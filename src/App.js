@@ -32,10 +32,10 @@ function buildElementListEntities(entities, addSource) {
  * Generate a list of objects, where every object has:
  * id: the id of an source in the 'sources' state array
  * jsx: jsx containing a representation of each source
- * @param {Array<source>} sources 
- * @param {function} updateSource 
- * @param {*} getEntityFromId 
- * @returns 
+ * @param {Array<source>} sources
+ * @param {function} updateSource
+ * @param {*} getEntityFromId
+ * @returns
  */
 function buildElementListSources(sources, updateSource, getEntityFromId) {
   const out = [];
