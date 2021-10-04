@@ -26,7 +26,7 @@ function SequenceEditor({ entity, addSource }) {
     },
   });
 
-  const onClick = () => { addSource(entity); };
+  const onClick = () => { addSource([entity]); };
 
   return (
     <div>

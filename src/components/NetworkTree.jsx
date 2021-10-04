@@ -1,6 +1,7 @@
 import React from 'react';
 import { constructNetwork } from '../network';
 import './NetworkTree.css';
+import NewSourceBox from './sources/NewSourceBox';
 
 function renderTreeElement(element, nodeFinder) {
   const extra = [];
@@ -33,8 +34,10 @@ function getTreeArray(network, nodeFinder) {
   });
   return items;
 }
-
-function NetworkTree({ entities, sources, nodeFinder }) {
+// A component that renders the ancestry tree
+function NetworkTree({
+  entities, sources, nodeFinder, addSource,
+}) {
   // Here we build an array of objects representing the nodes of the tree
   // each object looks like: { data: entity or source, ancestors: [] }
   // where data is the node, which can be an entity or a source, and ancestors is just
@@ -57,6 +60,9 @@ function NetworkTree({ entities, sources, nodeFinder }) {
     <div className="tf-tree tf-ancestor-tree">
       <ul>
         {getTreeArray(network, nodeFinder)}
+        <li>
+          <span className="tf-nc"><span className="node-text"><NewSourceBox {...{ addSource }} /></span></span>
+        </li>
       </ul>
     </div>
   );
