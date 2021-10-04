@@ -15,3 +15,36 @@ If you are using a port for the python app that is not the default one for flask
 
 Run `yarn install` and `yarn start` and the development server should be up and running.
 
+## My settings for vscode
+
+If you are interested in the settings that I use for vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:
+
+```json
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+        "**/__pycache__": true
+    },
+    "python.linting.enabled": true,
+    "python.linting.flake8Enabled": true,
+    "python.linting.flake8Path": "/Users/manu/.local/share/virtualenvs/backend-yNfT2bK_/bin/flake8",
+    "python.pythonPath": "/Users/manu/.local/share/virtualenvs/backend-yNfT2bK_/bin/python",
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+     },
+     "eslint.nodePath": "./src/frontend/node_modules",
+     "eslint.options": { "overrideConfigFile": "./src/frontend/.eslintrc.json"},
+     "eslint.format.enable": true,
+     "[javascript]": {
+         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+     },
+     "[javascriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    }
+}
+```
