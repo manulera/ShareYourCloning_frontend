@@ -2,12 +2,12 @@ import React from 'react';
 import { constructNetwork } from '../network';
 import './NetworkTree.css';
 
-function renderTreeElement(element, elementListRenderer) {
+function renderTreeElement(element, nodeFinder) {
   const extra = [];
   element.ancestors.forEach(
-    (ancestor) => extra.push(renderTreeElement(ancestor, elementListRenderer)),
+    (ancestor) => extra.push(renderTreeElement(ancestor, nodeFinder)),
   );
-  const jsxContent = elementListRenderer(element.data.id).jsx;
+  const jsxContent = nodeFinder(element.data.id).jsx;
 
   if (element.ancestors.length === 0) {
     return (
@@ -26,20 +26,20 @@ function renderTreeElement(element, elementListRenderer) {
   );
 }
 
-function getTreeArray(network, elementListRenderer) {
+function getTreeArray(network, nodeFinder) {
   const items = [];
   network.forEach((element) => {
-    items.push(renderTreeElement(element, elementListRenderer));
+    items.push(renderTreeElement(element, nodeFinder));
   });
   return items;
 }
 
-function NetworkTree({ entities, sources, elementListRenderer }) {
+function NetworkTree({ entities, sources, nodeFinder }) {
   const network = constructNetwork(entities, sources);
   return (
     <div className="tf-tree tf-ancestor-tree">
       <ul>
-        {getTreeArray(network, elementListRenderer)}
+        {getTreeArray(network, nodeFinder)}
       </ul>
     </div>
   );
