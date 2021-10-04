@@ -2,8 +2,6 @@
 
 This project was started with the [demo of Open Vector Editor](https://github.com/tnrich/ove-react-demo-repo).
 
-The frontend provides web interface to generate the cloning documentation described in the main readme
-
 
 ## Getting started
 
