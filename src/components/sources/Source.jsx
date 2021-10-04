@@ -7,6 +7,8 @@ import SourceRestriction from './SourceRestriction';
 // You should be able to chose based on the input. No input -> only file or request
 // An input -> no file nor request, but the others yes
 
+// There are several types of source, this components holds the common part,
+// which for now is a select element to pick which kind of source is created
 function Source({ source, updateSource, getEntityFromId }) {
   function onChange(event) {
     const newSource = {

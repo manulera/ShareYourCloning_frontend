@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React from 'react';
 
+// A component providing an interface for the user to type a Genbank ID
+// and get a sequence
 function SourceGenBank({ source, updateSource }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [genBankId, setGenBankId] = React.useState('');

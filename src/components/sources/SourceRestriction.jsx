@@ -4,10 +4,14 @@ import axios from 'axios';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
 
+// A component providing an interface for the user to perform a restriction reaction
+// with one or more restriction enzymes, move between output fragments, and eventually
+// select one as an output.
 function SourceRestriction({ source, updateSource, getEntityFromId }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [enzymeList, setEnzymeList] = React.useState('');
   const [outputList, setOutputList] = React.useState([]);
+  // TODO make selectedOutput a source property
   const [selectedOutput, setSelectedOutput] = React.useState(0);
 
   // Function called to update the value of enzymeList

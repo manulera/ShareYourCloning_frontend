@@ -28,7 +28,7 @@ function MainSequenceEditor({ node }) {
       ],
     },
   };
-  
+
   const seq = node === undefined ? undefined : convertToTeselaJson(node.node);
   const editor = <Editor {...editorProps} />;
   updateEditor(store, editorName, {

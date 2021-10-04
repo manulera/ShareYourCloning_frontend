@@ -1,9 +1,9 @@
-export default function executeSourceStep(source, updateOrCreateEntity) {
+export default function executeSourceStep(source, updateOrCreateEntity, uniqueIdDispatcher) {
   if (source.type === 'file') {
     if (typeof source.file_content !== 'undefined') {
       const newEntity = {
         kind: 'entity',
-        id: 2,
+        id: uniqueIdDispatcher(),
         sequence: {
           type: 'file',
           file_extension: source.file_extension,
@@ -19,7 +19,7 @@ export default function executeSourceStep(source, updateOrCreateEntity) {
     if (typeof source.output_list !== 'undefined' && source.output_list.length) {
       const newEntity = {
         kind: 'entity',
-        id: 2,
+        id: uniqueIdDispatcher(),
         sequence: source.output_list[0].sequence,
       };
       // Add the entity
