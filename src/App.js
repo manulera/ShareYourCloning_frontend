@@ -1,12 +1,13 @@
 import React from 'react';
 import './App.css';
+import { genbankToJson } from 'bio-parsers';
 import NetworkTree from './components/NetworkTree';
 import SequenceEditor from './components/SequenceEditor';
 import Source from './components/sources/Source';
 import executeSourceStep from './executeSourceStep';
 import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
-
+import QuickNetwork from './components/QuickNetwork';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -25,7 +26,11 @@ function buildElementListEntities(entities, addSource) {
     out.push({
       id: entity.id,
       node: entity,
-      jsx: <div><SequenceEditor {...{ entity, addSource }} /></div>,
+      jsx: (
+        <div>
+          <SequenceEditor {...{ entity, addSource }} />
+        </div>
+      ),
     });
   });
   return out;
@@ -47,7 +52,11 @@ function buildElementListSources(sources, updateSource, getEntityFromId) {
     out.push({
       id: source.id,
       node: source,
-      jsx: <div><Source {...{ source, updateSource, getEntityFromId }} /></div>,
+      jsx: (
+        <div>
+          <Source {...{ source, updateSource, getEntityFromId }} />
+        </div>
+      ),
     });
   });
   return out;
@@ -65,9 +74,15 @@ function App() {
   };
 
   const [entities, setEntities] = React.useState([]);
-  const [sources, setSources] = React.useState([{
-    id: 1, input: [], output: null, type: null, kind: 'source',
-  }]);
+  const [sources, setSources] = React.useState([
+    {
+      id: 1,
+      input: [],
+      output: null,
+      type: null,
+      kind: 'source',
+    },
+  ]);
 
   // We pass this set function to the constructor of the tree, so that when you click on a
   // toggle button, the sequence in that node is displayed in the main editor
@@ -78,7 +93,9 @@ function App() {
   // with the same source, if existed
   const updateOrCreateEntity = (newEntity, newSource) => {
     // If any of the entities comes from that source, we delete it
-    const newEntities = entities.filter((entity) => entity.id !== newSource.output);
+    const newEntities = entities.filter(
+      (entity) => entity.id !== newSource.output,
+    );
     // We add the new entity
     newEntities.push(newEntity);
     setEntities(newEntities);
@@ -101,11 +118,14 @@ function App() {
     const inputEntitiesIds = inputEntities.map((entity) => entity.id);
     setSources(sources.concat([
       {
-        id: uniqueIdDispatcher(), input: inputEntitiesIds, output: null, type: null, kind: 'source',
+        id: uniqueIdDispatcher(),
+        input: inputEntitiesIds,
+        output: null,
+        type: null,
+        kind: 'source',
       },
     ]));
   };
-
   // Here we make an array of objects in which each one has the id, and the jsx that will go
   // into each node in the tree.
   let elementList = buildElementListEntities(entities, addSource).concat(
@@ -118,15 +138,18 @@ function App() {
   // TODO: Some nodes should not display this, like sources like files
   // TODO: Fix for sources
   const updateMainSequenceId = (id) => {
-    const newMainSequenceId = (mainSequenceId !== id) ? id : null;
+    const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
   };
 
   // Here we append the toggle element to each jsx element in elemenList
   elementList = elementList.map((element) => {
     const newElement = { ...element };
-    newElement.jsx = [element.jsx,
-      <MainSequenceCheckBox {...{ id: element.id, mainSequenceId, updateMainSequenceId }} />,
+    newElement.jsx = [
+      element.jsx,
+      <MainSequenceCheckBox
+        {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
+      />,
     ];
     return newElement;
   });
@@ -140,8 +163,8 @@ function App() {
     <div className="App">
       <header className="App-header" />
       <div>
-        {/* <QuickNetwork /> */}
-        <NetworkTree {...{ entities, sources, nodeFinder, addSource }} />
+        <QuickNetwork />
+        <NetworkTree {...{ entities, sources, nodeFinder }} />
       </div>
       <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
     </div>

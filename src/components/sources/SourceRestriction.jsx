@@ -3,6 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
+import ArrowIcon from '../icons/ArrowIcon';
 
 // A component providing an interface for the user to perform a restriction reaction
 // with one or more restriction enzymes, move between output fragments, and eventually
@@ -27,7 +28,8 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
       restriction_enzymes: [enzymeList],
       input: [getEntityFromId(source.input[0]).sequence],
     };
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
       .then((resp) => {
         setOutputList(resp.data.output_list);
       })
@@ -46,7 +48,11 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
     };
 
     const seq = convertToTeselaJson(outputList[selectedOutput]);
-    editor = seq.circular ? <CircularView {...editorProps} /> : <LinearView {...editorProps} />;
+    editor = seq.circular ? (
+      <CircularView {...editorProps} />
+    ) : (
+      <LinearView {...editorProps} />
+    );
     updateEditor(store, editorName, {
       sequenceData: seq,
       annotationVisibility: {
@@ -57,7 +63,7 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
   }
 
   return (
-    <div>
+    <div className="restriction">
       <h3 className="header-nodes">Write the enzyme names as csv</h3>
       <form onSubmit={onSubmit}>
         <input type="text" value={enzymeList} onChange={onChange} />
@@ -67,8 +73,13 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
       {editor}
       {/* TODO: move this to the upstream component */}
       <div>
-        <button onClick={incrementSelectedOutput} type="button">{'<<'}</button>
-        <button onClick={decreaseSelectedOutput} type="button">{'>>'}</button>
+        <button onClick={decreaseSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'left' }} />
+        </button>
+        &nbsp;
+        <button onClick={incrementSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'right' }} />
+        </button>
       </div>
     </div>
   );

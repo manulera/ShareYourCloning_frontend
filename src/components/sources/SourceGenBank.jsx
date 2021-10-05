@@ -17,7 +17,8 @@ function SourceGenBank({ source, updateSource }) {
       ...source,
       genbank_id: genBankId,
     };
-    axios.post(`${process.env.REACT_APP_BACKEND_URL}step`, newSource)
+    axios
+      .post(`${process.env.REACT_APP_BACKEND_URL}step`, newSource)
       .then((resp) => {
         setWaitingMessage(null);
         updateSource({ ...newSource, output_list: resp.data.output_list });
@@ -26,7 +27,7 @@ function SourceGenBank({ source, updateSource }) {
   };
 
   return (
-    <div>
+    <div className="genbank-id">
       <h3 className="header-nodes">Type a Genbank ID</h3>
       <p>For example: NM_001018957.2</p>
       <form onSubmit={onSubmit}>

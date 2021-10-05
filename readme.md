@@ -28,15 +28,11 @@ If you are interested in the settings that I use for vscode, you can create a fo
         "**/*.pyc": true,
         "**/__pycache__": true
     },
-    "python.linting.enabled": true,
-    "python.linting.flake8Enabled": true,
-    "python.linting.flake8Path": "/Users/manu/.local/share/virtualenvs/backend-yNfT2bK_/bin/flake8",
-    "python.pythonPath": "/Users/manu/.local/share/virtualenvs/backend-yNfT2bK_/bin/python",
     "emmet.includeLanguages": {
         "javascript": "javascriptreact"
      },
-     "eslint.nodePath": "./src/frontend/node_modules",
-     "eslint.options": { "overrideConfigFile": "./src/frontend/.eslintrc.json"},
+     "eslint.nodePath": "../node_modules",
+     "eslint.options": { "overrideConfigFile": "../.eslintrc.json"},
      "eslint.format.enable": true,
      "[javascript]": {
          "editor.defaultFormatter": "dbaeumer.vscode-eslint"

@@ -23,16 +23,21 @@ function Source({ source, updateSource, getEntityFromId }) {
       specificSource = <SourceFile {...{ source, updateSource }} />;
     }
     if (source.type === 'restriction') {
-      specificSource = <SourceRestriction {...{ source, updateSource, getEntityFromId }} />;
+      specificSource = (
+        <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
+      );
     }
     if (source.type === 'genbank_id') {
-      specificSource = <SourceGenBank {...{ source, updateSource, getEntityFromId }} />;
+      specificSource = (
+        <SourceGenBank {...{ source, updateSource, getEntityFromId }} />
+      );
     }
   }
   return (
-    <div>
+    <div className="select-source">
       <label htmlFor="select_source">
-        Choose a source<br/>
+        Choose a source
+        <br />
         <select value={source.type} onChange={onChange} id="select_source">
           <option value=" " />
           <option value="file">file</option>
