@@ -3,6 +3,7 @@ import React from 'react';
 import axios from 'axios';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
+import ArrowIcon from '../icons/ArrowIcon';
 
 function SourceRestriction({ source, updateSource, getEntityFromId }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
@@ -68,43 +69,12 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
       {editor}
       {/* TODO: move this to the upstream component */}
       <div>
-        <button onClick={incrementSelectedOutput} type="button">
-          <span className="bp3-icon">
-            <svg
-              className="bp3-icon"
-              version="1.1"
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 22"
-            >
-              <path
-                id="Path_2"
-                data-name="Path 2"
-                d="M13,7V1L24,12,13,23V17H0V7Z"
-                transform="translate(24 23) rotate(180)"
-                fill="#fff"
-              />
-            </svg>
-          </span>
+        <button onClick={decreaseSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'left' }} />
         </button>
         &nbsp;
-        <button onClick={decreaseSelectedOutput} type="button">
-          <span className="bp3-icon">
-            <svg
-              className="bp3-icon"
-              version="1.1"
-              id="Capa_1"
-              xmlns="http://www.w3.org/2000/svg"
-              x="0px"
-              y="0px"
-              width="16px"
-              height="16px"
-              viewBox="0 0 24 24"
-            >
-              <path d="M13 7v-6l11 11-11 11v-6h-13v-10z" />
-            </svg>
-          </span>
+        <button onClick={incrementSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'right' }} />
         </button>
       </div>
     </div>
