@@ -1,0 +1,41 @@
+.select-source {
+  margin: 10px auto;
+  width: 400px;
+}
+
+.tf-tree,
+.tf-ancestor-tree {
+  margin: 10px auto;
+  width: 600px;
+  margin-bottom: 2em;
+}
+
+.tf-tree .tf-nc,
+.tf-tree .tf-node-content {
+  border-color: #106aa2;
+}
+
+.genbank-id button,
+.restriction button {
+  background-color: #106aa2;
+  color: white;
+  padding: 0.5em;
+  border-radius: 3px;
+  cursor: pointer;
+  border: none;
+}
+
+.genbank-id button:hover,
+.restriction button:hover {
+  background-color: #099;
+  color: #fff;
+}
+
+.genbank-id input,
+.restriction input {
+  padding: 0.3em;
+  border-radius: 3px;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  margin: 5px;
+}
