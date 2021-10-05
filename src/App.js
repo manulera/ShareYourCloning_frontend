@@ -7,6 +7,7 @@ import executeSourceStep from './executeSourceStep';
 import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
 import QuickNetwork from './components/QuickNetwork';
+import ShareYourCloningBox from './components/ShareYourCloningBox';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -66,7 +67,7 @@ function buildElementListSources(sources, updateSource, getEntityFromId, idsEnti
 
 function App() {
   // A counter with the next unique id to be assigned to a node
-  const [nextUniqueId, setNextUniqueId] = React.useState([2]);
+  const [nextUniqueId, setNextUniqueId] = React.useState(2);
 
   // A function to produce unique identifiers for entities
   const uniqueIdDispatcher = () => {
@@ -135,13 +136,16 @@ function App() {
 
   // Here we find the entities that don't have a child source, and could be linked
   // to a source with multiple inputs.
-  const idsEntitiesWithChildSource = [];
+  let idsEntitiesWithChildSource = [];
   sources.forEach((source) => {
-    idsEntitiesWithChildSource.concat(source.input);
+    idsEntitiesWithChildSource = idsEntitiesWithChildSource.concat(source.input);
   });
-  const idsEntitiesNotChildSource = entities.filter(
-    (entity) => idsEntitiesWithChildSource.includes(entity.id),
-  );
+  const idsEntitiesNotChildSource = [];
+  entities.forEach((entity) => {
+    if (!idsEntitiesWithChildSource.includes(entity.id)) {
+      idsEntitiesNotChildSource.push(entity.id);
+    }
+  });
 
   // Here we make an array of objects in which each one has the id, and the jsx that will go
   // into each node in the tree.
@@ -181,14 +185,22 @@ function App() {
   return (
     <div className="App">
       <header className="App-header" />
-      <div>
-        <QuickNetwork />
+      <div className="app-container">
+        <div className="app-title">
+          <ShareYourCloningBox {...{
+            entities, sources, setEntities, setSources,
+          }}
+          />
+        </div>
+        {/* <QuickNetwork /> */}
         <NetworkTree {...{
           entities, sources, nodeFinder, addSource,
         }}
         />
+        <span className="main-sequence-editor">
+          <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
+        </span>
       </div>
-      <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
     </div>
   );
 }

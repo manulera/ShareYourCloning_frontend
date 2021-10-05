@@ -43,22 +43,25 @@ function Source({
       specificSource = (
         <div>
           <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />
-          <SourceLigation {...{ source, updateSource, getEntityFromId }} />
+          {/* <SourceLigation {...{ source, updateSource, getEntityFromId }} /> */}
+          <MultipleOutputsSelector {...{ source, updateSource }} />
         </div>
       );
     }
   }
+  const selectElementId = `select_source_${source.id}`;
   const chooseSourceMessage = source.type !== null ? null : 'Choose a source';
   return (
     <div className="select-source">
       <label htmlFor="select_source">
         {chooseSourceMessage}
         <br />
-        <select value={source.type} onChange={onChange} id="select_source">
+        <select value={source.type} onChange={onChange} id={selectElementId}>
           <option value=" " />
           <option value="file">file</option>
-          <option value="restriction">restriction</option>
+          <option value="restriction">Restriction</option>
           <option value="genbank_id">GenBank ID</option>
+          <option value="ligation">Ligation</option>
         </select>
       </label>
       {specificSource}

@@ -3,22 +3,19 @@
   width: 400px;
 }
 
-.tf-tree,
-.tf-ancestor-tree {
+.tf-tree, .tf-ancestor-tree {
   margin: 10px auto;
   text-align: center;
   padding-bottom: 3px;
   margin-bottom: 2em;
 }
 
-.tf-tree .tf-nc,
-.tf-tree .tf-node-content {
+.tf-tree .tf-nc, .tf-tree .tf-node-content {
   border-color: #106aa2;
+  border-width: 2px;
 }
 
-.multiple-output-selector button,
-.genbank-id button,
-.restriction button {
+.multiple-output-selector button, .genbank-id button, .restriction button {
   background-color: #106aa2;
   color: white;
   padding: 0.5em;
@@ -28,15 +25,12 @@
   margin: 0.5em;
 }
 
-.multiple-output-selector button:hover,
-.genbank-id button:hover,
-.restriction button:hover {
+.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover {
   background-color: #099;
   color: #fff;
 }
-.multiple-output-selector input,
-.genbank-id input,
-.restriction input {
+
+.multiple-output-selector input, .genbank-id input, .restriction input {
   padding: 0.3em;
   border-radius: 3px;
   box-sizing: border-box;
@@ -44,3 +38,32 @@
   margin: 5px;
 }
 
+.multiple-input-selector select {
+  min-width: 100px;
+}
+
+.app-container {
+  text-align: center;
+  width: 100%;
+}
+
+.main-sequence-editor {
+  width: 800px;
+  display: inline-block;
+}
+
+.app-title h1 {
+  background-color: #106aa2;
+  padding: 30px;
+  color: white;
+  margin-bottom: 1em;
+  cursor: pointer;
+}
+
+.app-title h1:hover {
+  background-color: #099;
+}
+
+.app-title h1:drop {
+  background-color: #099;
+}
