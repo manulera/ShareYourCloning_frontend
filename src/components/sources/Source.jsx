@@ -1,7 +1,7 @@
-import React from "react";
-import SourceFile from "./SourceFile";
-import SourceGenBank from "./SourceGenBank";
-import SourceRestriction from "./SourceRestriction";
+import React from 'react';
+import SourceFile from './SourceFile';
+import SourceGenBank from './SourceGenBank';
+import SourceRestriction from './SourceRestriction';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -17,15 +17,15 @@ function Source({ source, updateSource, getEntityFromId }) {
   }
   let specificSource = null;
   if (source.type !== null) {
-    if (source.type === "file") {
+    if (source.type === 'file') {
       specificSource = <SourceFile {...{ source, updateSource }} />;
     }
-    if (source.type === "restriction") {
+    if (source.type === 'restriction') {
       specificSource = (
         <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
       );
     }
-    if (source.type === "genbank_id") {
+    if (source.type === 'genbank_id') {
       specificSource = (
         <SourceGenBank {...{ source, updateSource, getEntityFromId }} />
       );

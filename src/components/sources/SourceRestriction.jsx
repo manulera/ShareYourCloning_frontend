@@ -1,22 +1,20 @@
-import { updateEditor, CircularView, LinearView } from "open-vector-editor";
-import React from "react";
-import axios from "axios";
-import { convertToTeselaJson } from "../../sequenceParsers";
-import store from "../../store";
+import { updateEditor, CircularView, LinearView } from 'open-vector-editor';
+import React from 'react';
+import axios from 'axios';
+import { convertToTeselaJson } from '../../sequenceParsers';
+import store from '../../store';
 
 function SourceRestriction({ source, updateSource, getEntityFromId }) {
-  const [waitingMessage, setWaitingMessage] = React.useState("");
-  const [enzymeList, setEnzymeList] = React.useState("");
+  const [waitingMessage, setWaitingMessage] = React.useState('');
+  const [enzymeList, setEnzymeList] = React.useState('');
   const [outputList, setOutputList] = React.useState([]);
   const [selectedOutput, setSelectedOutput] = React.useState(0);
 
   // Function called to update the value of enzymeList
   const onChange = (event) => setEnzymeList(event.target.value);
   // Functions called to move between outputs of a restriction reaction
-  const incrementSelectedOutput = () =>
-    setSelectedOutput((selectedOutput + 1) % outputList.length);
-  const decreaseSelectedOutput = () =>
-    setSelectedOutput((selectedOutput + 1) % outputList.length);
+  const incrementSelectedOutput = () => setSelectedOutput((selectedOutput + 1) % outputList.length);
+  const decreaseSelectedOutput = () => setSelectedOutput((selectedOutput + 1) % outputList.length);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -71,9 +69,9 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
       {/* TODO: move this to the upstream component */}
       <div>
         <button onClick={incrementSelectedOutput} type="button">
-          <span class="bp3-icon">
+          <span className="bp3-icon">
             <svg
-              class="bp3-icon"
+              className="bp3-icon"
               version="1.1"
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -92,9 +90,9 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
         </button>
         &nbsp;
         <button onClick={decreaseSelectedOutput} type="button">
-          <span class="bp3-icon">
+          <span className="bp3-icon">
             <svg
-              class="bp3-icon"
+              className="bp3-icon"
               version="1.1"
               id="Capa_1"
               xmlns="http://www.w3.org/2000/svg"
@@ -104,7 +102,7 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
               height="16px"
               viewBox="0 0 24 24"
             >
-              <path d="M13 7v-6l11 11-11 11v-6h-13v-10z"></path>
+              <path d="M13 7v-6l11 11-11 11v-6h-13v-10z" />
             </svg>
           </span>
         </button>
