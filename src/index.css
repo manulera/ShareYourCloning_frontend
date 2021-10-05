@@ -15,7 +15,8 @@
   border-color: #106aa2;
 }
 
-.genbank-id button {
+.genbank-id button,
+.restriction button {
   background-color: #106aa2;
   color: white;
   padding: 0.5em;
@@ -24,13 +25,18 @@
   border: none;
 }
 
-.genbank-id button:hover {
+.genbank-id button:hover,
+.restriction button:hover {
   background-color: #099;
   color: #fff;
 }
 
-.genbank-id input {
+.genbank-id input,
+.restriction input {
   padding: 0.3em;
   border-radius: 3px;
   box-sizing: border-box;
+}
+
+.restriction {
 }
