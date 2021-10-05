@@ -9,3 +9,8 @@
   width: 600px;
   margin-bottom: 2em;
 }
+
+.tf-tree .tf-nc,
+.tf-tree .tf-node-content {
+  border-color: #106aa2;
+}
