@@ -6,7 +6,8 @@
 .tf-tree,
 .tf-ancestor-tree {
   margin: 10px auto;
-  width: 600px;
+  text-align: center;
+  padding-bottom: 3px;
   margin-bottom: 2em;
 }
 
@@ -23,6 +24,7 @@
   border-radius: 3px;
   cursor: pointer;
   border: none;
+  margin: 0.5em;
 }
 
 .genbank-id button:hover,
@@ -39,3 +41,4 @@
   border: 1px solid #000;
   margin: 5px;
 }
+

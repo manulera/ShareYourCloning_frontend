@@ -27,5 +27,17 @@ export default function executeSourceStep(source, updateOrCreateEntity, uniqueId
       // Set the output of the source TODO: This does not seem super clean
       source.output = newEntity.id;
     }
+  } else if (source.type === 'restriction') {
+    if (source.output_index !== null) {
+      const newEntity = {
+        kind: 'entity',
+        id: uniqueIdDispatcher(),
+        sequence: source.output_list[source.output_index].sequence,
+      };
+      // Add the entity
+      updateOrCreateEntity(newEntity, source);
+      // Set the output of the source TODO: This does not seem super clean
+      source.output = newEntity.id;
+    }
   }
 }

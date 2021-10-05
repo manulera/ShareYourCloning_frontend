@@ -1,6 +1,5 @@
 import React from 'react';
 import './App.css';
-import { genbankToJson } from 'bio-parsers';
 import NetworkTree from './components/NetworkTree';
 import SequenceEditor from './components/SequenceEditor';
 import Source from './components/sources/Source';
@@ -79,6 +78,8 @@ function App() {
       id: 1,
       input: [],
       output: null,
+      output_list: [],
+      output_index: null,
       type: null,
       kind: 'source',
     },
@@ -121,6 +122,8 @@ function App() {
         id: uniqueIdDispatcher(),
         input: inputEntitiesIds,
         output: null,
+        output_list: [],
+        output_index: null,
         type: null,
         kind: 'source',
       },
@@ -164,7 +167,10 @@ function App() {
       <header className="App-header" />
       <div>
         <QuickNetwork />
-        <NetworkTree {...{ entities, sources, nodeFinder, addSource }} />
+        <NetworkTree {...{
+          entities, sources, nodeFinder, addSource,
+        }}
+        />
       </div>
       <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
     </div>

@@ -11,15 +11,20 @@ import ArrowIcon from '../icons/ArrowIcon';
 function SourceRestriction({ source, updateSource, getEntityFromId }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [enzymeList, setEnzymeList] = React.useState('');
-  const [outputList, setOutputList] = React.useState([]);
-  // TODO make selectedOutput a source property
+
+  // selectedOutput is a local property, until you commit the step by clicking
   const [selectedOutput, setSelectedOutput] = React.useState(0);
 
   // Function called to update the value of enzymeList
   const onChange = (event) => setEnzymeList(event.target.value);
+
   // Functions called to move between outputs of a restriction reaction
-  const incrementSelectedOutput = () => setSelectedOutput((selectedOutput + 1) % outputList.length);
-  const decreaseSelectedOutput = () => setSelectedOutput((selectedOutput + 1) % outputList.length);
+  const incrementSelectedOutput = () => setSelectedOutput(
+    (selectedOutput + 1) % source.output_list.length,
+  );
+  const decreaseSelectedOutput = () => setSelectedOutput(
+    (selectedOutput + 1) % source.output_list.length,
+  );
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -31,12 +36,15 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
       .then((resp) => {
-        setOutputList(resp.data.output_list);
+        updateSource({
+          ...source,
+          output_list: resp.data.output_list,
+        });
       })
       .catch((reason) => console.log(reason));
   };
   let editor = null;
-  if (outputList.length) {
+  if (source.output_list.length) {
     const editorName = `editor_${source.id}`;
     const editorProps = {
       editorName,
@@ -47,7 +55,7 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
       },
     };
 
-    const seq = convertToTeselaJson(outputList[selectedOutput]);
+    const seq = convertToTeselaJson(source.output_list[selectedOutput]);
     editor = seq.circular ? (
       <CircularView {...editorProps} />
     ) : (
@@ -62,6 +70,31 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
     });
   }
 
+  const chooseFragment = () => updateSource(
+    {
+      ...source,
+      output_index: selectedOutput,
+    },
+  );
+
+  const enzymeSelect = source.output_index !== null ? null : (
+    <div>
+      <div>
+        <button onClick={decreaseSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'left' }} />
+        </button>
+    &nbsp;
+        <button onClick={incrementSelectedOutput} type="button">
+          <ArrowIcon {...{ direction: 'right' }} />
+        </button>
+      </div>
+      <div>
+        {editor}
+        <button onClick={chooseFragment} type="button">Choose fragment</button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="restriction">
       <h3 className="header-nodes">Write the enzyme names as csv</h3>
@@ -70,17 +103,7 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>
-      {editor}
-      {/* TODO: move this to the upstream component */}
-      <div>
-        <button onClick={decreaseSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'left' }} />
-        </button>
-        &nbsp;
-        <button onClick={incrementSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'right' }} />
-        </button>
-      </div>
+      {enzymeSelect}
     </div>
   );
 }
