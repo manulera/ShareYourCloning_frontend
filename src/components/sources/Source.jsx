@@ -33,6 +33,9 @@ function Source({ source, updateSource, getEntityFromId }) {
   }
   return (
     <div className="select-source">
+      <div id="icon">
+        X
+      </div>
       <label htmlFor="select_source">
         Choose a source
         <br />

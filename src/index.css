@@ -39,3 +39,15 @@
   border: 1px solid #000;
   margin: 5px;
 }
+
+#icon {
+  background-color: #106aa2;
+  color: white;
+  padding: 15px;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: -1px;
+  top: 1px;
+  border-radius: 3px;
+}
