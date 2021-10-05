@@ -14,3 +14,23 @@
 .tf-tree .tf-node-content {
   border-color: #106aa2;
 }
+
+.genbank-id button {
+  background-color: #106aa2;
+  color: white;
+  padding: 0.5em;
+  border-radius: 3px;
+  cursor: pointer;
+  border: none;
+}
+
+.genbank-id button:hover {
+  background-color: #099;
+  color: #fff;
+}
+
+.genbank-id input {
+  padding: 0.3em;
+  border-radius: 3px;
+  box-sizing: border-box;
+}
