@@ -164,7 +164,7 @@ function App() {
       <header className="App-header" />
       <div>
         <QuickNetwork />
-        <NetworkTree {...{ entities, sources, nodeFinder }} />
+        <NetworkTree {...{ entities, sources, nodeFinder, addSource }} />
       </div>
       <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
     </div>
