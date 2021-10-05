@@ -4,6 +4,20 @@ import React from 'react';
 // A component providing an interface for the user to type a Genbank ID
 // and get a sequence
 function SourceGenBank({ source, updateSource }) {
+  if (source.output !== null) {
+    const urlGenBank = `https://www.ncbi.nlm.nih.gov/nuccore/${source.genbank_id}`;
+    return (
+      <div>
+        Request to GenBank with ID
+        {' '}
+        <strong>
+          <a href={urlGenBank}>
+            {source.genbank_id}
+          </a>
+        </strong>
+      </div>
+    );
+  }
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [genBankId, setGenBankId] = React.useState('');
 

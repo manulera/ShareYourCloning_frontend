@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 
 // A component representing the ligation of several fragments
@@ -10,20 +11,18 @@ function SourceLigation({ source, updateSource, getEntityFromId }) {
     event.preventDefault();
     const requestData = {
       ...source,
-      restriction_enzymes: [enzymeList],
       input: [getEntityFromId(source.input[0]).sequence],
     };
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
       .then((resp) => {
-        setOutputList(resp.data.output_list);
+        // setOutputList(resp.data.output_list);
       })
       .catch((reason) => console.log(reason));
   };
 
   let editor = null;
-
-  if (outputList.length) {
+  if (source.output_list.length) {
     const editorName = `editor_${source.id}`;
     const editorProps = {
       editorName,
@@ -34,7 +33,7 @@ function SourceLigation({ source, updateSource, getEntityFromId }) {
       },
     };
 
-    const seq = convertToTeselaJson(outputList[selectedOutput]);
+    const seq = convertToTeselaJson(source.output_list[selectedOutput]);
     editor = seq.circular ? (
       <CircularView {...editorProps} />
     ) : (
@@ -57,17 +56,6 @@ function SourceLigation({ source, updateSource, getEntityFromId }) {
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>
-      {editor}
-      {/* TODO: move this to the upstream component */}
-      <div>
-        <button onClick={decreaseSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'left' }} />
-        </button>
-          &nbsp;
-        <button onClick={incrementSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'right' }} />
-        </button>
-      </div>
     </div>
   );
 }

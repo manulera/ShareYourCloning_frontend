@@ -1,15 +1,19 @@
 import React from 'react';
 import SourceFile from './SourceFile';
 import SourceGenBank from './SourceGenBank';
+import SourceLigation from './SourceLigation';
 import SourceRestriction from './SourceRestriction';
-
+import MultipleInputsSelector from './MultipleInputsSelector';
+import MultipleOutputsSelector from './MultipleOutputsSelector';
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
 // An input -> no file nor request, but the others yes
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
-function Source({ source, updateSource, getEntityFromId }) {
+function Source({
+  source, updateSource, getEntityFromId, idsEntitiesNotChildSource,
+}) {
   function onChange(event) {
     const newSource = {
       ...source,
@@ -24,7 +28,10 @@ function Source({ source, updateSource, getEntityFromId }) {
     }
     if (source.type === 'restriction') {
       specificSource = (
-        <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
+        <div>
+          <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
+          <MultipleOutputsSelector {...{ source, updateSource }} />
+        </div>
       );
     }
     if (source.type === 'genbank_id') {
@@ -32,11 +39,20 @@ function Source({ source, updateSource, getEntityFromId }) {
         <SourceGenBank {...{ source, updateSource, getEntityFromId }} />
       );
     }
+    if (source.type === 'ligation') {
+      specificSource = (
+        <div>
+          <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />
+          <SourceLigation {...{ source, updateSource, getEntityFromId }} />
+        </div>
+      );
+    }
   }
+  const chooseSourceMessage = source.type !== null ? null : 'Choose a source';
   return (
     <div className="select-source">
       <label htmlFor="select_source">
-        Choose a source
+        {chooseSourceMessage}
         <br />
         <select value={source.type} onChange={onChange} id="select_source">
           <option value=" " />

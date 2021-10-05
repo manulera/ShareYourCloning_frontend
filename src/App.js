@@ -45,7 +45,7 @@ function buildElementListEntities(entities, addSource) {
  * @param {*} getEntityFromId
  * @returns
  */
-function buildElementListSources(sources, updateSource, getEntityFromId) {
+function buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource) {
   const out = [];
   sources.forEach((source) => {
     out.push({
@@ -53,7 +53,10 @@ function buildElementListSources(sources, updateSource, getEntityFromId) {
       node: source,
       jsx: (
         <div>
-          <Source {...{ source, updateSource, getEntityFromId }} />
+          <Source {...{
+            source, updateSource, getEntityFromId, idsEntitiesNotChildSource,
+          }}
+          />
         </div>
       ),
     });
@@ -129,10 +132,21 @@ function App() {
       },
     ]));
   };
+
+  // Here we find the entities that don't have a child source, and could be linked
+  // to a source with multiple inputs.
+  const idsEntitiesWithChildSource = [];
+  sources.forEach((source) => {
+    idsEntitiesWithChildSource.concat(source.input);
+  });
+  const idsEntitiesNotChildSource = entities.filter(
+    (entity) => idsEntitiesWithChildSource.includes(entity.id),
+  );
+
   // Here we make an array of objects in which each one has the id, and the jsx that will go
   // into each node in the tree.
   let elementList = buildElementListEntities(entities, addSource).concat(
-    buildElementListSources(sources, updateSource, getEntityFromId),
+    buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource),
   );
 
   // This function sets the state of mainSequenceId (the id of the sequence that is displayed
@@ -150,14 +164,16 @@ function App() {
     const newElement = { ...element };
     newElement.jsx = [
       element.jsx,
-      <MainSequenceCheckBox
-        {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
-      />,
+      (element.node.kind === 'source') ? null : (
+        <MainSequenceCheckBox
+          {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
+        />
+      ),
     ];
     return newElement;
   });
 
-  // This file returns a node from elementList by passing the id. This is useful
+  // This function returns a node from elementList by passing the id. This is useful
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);

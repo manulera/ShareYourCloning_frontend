@@ -16,6 +16,7 @@
   border-color: #106aa2;
 }
 
+.multiple-output-selector button,
 .genbank-id button,
 .restriction button {
   background-color: #106aa2;
@@ -27,12 +28,13 @@
   margin: 0.5em;
 }
 
+.multiple-output-selector button:hover,
 .genbank-id button:hover,
 .restriction button:hover {
   background-color: #099;
   color: #fff;
 }
-
+.multiple-output-selector input,
 .genbank-id input,
 .restriction input {
   padding: 0.3em;
