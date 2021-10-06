@@ -1,7 +1,6 @@
 import React from 'react';
 import SourceFile from './SourceFile';
 import SourceGenBank from './SourceGenBank';
-import SourceLigation from './SourceLigation';
 import SourceRestriction from './SourceRestriction';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
@@ -53,6 +52,9 @@ function Source({
   const chooseSourceMessage = source.type !== null ? null : 'Choose a source';
   return (
     <div className="select-source">
+      <div id="icon">
+        X
+      </div>
       <label htmlFor="select_source">
         {chooseSourceMessage}
         <br />

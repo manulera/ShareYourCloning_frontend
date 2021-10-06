@@ -67,3 +67,15 @@
 .app-title h1:drop {
   background-color: #099;
 }
+
+#icon {
+  background-color: #106aa2;
+  color: white;
+  padding: 15px;
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: -1px;
+  top: 1px;
+  border-radius: 3px;
+}
