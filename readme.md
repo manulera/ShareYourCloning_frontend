@@ -2,6 +2,7 @@
 
 This project was started with the [demo of Open Vector Editor](https://github.com/tnrich/ove-react-demo-repo).
 
+This frontend is part of a bigger application, before going further, please go to the [main project readme](https://github.com/manulera/ShareYourCloning), where you can find an introduction.
 
 ## Getting started
 
