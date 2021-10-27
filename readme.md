@@ -43,3 +43,4 @@ If you are interested in the settings that I use for vscode, you can create a fo
     }
 }
 ```
+For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
