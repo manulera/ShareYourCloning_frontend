@@ -14,6 +14,12 @@ If you are using a port for the python app that is not the default one for flask
 
 Run `yarn install` and `yarn start` and the development server should be up and running.
 
+### Running with Docker
+
+```
+docker-compose -f docker-compose-prod.yml up -d
+```
+
 ## My settings for vscode
 
 If you are interested in the settings that I use for vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:

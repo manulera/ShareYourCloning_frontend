@@ -1,0 +1,30 @@
+FROM node:16-alpine as build
+
+# set working directory
+WORKDIR /app
+
+# add `/app/node_modules/.bin` to $PATH
+ENV PATH /app/node_modules/.bin:$PATH
+
+# install app dependencies
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+RUN ls
+RUN pwd
+
+# add app
+COPY . ./
+
+# start app
+RUN yarn build
+RUN ls
+RUN pwd
+
+# production environment
+FROM nginx
+COPY --from=build /app/build /usr/share/nginx/html
+# This is just in case I use the react router
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
