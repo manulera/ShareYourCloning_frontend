@@ -29,7 +29,7 @@ function Source({
       specificSource = (
         <div>
           <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
-          <MultipleOutputsSelector {...{ source, updateSource }} />
+          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
         </div>
       );
     }

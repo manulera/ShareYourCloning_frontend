@@ -4,7 +4,7 @@ import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
 import ArrowIcon from '../icons/ArrowIcon';
 
-function MultipleOutputsSelector({ source, updateSource }) {
+function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
   // If the output is already set or the list of outputs is empty, do not show this element
   if (source.output_index !== null || source.output_list.length === 0) { return null; }
 
@@ -38,18 +38,67 @@ function MultipleOutputsSelector({ source, updateSource }) {
     },
   };
 
-  const seq = convertToTeselaJson(source.output_list[selectedOutput]);
+  if (false) {
+    const seq = convertToTeselaJson(source.output_list[selectedOutput]);
+    editor = seq.circular ? (
+      <CircularView {...editorProps} />
+    ) : (
+      <LinearView {...editorProps} />
+    );
+    updateEditor(store, editorName, {
+      sequenceData: seq,
+      annotationVisibility: {
+        reverseSequence: false,
+        cutsites: false,
+      },
+    });
+
+    return (
+      <div className="multiple-output-selector">
+        <div>
+          <button onClick={decreaseSelectedOutput} type="button">
+            <ArrowIcon {...{ direction: 'left' }} />
+          </button>
+        &nbsp;
+          <button onClick={incrementSelectedOutput} type="button">
+            <ArrowIcon {...{ direction: 'right' }} />
+          </button>
+        </div>
+        <div>
+          {editor}
+          <button onClick={chooseFragment} type="button">Choose fragment</button>
+        </div>
+      </div>
+    );
+  }
+
+  const seq = convertToTeselaJson(getEntityFromId(source.input[0]));
+  //   const fragmentLengths = source.output_list.map((fragment) => {
+  //     const thisSeq = convertToTeselaJson(fragment);
+  //     return thisSeq.size;
+  //   });
+  //   let fragmentBoundaries = fragmentLengths.concat();
+  //   for (let i = 1; i < fragmentBoundaries.length; i++) {
+  //     fragmentBoundaries[i] = fragmentLengths[i - 1] + fragmentLengths[i];
+  //   }
+  //   fragmentBoundaries = [0].concat(fragmentBoundaries);
   editor = seq.circular ? (
     <CircularView {...editorProps} />
   ) : (
     <LinearView {...editorProps} />
   );
+  console.log(source.fragment_boundaries);
   updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
       cutsites: false,
     },
+    selectionLayer: {
+      start: source.fragment_boundaries[selectedOutput],
+      end: source.fragment_boundaries[selectedOutput + 1],
+    },
+    caretPosition: source.fragment_boundaries[selectedOutput],
   });
 
   return (

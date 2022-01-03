@@ -32,10 +32,10 @@ function SourceGenBank({ source, updateSource }) {
       genbank_id: genBankId,
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}step`, newSource)
+      .post(`${process.env.REACT_APP_BACKEND_URL}genebank_id`, newSource)
       .then((resp) => {
         setWaitingMessage(null);
-        updateSource({ ...newSource, output_list: resp.data.output_list });
+        updateSource({ ...resp.data.source, kind: 'source' });
       })
       .catch((reason) => console.log(reason));
   };

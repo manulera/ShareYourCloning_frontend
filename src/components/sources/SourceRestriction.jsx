@@ -25,19 +25,17 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
-      ...source,
-      restriction_enzymes: [enzymeList],
-      input: [getEntityFromId(source.input[0]).sequence],
+      source: {
+        ...source,
+        restriction_enzymes: [enzymeList],
+      },
+      sequences: [getEntityFromId(source.input[0])],
     };
     // A better way not to have to type twice the output_list thing
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}restriction`, requestData)
       .then((resp) => {
-        updateSource({
-          ...source,
-          output_list: resp.data.output_list,
-          restriction_enzymes: [enzymeList],
-        });
+        updateSource({ ...resp.data.source, kind: 'source' });
       })
       .catch((reason) => console.log(reason));
   };

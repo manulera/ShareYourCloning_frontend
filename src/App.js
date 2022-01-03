@@ -181,7 +181,7 @@ function App() {
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
-
+  console.log(sources);
   return (
     <div className="App">
       <header className="App-header" />
