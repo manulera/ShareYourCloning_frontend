@@ -1,3 +1,10 @@
+function ancestorWithSmallestId(node) {
+  if (node.ancestors.length === 0) {
+    return node.data.id;
+  }
+  return Math.min(node.ancestors.map((n) => ancestorWithSmallestId(n)));
+}
+
 export function findAncestors(element, entities, sources) {
   const ancestors = [];
   if (element.kind === 'source') {
@@ -17,7 +24,7 @@ export function findAncestors(element, entities, sources) {
       ancestors.push(thisTreeElement);
     });
   }
-  return ancestors;
+  return ancestors.sort((a, b) => ancestorWithSmallestId(a) - ancestorWithSmallestId(b));
 }
 
 export function constructNetwork(entities, sources) {
@@ -42,6 +49,5 @@ export function constructNetwork(entities, sources) {
       network.push(thisTreeElement);
     }
   });
-
-  return network;
+  return network.sort((a, b) => ancestorWithSmallestId(a) - ancestorWithSmallestId(b));
 }

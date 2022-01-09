@@ -1,7 +1,7 @@
 import React from 'react';
 
 function ShareYourCloningBox({
-  entities, sources, setEntities, setSources,
+  entities, sources, setEntities, setSources, setNextUniqueId,
 }) {
   const [headerText, setHeaderText] = React.useState('Share Your Cloning');
 
@@ -38,6 +38,12 @@ function ShareYourCloningBox({
       const newState = JSON.parse(eventFileRead.target.result);
       setSources(newState.sources);
       setEntities(newState.entities);
+      // We set the next id to the max +1
+      setNextUniqueId(
+        1 + newState.sources.concat(newState.entities).reduce(
+          (max, item) => Math.max(max, item.id), 0,
+        ),
+      );
     };
     reader.readAsText(files[0]);
   };

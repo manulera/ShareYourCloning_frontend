@@ -11,7 +11,7 @@ export default function executeSourceStep(source, updateOrCreateEntity, uniqueId
       // Set the output of the source TODO: This does not seem super clean
       source.output = newEntity.id;
     }
-  } else if (source.type === 'restriction') {
+  } else if (source.type === 'restriction' || source.type == 'sticky_ligation') {
     if (source.output_index !== null) {
       const newEntity = {
         kind: 'entity',

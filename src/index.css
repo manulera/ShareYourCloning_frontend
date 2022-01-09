@@ -1,81 +1,135 @@
+button {
+    cursor: pointer;
+}
+
 .select-source {
-  margin: 10px auto;
-  width: 400px;
+    margin: 10px auto;
+    width: 400px;
 }
 
 .tf-tree, .tf-ancestor-tree {
-  margin: 10px auto;
-  text-align: center;
-  padding-bottom: 3px;
-  margin-bottom: 2em;
+    margin: 10px auto;
+    text-align: center;
+    padding-bottom: 3px;
+    margin-bottom: 2em;
 }
 
 .tf-tree .tf-nc, .tf-tree .tf-node-content {
-  border-color: #106aa2;
-  border-width: 2px;
+    border-color: #106aa2;
+    border-width: 2px;
 }
 
-.multiple-output-selector button, .genbank-id button, .restriction button {
-  background-color: #106aa2;
-  color: white;
-  padding: 0.5em;
-  border-radius: 3px;
-  cursor: pointer;
-  border: none;
-  margin: 0.5em;
+
+.multiple-output-selector button, .genbank-id button, .restriction button, .ligation button {
+    background-color: #106aa2;
+    color: white;
+    padding: 0.5em;
+    border-radius: 3px;
+    cursor: pointer;
+    border: none;
+    margin: 0.5em;
 }
 
-.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover {
-  background-color: #099;
-  color: #fff;
+.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover {
+    background-color: #099;
+    color: #fff;
 }
 
-.multiple-output-selector input, .genbank-id input, .restriction input {
-  padding: 0.3em;
-  border-radius: 3px;
-  box-sizing: border-box;
-  border: 1px solid #000;
-  margin: 5px;
+.multiple-output-selector input, .genbank-id input, .restriction input .ligation input {
+    padding: 0.3em;
+    border-radius: 3px;
+    box-sizing: border-box;
+    border: 1px solid #000;
+    margin: 5px;
 }
 
 .multiple-input-selector select {
-  min-width: 100px;
+    min-width: 100px;
 }
 
 .app-container {
-  text-align: center;
-  width: 100%;
+    text-align: center;
+    width: 100%;
 }
 
 .main-sequence-editor {
-  width: 800px;
-  display: inline-block;
+    width: 800px;
+    display: inline-block;
 }
 
 .app-title h1 {
-  background-color: #106aa2;
-  padding: 30px;
-  color: white;
-  margin-bottom: 1em;
-  cursor: pointer;
+    background-color: #106aa2;
+    padding: 30px;
+    color: white;
+    margin-bottom: 1em;
+    cursor: pointer;
 }
 
 .app-title h1:hover {
-  background-color: #099;
+    background-color: #099;
 }
 
 .app-title h1:drop {
-  background-color: #099;
+    background-color: #099;
 }
 
-#icon {
-  background-color: #106aa2;
-  color: white;
-  padding: 15px;
-  width: 10px;
-  height: 10px;
-  position: absolute;
-  right: -1px;
-  top: 1px;
-  border-radius: 3px;
+button.icon-corner {
+    position: absolute;
+    right: -1px;
+    top: 1px;
+    color: #FF4433;
+    font-size: x-large;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+button.icon-corner:hover {
+    filter: brightness(70%);
+}
+
+.node-corner {
+    position: absolute;
+    right: -1px;
+    top: 1px;
+}
+
+.node-corner-icon {
+    font-size: xx-large;
+}
+
+input[type="checkbox"].hidden-checkbox {
+    display: none;
+}
+
+input[type="checkbox"].hidden-checkbox+label {
+    color: lightgray;
+}
+
+input[type="checkbox"].hidden-checkbox+label:hover {
+    color: gray;
+    cursor: pointer;
+}
+
+input[type="checkbox"].hidden-checkbox:checked+label {
+    color: green;
+}
+
+
+.overhang-representation {
+    text-align: center;
+
+    display: inline-block;
+
+}
+
+.overhang-representation div {
+    font-family: monospace;
+    text-align: left;
+    /* Prevent the removal of spaces that make sequences align correctly */
+    white-space: pre-wrap;
+}
+
+.tooltip-text {
+    font-size: medium;
 }

@@ -18,6 +18,7 @@ function MultipleInputsSelector({ source, updateSource, idsEntitiesNotChildSourc
   const allOptions = source.input.concat(idsEntitiesNotChildSource);
   return (
     <div className="multiple-input-selector">
+      <h3>Select several inputs for this step</h3>
       <label htmlFor="select_multiple_inputs">
         <select multiple="true" value={source.input} onChange={onChange} id="select_multiple_inputs">
           {

@@ -37,7 +37,9 @@ function SourceGenBank({ source, updateSource }) {
         setWaitingMessage(null);
         updateSource({ ...resp.data.source, kind: 'source' });
       })
-      .catch((reason) => console.log(reason));
+      .catch((error) => {
+        if (!error.response) { setWaitingMessage('Unable to connect to the backend server'); } else { setWaitingMessage(error.response.data.detail); }
+      });
   };
 
   return (
@@ -48,7 +50,7 @@ function SourceGenBank({ source, updateSource }) {
         <input type="text" value={genBankId} onChange={onChange} />
         <button type="submit">Submit</button>
       </form>
-      <div>{waitingMessage}</div>
+      <div className="waiting-message">{waitingMessage}</div>
     </div>
   );
 }

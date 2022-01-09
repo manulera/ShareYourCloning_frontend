@@ -6,8 +6,8 @@ import Source from './components/sources/Source';
 import executeSourceStep from './executeSourceStep';
 import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
-import QuickNetwork from './components/QuickNetwork';
 import ShareYourCloningBox from './components/ShareYourCloningBox';
+import { constructNetwork } from './network';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -20,7 +20,7 @@ import ShareYourCloningBox from './components/ShareYourCloningBox';
  *                        to add a new source.
  * @returns the mentioned list
  */
-function buildElementListEntities(entities, addSource) {
+function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput) {
   const out = [];
   entities.forEach((entity) => {
     out.push({
@@ -28,7 +28,7 @@ function buildElementListEntities(entities, addSource) {
       node: entity,
       jsx: (
         <div>
-          <SequenceEditor {...{ entity, addSource }} />
+          <SequenceEditor {...{ entity, addSource, getSourceWhereEntityIsInput }} />
         </div>
       ),
     });
@@ -46,7 +46,7 @@ function buildElementListEntities(entities, addSource) {
  * @param {*} getEntityFromId
  * @returns
  */
-function buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource) {
+function buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource) {
   const out = [];
   sources.forEach((source) => {
     out.push({
@@ -55,7 +55,7 @@ function buildElementListSources(sources, updateSource, getEntityFromId, idsEnti
       jsx: (
         <div>
           <Source {...{
-            source, updateSource, getEntityFromId, idsEntitiesNotChildSource,
+            source, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
           }}
           />
         </div>
@@ -117,7 +117,7 @@ function App() {
   // Return an entity from its id. This is used for executing sources that take inputs,
   // since source.input is an array with the ids of input entities
   const getEntityFromId = (id) => entities.filter((entity) => entity.id === id)[0];
-
+  const getSourceWhereEntityIsInput = (id) => sources.find((source) => source.input.includes(id));
   // Add a new source
   const addSource = (inputEntities) => {
     const inputEntitiesIds = inputEntities.map((entity) => entity.id);
@@ -147,12 +147,6 @@ function App() {
     }
   });
 
-  // Here we make an array of objects in which each one has the id, and the jsx that will go
-  // into each node in the tree.
-  let elementList = buildElementListEntities(entities, addSource).concat(
-    buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource),
-  );
-
   // This function sets the state of mainSequenceId (the id of the sequence that is displayed
   // outside of the tree in the rich editor). It is passed to the MainSequenceCheckBox, to
   // have one at each node.
@@ -162,6 +156,42 @@ function App() {
     const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
   };
+  // Here we build an array of objects representing the nodes of the tree
+  // each object looks like: { data: entity or source, ancestors: [] }
+  // where data is the node, which can be an entity or a source, and ancestors is just
+  // an array of the parent nodes connected to this node.
+  //
+  // As an example, for a relationship source1 -> entity2 -> source3 -> entity4
+  // In the application state, this would be:
+  // sources: [
+  //  {id: 1, input: null, output: [2]}, {id: 3, input: 2, output: [4]}
+  // ]
+  // entities: [{id:2}, {id:4}]
+  // and entities would only have their ids.
+  // In the output of this function, this would become:
+  // nodes: [{id:4, ancestors: [3], kind: entity}, {id:3, ancestors: [2], kind: source}, etc.]
+  const network = constructNetwork(entities, sources);
+  // A function to delete a source and its children
+  const deleteSource = (source) => {
+    const sources2delete = [];
+    const entities2delete = [];
+    let currentSource = source;
+    while (currentSource !== undefined) {
+      sources2delete.push(currentSource.id);
+      if (currentSource.output === null) { break; }
+      entities2delete.push(currentSource.output);
+      currentSource = sources.find((ss) => ss.input.includes(currentSource.output));
+    }
+
+    setSources(sources.filter((s) => !sources2delete.includes(s.id)));
+    setEntities(entities.filter((e) => !entities2delete.includes(e.id)));
+  };
+
+  // Here we make an array of objects in which each one has the id, and the jsx that will go
+  // into each node in the tree.
+  let elementList = buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput).concat(
+    buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource),
+  );
 
   // Here we append the toggle element to each jsx element in elemenList
   elementList = elementList.map((element) => {
@@ -181,20 +211,19 @@ function App() {
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
-  console.log(sources);
+
   return (
     <div className="App">
       <header className="App-header" />
       <div className="app-container">
         <div className="app-title">
           <ShareYourCloningBox {...{
-            entities, sources, setEntities, setSources,
+            entities, sources, setEntities, setSources, setNextUniqueId,
           }}
           />
         </div>
-        {/* <QuickNetwork /> */}
         <NetworkTree {...{
-          entities, sources, nodeFinder, addSource,
+          network, nodeFinder, addSource,
         }}
         />
         <span className="main-sequence-editor">

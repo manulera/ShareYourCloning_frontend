@@ -1,9 +1,16 @@
 import React from 'react';
+
+import { FaTrashAlt } from 'react-icons/fa';
+import Tooltip from '@mui/material/Tooltip';
+import Box from '@mui/material/Box';
+
 import SourceFile from './SourceFile';
 import SourceGenBank from './SourceGenBank';
 import SourceRestriction from './SourceRestriction';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
+import SourceLigation from './SourceLigation';
+
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
 // An input -> no file nor request, but the others yes
@@ -11,7 +18,7 @@ import MultipleOutputsSelector from './MultipleOutputsSelector';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  source, updateSource, getEntityFromId, idsEntitiesNotChildSource,
+  source, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
 }) {
   function onChange(event) {
     const newSource = {
@@ -38,34 +45,46 @@ function Source({
         <SourceGenBank {...{ source, updateSource, getEntityFromId }} />
       );
     }
-    if (source.type === 'ligation') {
+    if (source.type === 'sticky_ligation') {
+      const inputSelector = source.output_index !== null ? null : <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />;
       specificSource = (
         <div>
-          <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />
-          {/* <SourceLigation {...{ source, updateSource, getEntityFromId }} /> */}
-          <MultipleOutputsSelector {...{ source, updateSource }} />
+          {inputSelector}
+          <SourceLigation {...{ source, updateSource, getEntityFromId }} />
+          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
         </div>
       );
     }
   }
   const selectElementId = `select_source_${source.id}`;
   const chooseSourceMessage = source.type !== null ? null : 'Choose a source';
+  const sourceTypeSelector = source.output !== null ? null : (
+    <label htmlFor="select_source">
+      {chooseSourceMessage}
+      <br />
+      <select value={source.type} onChange={onChange} id={selectElementId}>
+        <option value=" " />
+        <option value="file">file</option>
+        <option value="restriction">Restriction</option>
+        <option value="genbank_id">GenBank ID</option>
+        <option value="sticky_ligation">Ligation with sticky ends</option>
+      </select>
+    </label>
+  );
+  const tooltipText = <div className="tooltip-text">Delete source and children</div>;
+  const onClickDeleteSource = () => deleteSource(source);
   return (
     <div className="select-source">
-      <div id="icon">
-        X
-      </div>
-      <label htmlFor="select_source">
-        {chooseSourceMessage}
-        <br />
-        <select value={source.type} onChange={onChange} id={selectElementId}>
-          <option value=" " />
-          <option value="file">file</option>
-          <option value="restriction">Restriction</option>
-          <option value="genbank_id">GenBank ID</option>
-          <option value="ligation">Ligation</option>
-        </select>
-      </label>
+
+      <button className="icon-corner" type="submit" onClick={onClickDeleteSource}>
+        <Tooltip title={tooltipText} arrow placement="top">
+          <Box>
+            <FaTrashAlt />
+          </Box>
+        </Tooltip>
+
+      </button>
+      {sourceTypeSelector}
       {specificSource}
     </div>
   );

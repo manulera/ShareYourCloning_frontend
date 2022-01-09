@@ -3,6 +3,7 @@ import React from 'react';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
 import ArrowIcon from '../icons/ArrowIcon';
+import OverhangsDisplay from '../OverhangsDisplay';
 
 function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
   // If the output is already set or the list of outputs is empty, do not show this element
@@ -16,7 +17,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
     (selectedOutput + 1) % source.output_list.length,
   );
   const decreaseSelectedOutput = () => setSelectedOutput(
-    (selectedOutput + 1) % source.output_list.length,
+    (selectedOutput - 1) % source.output_list.length,
   );
 
   // The function to pick the fragment as the output, and execute the step
@@ -38,7 +39,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
     },
   };
 
-  if (false) {
+  if (source.type !== 'restriction') {
     const seq = convertToTeselaJson(source.output_list[selectedOutput]);
     editor = seq.circular ? (
       <CircularView {...editorProps} />
@@ -73,21 +74,13 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
   }
 
   const seq = convertToTeselaJson(getEntityFromId(source.input[0]));
-  //   const fragmentLengths = source.output_list.map((fragment) => {
-  //     const thisSeq = convertToTeselaJson(fragment);
-  //     return thisSeq.size;
-  //   });
-  //   let fragmentBoundaries = fragmentLengths.concat();
-  //   for (let i = 1; i < fragmentBoundaries.length; i++) {
-  //     fragmentBoundaries[i] = fragmentLengths[i - 1] + fragmentLengths[i];
-  //   }
-  //   fragmentBoundaries = [0].concat(fragmentBoundaries);
+
   editor = seq.circular ? (
     <CircularView {...editorProps} />
   ) : (
     <LinearView {...editorProps} />
   );
-  console.log(source.fragment_boundaries);
+
   updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
@@ -100,7 +93,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
     },
     caretPosition: source.fragment_boundaries[selectedOutput],
   });
-
+  const overhangs = <OverhangsDisplay {...{ entity: source.output_list[selectedOutput] }} />;
   return (
     <div className="multiple-output-selector">
       <div>
@@ -114,6 +107,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
       </div>
       <div>
         {editor}
+        {overhangs}
         <button onClick={chooseFragment} type="button">Choose fragment</button>
       </div>
     </div>

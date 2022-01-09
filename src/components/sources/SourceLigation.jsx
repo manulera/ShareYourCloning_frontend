@@ -4,55 +4,38 @@ import React from 'react';
 // A component representing the ligation of several fragments
 function SourceLigation({ source, updateSource, getEntityFromId }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
-  // TODO make selectedOutput a source property
-  const [selectedOutput, setSelectedOutput] = React.useState(0);
+
+  if (source.output_index !== null) {
+    return (
+      <div>
+        Ligation of fragments with sticky ends
+      </div>
+    );
+  }
 
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
-      ...source,
-      input: [getEntityFromId(source.input[0]).sequence],
+      source,
+      sequences: source.input.map((id) => getEntityFromId(id)),
     };
+    // A better way not to have to type twice the output_list thing
+    setWaitingMessage('Processing...');
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}step`, requestData)
+      .post(`${process.env.REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
       .then((resp) => {
-        // setOutputList(resp.data.output_list);
+        setWaitingMessage('');
+        updateSource({ ...resp.data.source, kind: 'source' });
       })
-      .catch((reason) => console.log(reason));
+      .catch((error) => {
+        if (!error.response) { setWaitingMessage('Unable to connect to the backend server'); } else { setWaitingMessage(error.response.data.detail); }
+      });
   };
 
-  let editor = null;
-  if (source.output_list.length) {
-    const editorName = `editor_${source.id}`;
-    const editorProps = {
-      editorName,
-      isFullscreen: false,
-      annotationVisibility: {
-        reverseSequence: false,
-        cutsites: false,
-      },
-    };
-
-    const seq = convertToTeselaJson(source.output_list[selectedOutput]);
-    editor = seq.circular ? (
-      <CircularView {...editorProps} />
-    ) : (
-      <LinearView {...editorProps} />
-    );
-    updateEditor(store, editorName, {
-      sequenceData: seq,
-      annotationVisibility: {
-        reverseSequence: false,
-        cutsites: false,
-      },
-    });
-  }
-
   return (
-    <div className="restriction">
-      <h3 className="header-nodes">Write the enzyme names as csv</h3>
+    <div className="ligation">
+
       <form onSubmit={onSubmit}>
-        <input type="text" value={enzymeList} onChange={onChange} />
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>

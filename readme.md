@@ -36,6 +36,11 @@ docker pull manulera/shareyourcloning_frontend
 docker run -p 3000:80 manulera/shareyourcloning_frontend
 ```
 
+## Todo
+
+- [ ] Remove nodes
+- [ ] Order nodes
+
 ## My settings for vscode
 
 If you are interested in the settings that I use for vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:

@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 // import 'open-vector-editor/umd/main.css';
 import { CircularView, LinearView, updateEditor } from 'open-vector-editor';
 import { convertToTeselaJson } from '../sequenceParsers';
-
+import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 
-function SequenceEditor({ entity, addSource }) {
+function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
   const editorName = `editor_${entity.id}`;
   const editorProps = {
     editorName,
@@ -28,13 +28,16 @@ function SequenceEditor({ entity, addSource }) {
 
   const onClick = () => { addSource([entity]); };
 
+  const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
+    <button type="button" onClick={onClick}>
+      Add source
+    </button>
+  );
   return (
     <div>
       {editor}
-      <button type="button" onClick={onClick}>
-        Add source
-      </button>
-
+      <OverhangsDisplay {...{ entity }} />
+      {addSourceButton}
     </div>
   );
 }
