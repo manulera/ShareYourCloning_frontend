@@ -20,26 +20,9 @@ Run `yarn install` and `yarn start` and the development server should be up and 
 docker-compose -f docker-compose-prod.yml up -d
 ```
 
-### Deployment on digital ocean
+### Deployment
 
-```bash
-# In the local machine:
-# build the image
-docker build -t manulera/shareyourcloning_frontend -f Dockerfile-prod .
-# push to the repository:
-docker push manulera/shareyourcloning_frontend
-
-# In the droplet
-# Get the image
-docker pull manulera/shareyourcloning_frontend
-# Serve with nginx in the 3000
-docker run -p 3000:80 manulera/shareyourcloning_frontend
-```
-
-## Todo
-
-- [ ] Remove nodes
-- [ ] Order nodes
+Simply run `yarn build`.
 
 ## My settings for vscode
 
