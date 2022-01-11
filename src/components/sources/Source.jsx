@@ -46,7 +46,8 @@ function Source({
       );
     }
     if (source.type === 'sticky_ligation') {
-      const inputSelector = source.output_index !== null ? null : <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />;
+      const inputSelector = source.output_index !== null ? null
+        : <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />;
       specificSource = (
         <div>
           {inputSelector}
