@@ -8,7 +8,7 @@ This project was started with the [demo of Open Vector Editor](https://github.co
 
 ## Getting started
 
-If you want to quickly set up a local instance of the frontend and backend of the application using Docker, check [getting started in 5 minutes](https://shareyourcloning.netlify.app/) in the main repository.
+If you want to quickly set up a local instance of the frontend and backend of the application using Docker, check [getting started in 5 minutes](https://github.com/manulera/ShareYourCloning#timer_clock-getting-started-in-5-minutes) in the main repository.
 
 ### Local installation
 
