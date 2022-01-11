@@ -17,9 +17,9 @@ To install the javascript dependencies and build the site, you will need `yarn` 
 ```bash
 # Install dependencies
 yarn install
-# Serve the development site
+# If you want to serve the development site locally at http://localhost:3000/
 yarn start
-# Build a production site
+# If you want to build the statics assets of the production site in the folder ./build
 yarn build
 ```
 
@@ -30,8 +30,6 @@ If you run `yarn start`, then you should be able to access the frontend at [http
 You can also run the application in a Docker container.
 
 If you build locally, but you want to serve from the container (faster option, and what is used to create the docker-hub image):
-> **_NOTE:_**
-To understand why the env variable `REACT_APP_BACKEND_URL` is used, see [connecting to the backend](#connecting-to-the-backend)
 
 ```bash
 # Build the assets locally
@@ -41,16 +39,18 @@ docker build -t frontend_image .
 docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
 
-If you want to build in the container from the source files (very slow):
-
 > **_NOTE:_**
-You may have to set `REACT_APP_BACKEND_URL` in `containerised_build/Dockerfile`, see [connecting to the backend](#connecting-to-the-backend)
+To understand why the env variable `REACT_APP_BACKEND_URL` is used, see [connecting to the backend](#connecting-to-the-backend)
+
+If you want to build in the container from the source files (very slow):
 
 ```bash
 # Use a Dockerfile that build the static assets from the source files
 docker build -t frontend_image -f containerised_build/Dockerfile .
 docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
+> **_NOTE:_**
+You may have to set `REACT_APP_BACKEND_URL` in `containerised_build/Dockerfile`, see [connecting to the backend](#connecting-to-the-backend)
 
 ### Connecting to the backend
 
