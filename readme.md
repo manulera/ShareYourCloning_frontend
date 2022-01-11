@@ -34,7 +34,8 @@ If you build locally, but you want to serve from the container (faster option, a
 ```bash
 # Build the assets locally
 REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
-# Use a Dockerfile that simply copies the files in the local ./build directory
+# Use a Dockerfile that simply copies the files in the local ./build directory to
+# /assets/build in the container
 docker build -t frontend_image .
 docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
@@ -42,10 +43,11 @@ docker run -d --name frontend_container -p 3000:3000 frontend_image
 > **_NOTE:_**
 To understand why the env variable `REACT_APP_BACKEND_URL` is used, see [connecting to the backend](#connecting-to-the-backend)
 
-If you want to build in the container from the source files (very slow):
+If you want to build the static assets from the source files inside the container (very slow):
 
 ```bash
-# Use a Dockerfile that build the static assets from the source files
+# Use a Dockerfile that builds the static assets from the source files
+# in the container, at /assets/build
 docker build -t frontend_image -f containerised_build/Dockerfile .
 docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
@@ -69,15 +71,15 @@ REACT_APP_BACKEND_URL=http://localhost:8000/ yarn start
 REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
 ```
 
-Finally, if you are serving the frontend at an address different from `http://localhost:3000`, add it to the CORS exceptions of the backend ([see here](https://github.com/manulera/ShareYourCloning_backend#connecting-to-the-frontend)). Note that you will also get a CORS error if you run `yarn build` and try to make a request to the backend from `build/index.html` if you just open it in your browser instead of serving it at `localhost:3000`.
+Finally, if you are serving the frontend at an address different from `http://localhost:3000`, you will have to add the url of the frontend to the CORS allowed origins in the backend ([see here](https://github.com/manulera/ShareYourCloning_backend#connecting-to-the-frontend)). Note that you will also get a CORS error if you run `yarn build` and try to make a request to the backend from `build/index.html` if you just open it in your browser instead of serving it at `localhost:3000`.
 
 ## Contributing
 
 Check [contribution guidelines in the main repository](https://github.com/manulera/ShareYourCloning/blob/master/CONTRIBUTING.md).
 
-## My settings for vscode
+## Settings for vscode :desktop_computer:
 
-If you are interested in the settings that I use for vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:
+If you are going to develop using vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:
 
 ```json
 {
@@ -101,7 +103,8 @@ If you are interested in the settings that I use for vscode, you can create a fo
      },
      "[javascriptreact]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    }
+    },
+    "editor.formatOnSave": true
 }
 ```
 For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
