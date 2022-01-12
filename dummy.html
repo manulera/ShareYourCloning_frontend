@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        div {
+            border: solid;
+            border-width: black;
+            position: relative;
+        }
+
+        div.node {
+            margin: auto;
+            width: 200px;
+            height: 200px;
+        }
+
+        div p {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        div.hang-from-node {
+            box-sizing: content-box;
+            height: 30px;
+            width: 30px;
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, 30px);
+        }
+
+        div.hang-from-node::before {
+            position: absolute;
+            border: 1px solid;
+            width: 0;
+            height: 30px;
+            display: block;
+            content: '';
+            top: 0%;
+            left: 50%;
+            z-index: 1;
+            margin-left: -1px;
+            transform: translate(0, -100%);
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>My First Heading</h1>
+
+    <div class="node">
+        <div class="hang">
+            <p>Should hang</p>
+        </div>
+        <p>Hello this is the div div div</p>
+    </div>
+
+
+
+</body>
+
+</html>

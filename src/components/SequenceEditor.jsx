@@ -4,6 +4,7 @@ import { CircularView, LinearView, updateEditor } from 'open-vector-editor';
 import { convertToTeselaJson } from '../sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
+import NewSourceBox from './sources/NewSourceBox';
 
 function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
   const editorName = `editor_${entity.id}`;
@@ -18,21 +19,33 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
 
   const seq = convertToTeselaJson(entity);
   const editor = seq.circular ? <CircularView {...editorProps} /> : <LinearView {...editorProps} />;
-  updateEditor(store, editorName, {
+
+  useEffect(() => updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
       cutsites: false,
     },
-  });
-
-  const onClick = () => { addSource([entity]); };
+  }));
 
   const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
-    <button type="button" onClick={onClick}>
-      Add source
-    </button>
+    <div className="hang-from-node">
+      <p>
+        <NewSourceBox {...{ addSource, entity }} />
+      </p>
+    </div>
   );
+
+  if (addSourceButton !== null) {
+    return (
+      <div>
+        {editor}
+        <OverhangsDisplay {...{ entity }} />
+        {addSourceButton}
+      </div>
+    );
+  }
+
   return (
     <div>
       {editor}

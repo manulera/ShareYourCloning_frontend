@@ -72,6 +72,7 @@ function Source({
       </select>
     </label>
   );
+  console.log('rendering');
   const tooltipText = <div className="tooltip-text">Delete source and children</div>;
   const onClickDeleteSource = () => deleteSource(source);
   return (

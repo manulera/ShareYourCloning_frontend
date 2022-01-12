@@ -8,19 +8,20 @@ button {
 }
 
 .tf-tree, .tf-ancestor-tree {
-    margin: 10px auto;
+
     text-align: center;
     padding-bottom: 3px;
     margin-bottom: 2em;
+
 }
 
 .tf-tree .tf-nc, .tf-tree .tf-node-content {
-    border-color: #106aa2;
-    border-width: 2px;
+    box-shadow: inset 0px 0px 0px 3px #106aa2;
+    border: none
 }
 
 
-.multiple-output-selector button, .genbank-id button, .restriction button, .ligation button {
+.multiple-output-selector button, .genbank-id button, .restriction button, .ligation button, .description button {
     background-color: #106aa2;
     color: white;
     padding: 0.5em;
@@ -30,7 +31,7 @@ button {
     margin: 0.5em;
 }
 
-.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover {
+.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover, .description button:hover {
     background-color: #099;
     color: #fff;
 }
@@ -61,7 +62,6 @@ button {
     background-color: #106aa2;
     padding: 30px;
     color: white;
-    margin-bottom: 1em;
     cursor: pointer;
 }
 
@@ -73,16 +73,36 @@ button {
     background-color: #099;
 }
 
+.app-title {
+    margin-bottom: 1em;
+}
+
 button.icon-corner {
     position: absolute;
     right: -1px;
     top: 1px;
-    color: #FF4433;
     font-size: x-large;
     padding: 0;
     border: none;
     background: none;
+    color: gray;
 }
+
+div.select-source button.icon-corner {
+    color: #FF4433;
+}
+
+button.icon-hanging {
+    color: green;
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+button.icon-hanging:hover {
+    filter: brightness(70%);
+}
+
 
 button.icon-corner:hover {
     filter: brightness(70%);
@@ -132,4 +152,121 @@ input[type="checkbox"].hidden-checkbox:checked+label {
 
 .tooltip-text {
     font-size: medium;
+}
+
+div.hang-from-node {
+    box-sizing: content-box;
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, 40px);
+    border: 3px solid;
+    border-color: #106aa2;
+    border-radius: 100%;
+}
+
+/* To center the icon vertically */
+div.hang-from-node p {
+    margin: 0;
+    position: absolute;
+    top: 53%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+div.hang-from-node::before {
+    position: absolute;
+    border: 1px solid;
+    width: 0;
+    height: 30px;
+    display: block;
+    content: '';
+    top: -3%;
+    left: 50%;
+    margin-left: -1px;
+    transform: translate(0, -100%);
+}
+
+/* we unset overflow sot that when we add the hanging
+node to append a source to an entity, the network container
+does not become scrollable */
+.network-container {
+    margin-bottom: 100px;
+    overflow: unset;
+}
+
+div.tf-tree.tf-ancestor-tree {
+    overflow: unset;
+
+}
+
+header.app-bar {
+    background-color: #106aa2;
+    box-shadow: none;
+}
+
+header.app-bar button[type="button"] {
+    font-size: large;
+    margin-right: 20px;
+}
+
+header.app-bar button:hover {
+    background-color: #099;
+}
+
+header.app-bar div.MuiToolbar-root {
+    display: inline-block;
+}
+
+.app-name {
+    font-size: 4em;
+    font-weight: 200;
+}
+
+.description-section {
+    margin: auto;
+    margin-bottom: 2em;
+}
+
+.description-section div.description-box {
+    white-space: pre-wrap;
+    max-width: 600px;
+    margin: auto;
+    padding: 35px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    box-shadow: inset 0px 0px 0px 3px gray;
+    border-color: gray;
+    border-radius: 20px;
+    position: relative;
+}
+
+div.description-box p {
+    font-family: sans-serif;
+    font-size: large;
+    text-align: justify;
+    margin-bottom: 0;
+}
+
+.description-section button.icon-corner {
+    right: 6px;
+    top: 6px;
+}
+
+.description-box h1 {
+    margin-top: 0px;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+div.corner-id {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    font-family: sans-serif;
+    font-size: large;
+    color: #106aa2;
+    font-weight: bold;
 }

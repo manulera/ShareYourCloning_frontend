@@ -17,17 +17,17 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
   }
 
   const [waitingMessage, setWaitingMessage] = React.useState('');
-  const [enzymeList, setEnzymeList] = React.useState('');
+  const [enzymeList, setEnzymeList] = React.useState([]);
 
   // Function called to update the value of enzymeList
-  const onChange = (event) => setEnzymeList(event.target.value);
+  const onChange = (event) => setEnzymeList(event.target.value.split(','));
 
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
       source: {
         ...source,
-        restriction_enzymes: [enzymeList],
+        restriction_enzymes: enzymeList,
       },
       sequences: [getEntityFromId(source.input[0])],
     };

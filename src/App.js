@@ -6,8 +6,9 @@ import Source from './components/sources/Source';
 import executeSourceStep from './executeSourceStep';
 import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
-import ShareYourCloningBox from './components/ShareYourCloningBox';
 import { constructNetwork } from './network';
+import MainAppBar from './components/MainAppBar';
+import DescriptionEditor from './components/DescriptionEditor';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -20,6 +21,7 @@ import { constructNetwork } from './network';
  *                        to add a new source.
  * @returns the mentioned list
  */
+
 function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput) {
   const out = [];
   entities.forEach((entity) => {
@@ -34,6 +36,34 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
     });
   });
   return out;
+}
+
+const downloadStateAsJson = async (entities, sources, description) => {
+  // from https://stackoverflow.com/a/55613750/5622322
+  const output = { entities, sources, description };
+  // json
+  const fileName = 'file';
+  const json = JSON.stringify(output);
+  const blob = new Blob([json], { type: 'application/json' });
+  const href = await URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = href;
+  link.download = `${fileName}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+function loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId) {
+  setSources(newState.sources);
+  setEntities(newState.entities);
+  setDescription(newState.description);
+  // We set the next id to the max +1
+  setNextUniqueId(
+    1 + newState.sources.concat(newState.entities).reduce(
+      (max, item) => Math.max(max, item.id), 0,
+    ),
+  );
 }
 
 /**
@@ -75,7 +105,8 @@ function App() {
     setNextUniqueId(nextUniqueId + 1);
     return idReturn;
   };
-
+  const [description, setDescription] = React.useState('');
+  const [showDescription, setShowDescription] = React.useState(false);
   const [entities, setEntities] = React.useState([]);
   const [sources, setSources] = React.useState([
     {
@@ -203,32 +234,54 @@ function App() {
           {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
         />
       ),
+      <div className="corner-id">
+        {element.id}
+      </div>,
     ];
     return newElement;
   });
-
+  const exportData = () => {
+    downloadStateAsJson(entities, sources, description);
+  };
+  const loadData = (newState) => {
+    loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId);
+  };
   // This function returns a node from elementList by passing the id. This is useful
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
 
+  const descriptionText = React.useRef();
   return (
     <div className="App">
       <header className="App-header" />
       <div className="app-container">
         <div className="app-title">
-          <ShareYourCloningBox {...{
+          {/* <ShareYourCloningBox {...{
             entities, sources, setEntities, setSources, setNextUniqueId,
+          }}
+          /> */}
+          <MainAppBar {...{
+            exportData, loadData, showDescription, setShowDescription,
+          }}
+          />
+
+        </div>
+        {showDescription === false ? null : (
+          <div className="description-editor">
+            <DescriptionEditor {...{ description, setDescription }} />
+          </div>
+        ) }
+
+        <div className="network-container">
+          <NetworkTree {...{
+            network, nodeFinder, addSource,
           }}
           />
         </div>
-        <NetworkTree {...{
-          network, nodeFinder, addSource,
-        }}
-        />
-        <span className="main-sequence-editor">
+        <div className="main-sequence-editor">
           <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
-        </span>
+        </div>
       </div>
     </div>
   );
