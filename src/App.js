@@ -9,6 +9,7 @@ import MainSequenceEditor from './components/MainSequenceEditor';
 import { constructNetwork } from './network';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
+import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -36,34 +37,6 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
     });
   });
   return out;
-}
-
-const downloadStateAsJson = async (entities, sources, description) => {
-  // from https://stackoverflow.com/a/55613750/5622322
-  const output = { entities, sources, description };
-  // json
-  const fileName = 'file';
-  const json = JSON.stringify(output);
-  const blob = new Blob([json], { type: 'application/json' });
-  const href = await URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = href;
-  link.download = `${fileName}.json`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
-
-function loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId) {
-  setSources(newState.sources);
-  setEntities(newState.entities);
-  setDescription(newState.description);
-  // We set the next id to the max +1
-  setNextUniqueId(
-    1 + newState.sources.concat(newState.entities).reduce(
-      (max, item) => Math.max(max, item.id), 0,
-    ),
-  );
 }
 
 /**
@@ -245,13 +218,13 @@ function App() {
   };
   const loadData = (newState) => {
     loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId);
+    if (newState.description !== '') { setShowDescription(true); }
   };
   // This function returns a node from elementList by passing the id. This is useful
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
 
-  const descriptionText = React.useRef();
   return (
     <div className="App">
       <header className="App-header" />

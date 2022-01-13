@@ -32,7 +32,7 @@ button {
 }
 
 .multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover, .description button:hover {
-    background-color: #099;
+    background-color: #32ADCC;
     color: #fff;
 }
 
@@ -66,11 +66,11 @@ button {
 }
 
 .app-title h1:hover {
-    background-color: #099;
+    background-color: #32ADCC;
 }
 
 .app-title h1:drop {
-    background-color: #099;
+    background-color: #32ADCC;
 }
 
 .app-title {
@@ -213,7 +213,7 @@ header.app-bar button[type="button"] {
 }
 
 header.app-bar button:hover {
-    background-color: #099;
+    background-color: #32ADCC;
 }
 
 header.app-bar div.MuiToolbar-root {
@@ -269,4 +269,10 @@ div.corner-id {
     font-size: large;
     color: #106aa2;
     font-weight: bold;
+}
+
+button.github-icon svg {
+    padding: 0;
+    color: white;
+    font-size: 30px;
 }
