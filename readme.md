@@ -77,12 +77,6 @@ Finally, if you are serving the frontend at an address different from `http://lo
 
 Check [contribution guidelines in the main repository](https://github.com/manulera/ShareYourCloning/blob/master/CONTRIBUTING.md).
 
-## Acknowledgements :pray:
-
-Thanks to [@ikayz](https://github.com/ikayz) for initial improvements to the frontend.
-
-Thanks to [@joyceykao](https://github.com/joyceykao) for discussions on how to approach UI/UX and users interview.
-
 ## Settings for vscode :desktop_computer:
 
 If you are going to develop using vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:
