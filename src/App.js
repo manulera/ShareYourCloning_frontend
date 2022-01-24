@@ -154,8 +154,6 @@ function App() {
   // This function sets the state of mainSequenceId (the id of the sequence that is displayed
   // outside of the tree in the rich editor). It is passed to the MainSequenceCheckBox, to
   // have one at each node.
-  // TODO: Some nodes should not display this, like sources like files
-  // TODO: Fix for sources
   const updateMainSequenceId = (id) => {
     const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
