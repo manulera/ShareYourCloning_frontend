@@ -276,3 +276,12 @@ button.github-icon svg {
     color: white;
     font-size: 30px;
 }
+
+div.collapsed div {
+    margin: auto
+}
+
+div.collapsed button {
+    margin-bottom: 0px;
+    margin-top: 0px;
+}
