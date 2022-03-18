@@ -221,7 +221,7 @@ function App() {
   };
   const loadData = (newState) => {
     loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId);
-    if (newState.description !== '') { setShowDescription(true); }
+    setShowDescription(newState.description !== '');
   };
   // This function returns a node from elementList by passing the id. This is useful
   // for the main sequence editor, which will perform a different task for a source

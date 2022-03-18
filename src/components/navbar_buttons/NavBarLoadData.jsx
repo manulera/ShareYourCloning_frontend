@@ -13,6 +13,7 @@ function NavBarLoadData({ loadData }) {
       loadData(newState);
     };
   };
+  const clearInput = (e) => { e.target.value = null; };
   return (
     <div>
       <Button
@@ -22,7 +23,7 @@ function NavBarLoadData({ loadData }) {
       >
         Load data
       </Button>
-      <input type="file" onChange={onFileReceived} ref={inputFile} style={{ display: 'none' }} />
+      <input type="file" onChange={onFileReceived} onClick={clearInput} ref={inputFile} style={{ display: 'none' }} />
     </div>
   );
 }
