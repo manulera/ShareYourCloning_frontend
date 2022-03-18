@@ -101,9 +101,14 @@ function App() {
   // we pass also the source to delete an entity
   // with the same source, if existed
   const updateOrCreateEntity = (newEntity, newSource) => {
-    // If any of the entities comes from that source, we delete it
+    // If any of the entities was coming from that source, we delete it
+    const oldSource = sources.filter(
+      (s) => s.id === newSource.id,
+    )[0];
+    // TODO Here we could consider simply to iterate through all orphan entities, and remove those
+    // for now I don't see a case where the orphaning would not happen here.
     const newEntities = entities.filter(
-      (entity) => entity.id !== newSource.output,
+      (entity) => entity.id !== oldSource.output,
     );
     // We add the new entity
     newEntities.push(newEntity);
@@ -111,8 +116,8 @@ function App() {
   };
 
   // Update the state by adding a new source, and possibly executing the step associated with
-  // the source. For example, we may set a source parcially, e.g. specify that it is restriction,
-  // but not specify the enzymes. This will add the source, but not exectute the step.
+  // the source. For example, we may set a source partially, e.g. specify that it is restriction,
+  // but not specify the enzymes. This will add the source, but not execute the step.
   const updateSource = (newSource) => {
     executeSourceStep(newSource, updateOrCreateEntity, uniqueIdDispatcher);
     setSources(sources.map((source) => (source.id === newSource.id ? newSource : source)));
