@@ -10,6 +10,7 @@ import { constructNetwork } from './network';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
+import PrimerList from './components/primers/PrimerList';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -92,6 +93,23 @@ function App() {
       kind: 'source',
     },
   ]);
+  const [primers, setPrimers] = React.useState([]);
+  const [showPrimers, setShowPrimers] = React.useState(false);
+
+  const addPrimerList = (newPrimers) => {
+    // Asign ids to the new primers
+    newPrimers.map((newPrimer) => ({ ...newPrimer, id: uniqueIdDispatcher() }));
+    setPrimers([...primers, ...newPrimers]);
+  };
+  const deletePrimer = (primer) => {
+    setPrimers(primers.filter((p) => p.id !== primer.id));
+  };
+  const updatePrimer = (primer) => {
+    const oldRemoved = primers.filter((p) => p.id !== primer.id);
+    oldRemoved.push(primer);
+    oldRemoved.sort((a, b) => a.id - b.id);
+    setPrimers(primer);
+  };
 
   // We pass this set function to the constructor of the tree, so that when you click on a
   // toggle button, the sequence in that node is displayed in the main editor
@@ -238,7 +256,7 @@ function App() {
           }}
           /> */}
           <MainAppBar {...{
-            exportData, loadData, showDescription, setShowDescription,
+            exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
           }}
           />
 
@@ -248,7 +266,14 @@ function App() {
             <DescriptionEditor {...{ description, setDescription }} />
           </div>
         ) }
-
+        {showPrimers === false ? null : (
+          <div className="primer-list-container">
+            <PrimerList {...{
+              addPrimerList, deletePrimer, updatePrimer,
+            }}
+            />
+          </div>
+        ) }
         <div className="network-container">
           <NetworkTree {...{
             network, nodeFinder, addSource,

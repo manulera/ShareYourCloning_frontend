@@ -10,6 +10,7 @@ import SourceRestriction from './SourceRestriction';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import SourceLigation from './SourceLigation';
+import SourcePCR from './SourcePCR';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -56,6 +57,14 @@ function Source({
         </div>
       );
     }
+    if (source.type === 'PCR') {
+      specificSource = (
+        <div>
+          <SourcePCR {...{ source, updateSource, getEntityFromId }} />
+          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
+        </div>
+      );
+    }
   }
   const selectElementId = `select_source_${source.id}`;
   const chooseSourceMessage = source.type !== null ? null : 'Choose a source';
@@ -69,6 +78,7 @@ function Source({
         <option value="restriction">Restriction</option>
         <option value="genbank_id">GenBank ID</option>
         <option value="sticky_ligation">Ligation with sticky ends</option>
+        <option value="PCR">PCR</option>
       </select>
     </label>
   );
