@@ -21,12 +21,12 @@ function PrimerEdit({
 
   return (
     <div className="primer-row">
-      <TextField error={nameIsRepeated} helperText={errorTextName} sx={{ m: 1, display: { width: '20%' } }} id="name" label="Name" variant="outlined" value={primer.name} onChange={(e) => updateName(e.target.value)} />
-      <TextField error={sequenceIsNotDNA} helperText={errorTextSequence} sx={{ m: 1, display: { width: '60%' } }} id="sequence" label="Sequence" variant="outlined" value={primer.sequence} onChange={(e) => updateSequence(e.target.value)} />
+      <TextField error={nameIsRepeated} inputProps={{ style: { fontSize: 14 } }} helperText={errorTextName} sx={{ m: 1, display: { width: '20%' } }} id="name" label="Name" variant="outlined" value={primer.name} onChange={(e) => updateName(e.target.value)} />
+      <TextField error={sequenceIsNotDNA} inputProps={{ style: { fontSize: 14 } }} helperText={errorTextSequence} sx={{ m: 1, display: { width: '60%' } }} id="sequence" label="Sequence" variant="outlined" value={primer.sequence} onChange={(e) => updateSequence(e.target.value)} />
       <button type="button" className="icon-hanging" onClick={() => deletePrimer(index)}>
         <Tooltip title="Delete primer" arrow placement="top">
-          <Box>
-            <FaTrashAlt size={25} color="red" />
+          <Box sx={{ m: 1 }}>
+            <FaTrashAlt size={18} color="red" />
           </Box>
         </Tooltip>
       </button>

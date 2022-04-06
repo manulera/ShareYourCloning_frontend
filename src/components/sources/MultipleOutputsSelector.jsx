@@ -80,7 +80,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
   ) : (
     <LinearView {...editorProps} />
   );
-
+  console.log(source.fragment_boundaries);
   updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {

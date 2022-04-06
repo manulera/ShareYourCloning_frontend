@@ -6,7 +6,7 @@ import Alert from '@mui/material/Alert';
 import PrimerEdit from './PrimerEdit';
 import { repeatedPrimerNames, stringIsNotDNA } from './validators';
 
-function PrimerEditList({ addPrimerList }) {
+function PrimerEditList({ addPrimerList, setShowEditPrimers }) {
   const [primerList, setPrimerList] = React.useState([{ id: null, name: '', sequence: '' }]);
   const [repeatedNames, setRepeatedNames] = React.useState([]);
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -28,7 +28,7 @@ function PrimerEditList({ addPrimerList }) {
   const savePrimers = () => {
     // Perform the the checks
     const wrongSequence = primerList.find((p) => (
-      !stringIsNotDNA(p.sequence) || p.sequence.length === 0
+      stringIsNotDNA(p.sequence) || p.sequence.length === 0
     ));
     if (wrongSequence !== undefined) {
       setErrorMessage('One or more sequences are wrong or empty.');
@@ -40,6 +40,7 @@ function PrimerEditList({ addPrimerList }) {
     }
 
     addPrimerList(primerList);
+    setShowEditPrimers(false);
   };
   const addEmptyPrimer = () => { setPrimerList([...primerList, { id: null, name: '', sequence: '' }]); };
 
@@ -60,9 +61,9 @@ function PrimerEditList({ addPrimerList }) {
       {primerListElement}
       {errorMessage === '' ? null : <Alert sx={{ m: 1 }} severity="error">{errorMessage}</Alert>}
       <Stack direction="row" spacing={2} justifyContent="center">
-        <Button variant="contained" onClick={addEmptyPrimer}>Add Primer</Button>
+        <Button variant="contained" onClick={addEmptyPrimer}>Another Primer</Button>
         <Button variant="contained" onClick={savePrimers} color="success">Save Primers</Button>
-        <Button variant="contained" color="error">Cancel</Button>
+        <Button variant="contained" color="error" onClick={() => setShowEditPrimers(false)}>Cancel</Button>
       </Stack>
 
     </div>

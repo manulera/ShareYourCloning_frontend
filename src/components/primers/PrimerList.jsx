@@ -10,7 +10,7 @@ function PrimerList({
   let bottomPart = null;
   if (showEditPrimers) {
     bottomPart = (
-      <PrimerEditList {...{ addPrimerList }} />
+      <PrimerEditList {...{ addPrimerList, setShowEditPrimers }} />
 
     );
   } else {
@@ -18,12 +18,15 @@ function PrimerList({
       <button type="button" onClick={() => setShowEditPrimers(!showEditPrimers)}>Add Primers</button>
     );
   }
+  console.log('primers', primers);
+  const topPart = [];
+  primers.forEach((primer) => topPart.push(<Primer {...{ deletePrimer, updatePrimer, primer }} />));
 
   return (
     <div className="description-section">
       <div className="description-box">
         <h1>Primers:</h1>
-
+        {topPart}
         {bottomPart}
 
       </div>

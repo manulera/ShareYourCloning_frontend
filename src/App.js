@@ -93,7 +93,10 @@ function App() {
       kind: 'source',
     },
   ]);
-  const [primers, setPrimers] = React.useState([]);
+  const [primers, setPrimers] = React.useState([
+    { id: 100, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
+    { id: 101, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
+  ]);
   const [showPrimers, setShowPrimers] = React.useState(false);
 
   const addPrimerList = (newPrimers) => {
@@ -108,7 +111,7 @@ function App() {
     const oldRemoved = primers.filter((p) => p.id !== primer.id);
     oldRemoved.push(primer);
     oldRemoved.sort((a, b) => a.id - b.id);
-    setPrimers(primer);
+    setPrimers(oldRemoved);
   };
 
   // We pass this set function to the constructor of the tree, so that when you click on a
@@ -269,7 +272,7 @@ function App() {
         {showPrimers === false ? null : (
           <div className="primer-list-container">
             <PrimerList {...{
-              addPrimerList, deletePrimer, updatePrimer,
+              addPrimerList, deletePrimer, updatePrimer, primers,
             }}
             />
           </div>
