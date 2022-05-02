@@ -47,6 +47,14 @@ function Source({
         </div>
       );
     }
+    if (sourceType === 'PCR') {
+      specificSource = (
+        <div>
+          <SourcePCR {...{ source, updateSource, getEntityFromId }} />
+          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
+        </div>
+      );
+    }
   }
   console.log('rendering');
 

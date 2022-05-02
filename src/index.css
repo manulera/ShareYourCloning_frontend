@@ -285,3 +285,9 @@ div.collapsed button {
     margin-bottom: 0px;
     margin-top: 0px;
 }
+
+div.primer-row {
+    display: flex;
+    align-items: center;
+}
+

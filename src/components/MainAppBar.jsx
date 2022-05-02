@@ -12,9 +12,10 @@ import NavbarExportData from './navbar_buttons/NavbarExportData';
 import NavBarLoadData from './navbar_buttons/NavBarLoadData';
 import NavBarEditDescription from './navbar_buttons/NavBarEditDescription';
 import NavBarLoadExample from './navbar_buttons/NavBarLoadExample';
+import NavBarShowPrimers from './navbar_buttons/NavBarShowPrimers';
 
 function MainAppBar({
-  exportData, loadData, showDescription, setShowDescription,
+  exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
 }) {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   const theme = useTheme();
@@ -37,6 +38,7 @@ function MainAppBar({
             <NavbarExportData {...{ exportData }} />
             <NavBarLoadData {...{ loadData }} />
             <NavBarEditDescription {...{ showDescription, setShowDescription }} />
+            <NavBarShowPrimers {...{ showPrimers, setShowPrimers }} />
             <NavBarLoadExample {...{ loadData }} />
             <Tooltip title={tooltipText} arrow placement="top">
               <a href="https://github.com/manulera/ShareYourCloning" target="_blank" rel="noopener noreferrer">
