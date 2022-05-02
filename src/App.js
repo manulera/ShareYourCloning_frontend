@@ -10,6 +10,7 @@ import { constructNetwork } from './network';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
+import FinishedSource from './components/sources/FinishedSource';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -52,17 +53,23 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
 function buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource) {
   const out = [];
   sources.forEach((source) => {
-    out.push({
-      id: source.id,
-      node: source,
-      jsx: (
+    let sourceElement = null;
+    if (source.output === null) {
+      sourceElement = (
         <div>
           <Source {...{
-            source, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
+            sourceId: source.id, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
           }}
           />
         </div>
-      ),
+      );
+    } else {
+      sourceElement = (<div><FinishedSource {...{ source }} /></div>);
+    }
+    out.push({
+      id: source.id,
+      node: source,
+      jsx: sourceElement,
     });
   });
   return out;
@@ -73,6 +80,7 @@ function App() {
   const [nextUniqueId, setNextUniqueId] = React.useState(2);
 
   // A function to produce unique identifiers for entities
+  // TODO check async behaviour of this
   const uniqueIdDispatcher = () => {
     const idReturn = nextUniqueId;
     setNextUniqueId(nextUniqueId + 1);
@@ -102,6 +110,7 @@ function App() {
   // with the same source, if existed
   const updateOrCreateEntity = (newEntity, newSource) => {
     // If any of the entities was coming from that source, we delete it
+    // TODO switch to different array method and move this out of this function
     const oldSource = sources.filter(
       (s) => s.id === newSource.id,
     )[0];
@@ -118,9 +127,13 @@ function App() {
   // Update the state by adding a new source, and possibly executing the step associated with
   // the source. For example, we may set a source partially, e.g. specify that it is restriction,
   // but not specify the enzymes. This will add the source, but not execute the step.
-  const updateSource = (newSource) => {
-    executeSourceStep(newSource, updateOrCreateEntity, uniqueIdDispatcher);
-    setSources(sources.map((source) => (source.id === newSource.id ? newSource : source)));
+  const updateSource = (newSource, newEntityWithoutId) => {
+    const newEntity = { ...newEntityWithoutId, id: uniqueIdDispatcher() };
+
+    // Add the entity
+    updateOrCreateEntity(newEntity, newSource);
+    // TODO probably a nicer way of doing this
+    setSources(sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source)));
   };
 
   // Return an entity from its id. This is used for executing sources that take inputs,
@@ -179,10 +192,10 @@ function App() {
   // nodes: [{id:4, ancestors: [3], kind: entity}, {id:3, ancestors: [2], kind: source}, etc.]
   const network = constructNetwork(entities, sources);
   // A function to delete a source and its children
-  const deleteSource = (source) => {
+  const deleteSource = (sourceId) => {
     const sources2delete = [];
     const entities2delete = [];
-    let currentSource = source;
+    let currentSource = sources.find((s) => s.id === sourceId);
     while (currentSource !== undefined) {
       sources2delete.push(currentSource.id);
       if (currentSource.output === null) { break; }
@@ -227,7 +240,7 @@ function App() {
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
-
+  console.log('state', entities, sources);
   return (
     <div className="App">
       <header className="App-header" />
