@@ -4,9 +4,10 @@ import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
 import ArrowIcon from '../icons/ArrowIcon';
 import OverhangsDisplay from '../OverhangsDisplay';
+import SubSequenceDisplayer from './SubSequenceDisplayer';
 
 function MultipleOutputsSelector({
-  sources, entities, sourceId, commitSource,
+  sources, entities, sourceId, commitSource, inputEntities,
 }) {
   // If the output is already set or the list of outputs is empty, do not show this element
   if (sources.length === 0) { return null; }
@@ -18,13 +19,10 @@ function MultipleOutputsSelector({
   const incrementSelectedOutput = () => setSelectedOutput(
     (selectedOutput + 1) % sources.length,
   );
-  const decreaseSelectedOutput = () => setSelectedOutput(
-    (selectedOutput - 1) % sources.length,
-  );
+  const decreaseSelectedOutput = () => setSelectedOutput((selectedOutput !== 0) ? (selectedOutput - 1) : sources.length - 1);
 
   // The function to pick the fragment as the output, and execute the step
   const chooseFragment = () => commitSource(selectedOutput);
-  let editor = null;
 
   const editorName = `source_editor_${sourceId}`;
   const editorProps = {
@@ -35,9 +33,9 @@ function MultipleOutputsSelector({
       cutsites: false,
     },
   };
-  console.log('entities', entities);
+
   const seq = convertToTeselaJson(entities[selectedOutput]);
-  editor = seq.circular ? (
+  const editor = seq.circular ? (
     <CircularView {...editorProps} />
   ) : (
     <LinearView {...editorProps} />
@@ -62,6 +60,10 @@ function MultipleOutputsSelector({
         </button>
       </div>
       <div>
+        <SubSequenceDisplayer {...{
+          sources, selectedOutput, sourceId, inputEntities,
+        }}
+        />
         {editor}
         <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
         <button onClick={chooseFragment} type="button">Choose fragment</button>

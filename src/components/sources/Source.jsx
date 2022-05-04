@@ -15,7 +15,7 @@ import SourceBox from './SourceBox';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  sourceId, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
+  sourceId, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource, inputEntities,
 }) {
   const [sourceType, setSourceType] = React.useState('');
   let specificSource = null;
@@ -24,28 +24,15 @@ function Source({
       specificSource = <SourceFile {...{ sourceId, updateSource }} />;
     }
     if (sourceType === 'restriction') {
-      specificSource = (
-        <div>
-          <SourceRestriction {...{ source, updateSource, getEntityFromId }} />
-          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
-        </div>
+      // TODO is there a way in which the input length could be >1?
+      specificSource = (<SourceRestriction {...{ sourceId, updateSource, inputEntities }} />
       );
     }
     if (sourceType === 'genbank_id') {
-      specificSource = (
-        <SourceGenBank {...{ source, updateSource, getEntityFromId }} />
-      );
+      specificSource = (<SourceGenBank {...{ sourceId, updateSource }} />);
     }
     if (sourceType === 'sticky_ligation') {
-      const inputSelector = source.output_index !== null ? null
-        : <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />;
-      specificSource = (
-        <div>
-          {inputSelector}
-          <SourceLigation {...{ source, updateSource, getEntityFromId }} />
-          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
-        </div>
-      );
+      specificSource = (<SourceLigation {...{ sourceId, updateSource, getEntityFromId }} />);
     }
     if (sourceType === 'PCR') {
       specificSource = (
@@ -59,7 +46,7 @@ function Source({
   console.log('rendering');
 
   return (
-    <SourceBox>
+    <SourceBox {...{ sourceId, deleteSource }}>
       <SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />
       {specificSource}
     </SourceBox>

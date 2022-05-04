@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React from 'react';
+import error2String from './error2String';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 
 // A component provinding an interface to import a file
@@ -29,10 +30,10 @@ function SourceFile({ sourceId, updateSource }) {
         setWaitingMessage(null);
         // If there is only a single sequence in the file, commit the result, else allow choosing
         if (sources.length === 1) {
-          updateSource({ ...resp.data.sources[index], id: sourceId }, resp.data.sequences[0]);
-        } else { console.log(resp.data), setSources(resp.data.sources); setEntities(resp.data.sequences); }
+          updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
+        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
       })
-      .catch((reason) => console.log(reason));
+      .catch((error) => { setWaitingMessage(error2String(error)); });
   };
 
   return (

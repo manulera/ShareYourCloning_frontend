@@ -1,9 +1,13 @@
 import axios from 'axios';
 import React from 'react';
+import MultipleInputsSelector from './MultipleInputsSelector';
 
 // A component representing the ligation of several fragments
 function SourceLigation({ source, updateSource, getEntityFromId }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
+  
+  const inputSelector = source.output_index !== null ? null
+  : <MultipleInputsSelector {...{ source, updateSource, idsEntitiesNotChildSource }} />;
 
   if (source.output_index !== null) {
     return (

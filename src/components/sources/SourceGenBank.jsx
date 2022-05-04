@@ -1,23 +1,10 @@
 import axios from 'axios';
 import React from 'react';
+import error2String from './error2String';
 
 // A component providing an interface for the user to type a Genbank ID
 // and get a sequence
-function SourceGenBank({ source, updateSource }) {
-  if (source.output !== null) {
-    const urlGenBank = `https://www.ncbi.nlm.nih.gov/nuccore/${source.genbank_id}`;
-    return (
-      <div>
-        Request to GenBank with ID
-        {' '}
-        <strong>
-          <a href={urlGenBank}>
-            {source.genbank_id}
-          </a>
-        </strong>
-      </div>
-    );
-  }
+function SourceGenBank({ sourceId, updateSource }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [genBankId, setGenBankId] = React.useState('');
 
@@ -27,19 +14,13 @@ function SourceGenBank({ source, updateSource }) {
   const onSubmit = (event) => {
     event.preventDefault();
     setWaitingMessage('Requesting sequence to Genbank');
-    const newSource = {
-      ...source,
-      genbank_id: genBankId,
-    };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}genebank_id`, newSource)
+      .post(`${process.env.REACT_APP_BACKEND_URL}genbank_id`, { genbank_id: genBankId })
       .then((resp) => {
         setWaitingMessage(null);
-        updateSource({ ...resp.data.source, kind: 'source' });
+        updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
       })
-      .catch((error) => {
-        if (!error.response) { setWaitingMessage('Unable to connect to the backend server'); } else { setWaitingMessage(error.response.data.detail); }
-      });
+      .catch((error) => { setWaitingMessage(error2String(error)); });
   };
 
   return (

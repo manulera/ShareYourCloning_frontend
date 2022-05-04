@@ -55,16 +55,17 @@ function buildElementListSources(sources, updateSource, getEntityFromId, idsEnti
   sources.forEach((source) => {
     let sourceElement = null;
     if (source.output === null) {
+      const inputEntities = source.input.map((entityId) => getEntityFromId(entityId));
       sourceElement = (
         <div>
           <Source {...{
-            sourceId: source.id, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource,
+            sourceId: source.id, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource, inputEntities,
           }}
           />
         </div>
       );
     } else {
-      sourceElement = (<div><FinishedSource {...{ source }} /></div>);
+      sourceElement = (<div><FinishedSource {...{ source, deleteSource }} /></div>);
     }
     out.push({
       id: source.id,

@@ -3,7 +3,7 @@ import { FaTrashAlt } from 'react-icons/fa';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
-function SourceBox({ children, sourceId }) {
+function SourceBox({ children, sourceId, deleteSource }) {
   const tooltipText = <div className="tooltip-text">Delete source and children</div>;
   const onClickDeleteSource = () => deleteSource(sourceId);
   return (

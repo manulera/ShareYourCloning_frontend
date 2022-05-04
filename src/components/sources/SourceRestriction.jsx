@@ -1,43 +1,39 @@
 import React from 'react';
 import axios from 'axios';
+import MultipleOutputsSelector from './MultipleOutputsSelector';
+import error2String from './error2String';
 
 // A component providing an interface for the user to perform a restriction reaction
 // with one or more restriction enzymes, move between output fragments, and eventually
 // select one as an output.
-function SourceRestriction({ source, updateSource, getEntityFromId }) {
-  // If the restriction is done, show this instead:
-  if (source.output_index !== null) {
-    return (
-      <div>
-        Restriction reaction with
-        {' '}
-        {source.restriction_enzymes.join(' ')}
-      </div>
-    );
-  }
-
+function SourceRestriction({ sourceId, updateSource, inputEntities }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [enzymeList, setEnzymeList] = React.useState([]);
+  const [sources, setSources] = React.useState('');
+  const [entities, setEntities] = React.useState('');
 
   // Function called to update the value of enzymeList
   const onChange = (event) => setEnzymeList(event.target.value.split(','));
+  const commitSource = (index) => updateSource({ ...sources[index], id: sourceId }, entities[index]);
 
   const onSubmit = (event) => {
     event.preventDefault();
+    console.log(inputEntities.map((e) => e.i));
+    setWaitingMessage('Request sent to the server');
     const requestData = {
-      source: {
-        ...source,
-        restriction_enzymes: enzymeList,
-      },
-      sequences: [getEntityFromId(source.input[0])],
+      source: { restriction_enzymes: enzymeList, input: inputEntities.map((e) => e.id) },
+      sequences: inputEntities,
     };
-    // A better way not to have to type twice the output_list thing
     axios
       .post(`${process.env.REACT_APP_BACKEND_URL}restriction`, requestData)
       .then((resp) => {
-        updateSource({ ...resp.data.source, kind: 'source' });
-      })
-      .catch((reason) => console.log(reason));
+        console.log('restriction', resp);
+        setWaitingMessage(null);
+        // If there is only a single product, commit the result, else allow choosing
+        if (sources.length === 1) {
+          updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
+        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
+      }).catch((error) => { setWaitingMessage(error2String(error)); });
   };
 
   return (
@@ -48,6 +44,10 @@ function SourceRestriction({ source, updateSource, getEntityFromId }) {
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>
+      <MultipleOutputsSelector {...{
+        sources, entities, sourceId, commitSource,inputEntities
+      }}
+      />
     </div>
   );
 }
