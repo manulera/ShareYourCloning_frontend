@@ -1,5 +1,7 @@
 # Frontend application
 
+> :warning: Current version is unstable
+
 This frontend is part of a bigger application, before going further, please go to the [main project readme](https://github.com/manulera/ShareYourCloning), where you can find an introduction.
 
 A hosted version of this application can be found at [https://shareyourcloning.netlify.app/](https://shareyourcloning.netlify.app/).
