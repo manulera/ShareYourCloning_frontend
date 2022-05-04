@@ -1,6 +1,8 @@
 import React from 'react';
 
-function MultipleInputsSelector({ source, updateSource, idsEntitiesNotChildSource }) {
+function MultipleInputsSelector({
+  entityNotChildSourceIds, inputEntityIds, sourceId, updateSource,
+}) {
   const onChange = (event) => {
     const { options } = event.target;
     const value = [];
@@ -9,21 +11,16 @@ function MultipleInputsSelector({ source, updateSource, idsEntitiesNotChildSourc
         value.push(Number(options[i].value));
       }
     }
-    updateSource({
-      ...source,
-      input: value,
-    });
+    updateSource({ id: sourceId, input: value });
   };
   // The possible options should include the already selected ones + the one without children
-  const allOptions = source.input.concat(idsEntitiesNotChildSource);
+  const options = inputEntityIds.concat(entityNotChildSourceIds);
   return (
     <div className="multiple-input-selector">
       <h3>Select several inputs for this step</h3>
       <label htmlFor="select_multiple_inputs">
-        <select multiple="true" value={source.input} onChange={onChange} id="select_multiple_inputs">
-          {
-      allOptions.map((id) => <option value={id}>{id}</option>)
-    }
+        <select multiple="true" value={inputEntityIds} onChange={onChange} id="select_multiple_inputs">
+          {options.map((id) => <option value={id}>{id}</option>)}
         </select>
       </label>
     </div>

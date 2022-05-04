@@ -1,6 +1,8 @@
 import React from 'react';
 import SourceBox from './SourceBox';
 
+// TODO refactor this to use common part
+
 function FinishedSource({ source, deleteSource }) {
   if (source.type === 'file') {
     // TODO add link to file
@@ -19,6 +21,15 @@ function FinishedSource({ source, deleteSource }) {
               {source.genbank_id}
             </a>
           </strong>
+        </div>
+      </SourceBox>
+    );
+  }
+  if (source.type === 'ligation') {
+    return (
+      <SourceBox {...{ sourceId: source.id, deleteSource }}>
+        <div>
+          Ligation of fragments with sticky ends
         </div>
       </SourceBox>
     );

@@ -3,7 +3,6 @@ import './App.css';
 import NetworkTree from './components/NetworkTree';
 import SequenceEditor from './components/SequenceEditor';
 import Source from './components/sources/Source';
-import executeSourceStep from './executeSourceStep';
 import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
 import { constructNetwork } from './network';
@@ -50,7 +49,7 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
  * @param {*} getEntityFromId
  * @returns
  */
-function buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource) {
+function buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource) {
   const out = [];
   sources.forEach((source) => {
     let sourceElement = null;
@@ -59,7 +58,7 @@ function buildElementListSources(sources, updateSource, getEntityFromId, idsEnti
       sourceElement = (
         <div>
           <Source {...{
-            sourceId: source.id, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource, inputEntities,
+            sourceId: source.id, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities,
           }}
           />
         </div>
@@ -145,12 +144,17 @@ function App() {
     setEntities(newEntities);
   };
 
+  // TODO this is probably not great
   // Update the state by adding a new source, and possibly executing the step associated with
   // the source. For example, we may set a source partially, e.g. specify that it is restriction,
   // but not specify the enzymes. This will add the source, but not execute the step.
-  const updateSource = (newSource, newEntityWithoutId) => {
+  const updateSource = (newSource, newEntityWithoutId = null) => {
+    // If the entity is not passed, just update the source
+    if (newEntityWithoutId === null) {
+      setSources(sources.map((source) => (source.id === newSource.id ? { ...source, ...newSource } : source)));
+      return;
+    }
     const newEntity = { ...newEntityWithoutId, id: uniqueIdDispatcher() };
-
     // Add the entity
     updateOrCreateEntity(newEntity, newSource);
     // TODO probably a nicer way of doing this
@@ -183,10 +187,10 @@ function App() {
   sources.forEach((source) => {
     idsEntitiesWithChildSource = idsEntitiesWithChildSource.concat(source.input);
   });
-  const idsEntitiesNotChildSource = [];
+  const entitiesNotChildSource = [];
   entities.forEach((entity) => {
     if (!idsEntitiesWithChildSource.includes(entity.id)) {
-      idsEntitiesNotChildSource.push(entity.id);
+      entitiesNotChildSource.push(entity);
     }
   });
 
@@ -231,7 +235,7 @@ function App() {
   // Here we make an array of objects in which each one has the id, and the jsx that will go
   // into each node in the tree.
   let elementList = buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput).concat(
-    buildElementListSources(sources, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource),
+    buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource),
   );
 
   // Here we append the toggle element to each jsx element in elemenList
@@ -267,10 +271,6 @@ function App() {
       <header className="App-header" />
       <div className="app-container">
         <div className="app-title">
-          {/* <ShareYourCloningBox {...{
-            entities, sources, setEntities, setSources, setNextUniqueId,
-          }}
-          /> */}
           <MainAppBar {...{
             exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
           }}

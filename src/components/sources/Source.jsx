@@ -2,8 +2,6 @@ import React from 'react';
 import SourceFile from './SourceFile';
 import SourceGenBank from './SourceGenBank';
 import SourceRestriction from './SourceRestriction';
-import MultipleInputsSelector from './MultipleInputsSelector';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
 import SourceLigation from './SourceLigation';
 import SourceTypeSelector from './SourceTypeSelector';
 import SourceBox from './SourceBox';
@@ -15,7 +13,7 @@ import SourceBox from './SourceBox';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  sourceId, updateSource, getEntityFromId, idsEntitiesNotChildSource, deleteSource, inputEntities,
+  sourceId, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities,
 }) {
   const [sourceType, setSourceType] = React.useState('');
   let specificSource = null;
@@ -32,13 +30,17 @@ function Source({
       specificSource = (<SourceGenBank {...{ sourceId, updateSource }} />);
     }
     if (sourceType === 'sticky_ligation') {
-      specificSource = (<SourceLigation {...{ sourceId, updateSource, getEntityFromId }} />);
+      specificSource = (
+        <SourceLigation {...{
+          sourceId, updateSource, inputEntities, entitiesNotChildSource,
+        }}
+        />
+      );
     }
     if (sourceType === 'PCR') {
       specificSource = (
         <div>
           <SourcePCR {...{ source, updateSource, getEntityFromId }} />
-          <MultipleOutputsSelector {...{ source, updateSource, getEntityFromId }} />
         </div>
       );
     }
