@@ -19,8 +19,7 @@ function SubSequenceDisplayer({
       cutsites: false,
     },
   };
-  console.log(inputEntities[0]);
-  if (['restriction'].includes(source.type)) {
+  if (['restriction', 'PCR'].includes(source.type)) {
     const seq = convertToTeselaJson(inputEntities[0]);
     const editor = seq.circular ? (
       <CircularView {...editorProps} />

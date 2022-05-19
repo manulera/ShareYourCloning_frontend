@@ -14,7 +14,9 @@ function SourceLigation({
   const entityNotChildSourceIds = entitiesNotChildSource.map((e) => e.id);
   const inputEntityIds = inputEntities.map((e) => e.id);
 
-  const commitSource = (index) => updateSource({ ...sources[index], id: sourceId }, entities[index]);
+  const commitSource = (index) => {
+    updateSource({ ...sources[index], id: sourceId }, entities[index]);
+  };
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
@@ -27,7 +29,6 @@ function SourceLigation({
       .post(`${process.env.REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
       .then((resp) => {
         setWaitingMessage(null);
-        console.log(resp.data.sources, resp.data.sources.length);
         // If there is only a single product, commit the result, else allow choosing
         if (resp.data.sources.length === 1) {
           updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
@@ -38,7 +39,7 @@ function SourceLigation({
   return (
     <div className="ligation">
       <MultipleInputsSelector {...{
-        entityNotChildSourceIds, inputEntityIds, sourceId, updateSource,
+        entityNotChildSourceIds, inputEntityIds, sourceId, updateSource, sourceType: 'sticky_ligation',
       }}
       />
       <form onSubmit={onSubmit}>

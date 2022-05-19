@@ -1,6 +1,8 @@
-export const downloadStateAsJson = async (entities, sources, description) => {
+export const downloadStateAsJson = async (entities, sources, description, primers) => {
   // from https://stackoverflow.com/a/55613750/5622322
-  const output = { entities, sources, description };
+  const output = {
+    sequences: entities, sources, description, primers,
+  };
   // json
   const fileName = 'file';
   const json = JSON.stringify(output);
@@ -15,14 +17,16 @@ export const downloadStateAsJson = async (entities, sources, description) => {
 };
 
 export function loadStateFromJson(
-  newState, setSources, setEntities, setDescription, setNextUniqueId,
+  newState, setSources, setEntities, setDescription, setNextUniqueId, setPrimers,
 ) {
+  // TODO rename entities to sequences
+  setPrimers(newState.primers);
   setSources(newState.sources);
-  setEntities(newState.entities);
+  setEntities(newState.sequences);
   setDescription(newState.description);
   // We set the next id to the max +1
   setNextUniqueId(
-    1 + newState.sources.concat(newState.entities).reduce(
+    1 + newState.sources.concat(newState.sequences).reduce(
       (max, item) => Math.max(max, item.id), 0,
     ),
   );

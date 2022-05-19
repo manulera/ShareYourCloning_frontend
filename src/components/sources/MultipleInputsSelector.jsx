@@ -1,7 +1,7 @@
 import React from 'react';
 
 function MultipleInputsSelector({
-  entityNotChildSourceIds, inputEntityIds, sourceId, updateSource,
+  entityNotChildSourceIds, inputEntityIds, sourceId, updateSource, sourceType,
 }) {
   const onChange = (event) => {
     const { options } = event.target;
@@ -11,7 +11,7 @@ function MultipleInputsSelector({
         value.push(Number(options[i].value));
       }
     }
-    updateSource({ id: sourceId, input: value });
+    updateSource({ id: sourceId, input: value, type: sourceType });
   };
   // The possible options should include the already selected ones + the one without children
   const options = inputEntityIds.concat(entityNotChildSourceIds);

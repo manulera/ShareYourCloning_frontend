@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import Button from '@mui/material/Button';
 
+// TODO add more examples
 function NavBarLoadExample({ loadData }) {
   const onClick = () => {
-    fetch('examples/example_ligation.json')
+    fetch('examples/history.json')
       .then((response) => response.json())
       .then((data) => loadData(data));
   };

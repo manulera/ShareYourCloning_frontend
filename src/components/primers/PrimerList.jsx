@@ -18,7 +18,6 @@ function PrimerList({
       <button type="button" onClick={() => setShowEditPrimers(!showEditPrimers)}>Add Primers</button>
     );
   }
-  console.log('primers', primers);
   const topPart = [];
   primers.forEach((primer) => topPart.push(<Primer {...{ deletePrimer, updatePrimer, primer }} />));
 

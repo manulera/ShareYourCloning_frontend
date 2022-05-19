@@ -14,6 +14,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
         <option value="restriction">Restriction</option>
         <option value="genbank_id">GenBank ID</option>
         <option value="sticky_ligation">Ligation with sticky ends</option>
+        <option value="PCR">PCR</option>
       </select>
     </label>
   );

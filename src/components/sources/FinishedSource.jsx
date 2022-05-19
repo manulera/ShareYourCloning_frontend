@@ -25,7 +25,7 @@ function FinishedSource({ source, deleteSource }) {
       </SourceBox>
     );
   }
-  if (source.type === 'ligation') {
+  if (source.type === 'sticky_ligation') {
     return (
       <SourceBox {...{ sourceId: source.id, deleteSource }}>
         <div>
@@ -46,6 +46,18 @@ function FinishedSource({ source, deleteSource }) {
       </SourceBox>
     );
   }
+  if (source.type === 'PCR') {
+    return (
+      <SourceBox {...{ sourceId: source.id, deleteSource }}>
+        <div>
+          PCR with primers
+          {' '}
+          {source.primers.join(' and ')}
+        </div>
+      </SourceBox>
+    );
+  }
+  return null;
 }
 
 export default FinishedSource;

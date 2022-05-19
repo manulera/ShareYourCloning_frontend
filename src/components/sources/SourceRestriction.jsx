@@ -18,7 +18,6 @@ function SourceRestriction({ sourceId, updateSource, inputEntities }) {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(inputEntities.map((e) => e.i));
     setWaitingMessage('Request sent to the server');
     const requestData = {
       source: { restriction_enzymes: enzymeList, input: inputEntities.map((e) => e.id) },
@@ -44,7 +43,7 @@ function SourceRestriction({ sourceId, updateSource, inputEntities }) {
       </form>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId, commitSource,inputEntities
+        sources, entities, sourceId, commitSource, inputEntities,
       }}
       />
     </div>

@@ -5,6 +5,7 @@ import SourceRestriction from './SourceRestriction';
 import SourceLigation from './SourceLigation';
 import SourceTypeSelector from './SourceTypeSelector';
 import SourceBox from './SourceBox';
+import SourcePCR from './SourcePCR';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -13,9 +14,10 @@ import SourceBox from './SourceBox';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  sourceId, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities,
+  source, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities, primers,
 }) {
-  const [sourceType, setSourceType] = React.useState('');
+  const sourceId = source.id;
+  const [sourceType, setSourceType] = React.useState(source.type);
   let specificSource = null;
   if (sourceType !== null) {
     if (sourceType === 'file') {
@@ -40,12 +42,14 @@ function Source({
     if (sourceType === 'PCR') {
       specificSource = (
         <div>
-          <SourcePCR {...{ source, updateSource, getEntityFromId }} />
+          <SourcePCR {...{
+            sourceId, updateSource, inputEntities, primers,
+          }}
+          />
         </div>
       );
     }
   }
-  console.log('rendering');
 
   return (
     <SourceBox {...{ sourceId, deleteSource }}>

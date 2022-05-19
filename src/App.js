@@ -10,6 +10,7 @@ import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
 import FinishedSource from './components/sources/FinishedSource';
+import PrimerList from './components/primers/PrimerList';
 /**
  * Generate a list of objects, where every object has:
  * id: the id of an entity in the 'entities' state array
@@ -49,7 +50,7 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
  * @param {*} getEntityFromId
  * @returns
  */
-function buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource) {
+function buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, primers) {
   const out = [];
   sources.forEach((source) => {
     let sourceElement = null;
@@ -58,7 +59,7 @@ function buildElementListSources(sources, updateSource, getEntityFromId, entitie
       sourceElement = (
         <div>
           <Source {...{
-            sourceId: source.id, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities,
+            source, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities, primers,
           }}
           />
         </div>
@@ -155,9 +156,10 @@ function App() {
       return;
     }
     const newEntity = { ...newEntityWithoutId, id: uniqueIdDispatcher() };
-    // Add the entity
+    // // Add the entity
     updateOrCreateEntity(newEntity, newSource);
     // TODO probably a nicer way of doing this
+    const newSourceArray = sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source));
     setSources(sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source)));
   };
 
@@ -188,6 +190,7 @@ function App() {
     idsEntitiesWithChildSource = idsEntitiesWithChildSource.concat(source.input);
   });
   const entitiesNotChildSource = [];
+
   entities.forEach((entity) => {
     if (!idsEntitiesWithChildSource.includes(entity.id)) {
       entitiesNotChildSource.push(entity);
@@ -235,7 +238,7 @@ function App() {
   // Here we make an array of objects in which each one has the id, and the jsx that will go
   // into each node in the tree.
   let elementList = buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput).concat(
-    buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource),
+    buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, primers),
   );
 
   // Here we append the toggle element to each jsx element in elemenList
@@ -255,17 +258,17 @@ function App() {
     return newElement;
   });
   const exportData = () => {
-    downloadStateAsJson(entities, sources, description);
+    downloadStateAsJson(entities, sources, description, primers);
   };
   const loadData = (newState) => {
-    loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId);
+    loadStateFromJson(newState, setSources, setEntities, setDescription, setNextUniqueId, setPrimers);
     setShowDescription(newState.description !== '');
+    setShowPrimers(newState.primers.length > 0);
   };
   // This function returns a node from elementList by passing the id. This is useful
   // for the main sequence editor, which will perform a different task for a source
   // or a sequence
   const nodeFinder = (id) => elementList.find((element) => element.id === id);
-  console.log('state', entities, sources);
   return (
     <div className="App">
       <header className="App-header" />
