@@ -14,7 +14,24 @@ If you want to quickly set up a local instance of the frontend and backend of th
 
 ### Local installation
 
-To install the javascript dependencies and build the site, you will need `yarn` ([installation instructions](https://yarnpkg.com/getting-started/install)). Then:
+We use node 16.3, to manage different versions of node, we use `nvm`. Installation instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```bash
+# First time only
+nvm install 16.3
+
+nvm use 16.3
+```
+
+For the package management we use `yarn 1.22` (old version). To install `yarn` globally once you have installed node.
+
+```
+npm -g i yarn
+```
+
+In the future we want to move to `yarn 2` and newer versions of node. If you want to contribute to this see https://github.com/manulera/ShareYourCloning_frontend/issues/28.
+
+To install the javascript dependencies and build the site, you will need `yarn`:
 
 ```bash
 # Install dependencies
