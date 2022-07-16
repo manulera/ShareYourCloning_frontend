@@ -9,16 +9,23 @@ function FinishedSource({ source, deleteSource }) {
     return (<SourceBox {...{ sourceId: source.id, deleteSource }}>{`Sequence ${source.index_in_file + 1} read from file ${source.file_name}`}</SourceBox>);
   }
 
-  if (source.type === 'genbank_id') {
-    const urlGenBank = `https://www.ncbi.nlm.nih.gov/nuccore/${source.genbank_id}`;
+  if (source.type === 'repository_id') {
+    const { repository } = source;
+    let url = '';
+
+    if (repository === 'genbank') {
+      url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
+    } else if (repository === 'addgene') {
+      url = `https://www.addgene.org/${source.repository_id}/sequences/`;
+    }
     return (
       <SourceBox {...{ sourceId: source.id, deleteSource }}>
         <div>
-          Request to GenBank with ID
+          {`Request to ${repository} with ID`}
           {' '}
           <strong>
-            <a href={urlGenBank}>
-              {source.genbank_id}
+            <a href={url}>
+              {source.repository_id}
             </a>
           </strong>
         </div>

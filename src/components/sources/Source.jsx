@@ -1,6 +1,6 @@
 import React from 'react';
 import SourceFile from './SourceFile';
-import SourceGenBank from './SourceGenBank';
+import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
 import SourceLigation from './SourceLigation';
 import SourceTypeSelector from './SourceTypeSelector';
@@ -28,8 +28,8 @@ function Source({
       specificSource = (<SourceRestriction {...{ sourceId, updateSource, inputEntities }} />
       );
     }
-    if (sourceType === 'genbank_id') {
-      specificSource = (<SourceGenBank {...{ sourceId, updateSource }} />);
+    if (sourceType === 'repository_id') {
+      specificSource = (<SourceRepositoryId {...{ sourceId, updateSource }} />);
     }
     if (sourceType === 'sticky_ligation') {
       specificSource = (
