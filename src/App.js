@@ -108,12 +108,14 @@ function App() {
   const [showPrimers, setShowPrimers] = React.useState(false);
 
   const addPrimerList = (newPrimers) => {
-    // Asign ids to the new primers
-    newPrimers.map((newPrimer) => ({ ...newPrimer, id: uniqueIdDispatcher() }));
-    setPrimers([...primers, ...newPrimers]);
+    setPrimers([
+      ...primers,
+      // Asign ids to the new primers
+      ...newPrimers.map((newPrimer) => ({ ...newPrimer, id: uniqueIdDispatcher() })),
+    ]);
   };
-  const deletePrimer = (primer) => {
-    setPrimers(primers.filter((p) => p.id !== primer.id));
+  const deletePrimer = (primerId) => {
+    setPrimers(primers.filter((p) => p.id !== primerId));
   };
   const updatePrimer = (primer) => {
     const oldRemoved = primers.filter((p) => p.id !== primer.id);
