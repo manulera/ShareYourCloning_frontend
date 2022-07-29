@@ -35,6 +35,11 @@ function MainAppBar({
             }}
             className={wideMode ? null : 'collapsed'}
           >
+            <a href="https://www.youtube.com/watch?v=HRQb6s8m8_s" target="_blank" rel="noopener noreferrer">
+              <Button sx={{ my: 2, color: 'white', display: 'block' }}>
+                <>How to use</>
+              </Button>
+            </a>
             <NavbarExportData {...{ exportData }} />
             <NavBarLoadData {...{ loadData }} />
             <NavBarEditDescription {...{ showDescription, setShowDescription }} />
