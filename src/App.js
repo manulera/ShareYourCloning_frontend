@@ -31,7 +31,7 @@ function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInp
       id: entity.id,
       node: entity,
       jsx: (
-        <div>
+        <div key={entity.id}>
           <SequenceEditor {...{ entity, addSource, getSourceWhereEntityIsInput }} />
         </div>
       ),
@@ -58,14 +58,16 @@ function buildElementListSources(sources, updateSource, getEntityFromId, entitie
       const inputEntities = source.input.map((entityId) => getEntityFromId(entityId));
       sourceElement = (
         <div>
-          <Source {...{
-            source, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities, primers,
-          }}
+          <Source
+            key={source.id}
+            {...{
+              source, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities, primers,
+            }}
           />
         </div>
       );
     } else {
-      sourceElement = (<div><FinishedSource {...{ source, deleteSource }} /></div>);
+      sourceElement = (<div key={source.id}><FinishedSource {...{ source, deleteSource }} /></div>);
     }
     out.push({
       id: source.id,
@@ -246,17 +248,19 @@ function App() {
   // Here we append the toggle element to each jsx element in elemenList
   elementList = elementList.map((element) => {
     const newElement = { ...element };
-    newElement.jsx = [
-      element.jsx,
-      (element.node.kind === 'source') ? null : (
+    newElement.jsx = (
+      <div key={element.id}>
+        {element.jsx}
+        {element.node.kind !== 'source' && (
         <MainSequenceCheckBox
           {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
         />
-      ),
-      <div className="corner-id">
-        {element.id}
-      </div>,
-    ];
+        )}
+        <div className="corner-id">
+          {element.id}
+        </div>
+      </div>
+    );
     return newElement;
   });
   const exportData = () => {

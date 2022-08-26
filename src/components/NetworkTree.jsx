@@ -12,13 +12,13 @@ function renderTreeElement(element, nodeFinder) {
 
   if (element.ancestors.length === 0) {
     return (
-      <li>
+      <li key={element.data.id}>
         <span className="tf-nc"><span className="node-text">{jsxContent}</span></span>
       </li>
     );
   }
   return (
-    <li>
+    <li key={element.data.id}>
       <span className="tf-nc"><span className="node-text">{jsxContent}</span></span>
       <ul>
         {extra}
@@ -44,7 +44,7 @@ function NetworkTree({
     <div className="tf-tree tf-ancestor-tree">
       <ul>
         {getTreeArray(network, nodeFinder)}
-        <li>
+        <li key="new_source_box">
           <span className="tf-nc"><span className="node-text"><NewSourceBox {...{ addSource }} /></span></span>
         </li>
       </ul>

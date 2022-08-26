@@ -37,7 +37,7 @@ function MainAppBar({
           >
             <a href="https://www.youtube.com/watch?v=HRQb6s8m8_s" target="_blank" rel="noopener noreferrer">
               <Button sx={{ my: 2, color: 'white', display: 'block' }}>
-                <>How to use</>
+                <>Demo video</>
               </Button>
             </a>
             <NavbarExportData {...{ exportData }} />

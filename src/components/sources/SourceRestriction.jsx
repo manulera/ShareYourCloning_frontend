@@ -8,19 +8,23 @@ import error2String from './error2String';
 // select one as an output.
 function SourceRestriction({ sourceId, updateSource, inputEntities }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
-  const [enzymeList, setEnzymeList] = React.useState([]);
+  const [enzymesCSV, setenzymesCSV] = React.useState([]);
   const [sources, setSources] = React.useState('');
   const [entities, setEntities] = React.useState('');
 
-  // Function called to update the value of enzymeList
-  const onChange = (event) => setEnzymeList(event.target.value.split(','));
+  // Function called to update the value of enzymesCSV
+  const onChange = (event) => setenzymesCSV(event.target.value);
   const commitSource = (index) => updateSource({ ...sources[index], id: sourceId }, entities[index]);
 
   const onSubmit = (event) => {
     event.preventDefault();
+    if (enzymesCSV.length === 0) {
+      setWaitingMessage('No enzyme names provided');
+      return;
+    }
     setWaitingMessage('Request sent to the server');
     const requestData = {
-      source: { restriction_enzymes: enzymeList, input: inputEntities.map((e) => e.id) },
+      source: { restriction_enzymes: enzymesCSV.split(','), input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
     axios
@@ -38,7 +42,7 @@ function SourceRestriction({ sourceId, updateSource, inputEntities }) {
     <div className="restriction">
       <h3 className="header-nodes">Write the enzyme names as csv</h3>
       <form onSubmit={onSubmit}>
-        <input type="text" value={enzymeList} onChange={onChange} />
+        <input type="text" value={enzymesCSV} onChange={onChange} />
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>
