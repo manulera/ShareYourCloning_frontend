@@ -29,7 +29,7 @@ function SourcePCR({
     setWaitingMessage('Request sent to the server');
     const requestData = {
       sequences: inputEntities,
-      primers,
+      primers: primers.filter((p) => selectedPrimerIds.includes(p.id)),
       source: {
         input: inputEntities.map((e) => e.id),
         primer_annealing_settings: { minimum_annealing: 15 },
