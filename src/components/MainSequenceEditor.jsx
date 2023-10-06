@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-// import 'open-vector-editor/umd/main.css';
-import { Editor, updateEditor } from 'open-vector-editor';
+import { Editor, updateEditor } from '@teselagen/ove';
 import { convertToTeselaJson } from '../sequenceParsers';
 
 import store from '../store';
