@@ -26,7 +26,7 @@ function SourceLigation({
     // A better way not to have to type twice the output_list thing
     setWaitingMessage('Processing...');
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
       .then((resp) => {
         setWaitingMessage(null);
         // If there is only a single product, commit the result, else allow choosing

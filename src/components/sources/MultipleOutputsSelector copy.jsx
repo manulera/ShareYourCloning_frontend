@@ -80,8 +80,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
   ) : (
     <LinearView {...editorProps} />
   );
-
-  updateEditor(store, editorName, {
+  React.useEffect(() => updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
@@ -92,7 +91,7 @@ function MultipleOutputsSelector({ source, updateSource, getEntityFromId }) {
       end: source.fragment_boundaries[selectedOutput + 1],
     },
     caretPosition: source.fragment_boundaries[selectedOutput],
-  });
+  }));
   const overhangs = <OverhangsDisplay {...{ entity: source.output_list[selectedOutput] }} />;
   return (
     <div className="multiple-output-selector">

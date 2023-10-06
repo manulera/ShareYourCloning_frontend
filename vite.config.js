@@ -1,5 +1,4 @@
 import react from '@vitejs/plugin-react';
-import path from 'path';
 
 export default {
   plugins: [react()],
@@ -16,3 +15,4 @@ export default {
     global: {},
   },
 };
+

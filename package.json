@@ -28,7 +28,7 @@
         "redux-thunk": "^2.4.2"
     },
     "scripts": {
-        "start": "yarn run vite --force",
+        "start": "yarn run vite --force --port 3000",
         "build": "vite build"
     },
     "eslintConfig": {

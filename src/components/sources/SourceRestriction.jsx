@@ -28,7 +28,7 @@ function SourceRestriction({ sourceId, updateSource, inputEntities }) {
       sequences: inputEntities,
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}restriction`, requestData)
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}restriction`, requestData)
       .then((resp) => {
         setWaitingMessage(null);
         // If there is only a single product, commit the result, else allow choosing
