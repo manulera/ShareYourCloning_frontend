@@ -28,7 +28,7 @@
         "redux-thunk": "^2.4.2"
     },
     "scripts": {
-        "start": "vite --force",
+        "start": "yarn run vite --force",
         "build": "vite build"
     },
     "eslintConfig": {
