@@ -36,7 +36,7 @@ function SourcePCR({
       },
     };
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}pcr`, requestData)
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}pcr`, requestData)
       .then((resp) => {
         setWaitingMessage(null);
         // If there is only a single product, commit the result, else allow choosing

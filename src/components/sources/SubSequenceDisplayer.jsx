@@ -26,7 +26,7 @@ function SubSequenceDisplayer({
     ) : (
       <LinearView {...editorProps} />
     );
-    updateEditor(store, editorName, {
+    React.useEffect(() =>updateEditor(store, editorName, {
       sequenceData: seq,
       annotationVisibility: {
         reverseSequence: false,
@@ -37,7 +37,7 @@ function SubSequenceDisplayer({
         end: source.fragment_boundaries[1],
       },
       caretPosition: source.fragment_boundaries[0],
-    });
+    }));
 
     return (
       <div className="multiple-output-selector">

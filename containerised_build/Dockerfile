@@ -17,7 +17,7 @@ RUN pwd
 COPY . ./
 
 # build static assets - This should match the url of your backend api
-RUN REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
+RUN VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
 
 # static assets
 FROM node:16-alpine

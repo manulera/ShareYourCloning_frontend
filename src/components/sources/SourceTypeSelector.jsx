@@ -8,7 +8,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     <label htmlFor={`select_source_${sourceId}`}>
       Select source
       <br />
-      <select value={sourceType} onChange={onChange} id={`select_source_${sourceId}`}>
+      <select value={sourceType !== null ? sourceType : ''} onChange={onChange} id={`select_source_${sourceId}`}>
         <option value=" " />
         <option value="file">file</option>
         <option value="restriction">Restriction</option>

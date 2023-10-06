@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Editor, updateEditor } from '@teselagen/ove';
 import { convertToTeselaJson } from '../sequenceParsers';
 

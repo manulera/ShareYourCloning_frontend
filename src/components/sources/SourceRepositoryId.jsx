@@ -8,12 +8,12 @@ function SourceRepositoryId({ sourceId, updateSource }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
   const [repositoryId, setRepositoryId] = React.useState('');
   const [selectedRepository, setSelectedRepository] = React.useState('');
-
   const onSubmit = (event) => {
     event.preventDefault();
+    console.log(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`)
     setWaitingMessage(`Requesting sequence to ${selectedRepository}`);
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryId, repository: selectedRepository })
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryId, repository: selectedRepository })
       .then((resp) => {
         setWaitingMessage(null);
         updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);

@@ -40,13 +40,13 @@ function MultipleOutputsSelector({
   ) : (
     <LinearView {...editorProps} />
   );
-  updateEditor(store, editorName, {
+  React.useEffect(() =>updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
       cutsites: false,
     },
-  });
+  }));
 
   return (
     <div className="multiple-output-selector">

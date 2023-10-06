@@ -14,13 +14,15 @@ If you want to quickly set up a local instance of the frontend and backend of th
 
 ### Local installation
 
-We use node 16.3, to manage different versions of node, we use `nvm`. Installation instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
+> TODO: This is outdated, update!
+
+We use node 18.8, to manage different versions of node, we use `nvm`. Installation instructions [here](https://github.com/nvm-sh/nvm#installing-and-updating).
 
 ```bash
 # First time only
-nvm install 16.3
+nvm install 18.8
 
-nvm use 16.3
+nvm use 18.8
 ```
 
 For the package management we use `yarn 1.22` (old version). To install `yarn` globally once you have installed node.
@@ -52,7 +54,7 @@ If you build locally, but you want to serve from the container (faster option, a
 
 ```bash
 # Build the assets locally
-REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
+VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
 # Use a Dockerfile that simply copies the files in the local ./build directory to
 # /assets/build in the container
 docker build -t frontend_image .
@@ -60,7 +62,7 @@ docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
 
 > **_NOTE:_**
-To understand why the env variable `REACT_APP_BACKEND_URL` is used, see [connecting to the backend](#connecting-to-the-backend)
+To understand why the env variable `VITE_REACT_APP_BACKEND_URL` is used, see [connecting to the backend](#connecting-to-the-backend)
 
 If you want to build the static assets from the source files inside the container (very slow):
 
@@ -71,23 +73,23 @@ docker build -t frontend_image -f containerised_build/Dockerfile .
 docker run -d --name frontend_container -p 3000:3000 frontend_image
 ```
 > **_NOTE:_**
-You may have to set `REACT_APP_BACKEND_URL` in `containerised_build/Dockerfile`, see [connecting to the backend](#connecting-to-the-backend)
+You may have to set `VITE_REACT_APP_BACKEND_URL` in `containerised_build/Dockerfile`, see [connecting to the backend](#connecting-to-the-backend)
 
 ### Connecting to the backend
 
 For the application to work, you must have a running backend. For that, see the [bakend installation instructions](https://github.com/manulera/ShareYourCloning_backend#local-installation).
 
-The requests to the backend are made to the url contained in the environment variable `REACT_APP_BACKEND_URL`.
-* When you run the application with the development server using `yarn start`, `REACT_APP_BACKEND_URL` is set to `http://127.0.0.1:8000/`, indicated in the file `.env.development` (the default address used when running FastAPI locally).
+The requests to the backend are made to the url contained in the environment variable `VITE_REACT_APP_BACKEND_URL`.
+* When you run the application with the development server using `yarn start`, `VITE_REACT_APP_BACKEND_URL` is set to `http://127.0.0.1:8000/`, indicated in the file `.env.development` (the default address used when running FastAPI locally).
 * When you build the static assets using `yarn build`, the url is set to the address of the hosted api `https://shareyourcloning.api.genestorian.org/`.
 
 If you want to specify the backend url (for example, if you are running the api in Docker at `http://localhost:8000`), you can do:
 
 ```bash
 # To run the dev server
-REACT_APP_BACKEND_URL=http://localhost:8000/ yarn start
+VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn start
 # To build the static assets
-REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
+VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
 ```
 
 Finally, if you are serving the frontend at an address different from `http://localhost:3000`, you will have to add the url of the frontend to the CORS allowed origins in the backend ([see here](https://github.com/manulera/ShareYourCloning_backend#connecting-to-the-frontend)). Note that you will also get a CORS error if you run `yarn build` and try to make a request to the backend from `build/index.html` if you just open it in your browser instead of serving it at `localhost:3000`.
