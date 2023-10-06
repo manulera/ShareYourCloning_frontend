@@ -1,4 +1,4 @@
-import { CircularView, LinearView, updateEditor } from 'open-vector-editor';
+import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
 import React from 'react';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
