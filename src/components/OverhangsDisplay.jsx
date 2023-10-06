@@ -1,5 +1,5 @@
 import React from 'react';
-import { getReverseComplementSequenceString } from 've-sequence-utils';
+import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
 import { convertToTeselaJson } from '../sequenceParsers';
 
 function formatSequenceForOverhangDisplay(

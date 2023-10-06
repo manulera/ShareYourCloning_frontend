@@ -1,4 +1,4 @@
-import { genbankToJson } from 'bio-parsers';
+import { genbankToJson } from '@teselagen/bio-parsers';
 
 export function convertToTeselaJson(entity) {
   // TODO: This might have been fixed in more recent versions of the library

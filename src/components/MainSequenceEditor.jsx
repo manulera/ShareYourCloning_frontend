@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-// import 'open-vector-editor/umd/main.css';
-import { Editor, updateEditor } from 'open-vector-editor';
+import React from 'react';
+import { Editor, updateEditor } from '@teselagen/ove';
 import { convertToTeselaJson } from '../sequenceParsers';
 
 import store from '../store';
@@ -31,13 +30,9 @@ function MainSequenceEditor({ node }) {
 
   const seq = node === undefined ? undefined : convertToTeselaJson(node.node);
   const editor = <Editor {...editorProps} />;
-
-  updateEditor(store, editorName, {
-    sequenceData: seq,
-    annotationVisibility: {
-      reverseSequence: true,
-      cutsites: false,
-    },
+  
+  React.useEffect(() => {
+  updateEditor(store, editorName, { sequenceData: seq, annotationVisibility: { reverseSequence: true, cutsites: false,},
     adjustCircularLabelSpacing: true,
     panelsShown: [[
       {
@@ -59,7 +54,7 @@ function MainSequenceEditor({ node }) {
         name: 'Properties',
       },
     ]],
-  });
+  });});
 
   return (
     <div>

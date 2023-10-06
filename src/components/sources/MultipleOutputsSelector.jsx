@@ -1,4 +1,4 @@
-import { updateEditor, CircularView, LinearView } from 'open-vector-editor';
+import { updateEditor, CircularView, LinearView } from '@teselagen/ove';
 import React from 'react';
 import { convertToTeselaJson } from '../../sequenceParsers';
 import store from '../../store';
@@ -40,13 +40,13 @@ function MultipleOutputsSelector({
   ) : (
     <LinearView {...editorProps} />
   );
-  updateEditor(store, editorName, {
+  React.useEffect(() =>updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
       cutsites: false,
     },
-  });
+  }));
 
   return (
     <div className="multiple-output-selector">

@@ -25,7 +25,7 @@ function SourceFile({ sourceId, updateSource }) {
     // TODO: dirty setting of the id of the source because of special case where source is
     // not submitted
     axios
-      .post(`${process.env.REACT_APP_BACKEND_URL}read_from_file`, formData, config)
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}read_from_file`, formData, config)
       .then((resp) => {
         setWaitingMessage(null);
         // If there is only a single sequence in the file, commit the result, else allow choosing
