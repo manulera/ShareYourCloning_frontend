@@ -25,19 +25,21 @@ nvm install 18.8
 nvm use 18.8
 ```
 
-For the package management we use `yarn 1.22` (old version). To install `yarn` globally once you have installed node.
+To install the javascript dependencies and build the site, you will need [yarn]()
 
-```
-npm -g i yarn
-```
-
-In the future we want to move to `yarn 2` and newer versions of node. If you want to contribute to this see https://github.com/manulera/ShareYourCloning_frontend/issues/28.
-
-To install the javascript dependencies and build the site, you will need `yarn`:
 
 ```bash
+
+## The first time ==========
+
+# Enable yarn in the project
+corepack enable
+
 # Install dependencies
 yarn install
+
+
+## Dev server / building site ==========
 # If you want to serve the development site locally at http://localhost:3000/
 yarn start
 # If you want to build the statics assets of the production site in the folder ./build
