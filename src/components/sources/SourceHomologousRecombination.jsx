@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import error2String from './error2String';
-import SingleInputselector from './SingleInputselector';
+import SingleInputSelector from './SingleInputSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 
 // A component representing the ligation of several fragments
@@ -49,13 +49,13 @@ function SourceHomologousRecombination({
     <div className="ligation">
 
       <div>Select template:</div>
-      <SingleInputselector {...{
+      <SingleInputSelector {...{
         options, selectedId: template, onChange: setTemplate,
       }}
       />
 
       <div>Select insert:</div>
-      <SingleInputselector {...{
+      <SingleInputSelector {...{
         options, selectedId: insert, onChange: setInsert,
       }}
       />
