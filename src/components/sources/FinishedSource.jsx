@@ -64,6 +64,15 @@ function FinishedSource({ source, deleteSource }) {
       </SourceBox>
     );
   }
+  if (source.type === 'homologous_recombination') {
+    return (
+      <SourceBox {...{ sourceId: source.id, deleteSource }}>
+        <div>
+          Homologous recombination with {source.input[0]} as template and {source.input[1]} as insert.
+        </div>
+      </SourceBox>
+    );
+  }
   return null;
 }
 

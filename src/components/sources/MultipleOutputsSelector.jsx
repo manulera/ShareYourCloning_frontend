@@ -6,9 +6,7 @@ import ArrowIcon from '../icons/ArrowIcon';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
 
-function MultipleOutputsSelector({
-  sources, entities, sourceId, commitSource, inputEntities,
-}) {
+function MultipleOutputsSelector({ sources, entities, sourceId, commitSource, inputEntities, }) {
   // If the output is already set or the list of outputs is empty, do not show this element
   if (sources.length === 0) { return null; }
 
@@ -35,18 +33,15 @@ function MultipleOutputsSelector({
   };
 
   const seq = convertToTeselaJson(entities[selectedOutput]);
-  const editor = seq.circular ? (
-    <CircularView {...editorProps} />
-  ) : (
-    <LinearView {...editorProps} />
-  );
-  React.useEffect(() =>updateEditor(store, editorName, {
+  const editor = seq.circular ? (<CircularView {...editorProps} />)
+    : (<LinearView {...editorProps} />);
+  React.useEffect(() => updateEditor(store, editorName, {
     sequenceData: seq,
     annotationVisibility: {
       reverseSequence: false,
       cutsites: false,
     },
-  }));
+  }), [seq, editorName]);
 
   return (
     <div className="multiple-output-selector">

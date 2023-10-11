@@ -15,6 +15,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
         <option value="repository_id">Repository ID (GenBank, AddGene)</option>
         <option value="sticky_ligation">Ligation with sticky ends</option>
         <option value="PCR">PCR</option>
+        <option value="homologous_recombination">Homologous recombination</option>
       </select>
     </label>
   );

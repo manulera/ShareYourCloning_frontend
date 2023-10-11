@@ -6,6 +6,7 @@ import SourceLigation from './SourceLigation';
 import SourceTypeSelector from './SourceTypeSelector';
 import SourceBox from './SourceBox';
 import SourcePCR from './SourcePCR';
+import SourceHomologousRecombination from './SourceHomologousRecombination';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -34,6 +35,14 @@ function Source({
     if (sourceType === 'sticky_ligation') {
       specificSource = (
         <SourceLigation {...{
+          sourceId, updateSource, inputEntities, entitiesNotChildSource,
+        }}
+        />
+      );
+    }
+    if (sourceType === 'homologous_recombination') {
+      specificSource = (
+        <SourceHomologousRecombination {...{
           sourceId, updateSource, inputEntities, entitiesNotChildSource,
         }}
         />

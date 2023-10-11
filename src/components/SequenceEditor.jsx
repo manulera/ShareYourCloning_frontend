@@ -25,7 +25,7 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
       reverseSequence: false,
       cutsites: false,
     },
-  }));
+  }), [seq, editorName]);
 
   const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
     <div className="hang-from-node">
