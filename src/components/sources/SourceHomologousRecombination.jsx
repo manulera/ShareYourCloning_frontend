@@ -30,7 +30,6 @@ function SourceHomologousRecombination({
       .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}homologous_recombination`, requestData, {minimal_homology: 40})
       .then((resp) => {
         setWaitingMessage(null);
-        console.log(resp.data)
         // If there is only a single product, commit the result, else allow choosing
         if (resp.data.sources.length === 1) {
           updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
@@ -43,12 +42,8 @@ function SourceHomologousRecombination({
   const options = inputEntityIds.concat(entityNotChildSourceIds);
 
   const setTemplate = (event) => updateSource({ id: sourceId, input: [Number(event.target.value), insert], type: 'sticky_ligation' });
-  const setInsert = (event) => {
-    console.log(event.target.value);
-    console.log(template);
-    updateSource({ id: sourceId, input: [template, Number(event.target.value)], type: 'sticky_ligation' });
-  }
-  
+  const setInsert = (event) => updateSource({ id: sourceId, input: [template, Number(event.target.value)], type: 'sticky_ligation' });
+
 
   return (
     <div className="ligation">
