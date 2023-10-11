@@ -6,14 +6,14 @@ import error2String from './error2String';
 // and get a sequence
 function SourceRepositoryId({ sourceId, updateSource }) {
   const [waitingMessage, setWaitingMessage] = React.useState('');
-  const [repositoryId, setRepositoryId] = React.useState('');
   const [selectedRepository, setSelectedRepository] = React.useState('');
+  const repositoryIdRef = React.useRef('');
+  
   const onSubmit = (event) => {
     event.preventDefault();
-    console.log(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`)
     setWaitingMessage(`Requesting sequence to ${selectedRepository}`);
     axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryId, repository: selectedRepository })
+      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
       .then((resp) => {
         setWaitingMessage(null);
         updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
@@ -47,7 +47,7 @@ function SourceRepositoryId({ sourceId, updateSource }) {
         {selectedRepository === 'genbank' ? 'NM_001018957.2' : '39282'}
       </p>
       <form onSubmit={onSubmit}>
-        <input type="text" value={repositoryId} onChange={(event) => setRepositoryId(event.target.value)} />
+        <input type="text" ref={repositoryIdRef}/>
         <button type="submit">Submit</button>
       </form>
     </>
