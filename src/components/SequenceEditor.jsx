@@ -7,6 +7,7 @@ import NewSourceBox from './sources/NewSourceBox';
 
 function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
   const editorName = `editor_${entity.id}`;
+  const renderCount = React.useRef(0);
   const editorProps = {
     editorName,
     isFullscreen: false,
@@ -38,6 +39,7 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
   if (addSourceButton !== null) {
     return (
       <div>
+        <h1>Renders: {renderCount.current++}</h1>
         {editor}
         <OverhangsDisplay {...{ entity }} />
         {addSourceButton}
@@ -47,6 +49,7 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
 
   return (
     <div>
+      <h1>Renders: {renderCount.current++}</h1>
       {editor}
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}
