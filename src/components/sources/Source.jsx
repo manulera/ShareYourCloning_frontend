@@ -15,49 +15,28 @@ import SourceHomologousRecombination from './SourceHomologousRecombination';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  source, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, inputEntities, primers,
+  source, updateSource, entitiesNotChildSource, deleteSource, inputEntities, primers,
 }) {
   const sourceId = source.id;
   const [sourceType, setSourceType] = React.useState(source.type);
   let specificSource = null;
-  if (sourceType !== null) {
-    if (sourceType === 'file') {
-      specificSource = <SourceFile {...{ sourceId, updateSource }} />;
-    }
-    if (sourceType === 'restriction') {
-      // TODO is there a way in which the input length could be >1?
-      specificSource = (<SourceRestriction {...{ sourceId, updateSource, inputEntities }} />
-      );
-    }
-    if (sourceType === 'repository_id') {
-      specificSource = (<SourceRepositoryId {...{ sourceId, updateSource }} />);
-    }
-    if (sourceType === 'sticky_ligation') {
-      specificSource = (
-        <SourceLigation {...{
-          sourceId, updateSource, inputEntities, entitiesNotChildSource,
-        }}
-        />
-      );
-    }
-    if (sourceType === 'homologous_recombination') {
-      specificSource = (
-        <SourceHomologousRecombination {...{
-          sourceId, updateSource, inputEntities, entitiesNotChildSource,
-        }}
-        />
-      );
-    }
-    if (sourceType === 'PCR') {
-      specificSource = (
-        <div>
-          <SourcePCR {...{
-            sourceId, updateSource, inputEntities, primers,
-          }}
-          />
-        </div>
-      );
-    }
+  switch (sourceType) {
+    /* eslint-disable */
+    case 'file':
+      specificSource = <SourceFile {...{ sourceId, updateSource }} />; break;
+    case 'restriction':
+      specificSource = <SourceRestriction {...{ sourceId, updateSource, inputEntities }} />; break;
+    case 'repository_id':
+      specificSource = <SourceRepositoryId {...{ sourceId, updateSource }} />; break;
+    case 'sticky_ligation':
+      specificSource = <SourceLigation {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+    case 'homologous_recombination':
+      specificSource = <SourceHomologousRecombination {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+    case 'PCR':
+      specificSource = <SourcePCR {...{ sourceId, updateSource, inputEntities, primers }} />; break;
+    default:
+      break;
+    /* eslint-enable */
   }
 
   return (
