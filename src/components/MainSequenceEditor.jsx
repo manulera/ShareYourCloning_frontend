@@ -30,31 +30,34 @@ function MainSequenceEditor({ node }) {
 
   const seq = node === undefined ? undefined : convertToTeselaJson(node.node);
   const editor = <Editor {...editorProps} />;
-  
+
   React.useEffect(() => {
-  updateEditor(store, editorName, { sequenceData: seq, annotationVisibility: { reverseSequence: true, cutsites: false,},
-    adjustCircularLabelSpacing: true,
-    panelsShown: [[
-      {
-        id: 'rail',
-        name: 'Linear Map',
-        active: seq === undefined || !seq.circular,
-      },
-      {
-        id: 'sequence',
-        name: 'Sequence Map',
-      },
-      {
-        active: seq !== undefined && seq.circular,
-        id: 'circular',
-        name: 'Circular Map',
-      },
-      {
-        id: 'properties',
-        name: 'Properties',
-      },
-    ]],
-  });});
+    updateEditor(store, editorName, {
+      sequenceData: seq,
+      annotationVisibility: { reverseSequence: true, cutsites: false },
+      adjustCircularLabelSpacing: true,
+      panelsShown: [[
+        {
+          id: 'rail',
+          name: 'Linear Map',
+          active: seq === undefined || !seq.circular,
+        },
+        {
+          id: 'sequence',
+          name: 'Sequence Map',
+        },
+        {
+          active: seq !== undefined && seq.circular,
+          id: 'circular',
+          name: 'Circular Map',
+        },
+        {
+          id: 'properties',
+          name: 'Properties',
+        },
+      ]],
+    });
+  }, [seq, editorName]);
 
   return (
     <div>

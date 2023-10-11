@@ -37,7 +37,7 @@ function SubSequenceDisplayer({
         end: source.fragment_boundaries[1],
       },
       caretPosition: source.fragment_boundaries[0],
-    }));
+    }), [seq, editorName, source]);
 
     return (
       <div className="multiple-output-selector">
