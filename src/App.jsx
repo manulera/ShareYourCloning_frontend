@@ -11,72 +11,8 @@ import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
 import FinishedSource from './components/sources/FinishedSource';
 import PrimerList from './components/primers/PrimerList';
-/**
- * Generate a list of objects, where every object has:
- * id: the id of an entity in the 'entities' state array
- * jsx: jsx containing a representation of each entity (in this case graphical representation)
- *    of the DNA molecule
- * node: contains the entity
- * @param {Array<entity>} entities array of entities
- * @param {function} addSource passing down the function addSource, so that in the entities that are
- *                        not the input of anything (at the bottom of the tree), there is a button
- *                        to add a new source.
- * @returns the mentioned list
- */
-
-function buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput) {
-  const out = [];
-  entities.forEach((entity) => {
-    out.push({
-      id: entity.id,
-      node: entity,
-      jsx: (
-        <div key={entity.id}>
-          <SequenceEditor {...{ entity, addSource, getSourceWhereEntityIsInput }} />
-        </div>
-      ),
-    });
-  });
-  return out;
-}
-
-/**
- * Generate a list of objects, where every object has:
- * id: the id of an source in the 'sources' state array
- * jsx: jsx containing a representation of each source
- * node: contains the entity
- * @param {Array<source>} sources
- * @param {function} updateSource
- * @param {*} getEntityFromId
- * @returns
- */
-function buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, primers) {
-  const out = [];
-  sources.forEach((source) => {
-    let sourceElement = null;
-    if (source.output === null) {
-      const inputEntities = source.input.map((entityId) => getEntityFromId(entityId));
-      sourceElement = (
-        <div>
-          <Source
-            key={source.id}
-            {...{
-              source, updateSource, entitiesNotChildSource, deleteSource, inputEntities, primers,
-            }}
-          />
-        </div>
-      );
-    } else {
-      sourceElement = (<div key={source.id}><FinishedSource {...{ source, deleteSource }} /></div>);
-    }
-    out.push({
-      id: source.id,
-      node: source,
-      jsx: sourceElement,
-    });
-  });
-  return out;
-}
+import NetWorkNode from './components/NetworkNode';
+import NewSourceBox from './components/sources/NewSourceBox';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
@@ -203,20 +139,7 @@ function App() {
     const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
   };
-  // Here we build an array of objects representing the nodes of the tree
-  // each object looks like: { data: entity or source, ancestors: [] }
-  // where data is the node, which can be an entity or a source, and ancestors is just
-  // an array of the parent nodes connected to this node.
-  //
-  // As an example, for a relationship source1 -> entity2 -> source3 -> entity4
-  // In the application state, this would be:
-  // sources: [
-  //  {id: 1, input: null, output: [2]}, {id: 3, input: 2, output: [4]}
-  // ]
-  // entities: [{id:2}, {id:4}]
-  // and entities would only have their ids.
-  // In the output of this function, this would become:
-  // nodes: [{id:4, ancestors: [3], kind: entity}, {id:3, ancestors: [2], kind: source}, etc.]
+
   const network = constructNetwork(entities, sources);
   // A function to delete a source and its children
   const deleteSource = (sourceId) => {
@@ -234,30 +157,6 @@ function App() {
     setEntities(entities.filter((e) => !entities2delete.includes(e.id)));
   };
 
-  // Here we make an array of objects in which each one has the id, and the jsx that will go
-  // into each node in the tree.
-  let elementList = buildElementListEntities(entities, addSource, getSourceWhereEntityIsInput).concat(
-    buildElementListSources(sources, updateSource, getEntityFromId, entitiesNotChildSource, deleteSource, primers),
-  );
-
-  // Here we append the toggle element to each jsx element in elemenList
-  elementList = elementList.map((element) => {
-    const newElement = { ...element };
-    newElement.jsx = (
-      <div key={element.id}>
-        {element.jsx}
-        {element.node.kind !== 'source' && (
-        <MainSequenceCheckBox
-          {...{ id: element.id, mainSequenceId, updateMainSequenceId }}
-        />
-        )}
-        <div className="corner-id">
-          {element.id}
-        </div>
-      </div>
-    );
-    return newElement;
-  });
   const exportData = () => {
     downloadStateAsJson(entities, sources, description, primers);
   };
@@ -266,10 +165,7 @@ function App() {
     setShowDescription(newState.description !== '');
     setShowPrimers(newState.primers.length > 0);
   };
-  // This function returns a node from elementList by passing the id. This is useful
-  // for the main sequence editor, which will perform a different task for a source
-  // or a sequence
-  const nodeFinder = (id) => elementList.find((element) => element.id === id);
+
   return (
     <div className="App">
       <header className="App-header" />
