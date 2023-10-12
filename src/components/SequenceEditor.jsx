@@ -5,9 +5,10 @@ import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
 
-function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
+const SequenceEditor = React.memo(({ entity, addSource, getSourceWhereEntityIsInput }) => {
   const editorName = `editor_${entity.id}`;
   const renderCount = React.useRef(0);
+  const editorCount = React.useRef(0);
   const editorProps = {
     editorName,
     isFullscreen: false,
@@ -20,13 +21,16 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
   const seq = convertToTeselaJson(entity);
   const editor = seq.circular ? <CircularView {...editorProps} /> : <LinearView {...editorProps} />;
 
-  useEffect(() => updateEditor(store, editorName, {
-    sequenceData: seq,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  }), [seq, editorName]);
+  useEffect(() => {
+    updateEditor(store, editorName, {
+      sequenceData: seq,
+      annotationVisibility: {
+        reverseSequence: false,
+        cutsites: false,
+      },
+    });
+    editorCount.current += 1;
+  }, [seq, editorName]);
 
   const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
     <div className="hang-from-node">
@@ -36,24 +40,14 @@ function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
     </div>
   );
 
-  if (addSourceButton !== null) {
-    return (
-      <div>
-        <h1>Renders: {renderCount.current++}</h1>
-        {editor}
-        <OverhangsDisplay {...{ entity }} />
-        {addSourceButton}
-      </div>
-    );
-  }
-
   return (
     <div>
-      <h1>Renders: {renderCount.current++}</h1>
+      <h1>Renders: {renderCount.current++} / {editorCount.current}</h1>
       {editor}
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}
     </div>
   );
-}
+});
+
 export default SequenceEditor;

@@ -19,7 +19,7 @@ function MultipleInputsSelector({
     <div className="multiple-input-selector">
       <h3>Select several inputs for this step</h3>
       <label htmlFor="select_multiple_inputs">
-        <select multiple="true" value={inputEntityIds} onChange={onChange} id="select_multiple_inputs">
+        <select multiple value={inputEntityIds} onChange={onChange} id="select_multiple_inputs">
           {options.map((id) => <option key={id} value={id}>{id}</option>)}
         </select>
       </label>

@@ -97,8 +97,6 @@ function App() {
       id: 1,
       input: [],
       output: null,
-      output_list: [],
-      output_index: null,
       type: null,
       kind: 'source',
     },
@@ -163,7 +161,6 @@ function App() {
     // // Add the entity
     updateOrCreateEntity(newEntity, newSource);
     // TODO probably a nicer way of doing this
-    const newSourceArray = sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source));
     setSources(sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source)));
   };
 
@@ -179,8 +176,6 @@ function App() {
         id: uniqueIdDispatcher(),
         input: inputEntitiesIds,
         output: null,
-        output_list: [],
-        output_index: null,
         type: null,
         kind: 'source',
       },

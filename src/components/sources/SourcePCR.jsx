@@ -51,7 +51,7 @@ function SourcePCR({
       <h3 className="header-nodes">PCR</h3>
       <form onSubmit={onSubmit}>
         <label htmlFor="select_multiple_primers">
-          <select multiple="true" value={selectedPrimerIds} id="select_multiple_primers" onChange={onChange}>
+          <select multiple value={selectedPrimerIds} id="select_multiple_primers" onChange={onChange}>
             {primers.map((primer) => <option value={primer.id}>{primer.name}</option>)}
           </select>
         </label>

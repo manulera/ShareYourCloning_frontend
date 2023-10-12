@@ -23,7 +23,6 @@ function SourceLigation({
       source: { input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    // A better way not to have to type twice the output_list thing
     setWaitingMessage('Processing...');
     axios
       .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
