@@ -41,7 +41,7 @@ function Source({
 
   return (
     <SourceBox {...{ sourceId, deleteSource }}>
-      <SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />
+      <SourceTypeSelector {...{ sourceId, sourceType, setSourceType, hasInputEntities: inputEntities.length }} />
       {specificSource}
     </SourceBox>
   );
