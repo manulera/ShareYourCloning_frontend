@@ -1,15 +1,10 @@
 import React from 'react';
 import './App.css';
-import NetworkTree from './components/NetworkTree';
-import SequenceEditor from './components/SequenceEditor';
-import Source from './components/sources/Source';
-import MainSequenceCheckBox from './components/MainSequenceCheckBox';
 import MainSequenceEditor from './components/MainSequenceEditor';
 import { constructNetwork } from './network';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
-import FinishedSource from './components/sources/FinishedSource';
 import PrimerList from './components/primers/PrimerList';
 import NetWorkNode from './components/NetworkNode';
 import NewSourceBox from './components/sources/NewSourceBox';
@@ -100,9 +95,6 @@ function App() {
     setSources(sources.map((source) => (source.id === newSource.id ? { ...newSource, output: newEntity.id } : source)));
   };
 
-  // Return an entity from its id. This is used for executing sources that take inputs,
-  // since source.input is an array with the ids of input entities
-  const getEntityFromId = (id) => entities.filter((entity) => entity.id === id)[0];
   const getSourceWhereEntityIsInput = (id) => sources.find((source) => source.input.includes(id));
   // Add a new source
   const addSource = (inputEntities) => {
@@ -139,6 +131,8 @@ function App() {
     const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
   };
+
+  console.log(mainSequenceId)
 
   const network = constructNetwork(entities, sources);
   // A function to delete a source and its children
@@ -191,13 +185,27 @@ function App() {
           </div>
         ) }
         <div className="network-container">
-          <NetworkTree {...{
-            network, nodeFinder, addSource,
-          }}
-          />
+          <div className="tf-tree tf-ancestor-tree">
+            <ul>
+              {network.map((node) => (
+                <NetWorkNode key={node.source.id} {...{ node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId, updateMainSequenceId }} />
+              ))}
+              {/* There is always a box on the right side to add a source */}
+              <li key="new_source_box">
+                <span className="tf-nc"><span className="node-text"><NewSourceBox {...{ addSource }} /></span></span>
+              </li>
+            </ul>
+          </div>
         </div>
         <div className="main-sequence-editor">
-          <MainSequenceEditor {...{ node: nodeFinder(mainSequenceId) }} />
+          {/* TODO probably this can be made not be rendered every time the seq is updated */}
+          <MainSequenceEditor entity={entities.find((e) => e.id === mainSequenceId)} />
+        </div>
+        <div>
+          {/* TODO include here some code that shows the model , trimming the sequence part */}
+          {/* <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
+            {JSON.stringify(network, null, 4)}
+          </code> */}
         </div>
       </div>
     </div>
