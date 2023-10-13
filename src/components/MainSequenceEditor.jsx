@@ -4,7 +4,7 @@ import { convertToTeselaJson } from '../sequenceParsers';
 
 import store from '../store';
 
-function MainSequenceEditor({ node }) {
+function MainSequenceEditor({ entity }) {
   const editorName = 'mainEditor';
   const editorProps = {
     editorName,
@@ -28,7 +28,8 @@ function MainSequenceEditor({ node }) {
     },
   };
 
-  const seq = node === undefined ? undefined : convertToTeselaJson(node.node);
+  const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
+
   const editor = <Editor {...editorProps} />;
 
   React.useEffect(() => {

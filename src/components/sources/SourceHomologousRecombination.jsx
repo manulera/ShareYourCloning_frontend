@@ -24,7 +24,6 @@ function SourceHomologousRecombination({
       source: { input: inputEntityIds },
       sequences: inputEntities,
     };
-    // A better way not to have to type twice the output_list thing
     setWaitingMessage('Processing...');
     axios
       .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}homologous_recombination`, requestData, {minimal_homology: 40})

@@ -4,10 +4,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
 function SourceBox({ children, sourceId, deleteSource }) {
+  const renderCount = React.useRef(0);
   const tooltipText = <div className="tooltip-text">Delete source and children</div>;
   const onClickDeleteSource = () => deleteSource(sourceId);
   return (
     <div className="select-source">
+      <div>Renders: {renderCount.current++}</div>
       <button className="icon-corner" type="submit" onClick={onClickDeleteSource}>
         <Tooltip title={tooltipText} arrow placement="top">
           <Box>

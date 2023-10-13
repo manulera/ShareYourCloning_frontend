@@ -1,30 +1,11 @@
-function ancestorWithSmallestId(node) {
-  if (node.ancestors.length === 0) {
-    return node.data.id;
-  }
-  return Math.min(node.ancestors.map((n) => ancestorWithSmallestId(n)));
-}
+export function getParentNodes(node, entities, sources) {
+  const parentEntities = entities.filter((entity) => node.source.input.includes(entity.id));
 
-export function findAncestors(element, entities, sources) {
-  const ancestors = [];
-  if (element.kind === 'source') {
-    const ancestorEntities = entities.filter((entity) => element.input.includes(entity.id));
-    ancestorEntities.forEach((entity) => {
-      const thisTreeElement = { data: entity, ancestors: [] };
-      thisTreeElement.ancestors = findAncestors(thisTreeElement.data, entities, sources);
-      ancestors.push(thisTreeElement);
-    });
-  }
-  if (element.kind === 'entity') {
-    // There should be only one
-    const ancestorSources = sources.filter((source) => element.id === source.output);
-    ancestorSources.forEach((source) => {
-      const thisTreeElement = { data: source, ancestors: [] };
-      thisTreeElement.ancestors = findAncestors(thisTreeElement.data, entities, sources);
-      ancestors.push(thisTreeElement);
-    });
-  }
-  return ancestors.sort((a, b) => ancestorWithSmallestId(a) - ancestorWithSmallestId(b));
+  return parentEntities.map((parentEntity) => {
+    const parentSource = sources.find((source) => source.output === parentEntity.id);
+    const parentNode = { source: parentSource, entity: parentEntity };
+    return { ...parentNode, parentNodes: getParentNodes(parentNode, entities, sources) };
+  });
 }
 
 export function constructNetwork(entities, sources) {
@@ -32,22 +13,13 @@ export function constructNetwork(entities, sources) {
 
   // To construct the network, we start by the elements of DNA that are not input for anything
   // and the sources that have no output
-  entities.forEach((entity) => {
-    const entityIsInput = sources.reduce((result, source) => result
-          || source.input.includes(entity.id), false);
-    if (!entityIsInput) {
-      const thisTreeElement = { data: entity, ancestors: [] };
-      thisTreeElement.ancestors = findAncestors(thisTreeElement.data, entities, sources);
-      network.push(thisTreeElement);
-    }
-  });
+  const entityIdsThatAreInput = sources.reduce((result, source) => result.concat(source.input), []);
+  const entitiesThatAreNotInput = entities.filter((entity) => !entityIdsThatAreInput.includes(entity.id));
 
-  sources.forEach((source) => {
-    if (source.output === null) {
-      const thisTreeElement = { data: source, ancestors: [] };
-      thisTreeElement.ancestors = findAncestors(thisTreeElement.data, entities, sources);
-      network.push(thisTreeElement);
-    }
-  });
-  return network.sort((a, b) => ancestorWithSmallestId(a) - ancestorWithSmallestId(b));
+  const sourcesWithoutOutput = sources.filter((source) => source.output === null);
+
+  entitiesThatAreNotInput.forEach((entity) => network.push({ entity, source: sources.find((s) => s.output === entity.id) }));
+  sourcesWithoutOutput.forEach((source) => network.push({ entity: null, source }));
+
+  return network.map((node) => ({ ...node, parentNodes: getParentNodes(node, entities, sources) }));
 }
