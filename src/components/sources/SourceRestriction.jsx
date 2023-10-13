@@ -35,11 +35,7 @@ function SourceRestriction({ sourceId, updateSource, inputEntities }) {
         if (resp.data.sources.length === 1) {
           updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
         } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
-      }).catch((error) => {
-        setWaitingMessage(error2String(error));
-        setSources([]);
-        setEntities([]);
-      });
+      }).catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });
   };
 
   return (
