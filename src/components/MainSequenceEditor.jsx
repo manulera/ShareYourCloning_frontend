@@ -1,10 +1,11 @@
 import React from 'react';
 import { Editor, updateEditor } from '@teselagen/ove';
 import { convertToTeselaJson } from '../sequenceParsers';
-
+import { MainSequenceContext } from '../context/MainSequenceContext';
 import store from '../store';
 
-function MainSequenceEditor({ entity }) {
+function MainSequenceEditor({ entities }) {
+  const { mainSequenceId } = React.useContext(MainSequenceContext);
   const editorName = 'mainEditor';
   const editorProps = {
     editorName,
@@ -27,7 +28,7 @@ function MainSequenceEditor({ entity }) {
       ],
     },
   };
-
+  const entity = entities.find((e) => e.id === mainSequenceId);
   const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
 
   const editor = <Editor {...editorProps} />;

@@ -56,10 +56,6 @@ function App() {
     setPrimers(oldRemoved);
   };
 
-  // We pass this set function to the constructor of the tree, so that when you click on a
-  // toggle button, the sequence in that node is displayed in the main editor
-  const [mainSequenceId, setMainSequenceId] = React.useState(null);
-
   // Update the entities state variable with a new entity
   // we pass also the source to delete an entity
   // with the same source, if existed
@@ -125,14 +121,6 @@ function App() {
     }
   });
 
-  // This function sets the state of mainSequenceId (the id of the sequence that is displayed
-  // outside of the tree in the rich editor). It is passed to the MainSequenceCheckBox, to
-  // have one at each node.
-  const updateMainSequenceId = (id) => {
-    const newMainSequenceId = mainSequenceId !== id ? id : null;
-    setMainSequenceId(newMainSequenceId);
-  };
-
   const network = constructNetwork(entities, sources);
   // A function to delete a source and its children
   const deleteSource = (sourceId) => {
@@ -187,7 +175,7 @@ function App() {
           <div className="tf-tree tf-ancestor-tree">
             <ul>
               {network.map((node) => (
-                <NetWorkNode key={node.source.id} {...{ node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId, updateMainSequenceId }} />
+                <NetWorkNode key={node.source.id} {...{ node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers}} />
               ))}
               {/* There is always a box on the right side to add a source */}
               <li key="new_source_box">
@@ -198,7 +186,7 @@ function App() {
         </div>
         <div className="main-sequence-editor">
           {/* TODO probably this can be made not be rendered every time the seq is updated */}
-          <MainSequenceEditor entity={entities.find((e) => e.id === mainSequenceId)} />
+          <MainSequenceEditor {...{ entities }} />
         </div>
         <div>
           {/* TODO include here some code that shows the model , trimming the sequence part */}
