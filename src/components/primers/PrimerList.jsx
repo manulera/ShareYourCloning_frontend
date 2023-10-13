@@ -10,7 +10,7 @@ function PrimerList({
   let bottomPart = null;
   if (showEditPrimers) {
     bottomPart = (
-      <PrimerEditList {...{ addPrimerList, setShowEditPrimers }} />
+      <PrimerEditList {...{ addPrimerList, setShowEditPrimers, existingPrimers: primers }} />
 
     );
   } else {

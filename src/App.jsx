@@ -39,10 +39,11 @@ function App() {
   const [showPrimers, setShowPrimers] = React.useState(false);
 
   const addPrimerList = (newPrimers) => {
+    const firstPrimerId = uniqueIdDispatcher();
     setPrimers([
       ...primers,
       // Asign ids to the new primers
-      ...newPrimers.map((newPrimer) => ({ ...newPrimer, id: uniqueIdDispatcher() })),
+      ...newPrimers.map((newPrimer, i) => ({ ...newPrimer, id: firstPrimerId + i })),
     ]);
   };
   const deletePrimer = (primerId) => {
@@ -131,8 +132,6 @@ function App() {
     const newMainSequenceId = mainSequenceId !== id ? id : null;
     setMainSequenceId(newMainSequenceId);
   };
-
-  console.log(mainSequenceId)
 
   const network = constructNetwork(entities, sources);
   // A function to delete a source and its children
