@@ -2,11 +2,12 @@ import React from 'react';
 import { AiFillEye } from 'react-icons/ai';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
-import { setMainSequenceId } from '../cloning_store/actions'
 import { useDispatch, useSelector } from 'react-redux';
+import { cloningActions } from '../store/cloning';
 
 function MainSequenceCheckBox({ id }) {
   const dispatch = useDispatch();
+  const { setMainSequenceId } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const toggleMain = () => (mainSequenceId === id ? dispatch(setMainSequenceId(null)) : dispatch(setMainSequenceId(id)));
   const tooltipText = <div className="tooltip-text">See sequence in main editor</div>;
