@@ -7,6 +7,5 @@ export const MainSequenceContext = React.createContext({
 
 export const MainSequenceProvider = ({ children }) => {
   const [mainSequenceId, setMainSequenceId] = React.useState(null);
-  const blah = (id) => {console.log('called', id); setMainSequenceId(id);}
-  return <MainSequenceContext.Provider value={{ mainSequenceId, setMainSequenceId: blah }}>{children}</MainSequenceContext.Provider>;
+  return <MainSequenceContext.Provider value={{ mainSequenceId, setMainSequenceId }}>{children}</MainSequenceContext.Provider>;
 };
