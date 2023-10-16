@@ -4,9 +4,11 @@ import { convertToTeselaJson } from '../sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
+import { shallowEqual, useSelector } from 'react-redux';
 
-const SequenceEditor = React.memo(({ entity, addSource, getSourceWhereEntityIsInput }) => {
-  const editorName = `editor_${entity.id}`;
+const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
+  const editorName = `editor_${entityId}`;
+  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const renderCount = React.useRef(0);
   const editorCount = React.useRef(0);
   const editorProps = {
@@ -32,17 +34,19 @@ const SequenceEditor = React.memo(({ entity, addSource, getSourceWhereEntityIsIn
     editorCount.current += 1;
   }, [seq, editorName]);
 
-  const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
+  const addSourceButton = isRootNode ? null : (
     <div className="hang-from-node">
       <p>
-        <NewSourceBox {...{ addSource, entity }} />
+        <NewSourceBox {...{ inputEntitiesIds: [entityId] }} />
       </p>
     </div>
   );
 
   return (
     <div>
-      <h1>Renders: {renderCount.current++} / {editorCount.current}</h1>
+      <h1>
+        Renders: {renderCount.current++} / {editorCount.current}
+      </h1>
       {editor}
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}

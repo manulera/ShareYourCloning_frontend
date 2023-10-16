@@ -7,7 +7,7 @@ import MainSequenceCheckBox from './MainSequenceCheckBox';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
-  node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId,
+  node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId, isRootNode
 }) {
   const parentsContent = node.parentNodes.length === 0 ? null : (
     <ul>
@@ -16,7 +16,7 @@ function NetWorkNode({
           node={parentNode}
           key={`node-${parentNode.source.id}`}
           {...{
-            updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId,
+            updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId, isRootNode: false
           }}
         />
       ))}
@@ -58,11 +58,11 @@ function NetWorkNode({
     <li key={entity.id}>
       <span className="tf-nc">
         <span className="node-text">
-          <SequenceEditor {...{ entity, addSource, getSourceWhereEntityIsInput }} />
+          <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
           <div className="corner-id">
             {entity.id}
           </div>
-          <MainSequenceCheckBox {...{ id: entity.id}} />
+          <MainSequenceCheckBox {...{ id: entity.id }} />
         </span>
       </span>
       <ul>
