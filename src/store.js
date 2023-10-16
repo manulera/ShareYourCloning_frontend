@@ -1,13 +1,9 @@
-
-//optionally connect to the redux store
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { tg_modalState } from "@teselagen/ui";
-import {
-  vectorEditorReducer as VectorEditor,
-  vectorEditorMiddleware
-} from "@teselagen/ove";
+import { vectorEditorReducer as VectorEditor, vectorEditorMiddleware } from "@teselagen/ove";
 import thunk from "redux-thunk";
 import { reducer as form } from "redux-form";
+import cloningReducer from "./cloning_store/reducer";
 
 const composeEnhancer =
   (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
@@ -23,7 +19,8 @@ const store = createStore(
   combineReducers({
     form,
     tg_modalState,
-    VectorEditor: VectorEditor()
+    VectorEditor: VectorEditor(),
+    cloning: cloningReducer,
   }),
   undefined,
   composeEnhancer(

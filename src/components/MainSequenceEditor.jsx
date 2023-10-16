@@ -1,11 +1,11 @@
 import React from 'react';
 import { Editor, updateEditor } from '@teselagen/ove';
+import { useSelector } from 'react-redux';
 import { convertToTeselaJson } from '../sequenceParsers';
-import { MainSequenceContext } from '../context/MainSequenceContext';
 import store from '../store';
 
 function MainSequenceEditor({ entities }) {
-  const { mainSequenceId } = React.useContext(MainSequenceContext);
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const editorName = 'mainEditor';
   const editorProps = {
     editorName,
