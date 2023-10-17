@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
+import { shallowEqual, useSelector } from 'react-redux';
 import { convertToTeselaJson } from '../sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
-import { shallowEqual, useSelector } from 'react-redux';
+
 
 const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
   const editorName = `editor_${entityId}`;
@@ -34,7 +35,7 @@ const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
     editorCount.current += 1;
   }, [seq, editorName]);
 
-  const addSourceButton = isRootNode ? null : (
+  const addSourceButton = !isRootNode ? null : (
     <div className="hang-from-node">
       <p>
         <NewSourceBox {...{ inputEntitiesIds: [entityId] }} />

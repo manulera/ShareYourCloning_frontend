@@ -80,7 +80,7 @@ function App() {
           <div className="tf-tree tf-ancestor-tree">
             <ul>
               {network.map((node) => (
-                <NetWorkNode key={node.source.id} {...{ node, primers, isRootNode: true}} />
+                <NetWorkNode key={node.source.id} {...{ node, primers, isRootNode: true }} />
               ))}
               {/* There is always a box on the right side to add a source */}
               <li key="new_source_box">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -15,19 +16,24 @@ import SourceHomologousRecombination from './SourceHomologousRecombination';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({
-  source, updateSource, entitiesNotChildSource, deleteSource, inputEntities, primers,
+  sourceId, primers,
 }) {
-  const sourceId = source.id;
+  const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
+  // , updateSource, entitiesNotChildSource, deleteSource, inputEntities
   const [sourceType, setSourceType] = React.useState(source.type);
+  const inputEntities = useSelector((state) => {
+    const thisSource = state.cloning.sources.find((source) => source.id === sourceId);
+    return state.cloning.entities.filter((entity) => thisSource.input.includes(entity.id));
+  }, shallowEqual);
   let specificSource = null;
   switch (sourceType) {
     /* eslint-disable */
     case 'file':
-      specificSource = <SourceFile {...{ sourceId, updateSource }} />; break;
+      specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
       specificSource = <SourceRestriction {...{ sourceId, updateSource, inputEntities }} />; break;
     case 'repository_id':
-      specificSource = <SourceRepositoryId {...{ sourceId, updateSource }} />; break;
+      specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'sticky_ligation':
       specificSource = <SourceLigation {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
     case 'homologous_recombination':
@@ -40,7 +46,7 @@ function Source({
   }
 
   return (
-    <SourceBox {...{ sourceId, deleteSource }}>
+    <SourceBox {...{ sourceId }}>
       <SourceTypeSelector {...{ sourceId, sourceType, setSourceType, hasInputEntities: inputEntities.length > 0 }} />
       {specificSource}
     </SourceBox>

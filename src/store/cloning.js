@@ -1,15 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+// const createSlice = require("@reduxjs/toolkit").createSlice;
 
 const initialState = {
   mainSequenceId: null,
   nextUniqueId: 2,
-  sources: {
-    id: 1,
-    input: [],
-    output: null,
-    type: null,
-    kind: 'source',
-  },
+  sources: [
+    {
+      id: 1,
+      input: [],
+      output: null,
+      type: null,
+      kind: 'source',
+    },
+  ],
   entities: [],
 };
 
@@ -20,7 +23,7 @@ const reducer = {
   },
 
   addEmptySource(state, action) {
-    const { inputEntitiesIds } = action.payload;
+    const inputEntitiesIds = action.payload;
     const { sources } = state;
     state.nextUniqueId += 1;
     sources.push({
@@ -39,7 +42,9 @@ const reducer = {
     newEntity.id = state.nextUniqueId;
     newSource.output = state.nextUniqueId;
     entities.push(newEntity);
-    sources.input.push(newSource.id);
+    // Replace the source with the new one
+    const source = sources.find((s) => s.id === newSource.id);
+    Object.assign(source, newSource);
   },
 
   updateSource(state, action) {

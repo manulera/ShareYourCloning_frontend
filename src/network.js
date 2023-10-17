@@ -10,7 +10,6 @@ export function getParentNodes(node, entities, sources) {
 
 export function constructNetwork(entities, sources) {
   const network = [];
-
   // To construct the network, we start by the elements of DNA that are not input for anything
   // and the sources that have no output
   const entityIdsThatAreInput = sources.reduce((result, source) => result.concat(source.input), []);
