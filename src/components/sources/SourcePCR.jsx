@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
-import error2String from './error2String';
+import error2String from '../../utils/error2String';
 
 function SourcePCR({
   sourceId, updateSource, inputEntities, primers,

@@ -1,27 +1,17 @@
-import axios from 'axios';
 import React from 'react';
-import error2String from './error2String';
-import { cloningActions } from '../../store/cloning';
-import { useDispatch } from 'react-redux';
+import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component providing an interface for the user to type a Genbank ID
 // and get a sequence
 function SourceRepositoryId({ sourceId }) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef('');
-  const { addEntityAndItsSource } = cloningActions;
-  const dispatch = useDispatch();
+  
+  const { waitingMessage, sendRequest } = useBackendAPI(sourceId);
+
   const onSubmit = (event) => {
     event.preventDefault();
-    setWaitingMessage(`Requesting sequence to ${selectedRepository}`);
-    axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
-      .then((resp) => {
-        setWaitingMessage(null);
-        dispatch(addEntityAndItsSource({ newSource: { ...resp.data.sources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
-      })
-      .catch((error) => { setWaitingMessage(error2String(error)); });
+    sendRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
   };
   const repositorySelector = (
     <label htmlFor={`select_repository_${sourceId}`}>

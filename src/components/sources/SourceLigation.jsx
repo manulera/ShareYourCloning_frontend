@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react';
-import error2String from './error2String';
+import error2String from '../../utils/error2String';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 

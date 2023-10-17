@@ -1,13 +1,13 @@
 import React from 'react';
 import axios from 'axios';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
-import error2String from './error2String';
+import error2String from '../../utils/error2String';
+
 
 // A component providing an interface for the user to perform a restriction reaction
 // with one or more restriction enzymes, move between output fragments, and eventually
 // select one as an output.
 function SourceRestriction({ sourceId, updateSource, inputEntities }) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
   const [enzymesCSV, setenzymesCSV] = React.useState([]);
   const [sources, setSources] = React.useState('');
   const [entities, setEntities] = React.useState('');
