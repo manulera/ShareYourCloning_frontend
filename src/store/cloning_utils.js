@@ -12,6 +12,6 @@ export function getIdsOfEntitiesWithoutChildSource(sources, entities) {
       entitiesNotChildSource.push(entity);
     }
   });
-  return entitiesNotChildSource;
+  return entitiesNotChildSource.map((entity) => entity.id);
 }
 

@@ -1,44 +1,25 @@
-import axios from 'axios';
 import React from 'react';
-import error2String from '../../utils/error2String';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
+import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component representing the ligation of several fragments
-function SourceLigation({
-  sourceId, updateSource, inputEntities, entitiesNotChildSource,
-}) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
-  const [sources, setSources] = React.useState('');
-  const [entities, setEntities] = React.useState('');
-  const entityNotChildSourceIds = entitiesNotChildSource.map((e) => e.id);
+function SourceLigation({ sourceId, inputEntities }) {
   const inputEntityIds = inputEntities.map((e) => e.id);
-
-  const commitSource = (index) => {
-    updateSource({ ...sources[index], id: sourceId }, entities[index]);
-  };
+  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
       source: { input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    setWaitingMessage('Processing...');
-    axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}sticky_ligation`, requestData)
-      .then((resp) => {
-        setWaitingMessage(null);
-        // If there is only a single product, commit the result, else allow choosing
-        if (resp.data.sources.length === 1) {
-          updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
-        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
-      }).catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });
+    sendRequest('sticky_ligation', requestData);
   };
 
   return (
     <div className="ligation">
       <MultipleInputsSelector {...{
-        entityNotChildSourceIds, inputEntityIds, sourceId, updateSource, sourceType: 'sticky_ligation',
+        inputEntityIds, sourceId, sourceType: 'sticky_ligation',
       }}
       />
       <form onSubmit={onSubmit}>
@@ -46,7 +27,7 @@ function SourceLigation({
       </form>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId, commitSource, inputEntities,
+        sources, entities, sourceId, inputEntities,
       }}
       />
     </div>

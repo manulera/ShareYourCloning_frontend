@@ -12,7 +12,6 @@ export default function useBackendAPI(sourceId) {
   const dispatch = useDispatch();
 
   const sendRequest = useCallback(async (endpoint, requestData, config = {}) => {
-    console.log('sendRequest', endpoint, requestData, config);
     setWaitingMessage('Request sent to the server');
     const url = import.meta.env.VITE_REACT_APP_BACKEND_URL + endpoint;
     axios

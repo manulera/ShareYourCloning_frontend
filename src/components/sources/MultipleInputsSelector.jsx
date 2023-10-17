@@ -1,8 +1,14 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { cloningActions } from '../../store/cloning';
+import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
 function MultipleInputsSelector({
-  entityNotChildSourceIds, inputEntityIds, sourceId, updateSource, sourceType,
+  inputEntityIds, sourceId, sourceType,
 }) {
+  const dispatch = useDispatch();
+  const { updateSource } = cloningActions;
+
   const onChange = (event) => {
     const { options } = event.target;
     const value = [];
@@ -11,8 +17,10 @@ function MultipleInputsSelector({
         value.push(Number(options[i].value));
       }
     }
-    updateSource({ id: sourceId, input: value, type: sourceType });
+    dispatch(updateSource({ id: sourceId, input: value, type: sourceType }));
   };
+  const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities));
+  
   // The possible options should include the already selected ones + the one without children
   const options = inputEntityIds.concat(entityNotChildSourceIds);
   return (

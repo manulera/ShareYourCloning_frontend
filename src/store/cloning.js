@@ -48,14 +48,14 @@ const reducer = {
   },
 
   updateSource(state, action) {
-    const { newSource } = action.payload;
+    const newSource = action.payload;
     const { sources } = state;
     const source = sources.find((s) => s.id === newSource.id);
     Object.assign(source, newSource);
   },
 
   deleteSourceAndItsChildren(state, action) {
-    const { sourceId } = action.payload;
+    const sourceId = action.payload;
     const { sources, entities } = state;
     const sources2delete = [];
     const entities2delete = [];
@@ -68,6 +68,13 @@ const reducer = {
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
+  },
+
+  loadState(state, action) {
+    const { sources, entities } = action.payload;
+    console.log(sources, entities)
+    state.sources = sources;
+    state.entities = entities;
   },
 
 };

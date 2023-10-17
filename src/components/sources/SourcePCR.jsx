@@ -1,15 +1,11 @@
 import React from 'react';
-import axios from 'axios';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
-import error2String from '../../utils/error2String';
+import useBackendAPI from '../../hooks/useBackendAPI';
 
-function SourcePCR({
-  sourceId, updateSource, inputEntities, primers,
-}) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
+function SourcePCR({ sourceId, inputEntities, primers }) {
+
+  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);
-  const [sources, setSources] = React.useState('');
-  const [entities, setEntities] = React.useState('');
 
   const onChange = (event) => {
     const { options } = event.target;
@@ -22,11 +18,8 @@ function SourcePCR({
     setSelectedPrimersIds(value);
   };
 
-  const commitSource = (index) => updateSource({ ...sources[index], id: sourceId }, entities[index]);
-
   const onSubmit = (event) => {
     event.preventDefault();
-    setWaitingMessage('Request sent to the server');
     const requestData = {
       sequences: inputEntities,
       primers: primers.filter((p) => selectedPrimerIds.includes(p.id)),
@@ -35,15 +28,7 @@ function SourcePCR({
         primer_annealing_settings: { minimum_annealing: 15 },
       },
     };
-    axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}pcr`, requestData)
-      .then((resp) => {
-        setWaitingMessage(null);
-        // If there is only a single product, commit the result, else allow choosing
-        if (resp.data.sources.length === 1) {
-          updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
-        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
-      }).catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });
+    sendRequest('pcr', requestData);
   };
 
   return (
@@ -59,7 +44,7 @@ function SourcePCR({
       </form>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId, commitSource, inputEntities,
+        sources, entities, sourceId, inputEntities,
       }}
       />
     </div>

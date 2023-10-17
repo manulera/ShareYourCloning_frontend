@@ -31,15 +31,15 @@ function Source({
     case 'file':
       specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
-      specificSource = <SourceRestriction {...{ sourceId, updateSource, inputEntities }} />; break;
+      specificSource = <SourceRestriction {...{ sourceId, inputEntities }} />; break;
     case 'repository_id':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'sticky_ligation':
-      specificSource = <SourceLigation {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+      specificSource = <SourceLigation {...{ sourceId, inputEntities }} />; break;
     case 'homologous_recombination':
-      specificSource = <SourceHomologousRecombination {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ sourceId, inputEntities }} />; break;
     case 'PCR':
-      specificSource = <SourcePCR {...{ sourceId, updateSource, inputEntities, primers }} />; break;
+      specificSource = <SourcePCR {...{ sourceId, inputEntities, primers }} />; break;
     default:
       break;
     /* eslint-enable */
