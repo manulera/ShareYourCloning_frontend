@@ -7,7 +7,7 @@ import MainSequenceCheckBox from './MainSequenceCheckBox';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
-  node, primers, isRootNode
+  node, isRootNode,
 }) {
   const parentsContent = node.parentNodes.length === 0 ? null : (
     <ul>
@@ -16,7 +16,7 @@ function NetWorkNode({
           node={parentNode}
           key={`node-${parentNode.source.id}`}
           {...{
-            primers, isRootNode: false
+            isRootNode: false
           }}
         />
       ))}
@@ -29,7 +29,7 @@ function NetWorkNode({
     <FinishedSource {...{ source: node.source, deleteSource }} />
   ) : (
     <Source {...{
-      sourceId: node.source.id, primers,
+      sourceId: node.source.id
     }}
     />
   );

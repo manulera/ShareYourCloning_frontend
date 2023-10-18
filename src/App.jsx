@@ -10,36 +10,17 @@ import NetWorkNode from './components/NetworkNode';
 import NewSourceBox from './components/sources/NewSourceBox';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { cloningActions } from './store/cloning';
+import { primersActions } from './store/primers';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
   const [description, setDescription] = React.useState('');
   const [showDescription, setShowDescription] = React.useState(false);
   const dispatch = useDispatch();
-  const { loadState, setMainSequenceId } = cloningActions;
-  const [primers, setPrimers] = React.useState([
-    { id: 100, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
-    { id: 101, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
-  ]);
+  const { setState: setCloningState, setMainSequenceId } = cloningActions;
+  const { setPrimers } = primersActions;
   const [showPrimers, setShowPrimers] = React.useState(false);
 
-  const addPrimerList = (newPrimers) => {
-    const firstPrimerId = 3;
-    setPrimers([
-      ...primers,
-      // Asign ids to the new primers
-      ...newPrimers.map((newPrimer, i) => ({ ...newPrimer, id: firstPrimerId + i })),
-    ]);
-  };
-  const deletePrimer = (primerId) => {
-    setPrimers(primers.filter((p) => p.id !== primerId));
-  };
-  const updatePrimer = (primer) => {
-    const oldRemoved = primers.filter((p) => p.id !== primer.id);
-    oldRemoved.push(primer);
-    oldRemoved.sort((a, b) => a.id - b.id);
-    setPrimers(oldRemoved);
-  };
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
   const network = constructNetwork(entities, sources);
@@ -49,17 +30,12 @@ function App() {
     // downloadStateAsJson(entities, sources, description, primers);
   };
   const loadData = (newState) => {
-    dispatch(loadState({ sources: newState.sources, entities: newState.sequences }));
-    setPrimers(newState.primers);
+    dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
+    dispatch(setPrimers(newState.primers));
+    dispatch(setMainSequenceId(newState.mainSequenceId));
     setDescription(newState.description);
-    // We set the next id to the max +1
-    setMainSequenceId(
-      1 + newState.sources.concat(newState.sequences).reduce(
-        (max, item) => Math.max(max, item.id), 0,
-      ),
-    );
     setShowDescription(description !== '');
-    setShowPrimers(primers.length > 0);
+    setShowPrimers(newState.primers.length > 0);
   };
 
   return (
@@ -80,17 +56,14 @@ function App() {
         ) }
         {showPrimers === false ? null : (
           <div className="primer-list-container">
-            <PrimerList {...{
-              addPrimerList, deletePrimer, updatePrimer, primers,
-            }}
-            />
+            <PrimerList />
           </div>
         ) }
         <div className="network-container">
           <div className="tf-tree tf-ancestor-tree">
             <ul>
               {network.map((node) => (
-                <NetWorkNode key={node.source.id} {...{ node, primers, isRootNode: true }} />
+                <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
               ))}
               {/* There is always a box on the right side to add a source */}
               <li key="new_source_box">

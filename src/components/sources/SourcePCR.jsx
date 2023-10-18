@@ -1,9 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 
-function SourcePCR({ sourceId, inputEntities, primers }) {
-
+function SourcePCR({ sourceId, inputEntities }) {
+  const primers = useSelector((state) => state.primers.primers);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);
 

@@ -70,7 +70,7 @@ const reducer = {
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
   },
 
-  loadState(state, action) {
+  setState(state, action) {
     const { sources, entities } = action.payload;
     state.sources = sources;
     state.entities = entities;

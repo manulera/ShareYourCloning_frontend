@@ -4,6 +4,7 @@ import { vectorEditorReducer as VectorEditor, vectorEditorMiddleware } from '@te
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import cloningReducer from './cloning';
+import primerReducer from './primers';
 
 // const composeEnhancer =
 //   (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ &&
@@ -23,6 +24,7 @@ const store = configureStore({
     tg_modalState,
     VectorEditor: VectorEditor(),
     cloning: cloningReducer,
+    primers: primerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(thunk, vectorEditorMiddleware),
