@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { constructNetwork } from '../network';
 // const createSlice = require("@reduxjs/toolkit").createSlice;
 
 const initialState = {
@@ -33,6 +34,7 @@ const reducer = {
       type: null,
       kind: 'source',
     });
+    state.network = constructNetwork(state.entities, state.sources);
   },
 
   addEntityAndItsSource(state, action) {
@@ -45,6 +47,7 @@ const reducer = {
     // Replace the source with the new one
     const source = sources.find((s) => s.id === newSource.id);
     Object.assign(source, newSource);
+    state.network = constructNetwork(state.entities, state.sources);
   },
 
   updateSource(state, action) {
@@ -52,6 +55,7 @@ const reducer = {
     const { sources } = state;
     const source = sources.find((s) => s.id === newSource.id);
     Object.assign(source, newSource);
+    state.network = constructNetwork(state.entities, state.sources);
   },
 
   deleteSourceAndItsChildren(state, action) {
@@ -68,6 +72,7 @@ const reducer = {
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
+    state.network = constructNetwork(state.entities, state.sources);
   },
 
   setState(state, action) {
@@ -75,6 +80,7 @@ const reducer = {
     state.sources = sources;
     state.entities = entities;
     state.nextUniqueId = Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
+    state.network = constructNetwork(entities, sources);
   },
 
 };
@@ -82,7 +88,7 @@ const reducer = {
 
 const cloningSlice = createSlice({
   name: 'cloning',
-  initialState,
+  initialState: { ...initialState, network: constructNetwork(initialState.entities, initialState.sources) },
   reducers: reducer,
 });
 

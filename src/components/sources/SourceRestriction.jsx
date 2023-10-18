@@ -1,14 +1,15 @@
 import React from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
-
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
 // A component providing an interface for the user to perform a restriction reaction
 // with one or more restriction enzymes, move between output fragments, and eventually
 // select one as an output.
-function SourceRestriction({ sourceId, inputEntities }) {
-
+function SourceRestriction({ sourceId }) {
   const enzymesCsvRef = React.useRef('');
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {

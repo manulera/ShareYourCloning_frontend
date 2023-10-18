@@ -17,27 +17,22 @@ import SourceHomologousRecombination from './SourceHomologousRecombination';
 // which for now is a select element to pick which kind of source is created
 function Source({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
-  // , updateSource, entitiesNotChildSource, deleteSource, inputEntities
   const [sourceType, setSourceType] = React.useState(source.type);
-  const inputEntities = useSelector((state) => {
-    const thisSource = state.cloning.sources.find((source) => source.id === sourceId);
-    return state.cloning.entities.filter((entity) => thisSource.input.includes(entity.id));
-  }, shallowEqual);
   let specificSource = null;
   switch (sourceType) {
     /* eslint-disable */
     case 'file':
       specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
-      specificSource = <SourceRestriction {...{ sourceId, inputEntities }} />; break;
+      specificSource = <SourceRestriction {...{ sourceId }} />; break;
     case 'repository_id':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'sticky_ligation':
-      specificSource = <SourceLigation {...{ sourceId, inputEntities }} />; break;
+      specificSource = <SourceLigation {...{ sourceId }} />; break;
     case 'homologous_recombination':
-      specificSource = <SourceHomologousRecombination {...{ sourceId, inputEntities }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
     case 'PCR':
-      specificSource = <SourcePCR {...{ sourceId, inputEntities }} />; break;
+      specificSource = <SourcePCR {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */
@@ -45,7 +40,7 @@ function Source({ sourceId }) {
 
   return (
     <SourceBox {...{ sourceId }}>
-      <SourceTypeSelector {...{ sourceId, sourceType, setSourceType, hasInputEntities: inputEntities.length > 0 }} />
+      <SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />
       {specificSource}
     </SourceBox>
   );

@@ -1,14 +1,13 @@
 import React from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import MainSequenceEditor from './components/MainSequenceEditor';
-import { constructNetwork } from './network';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
-import { downloadStateAsJson, loadStateFromJson } from './readNwrite';
+import { downloadStateAsJson } from './readNwrite';
 import PrimerList from './components/primers/PrimerList';
 import NetWorkNode from './components/NetworkNode';
 import NewSourceBox from './components/sources/NewSourceBox';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { cloningActions } from './store/cloning';
 import { primersActions } from './store/primers';
 
@@ -23,11 +22,11 @@ function App() {
 
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
-  const network = constructNetwork(entities, sources);
-  const networkFormatted = constructNetwork(entities.map((e) => ({ ...e, sequence: '' })), sources);
+  const primers = useSelector((state) => state.cloning.entities, shallowEqual);
+  const network = useSelector((state) => state.cloning.network, shallowEqual);
 
   const exportData = () => {
-    // downloadStateAsJson(entities, sources, description, primers);
+    downloadStateAsJson(entities, sources, description, primers);
   };
   const loadData = (newState) => {
     dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
@@ -78,7 +77,7 @@ function App() {
         </div>
         <div>
           <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
-            {JSON.stringify(networkFormatted, null, 4)}
+            {JSON.stringify(network, null, 4)}
           </code>
         </div>
       </div>

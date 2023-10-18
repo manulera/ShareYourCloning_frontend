@@ -1,15 +1,12 @@
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
 // A component provinding an interface to import a file
 function SourceFile({ sourceId }) {
-  const inputEntities = useSelector((state) => {
-    const thisSource = state.cloning.sources.find((source) => source.id === sourceId);
-    return state.cloning.entities.filter((entity) => thisSource.input.includes(entity.id));
-  }, shallowEqual);
-
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);

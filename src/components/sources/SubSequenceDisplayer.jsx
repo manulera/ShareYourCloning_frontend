@@ -1,13 +1,15 @@
-import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
 import React from 'react';
+import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import { convertToTeselaJson, parseFeatureLocation } from '../../sequenceParsers';
 import store from '../../store';
 
 function SubSequenceDisplayer({
-  sources, selectedOutput, sourceId, inputEntities,
+  sources, selectedOutput, sourceId,
 }) {
   if (sources.length === 0) { return null; }
-
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const source = sources[selectedOutput];
 
   const editorName = `subsequence_editor_${sourceId}`;

@@ -20,7 +20,6 @@ export default function useBackendAPI(sourceId) {
         setWaitingMessage(null);
         // If there is only a single product, commit the result, else allow choosing
         if (resp.data.sources.length === 1) {
-          console.log(resp.data)
           dispatch(addEntityAndItsSource({ newSource: { ...resp.data.sources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
         } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
       }).catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });

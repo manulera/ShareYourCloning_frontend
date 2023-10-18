@@ -1,9 +1,11 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
-function SourcePCR({ sourceId, inputEntities }) {
+function SourcePCR({ sourceId }) {
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);

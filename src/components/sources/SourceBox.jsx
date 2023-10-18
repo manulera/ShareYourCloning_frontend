@@ -5,7 +5,6 @@ import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import { cloningActions } from '../../store/cloning';
 
-
 function SourceBox({ children, sourceId }) {
   const renderCount = React.useRef(0);
   const tooltipText = <div className="tooltip-text">Delete source and children</div>;
@@ -27,4 +26,4 @@ function SourceBox({ children, sourceId }) {
   );
 }
 
-export default SourceBox;
+export default React.memo(SourceBox);

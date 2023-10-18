@@ -26,7 +26,7 @@ function PrimerList() {
     );
   }
   const topPart = [];
-  primers.forEach((primer) => topPart.push(<Primer {...{ deletePrimer, updatePrimer, primer }} />));
+  primers.forEach((primer) => topPart.push(<Primer key={primer.id} {...{ deletePrimer, updatePrimer, primer }} />));
 
   return (
     <div className="description-section">

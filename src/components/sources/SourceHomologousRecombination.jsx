@@ -1,12 +1,14 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SingleInputSelector from './SingleInputSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { cloningActions } from '../../store/cloning';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
 // A component representing the ligation of several fragments
-function SourceHomologousRecombination({ sourceId, inputEntities }) {
+function SourceHomologousRecombination({ sourceId }) {
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();

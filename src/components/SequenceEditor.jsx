@@ -6,7 +6,7 @@ import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
 
-const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
+const SequenceEditor = ({ entityId, isRootNode }) => {
   console.log('SequenceEditorRender', entityId);
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
@@ -25,6 +25,7 @@ const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
   const editor = seq.circular ? <CircularView {...editorProps} /> : <LinearView {...editorProps} />;
 
   useEffect(() => {
+    console.log('SequenceEditorUseEffect', entityId);
     updateEditor(store, editorName, {
       sequenceData: seq,
       annotationVisibility: {
@@ -53,6 +54,6 @@ const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
       {addSourceButton}
     </div>
   );
-});
+};
 
-export default SequenceEditor;
+export default React.memo(SequenceEditor);
