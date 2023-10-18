@@ -6,8 +6,8 @@ import OverhangsDisplay from './OverhangsDisplay';
 import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
 
-
 const SequenceEditor = React.memo(({ entityId, isRootNode }) => {
+  console.log('SequenceEditorRender', entityId);
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const renderCount = React.useRef(0);

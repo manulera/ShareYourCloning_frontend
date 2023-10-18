@@ -72,9 +72,9 @@ const reducer = {
 
   loadState(state, action) {
     const { sources, entities } = action.payload;
-    console.log(sources, entities)
     state.sources = sources;
     state.entities = entities;
+    state.nextUniqueId = Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
   },
 
 };

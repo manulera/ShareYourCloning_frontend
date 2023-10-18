@@ -1,6 +1,6 @@
 import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
 import React from 'react';
-import { convertToTeselaJson } from '../../sequenceParsers';
+import { convertToTeselaJson, parseFeatureLocation } from '../../sequenceParsers';
 import store from '../../store';
 
 function SubSequenceDisplayer({
@@ -26,16 +26,15 @@ function SubSequenceDisplayer({
     ) : (
       <LinearView {...editorProps} />
     );
+    const selectionLayer = source.type === 'homologous_recombination' ? parseFeatureLocation(source.location) : { start: source.fragment_boundaries[0], end: source.fragment_boundaries[1] };
+
     React.useEffect(() =>updateEditor(store, editorName, {
       sequenceData: seq,
       annotationVisibility: {
         reverseSequence: false,
         cutsites: false,
       },
-      selectionLayer: {
-        start: source.fragment_boundaries[0],
-        end: source.fragment_boundaries[1],
-      },
+      selectionLayer,
       caretPosition: source.fragment_boundaries[0],
     }), [seq, editorName, source]);
 

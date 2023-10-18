@@ -15,9 +15,7 @@ import SourceHomologousRecombination from './SourceHomologousRecombination';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
-function Source({
-  sourceId, primers,
-}) {
+function Source({ sourceId, primers }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   // , updateSource, entitiesNotChildSource, deleteSource, inputEntities
   const [sourceType, setSourceType] = React.useState(source.type);
@@ -53,4 +51,4 @@ function Source({
   );
 }
 
-export default Source;
+export default React.memo(Source);

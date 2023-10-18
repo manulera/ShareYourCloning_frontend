@@ -16,7 +16,7 @@ function App() {
   const [description, setDescription] = React.useState('');
   const [showDescription, setShowDescription] = React.useState(false);
   const dispatch = useDispatch();
-  const { loadState, setMainSequenceId } = cloningActions
+  const { loadState, setMainSequenceId } = cloningActions;
   const [primers, setPrimers] = React.useState([
     { id: 100, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
     { id: 101, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
@@ -101,7 +101,7 @@ function App() {
         </div>
         <div className="main-sequence-editor">
           {/* TODO probably this can be made not be rendered every time the seq is updated */}
-          <MainSequenceEditor {...{ entities }} />
+          <MainSequenceEditor />
         </div>
         <div>
           <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
