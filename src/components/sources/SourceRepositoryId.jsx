@@ -1,24 +1,17 @@
-import axios from 'axios';
 import React from 'react';
-import error2String from './error2String';
+import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component providing an interface for the user to type a Genbank ID
 // and get a sequence
-function SourceRepositoryId({ sourceId, updateSource }) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
+function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef('');
   
+  const { waitingMessage, sendRequest } = useBackendAPI(sourceId);
+
   const onSubmit = (event) => {
     event.preventDefault();
-    setWaitingMessage(`Requesting sequence to ${selectedRepository}`);
-    axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}repository_id`, { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
-      .then((resp) => {
-        setWaitingMessage(null);
-        updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
-      })
-      .catch((error) => { setWaitingMessage(error2String(error)); });
+    sendRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
   };
   const repositorySelector = (
     <label htmlFor={`select_repository_${sourceId}`}>

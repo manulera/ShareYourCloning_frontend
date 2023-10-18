@@ -1,19 +1,14 @@
-import axios from 'axios';
 import React from 'react';
-import error2String from './error2String';
+import { shallowEqual, useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
+import useBackendAPI from '../../hooks/useBackendAPI';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
 // A component provinding an interface to import a file
-// TODO support multi-sequence files
-function SourceFile({ sourceId, updateSource }) {
-  const [waitingMessage, setWaitingMessage] = React.useState('');
-  const [sources, setSources] = React.useState('');
-  const [entities, setEntities] = React.useState('');
-
-  // Commit the selected sequence and source
-  const commitSource = (index) => updateSource({ ...sources[index], id: sourceId }, entities[index]);
+function SourceFile({ sourceId }) {
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
-    setWaitingMessage('Loading your file');
     const files = Array.from(event.target.files);
     const formData = new FormData();
     formData.append('file', files[0]);
@@ -22,18 +17,7 @@ function SourceFile({ sourceId, updateSource }) {
         'content-type': 'multipart/form-data',
       },
     };
-    // TODO: dirty setting of the id of the source because of special case where source is
-    // not submitted
-    axios
-      .post(`${import.meta.env.VITE_REACT_APP_BACKEND_URL}read_from_file`, formData, config)
-      .then((resp) => {
-        setWaitingMessage(null);
-        // If there is only a single sequence in the file, commit the result, else allow choosing
-        if (sources.length === 1) {
-          updateSource({ ...resp.data.sources[0], id: sourceId }, resp.data.sequences[0]);
-        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
-      })
-      .catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });
+    sendRequest('read_from_file', formData, config);
   };
 
   return (
@@ -43,7 +27,7 @@ function SourceFile({ sourceId, updateSource }) {
       <input type="file" onChange={onChange} />
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId, commitSource,
+        sources, entities, sourceId, inputEntities,
       }}
       />
 

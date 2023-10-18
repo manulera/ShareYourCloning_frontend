@@ -6,7 +6,7 @@ import Alert from '@mui/material/Alert';
 import PrimerEdit from './PrimerEdit';
 import { stringIsNotDNA } from './validators';
 
-function PrimerEditList({ addPrimerList, setShowEditPrimers, existingPrimers }) {
+function PrimerEditList({ addPrimers, setShowEditPrimers, existingPrimers }) {
   const [primerList, setPrimerList] = React.useState([{ id: null, name: '', sequence: '' }]);
   const [formIsValid, setFormIsValid] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
@@ -52,7 +52,7 @@ function PrimerEditList({ addPrimerList, setShowEditPrimers, existingPrimers }) 
       return;
     }
 
-    addPrimerList(primerList);
+    addPrimers(primerList);
     setShowEditPrimers(false);
   };
   const addEmptyPrimer = () => { setPrimerList([...primerList, { id: null, name: '', sequence: '' }]); };

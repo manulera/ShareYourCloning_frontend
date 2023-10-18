@@ -1,9 +1,10 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-function SingleInputSelector({
-  options, selectedId, onChange
-}) {
-
+function SingleInputSelector({ selectedId, onChange }) {
+  const options = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities));
+  options.push(selectedId);
   return (
     <div className="single-input-selector">
       <label htmlFor="select_single_inputs">

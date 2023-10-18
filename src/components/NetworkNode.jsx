@@ -7,7 +7,7 @@ import MainSequenceCheckBox from './MainSequenceCheckBox';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
-  node, updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId,
+  node, isRootNode,
 }) {
   const parentsContent = node.parentNodes.length === 0 ? null : (
     <ul>
@@ -16,29 +16,25 @@ function NetWorkNode({
           node={parentNode}
           key={`node-${parentNode.source.id}`}
           {...{
-            updateSource, entitiesNotChildSource, addSource, getSourceWhereEntityIsInput, deleteSource, primers, mainSequenceId,
+            isRootNode: false
           }}
         />
       ))}
     </ul>
   );
 
-  const inputEntities = node.parentNodes.map((parentNode) => parentNode.entity);
   const sourceId = node.source.id;
-
   const sourceComponent = node.source.output !== null ? (
-    <FinishedSource {...{ source: node.source, deleteSource }} />
+    <FinishedSource {...{ sourceId: node.source.id }} />
   ) : (
-    <Source {...{
-      source: node.source, updateSource, inputEntities, entitiesNotChildSource, deleteSource, primers, mainSequenceId,
-    }}
-    />
+    <Source {...{ sourceId: node.source.id }} />
   );
-
+  const renderCount = React.useRef(0);
   const sourceSection = (
     <li key={sourceId}>
       <span className="tf-nc">
         <span className="node-text">
+          Renders node: {renderCount.current++}
           {sourceComponent}
           <div className="corner-id">
             {node.source.id}
@@ -58,11 +54,11 @@ function NetWorkNode({
     <li key={entity.id}>
       <span className="tf-nc">
         <span className="node-text">
-          <SequenceEditor {...{ entity, addSource, getSourceWhereEntityIsInput }} />
+          <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
           <div className="corner-id">
             {entity.id}
           </div>
-          <MainSequenceCheckBox {...{ id: entity.id}} />
+          <MainSequenceCheckBox {...{ id: entity.id }} />
         </span>
       </span>
       <ul>

@@ -9,17 +9,17 @@ export function getParentNodes(node, entities, sources) {
 }
 
 export function constructNetwork(entities, sources) {
+  const shortEntities = entities.map((entity) => ({ ...entity, sequence: '' }));
   const network = [];
-
   // To construct the network, we start by the elements of DNA that are not input for anything
   // and the sources that have no output
   const entityIdsThatAreInput = sources.reduce((result, source) => result.concat(source.input), []);
-  const entitiesThatAreNotInput = entities.filter((entity) => !entityIdsThatAreInput.includes(entity.id));
+  const entitiesThatAreNotInput = shortEntities.filter((entity) => !entityIdsThatAreInput.includes(entity.id));
 
   const sourcesWithoutOutput = sources.filter((source) => source.output === null);
 
   entitiesThatAreNotInput.forEach((entity) => network.push({ entity, source: sources.find((s) => s.output === entity.id) }));
   sourcesWithoutOutput.forEach((source) => network.push({ entity: null, source }));
 
-  return network.map((node) => ({ ...node, parentNodes: getParentNodes(node, entities, sources) }));
+  return network.map((node) => ({ ...node, parentNodes: getParentNodes(node, shortEntities, sources) }));
 }
