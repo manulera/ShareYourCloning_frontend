@@ -13,14 +13,14 @@ function SourceHomologousRecombination({ sourceId }) {
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
   const inputEntityIds = inputEntities.map((e) => e.id);
-
+  const minimalHomologyRef = React.useRef(null);
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
       source: { input: inputEntityIds },
       sequences: inputEntities,
     };
-    const config = { minimal_homology: 40 };
+    const config = { params: { minimal_homology: minimalHomologyRef.current.value } };
     sendRequest('homologous_recombination', requestData, config);
   };
 
@@ -45,6 +45,10 @@ function SourceHomologousRecombination({ sourceId }) {
         selectedId: insert, onChange: setInsert,
       }}
       />
+
+      <div>Minimal homology:</div>
+      <input type="number" ref={minimalHomologyRef} defaultValue="40" />
+
       <form onSubmit={onSubmit}>
         <button type="submit">Submit</button>
       </form>

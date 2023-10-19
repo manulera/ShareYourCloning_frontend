@@ -9,6 +9,7 @@ function SourcePCR({ sourceId }) {
   const primers = useSelector((state) => state.primers.primers);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);
+  const minimalAnnealingRef = React.useRef(null);
 
   const onChange = (event) => {
     const { options } = event.target;
@@ -26,23 +27,29 @@ function SourcePCR({ sourceId }) {
     const requestData = {
       sequences: inputEntities,
       primers: primers.filter((p) => selectedPrimerIds.includes(p.id)),
-      source: {
-        input: inputEntities.map((e) => e.id),
-        primer_annealing_settings: { minimum_annealing: 15 },
-      },
+      source: { input: inputEntities.map((e) => e.id) },
     };
-    sendRequest('pcr', requestData);
+    sendRequest('pcr', requestData, { params: { minimal_annealing: minimalAnnealingRef.current.value } });
   };
 
   return (
     <div className="restriction">
       <h3 className="header-nodes">PCR</h3>
       <form onSubmit={onSubmit}>
-        <label htmlFor="select_multiple_primers">
-          <select multiple value={selectedPrimerIds} id="select_multiple_primers" onChange={onChange}>
-            {primers.map((primer) => <option value={primer.id}>{primer.name}</option>)}
-          </select>
-        </label>
+        <div>
+          <label htmlFor="select_multiple_primers">
+            <div>Select the primers:</div>
+            <select multiple value={selectedPrimerIds} id="select_multiple_primers" onChange={onChange}>
+              {primers.map((primer) => <option value={primer.id}>{primer.name}</option>)}
+            </select>
+          </label>
+        </div>
+        <div>
+          <label htmlFor="minimal_annealing">
+            <div>Minimal annealing:</div>
+            <input id="minimal_annealing" type="number" ref={minimalAnnealingRef} defaultValue="20" />
+          </label>
+        </div>
         <button type="submit">Submit</button>
       </form>
       <div>{waitingMessage}</div>
