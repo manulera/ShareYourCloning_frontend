@@ -1,56 +1,30 @@
-import React, { useEffect } from 'react';
-import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
-import { convertToTeselaJson } from '../sequenceParsers';
+import React from 'react';
+import { SimpleCircularOrLinearView } from '@teselagen/ove';
+import { shallowEqual, useSelector } from 'react-redux';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
-import store from '../store';
 import NewSourceBox from './sources/NewSourceBox';
 
-function SequenceEditor({ entity, addSource, getSourceWhereEntityIsInput }) {
-  const editorName = `editor_${entity.id}`;
-  const editorProps = {
-    editorName,
-    isFullscreen: false,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  };
-
+const SequenceEditor = ({ entityId, isRootNode }) => {
+  const editorName = `editor_${entityId}`;
+  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const seq = convertToTeselaJson(entity);
-  const editor = seq.circular ? <CircularView {...editorProps} /> : <LinearView {...editorProps} />;
 
-  useEffect(() => updateEditor(store, editorName, {
-    sequenceData: seq,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  }), [seq, editorName]);
-
-  const addSourceButton = getSourceWhereEntityIsInput(entity.id) !== undefined ? null : (
+  const addSourceButton = !isRootNode ? null : (
     <div className="hang-from-node">
       <p>
-        <NewSourceBox {...{ addSource, entity }} />
+        <NewSourceBox {...{ inputEntitiesIds: [entityId] }} />
       </p>
     </div>
   );
 
-  if (addSourceButton !== null) {
-    return (
-      <div>
-        {editor}
-        <OverhangsDisplay {...{ entity }} />
-        {addSourceButton}
-      </div>
-    );
-  }
-
   return (
     <div>
-      {editor}
+      <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: seq.circular ? null : 'auto' }} />
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}
     </div>
   );
-}
-export default SequenceEditor;
+};
+
+export default React.memo(SequenceEditor);

@@ -1,68 +1,25 @@
 import React from 'react';
-import { Editor, updateEditor } from '@teselagen/ove';
-import { convertToTeselaJson } from '../sequenceParsers';
+import { createVectorEditor } from '@teselagen/ove';
+import { shallowEqual, useSelector } from 'react-redux';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
+import defaultMainEditorProps from '../config/defaultMainEditorProps';
 
-import store from '../store';
-
-function MainSequenceEditor({ node }) {
+function MainSequenceEditor() {
   const editorName = 'mainEditor';
-  const editorProps = {
-    editorName,
-    isFullscreen: false,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: true,
-    },
-    height: '800',
-    ToolBarProps: {
-      toolList: [
-        'saveTool',
-        'downloadTool',
-        'cutsiteTool',
-        'featureTool',
-        'alignmentTool',
-        'orfTool',
-        'findTool',
-        'visibilityTool',
-      ],
-    },
-  };
 
-  const seq = node === undefined ? undefined : convertToTeselaJson(node.node);
-  const editor = <Editor {...editorProps} />;
+  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId), shallowEqual);
+  const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
+  const nodeRef = React.useRef(null);
 
   React.useEffect(() => {
-    updateEditor(store, editorName, {
+    const editorProps = {
       sequenceData: seq,
-      annotationVisibility: { reverseSequence: true, cutsites: false },
-      adjustCircularLabelSpacing: true,
-      panelsShown: [[
-        {
-          id: 'rail',
-          name: 'Linear Map',
-          active: seq === undefined || !seq.circular,
-        },
-        {
-          id: 'sequence',
-          name: 'Sequence Map',
-        },
-        {
-          active: seq !== undefined && seq.circular,
-          id: 'circular',
-          name: 'Circular Map',
-        },
-        {
-          id: 'properties',
-          name: 'Properties',
-        },
-      ]],
-    });
-  }, [seq, editorName]);
+      ...defaultMainEditorProps,
+    };
+    const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
+    editor.updateEditor(editorProps);
+  }, [seq]);
 
-  return (
-    <div>
-      {editor}
-    </div>
-  );
+  return (<div ref={nodeRef} />);
 }
 export default MainSequenceEditor;

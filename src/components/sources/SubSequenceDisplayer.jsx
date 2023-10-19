@@ -1,47 +1,25 @@
-import { CircularView, LinearView, updateEditor } from '@teselagen/ove';
 import React from 'react';
-import { convertToTeselaJson } from '../../sequenceParsers';
-import store from '../../store';
+import { SimpleCircularOrLinearView } from '@teselagen/ove';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import { convertToTeselaJson } from '../../utils/sequenceParsers';
 
 function SubSequenceDisplayer({
-  sources, selectedOutput, sourceId, inputEntities,
+  sources, selectedOutput, sourceId,
 }) {
   if (sources.length === 0) { return null; }
-
+  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const source = sources[selectedOutput];
 
   const editorName = `subsequence_editor_${sourceId}`;
-  const editorProps = {
-    editorName,
-    isFullscreen: false,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  };
   if (['restriction', 'PCR'].includes(source.type)) {
     const seq = convertToTeselaJson(inputEntities[0]);
-    const editor = seq.circular ? (
-      <CircularView {...editorProps} />
-    ) : (
-      <LinearView {...editorProps} />
-    );
-    React.useEffect(() =>updateEditor(store, editorName, {
-      sequenceData: seq,
-      annotationVisibility: {
-        reverseSequence: false,
-        cutsites: false,
-      },
-      selectionLayer: {
-        start: source.fragment_boundaries[0],
-        end: source.fragment_boundaries[1],
-      },
-      caretPosition: source.fragment_boundaries[0],
-    }), [seq, editorName, source]);
+    const selectionLayer = source.type === 'homologous_recombination' ? parseFeatureLocation(source.location) : { start: source.fragment_boundaries[0], end: source.fragment_boundaries[1] };
+
 
     return (
       <div className="multiple-output-selector">
-        {editor}
+        <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, selectionLayer, caretPosition: source.fragment_boundaries[0], height: 'auto' }} />
       </div>
     );
   }

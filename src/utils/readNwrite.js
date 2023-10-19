@@ -15,19 +15,3 @@ export const downloadStateAsJson = async (entities, sources, description, primer
   link.click();
   document.body.removeChild(link);
 };
-
-export function loadStateFromJson(
-  newState, setSources, setEntities, setDescription, setNextUniqueId, setPrimers,
-) {
-  // TODO rename entities to sequences
-  setPrimers(newState.primers);
-  setSources(newState.sources);
-  setEntities(newState.sequences);
-  setDescription(newState.description);
-  // We set the next id to the max +1
-  setNextUniqueId(
-    1 + newState.sources.concat(newState.sequences).reduce(
-      (max, item) => Math.max(max, item.id), 0,
-    ),
-  );
-}
