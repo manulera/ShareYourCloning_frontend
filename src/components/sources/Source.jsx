@@ -1,4 +1,5 @@
 import React from 'react';
+import { shallowEqual, useSelector } from 'react-redux';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -14,37 +15,35 @@ import SourceHomologousRecombination from './SourceHomologousRecombination';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
-function Source({
-  source, updateSource, entitiesNotChildSource, deleteSource, inputEntities, primers,
-}) {
-  const sourceId = source.id;
+function Source({ sourceId }) {
+  const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   const [sourceType, setSourceType] = React.useState(source.type);
   let specificSource = null;
   switch (sourceType) {
     /* eslint-disable */
     case 'file':
-      specificSource = <SourceFile {...{ sourceId, updateSource }} />; break;
+      specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
-      specificSource = <SourceRestriction {...{ sourceId, updateSource, inputEntities }} />; break;
+      specificSource = <SourceRestriction {...{ sourceId }} />; break;
     case 'repository_id':
-      specificSource = <SourceRepositoryId {...{ sourceId, updateSource }} />; break;
+      specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'sticky_ligation':
-      specificSource = <SourceLigation {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+      specificSource = <SourceLigation {...{ sourceId }} />; break;
     case 'homologous_recombination':
-      specificSource = <SourceHomologousRecombination {...{ sourceId, updateSource, inputEntities, entitiesNotChildSource }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
     case 'PCR':
-      specificSource = <SourcePCR {...{ sourceId, updateSource, inputEntities, primers }} />; break;
+      specificSource = <SourcePCR {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */
   }
 
   return (
-    <SourceBox {...{ sourceId, deleteSource }}>
+    <SourceBox {...{ sourceId }}>
       <SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />
       {specificSource}
     </SourceBox>
   );
 }
 
-export default Source;
+export default React.memo(Source);
