@@ -1,5 +1,5 @@
 import React from 'react';
-import { constructNetwork } from '../network';
+import { constructNetwork } from '../utils/network';
 import './NetworkTree.css';
 
 function renderTreeElement(element, nodeFinder) {

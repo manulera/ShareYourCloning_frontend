@@ -1,7 +1,7 @@
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { convertToTeselaJson } from '../../sequenceParsers';
+import { convertToTeselaJson } from '../../utils/sequenceParsers';
 import ArrowIcon from '../icons/ArrowIcon';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';

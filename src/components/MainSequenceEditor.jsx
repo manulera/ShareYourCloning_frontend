@@ -1,7 +1,7 @@
 import React from 'react';
 import { createVectorEditor } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
-import { convertToTeselaJson } from '../sequenceParsers';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
 import defaultMainEditorProps from '../config/defaultMainEditorProps';
 
 function MainSequenceEditor() {

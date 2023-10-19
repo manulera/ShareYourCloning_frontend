@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { constructNetwork } from '../network';
+import { constructNetwork } from '../utils/network';
 // const createSlice = require("@reduxjs/toolkit").createSlice;
 
 const initialState = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
-import { convertToTeselaJson } from '../sequenceParsers';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 

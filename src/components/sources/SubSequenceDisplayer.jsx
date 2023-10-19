@@ -2,7 +2,7 @@ import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
-import { convertToTeselaJson, parseFeatureLocation } from '../../sequenceParsers';
+import { convertToTeselaJson, parseFeatureLocation } from '../../utils/sequenceParsers';
 
 function SubSequenceDisplayer({
   sources, selectedOutput, sourceId,

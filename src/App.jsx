@@ -4,7 +4,7 @@ import './App.css';
 import MainSequenceEditor from './components/MainSequenceEditor';
 import MainAppBar from './components/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
-import { downloadStateAsJson } from './readNwrite';
+import { downloadStateAsJson } from './utils/readNwrite';
 import PrimerList from './components/primers/PrimerList';
 import NetWorkNode from './components/NetworkNode';
 import NewSourceBox from './components/sources/NewSourceBox';
