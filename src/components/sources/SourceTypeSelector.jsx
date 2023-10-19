@@ -25,7 +25,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
 
   return (
     <label htmlFor={`select_source_${sourceId}`}>
-      Select source
+      Select type of Source
       <br />
       <select value={sourceType !== null ? sourceType : ''} onChange={onChange} id={`select_source_${sourceId}`}>
         <option value=" " />

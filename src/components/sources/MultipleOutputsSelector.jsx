@@ -7,7 +7,6 @@ import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
 import { cloningActions } from '../../store/cloning';
 
-
 function MultipleOutputsSelector({ sources, entities, sourceId }) {
   // If the output is already set or the list of outputs is empty, do not show this element
   if (sources.length === 0) { return null; }

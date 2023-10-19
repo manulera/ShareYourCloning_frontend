@@ -6,14 +6,6 @@ button {
     margin: 10px auto;
 }
 
-.tf-tree, .tf-ancestor-tree {
-
-    text-align: center;
-    padding-bottom: 3px;
-    margin-bottom: 2em;
-
-}
-
 .tf-tree .tf-nc, .tf-tree .tf-node-content {
     box-shadow: inset 0px 0px 0px 3px #106aa2;
     border: none

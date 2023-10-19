@@ -1,6 +1,6 @@
 import React from 'react';
-import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
+import { formatSequenceForOverhangDisplay } from '../utils/sequenceDisplay';
 
 function OverhangsDisplay({ entity }) {
   if (entity === undefined
