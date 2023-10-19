@@ -1,12 +1,9 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
-import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 
 // A component provinding an interface to import a file
 function SourceFile({ sourceId }) {
-  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
@@ -27,7 +24,7 @@ function SourceFile({ sourceId }) {
       <input type="file" onChange={onChange} />
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId, inputEntities,
+        sources, entities, sourceId
       }}
       />
 

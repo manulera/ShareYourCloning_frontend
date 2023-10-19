@@ -29,12 +29,10 @@ function NetWorkNode({
   ) : (
     <Source {...{ sourceId: node.source.id }} />
   );
-  const renderCount = React.useRef(0);
   const sourceSection = (
     <li key={sourceId}>
       <span className="tf-nc">
         <span className="node-text">
-          Renders node: {renderCount.current++}
           {sourceComponent}
           <div className="corner-id">
             {node.source.id}

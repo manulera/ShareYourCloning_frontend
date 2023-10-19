@@ -1,70 +1,25 @@
 import React from 'react';
-import { Editor, updateEditor } from '@teselagen/ove';
+import { createVectorEditor } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
 import { convertToTeselaJson } from '../sequenceParsers';
-import store from '../store';
+import defaultMainEditorProps from '../config/defaultMainEditorProps';
 
 function MainSequenceEditor() {
   const editorName = 'mainEditor';
-  const editorProps = {
-    editorName,
-    isFullscreen: false,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: true,
-    },
-    height: '800',
-    ToolBarProps: {
-      toolList: [
-        'saveTool',
-        'downloadTool',
-        'cutsiteTool',
-        'featureTool',
-        'alignmentTool',
-        'orfTool',
-        'findTool',
-        'visibilityTool',
-      ],
-    },
-  };
 
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId), shallowEqual);
   const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
-
-  const editor = <Editor {...editorProps} />;
+  const nodeRef = React.useRef(null);
 
   React.useEffect(() => {
-    updateEditor(store, editorName, {
+    const editorProps = {
       sequenceData: seq,
-      annotationVisibility: { reverseSequence: true, cutsites: false },
-      adjustCircularLabelSpacing: true,
-      panelsShown: [[
-        {
-          id: 'rail',
-          name: 'Linear Map',
-          active: seq === undefined || !seq.circular,
-        },
-        {
-          id: 'sequence',
-          name: 'Sequence Map',
-        },
-        {
-          active: seq !== undefined && seq.circular,
-          id: 'circular',
-          name: 'Circular Map',
-        },
-        {
-          id: 'properties',
-          name: 'Properties',
-        },
-      ]],
-    });
-  }, [seq, editorName]);
+      ...defaultMainEditorProps,
+    };
+    const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
+    editor.updateEditor(editorProps);
+  }, [seq]);
 
-  return (
-    <div>
-      {editor}
-    </div>
-  );
+  return (<div ref={nodeRef} />);
 }
 export default MainSequenceEditor;

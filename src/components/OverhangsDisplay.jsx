@@ -34,9 +34,9 @@ function formatSequenceForOverhangDisplay(
   };
 
   if (watson.length >= lengthLimit) {
-    watson = trimRepresentation(watson, 5, 5);
-    crick = trimRepresentation(crick, 5, 5);
-    middle = trimRepresentation(middle, 5, 5);
+    watson = trimRepresentation(watson, 5, 5).toUpperCase();
+    crick = trimRepresentation(crick, 5, 5).toUpperCase();
+    middle = trimRepresentation(middle, 5, 5).toUpperCase();
   }
   return { watson, crick, middle };
 }
@@ -53,12 +53,10 @@ function OverhangsDisplay({ entity }) {
   );
 
   return (
-    <div>
-      <div className="overhang-representation">
-        <div>{watson}</div>
-        <div>{middle}</div>
-        <div>{crick}</div>
-      </div>
+    <div className="overhang-representation">
+      <div>{watson}</div>
+      <div>{middle}</div>
+      <div>{crick}</div>
     </div>
   );
 }

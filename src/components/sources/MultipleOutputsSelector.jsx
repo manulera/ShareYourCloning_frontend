@@ -1,8 +1,7 @@
-import { updateEditor, CircularView, LinearView } from '@teselagen/ove';
+import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { convertToTeselaJson } from '../../sequenceParsers';
-import store from '../../store';
 import ArrowIcon from '../icons/ArrowIcon';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
@@ -28,25 +27,8 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   const chooseFragment = () => dispatch(addEntityAndItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
 
   const editorName = `source_editor_${sourceId}`;
-  const editorProps = {
-    editorName,
-    isFullscreen: false,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  };
 
   const seq = convertToTeselaJson(entities[selectedOutput]);
-  const editor = seq.circular ? (<CircularView {...editorProps} />)
-    : (<LinearView {...editorProps} />);
-  React.useEffect(() => updateEditor(store, editorName, {
-    sequenceData: seq,
-    annotationVisibility: {
-      reverseSequence: false,
-      cutsites: false,
-    },
-  }), [seq, editorName]);
 
   return (
     <div className="multiple-output-selector">
@@ -64,7 +46,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
           sources, selectedOutput, sourceId
         }}
         />
-        {editor}
+        <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: 'auto' }} />
         <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
         <button onClick={chooseFragment} type="button">Choose fragment</button>
       </div>

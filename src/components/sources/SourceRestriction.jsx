@@ -23,6 +23,7 @@ function SourceRestriction({ sourceId }) {
       source: { restriction_enzymes: enzymesCsvRef.current.value.split(','), input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
+    console.log(inputEntities)
     sendRequest('restriction', requestData);
   };
 
