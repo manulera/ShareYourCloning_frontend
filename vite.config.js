@@ -14,5 +14,9 @@ export default {
     // necessary for segment analytics lib to work
     global: {},
   },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './tests/setup.js',
+  },
 };
-
