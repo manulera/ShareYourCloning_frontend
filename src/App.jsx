@@ -18,7 +18,7 @@ function App() {
   const dispatch = useDispatch();
   const { setState: setCloningState, setMainSequenceId } = cloningActions;
   const { setPrimers } = primersActions;
-  const [showPrimers, setShowPrimers] = React.useState(false);
+  const [showPrimers, setShowPrimers] = React.useState(true);
 
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);

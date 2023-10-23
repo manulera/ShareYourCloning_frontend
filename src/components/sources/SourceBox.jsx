@@ -1,9 +1,10 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { FaTrashAlt } from 'react-icons/fa';
 import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
 import { cloningActions } from '../../store/cloning';
+import './SourceBox.css';
 
 function SourceBox({ children, sourceId }) {
   const tooltipText = <div className="tooltip-text">Delete source and children</div>;
@@ -12,13 +13,13 @@ function SourceBox({ children, sourceId }) {
   const onClickDeleteSource = () => dispatch(deleteSourceAndItsChildren(sourceId));
   return (
     <div className="select-source">
-      <button className="icon-corner" type="submit" onClick={onClickDeleteSource}>
+      <div className="icon-corner">
         <Tooltip title={tooltipText} arrow placement="top">
-          <Box>
-            <FaTrashAlt />
-          </Box>
+          <button type="submit" onClick={onClickDeleteSource}>
+            <DeleteIcon sx={{ fontSize: '2em' }} />
+          </button>
         </Tooltip>
-      </button>
+      </div>
       {children}
     </div>
   );
