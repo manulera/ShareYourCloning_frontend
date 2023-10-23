@@ -1,16 +1,16 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
-import Primer from './Primer';
 import { primersActions } from '../../store/primers';
 import PrimerForm from './PrimerForm';
+import PrimerTableRow from './PrimerTableRow';
+import './PrimerList.css';
 
 function PrimerList() {
   const primers = useSelector((state) => state.primers.primers);
-  const { deletePrimer: deleteAction, addPrimer: addAction, updatePrimer: updateAction } = primersActions;
+  const { deletePrimer: deleteAction, addPrimer: addAction } = primersActions;
   const dispatch = useDispatch();
   const deletePrimer = (id) => dispatch(deleteAction(id));
-  const updatePrimer = (newPrimer) => dispatch(updateAction(newPrimer));
   const addPrimer = (newPrimer) => dispatch(addAction(newPrimer));
   const [addingPrimer, setAddingPrimer] = React.useState(false);
   const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
@@ -22,17 +22,27 @@ function PrimerList() {
   );
 
   const topPart = [];
-  primers.forEach((primer) => topPart.push(<Primer key={primer.id} {...{ deletePrimer, updatePrimer, primer }} />));
+  primers.forEach((primer) => topPart.push(<PrimerTableRow key={primer.id} {...{ deletePrimer, primer }} />));
 
   return (
     <div className="description-section">
       <div className="description-box">
         <h1>Primers</h1>
-        {topPart}
+        <div className="primer-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>Sequence</th>
+              </tr>
+            </thead>
+            <tbody>{topPart}</tbody>
+          </table>
+        </div>
         {bottomPart}
       </div>
     </div>
-
   );
 }
 

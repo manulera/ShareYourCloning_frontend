@@ -68,21 +68,6 @@ button {
     margin-bottom: 1em;
 }
 
-button.icon-corner {
-    position: absolute;
-    right: -1px;
-    top: 1px;
-    font-size: x-large;
-    padding: 0;
-    border: none;
-    background: none;
-    color: gray;
-}
-
-div.select-source button.icon-corner {
-    color: #FF4433;
-}
-
 button.icon-hanging {
     color: green;
     padding: 0;
@@ -94,10 +79,6 @@ button.icon-hanging:hover {
     filter: brightness(70%);
 }
 
-
-button.icon-corner:hover {
-    filter: brightness(70%);
-}
 
 .node-corner {
     position: absolute;

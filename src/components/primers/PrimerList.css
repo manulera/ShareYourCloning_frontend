@@ -1,0 +1,24 @@
+table {
+    width: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+
+tr:hover {
+    background-color: #f0f0f0;
+}
+
+div.primer-table-container {
+    overflow-x: scroll;
+}
