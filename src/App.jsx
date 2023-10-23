@@ -39,15 +39,12 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header" />
-      <div className="app-container">
+      <header className="App-header">
         <div className="app-title">
-          <MainAppBar {...{
-            exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
-          }}
-          />
-
+          <MainAppBar {...{ exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers }} />
         </div>
+      </header>
+      <div className="app-container">
         {showDescription === false ? null : (
           <div className="description-editor">
             <DescriptionEditor {...{ description, setDescription }} />

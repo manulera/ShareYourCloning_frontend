@@ -7,12 +7,8 @@ import { AiFillGithub } from 'react-icons/ai';
 import {
   Button, Tooltip, useMediaQuery, useTheme,
 } from '@mui/material';
-
-import NavbarExportData from './navbar_buttons/NavbarExportData';
-import NavBarLoadData from './navbar_buttons/NavBarLoadData';
-import NavBarEditDescription from './navbar_buttons/NavBarEditDescription';
-import NavBarLoadExample from './navbar_buttons/NavBarLoadExample';
-import NavBarShowPrimers from './navbar_buttons/NavBarShowPrimers';
+import './MainAppBar.css';
+import ButtonWithMenu from './navbar_buttons/ButtonWithMenu';
 
 function MainAppBar({
   exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
@@ -21,39 +17,40 @@ function MainAppBar({
   const theme = useTheme();
   const wideMode = useMediaQuery(theme.breakpoints.up('md'));
 
+  const fileMenu = [
+    { display: 'Save to file', onClick: exportData },
+    { display: 'Load from file', onClick: loadData },
+    { display: 'Load example',
+      onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)),
+    },
+  ];
+
+  const helpMenu = [
+    { display: 'About', onClick: () => window.open('https://www.genestorian.org/') },
+    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') }
+  ];
+
   return (
     <AppBar position="static" className="app-bar">
       <div className="app-name">Share Your Cloning</div>
       <Container maxWidth="s">
-        <Toolbar disableGutters>
-
+        <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50, height: 50 }}>
           <Box
             sx={{
-              flexGrow: 1,
               display: { md: 'flex', xs: 'flex' },
               flexDirection: { md: 'row', xs: 'column' },
+              height: '100%',
             }}
             className={wideMode ? null : 'collapsed'}
           >
-            <a href="https://www.youtube.com/watch?v=HRQb6s8m8_s" target="_blank" rel="noopener noreferrer">
-              <Button sx={{ my: 2, color: 'white', display: 'block' }}>
-                <>Demo video</>
-              </Button>
-            </a>
-            <NavbarExportData {...{ exportData }} />
-            <NavBarLoadData {...{ loadData }} />
-            <NavBarEditDescription {...{ showDescription, setShowDescription }} />
-            <NavBarShowPrimers {...{ showPrimers, setShowPrimers }} />
-            <NavBarLoadExample {...{ loadData }} />
+            <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
+            <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
             <Tooltip title={tooltipText} arrow placement="top">
-              <a href="https://github.com/manulera/ShareYourCloning" target="_blank" rel="noopener noreferrer">
-                <Button className="github-icon" sx={{ my: 2 }}>
-                  <AiFillGithub />
-                </Button>
-              </a>
+              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
+                <AiFillGithub />
+              </Button>
             </Tooltip>
           </Box>
-
         </Toolbar>
       </Container>
     </AppBar>

@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
 import { cloningActions } from '../../store/cloning';
 import './SourceBox.css';
 
