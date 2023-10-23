@@ -10,11 +10,12 @@ const initialState = {
 
 /* eslint-disable no-param-reassign */
 const reducer = {
-  addPrimers(state, action) {
-    const newPrimers = action.payload;
+  addPrimer(state, action) {
+    const newPrimer = action.payload;
     const { primers } = state;
-    state.nextUniqueId += newPrimers.length;
-    primers.push(...newPrimers.map((p, i) => ({ ...p, id: state.nextUniqueId - newPrimers.length + i })));
+    newPrimer.id = state.nextUniqueId;
+    state.nextUniqueId += 1;
+    primers.push(newPrimer);
   },
 
   setPrimers(state, action) {
@@ -25,13 +26,6 @@ const reducer = {
   deletePrimer(state, action) {
     const primerId = action.payload;
     state.primers = state.primers.filter((p) => p.id !== primerId);
-  },
-
-  updatePrimer(state, action) {
-    const newPrimer = action.payload;
-    const { primers } = state;
-    const primer = primers.find((p) => p.id === newPrimer.id);
-    Object.assign(primer, newPrimer);
   },
 
 };

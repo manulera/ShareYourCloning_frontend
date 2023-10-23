@@ -1,43 +1,48 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import Primer from './Primer';
-import PrimerEditList from './PrimerEditList';
+import Button from '@mui/material/Button';
 import { primersActions } from '../../store/primers';
+import PrimerForm from './PrimerForm';
+import PrimerTableRow from './PrimerTableRow';
+import './PrimerList.css';
 
 function PrimerList() {
   const primers = useSelector((state) => state.primers.primers);
-  const { deletePrimer: deleteAction, addPrimers: addAction, updatePrimer: updateAction } = primersActions;
+  const { deletePrimer: deleteAction, addPrimer: addAction } = primersActions;
   const dispatch = useDispatch();
   const deletePrimer = (id) => dispatch(deleteAction(id));
-  const addPrimers = (newPrimers) => dispatch(addAction(newPrimers));
-  const updatePrimer = (newPrimer) => dispatch(updateAction(newPrimer));
+  const addPrimer = (newPrimer) => dispatch(addAction(newPrimer));
+  const [addingPrimer, setAddingPrimer] = React.useState(false);
+  const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
 
-  const [showEditPrimers, setShowEditPrimers] = React.useState(false);
-  let bottomPart = null;
-  if (showEditPrimers) {
-    bottomPart = (
-      <PrimerEditList {...{ addPrimers, setShowEditPrimers, existingPrimers: primers }} />
+  const bottomPart = addingPrimer ? (
+    <PrimerForm {...{ submitPrimer: addPrimer, cancelForm: switchAddingPrimer, existingNames: primers.map((p) => p.name) }} />
+  ) : (
+    <Button variant="contained" onClick={switchAddingPrimer} size="small">Add Primer</Button>
+  );
 
-    );
-  } else {
-    bottomPart = (
-      <button type="button" onClick={() => setShowEditPrimers(!showEditPrimers)}>Add Primers</button>
-    );
-  }
   const topPart = [];
-  primers.forEach((primer) => topPart.push(<Primer key={primer.id} {...{ deletePrimer, updatePrimer, primer }} />));
+  primers.forEach((primer) => topPart.push(<PrimerTableRow key={primer.id} {...{ deletePrimer, primer }} />));
 
   return (
     <div className="description-section">
       <div className="description-box">
-        <h1>Primers:</h1>
-        {topPart}
+        <h1>Primers</h1>
+        <div className="primer-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th> </th>
+                <th>Name</th>
+                <th>Sequence</th>
+              </tr>
+            </thead>
+            <tbody>{topPart}</tbody>
+          </table>
+        </div>
         {bottomPart}
-
       </div>
     </div>
-
   );
 }
 

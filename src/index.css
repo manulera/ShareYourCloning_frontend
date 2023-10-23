@@ -68,21 +68,6 @@ button {
     margin-bottom: 1em;
 }
 
-button.icon-corner {
-    position: absolute;
-    right: -1px;
-    top: 1px;
-    font-size: x-large;
-    padding: 0;
-    border: none;
-    background: none;
-    color: gray;
-}
-
-div.select-source button.icon-corner {
-    color: #FF4433;
-}
-
 button.icon-hanging {
     color: green;
     padding: 0;
@@ -94,10 +79,6 @@ button.icon-hanging:hover {
     filter: brightness(70%);
 }
 
-
-button.icon-corner:hover {
-    filter: brightness(70%);
-}
 
 .node-corner {
     position: absolute;
@@ -278,9 +259,48 @@ div.collapsed button {
     margin-top: 0px;
 }
 
-div.primer-row {
+.primer-row {
+    display: flex;
+}
+
+.primer-row .left-side{
     display: flex;
     align-items: center;
+    width: 30%;
+    background-color: #106aa2;
+}
+
+.primer-row .right-side{
+    display: flex;
+    align-items: center;
+    width: 70%;
+    overflow:initial;
+}
+
+.primer-row div.primer-sequence{
+    font-family: monospace;
+    text-align: left;
+    padding-left: 10px;
+}
+
+
+.primer-row div.primer-name{
+    font-family: monospace;
+    text-align: center;
+    background-color: #106aa2;
+    color: white;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    text-align: center;
+    width: 100%;
+}
+
+div.primer-row {
+    border-radius: 300px;
+    border: #106aa2 solid 3px;
+    margin-top: 7px;
+    margin-bottom: 7px;
+    overflow: hidden;
 }
 
 /* Prevents scollbar from showing on small editors,
