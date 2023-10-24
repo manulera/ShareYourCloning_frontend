@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
+import { Button } from '@mui/material';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
@@ -21,12 +22,12 @@ function SourceLigation({ sourceId }) {
 
   return (
     <div className="ligation">
-      <MultipleInputsSelector {...{
-        inputEntityIds, sourceId, sourceType: 'sticky_ligation',
-      }}
-      />
       <form onSubmit={onSubmit}>
-        <button type="submit">Submit</button>
+        <MultipleInputsSelector {...{
+          inputEntityIds, sourceId, sourceType: 'sticky_ligation',
+        }}
+        />
+        <Button fullWidth type="submit" variant="contained">Submit</Button>
       </form>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{

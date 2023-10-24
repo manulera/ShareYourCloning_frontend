@@ -8,26 +8,6 @@ button {
 }
 
 
-.multiple-output-selector button, .genbank-id button, .restriction button, .ligation button, .description button {
-    background-color: rgb(25, 118, 210);
-    color: white;
-    padding: 0.5em;
-    border-radius: 3px;
-    cursor: pointer;
-    border: none;
-    margin: 0.5em;
-}
-
-.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover, .description button:hover {
-    background-color: #32ADCC;
-    color: #fff;
-}
-
-
-.multiple-input-selector select {
-    min-width: 100px;
-}
-
 .app-container {
     text-align: center;
     width: 100%;
@@ -47,9 +27,6 @@ button.icon-hanging {
     background: none;
 }
 
-button.icon-hanging:hover {
-    filter: brightness(70%);
-}
 
 
 .node-corner {
@@ -225,5 +202,11 @@ div.select-source h2 {
 
 
 div.select-source {
-    width: 250px;
+    width: 275px;
+}
+
+.fragment-picker {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
 }
