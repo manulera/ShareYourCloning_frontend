@@ -65,7 +65,7 @@ function SourcePCR({ sourceId }) {
             label="Minimal annealing length (in bp)"
             inputRef={minimalAnnealingRef}
             type="number"
-            value={20}
+            defaultValue={20}
           />
         </FormControl>
         <Button type="submit" variant="contained" color="success">Perform PCR</Button>
