@@ -1,5 +1,5 @@
 import React from 'react';
-import { AiFillPlusCircle } from 'react-icons/ai';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 import { useDispatch } from 'react-redux';
@@ -15,7 +15,7 @@ function NewSourceBox({ inputEntitiesIds = [] }) {
     <button type="button" className="icon-hanging" onClick={onClick}>
       <Tooltip title={tooltipText} arrow placement="bottom">
         <Box>
-          <AiFillPlusCircle className="node-corner-icon" />
+          <AddCircleIcon sx={{ fontSize: '2.75em' }} className="node-corner-icon" />
         </Box>
       </Tooltip>
     </button>

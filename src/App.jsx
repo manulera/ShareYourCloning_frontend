@@ -2,7 +2,7 @@ import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import './App.css';
 import MainSequenceEditor from './components/MainSequenceEditor';
-import MainAppBar from './components/MainAppBar';
+import MainAppBar from './components/navigation/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
 import { downloadStateAsJson } from './utils/readNwrite';
 import PrimerList from './components/primers/PrimerList';

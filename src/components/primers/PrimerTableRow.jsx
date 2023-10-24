@@ -13,7 +13,7 @@ function PrimerTableRow({ primer, deletePrimer }) {
         </Tooltip>
       </td>
       <td>{primer.name}</td>
-      <td>{primer.sequence}</td>
+      <td className="sequence">{primer.sequence}</td>
     </tr>
   );
 }

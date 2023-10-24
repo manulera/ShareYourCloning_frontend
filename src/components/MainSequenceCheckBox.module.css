@@ -1,0 +1,8 @@
+input[type="checkbox"] + svg {
+    font-size: 2em;
+    color:gray
+}
+
+input[type="checkbox"]:checked + svg {
+    color: #2e7d32;
+}

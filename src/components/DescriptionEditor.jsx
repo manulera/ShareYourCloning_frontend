@@ -1,6 +1,6 @@
 import React from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { AiFillEdit } from 'react-icons/ai';
+import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
 
@@ -23,7 +23,7 @@ function DescriptionEditor({ description, setDescription }) {
       <button className="icon-corner" type="submit" onClick={onClickEditButton}>
         <Tooltip title={tooltipText} arrow placement="top">
           <Box>
-            <AiFillEdit />
+            <EditIcon />
           </Box>
         </Tooltip>
 

@@ -2,10 +2,6 @@ button {
     cursor: pointer;
 }
 
-.select-source {
-    margin: 10px auto;
-}
-
 .tf-tree .tf-nc, .tf-tree .tf-node-content {
     box-shadow: inset 0px 0px 0px 3px rgb(25, 118, 210);
     border: none
@@ -27,13 +23,6 @@ button {
     color: #fff;
 }
 
-.multiple-output-selector input, .genbank-id input, .restriction input .ligation input {
-    padding: 0.3em;
-    border-radius: 3px;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    margin: 5px;
-}
 
 .multiple-input-selector select {
     min-width: 100px;
@@ -72,24 +61,6 @@ button.icon-hanging:hover {
 .node-corner-icon {
     font-size: xx-large;
 }
-
-input[type="checkbox"].hidden-checkbox {
-    display: none;
-}
-
-input[type="checkbox"].hidden-checkbox+label {
-    color: lightgray;
-}
-
-input[type="checkbox"].hidden-checkbox+label:hover {
-    color: gray;
-    cursor: pointer;
-}
-
-input[type="checkbox"].hidden-checkbox:checked+label {
-    color: green;
-}
-
 
 .overhang-representation {
     text-align: center;
@@ -220,50 +191,6 @@ div.collapsed button {
     margin-top: 0px;
 }
 
-.primer-row {
-    display: flex;
-}
-
-.primer-row .left-side{
-    display: flex;
-    align-items: center;
-    width: 30%;
-    background-color: rgb(25, 118, 210);
-}
-
-.primer-row .right-side{
-    display: flex;
-    align-items: center;
-    width: 70%;
-    overflow:initial;
-}
-
-.primer-row div.primer-sequence{
-    font-family: monospace;
-    text-align: left;
-    padding-left: 10px;
-}
-
-
-.primer-row div.primer-name{
-    font-family: monospace;
-    text-align: center;
-    background-color: rgb(25, 118, 210);
-    color: white;
-    text-overflow: ellipsis;
-    overflow:hidden;
-    text-align: center;
-    width: 100%;
-}
-
-div.primer-row {
-    border-radius: 300px;
-    border: rgb(25, 118, 210) solid 3px;
-    margin-top: 7px;
-    margin-bottom: 7px;
-    overflow: hidden;
-}
-
 /* Prevents scollbar from showing on small editors,
    that was caused by overflowing numbers at the edges
    of the x axis */
@@ -284,4 +211,19 @@ span.node-text > div:first-child {
 body {
     margin: 0px;
     padding: 0px;
+}
+
+div.select-source div.MuiFormControl-root {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.select-source h2 {
+    margin-bottom: 5px;
+    font-size: x-large;
+}
+
+
+div.select-source {
+    width: 250px;
 }

@@ -3,16 +3,12 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
-import { AiFillGithub } from 'react-icons/ai';
-import {
-  Button, Tooltip, useMediaQuery, useTheme,
-} from '@mui/material';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import { Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
-import ButtonWithMenu from './navbar_buttons/ButtonWithMenu';
+import ButtonWithMenu from './ButtonWithMenu';
 
-function MainAppBar({
-  exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers,
-}) {
+function MainAppBar({ exportData, loadData }) {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   const theme = useTheme();
   const wideMode = useMediaQuery(theme.breakpoints.up('md'));
@@ -27,14 +23,14 @@ function MainAppBar({
 
   const helpMenu = [
     { display: 'About', onClick: () => window.open('https://www.genestorian.org/') },
-    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') }
+    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') },
   ];
 
   return (
     <AppBar position="static" className="app-bar">
       <div className="app-name">Share Your Cloning</div>
       <Container maxWidth="s">
-        <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50, height: 50 }}>
+        <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50 }}>
           <Box
             sx={{
               display: { md: 'flex', xs: 'flex' },
@@ -45,9 +41,9 @@ function MainAppBar({
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
             <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
-            <Tooltip title={tooltipText} arrow placement="top">
+            <Tooltip title={tooltipText} arrow placement="right">
               <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
-                <AiFillGithub />
+                <GitHubIcon />
               </Button>
             </Tooltip>
           </Box>

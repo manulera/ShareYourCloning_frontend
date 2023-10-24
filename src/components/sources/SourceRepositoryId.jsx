@@ -1,4 +1,10 @@
 import React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { Button } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component providing an interface for the user to type a Genbank ID
@@ -6,52 +12,43 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef('');
-  
+
   const { waitingMessage, sendRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    sendRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository })
+    sendRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
   };
-  const repositorySelector = (
-    <label htmlFor={`select_repository_${sourceId}`}>
-      Select repository
-      <br />
-      <select value={selectedRepository} onChange={(event) => setSelectedRepository(event.target.value)} id={`select_repository_${sourceId}`}>
-        <option value="" />
-        <option value="addgene">AddGene</option>
-        <option value="genbank">GenBank</option>
-      </select>
-    </label>
-  );
-  // A bit dirty but works for now. TODO refactor
-  const idInputField = selectedRepository === '' ? null : (
-    <>
-      <h3 className="header-nodes">
-        Type a
-        {' '}
-        {selectedRepository}
-        {' '}
-        ID
-      </h3>
-      <p>
-        For example:
-        {' '}
-        {selectedRepository === 'genbank' ? 'NM_001018957.2' : '39282'}
-      </p>
-      <form onSubmit={onSubmit}>
-        <input type="text" ref={repositoryIdRef}/>
-        <button type="submit">Submit</button>
-      </form>
-    </>
-  );
 
   return (
-    <div className="genbank-id">
-      {repositorySelector}
-      {idInputField}
+    <>
+      <FormControl fullWidth>
+        <InputLabel id={`select-repository-${sourceId}-label`}>Select repository</InputLabel>
+        <Select
+          value={selectedRepository}
+          onChange={(event) => setSelectedRepository(event.target.value)}
+          labelId={`select-repository-${sourceId}-label`}
+          label="Select repository"
+        >
+          <MenuItem value="addgene">AddGene</MenuItem>
+          <MenuItem value="genbank">GenBank</MenuItem>
+        </Select>
+      </FormControl>
+      {selectedRepository !== '' && (
+      <form onSubmit={onSubmit}>
+        <FormControl fullWidth>
+          <TextField
+            label="ID in repository"
+            id={`repository-id-${sourceId}`}
+            inputRef={repositoryIdRef}
+            helperText={`Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`}
+          />
+        </FormControl>
+        <Button fullWidth type="submit" variant="contained">Submit</Button>
+      </form>
+      )}
       <div className="waiting-message">{waitingMessage}</div>
-    </div>
+    </>
   );
 }
 
