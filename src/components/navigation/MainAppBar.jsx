@@ -7,20 +7,21 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
 import ButtonWithMenu from './ButtonWithMenu';
+import { fileReceivedToJson } from '../../utils/readNwrite';
 
 function MainAppBar({ exportData, loadData }) {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   const theme = useTheme();
   const wideMode = useMediaQuery(theme.breakpoints.up('md'));
-
+  // Hidden input field, used to load files.
+  const fileInputRef = React.useRef(null);
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
-    { display: 'Load from file', onClick: loadData },
-    { display: 'Load example',
-      onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)),
-    },
+    { display: 'Load from file', onClick: () => fileInputRef.current.click() },
+    { display: 'Load example', onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)) },
   ];
 
+  // TODO: turn these into <a> elements.
   const helpMenu = [
     { display: 'About', onClick: () => window.open('https://www.genestorian.org/') },
     { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') },
@@ -40,6 +41,7 @@ function MainAppBar({ exportData, loadData }) {
             className={wideMode ? null : 'collapsed'}
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
+            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => fileReceivedToJson(e, loadData)} />
             <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
             <Tooltip title={tooltipText} arrow placement="right">
               <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>

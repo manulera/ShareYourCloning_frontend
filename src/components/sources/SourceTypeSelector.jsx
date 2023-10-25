@@ -39,7 +39,6 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
           // see https://stackoverflow.com/questions/67064682/material-ui-outlined-select-label-is-not-rendering-properly
           label="Source type"
         >
-          <MenuItem value=" " />
           {options}
         </Select>
       </FormControl>

@@ -15,9 +15,7 @@ const MenuProps = {
   },
 };
 
-function MultipleInputsSelector({
-  inputEntityIds, sourceId, sourceType,
-}) {
+function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
   const dispatch = useDispatch();
   const { updateSource } = cloningActions;
 
