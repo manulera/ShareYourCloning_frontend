@@ -16,27 +16,16 @@ button {
 }
 
 .main-sequence-editor {
-    width: 800px;
+    width: 100%;
+    max-width: 1000px;
     display: inline-block;
 }
-
-button.icon-hanging {
-    color: green;
-    padding: 0;
-    border: none;
-    background: none;
-}
-
 
 
 .node-corner {
     position: absolute;
     right: -1px;
     top: 1px;
-}
-
-.node-corner-icon {
-    font-size: xx-large;
 }
 
 .overhang-representation {
@@ -72,10 +61,10 @@ div.hang-from-node {
 }
 
 /* To center the icon vertically */
-div.hang-from-node p {
+div.hang-from-node div {
     margin: 0;
     position: absolute;
-    top: 53%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -93,17 +82,13 @@ div.hang-from-node::before {
     transform: translate(0, -100%);
 }
 
-/* we unset overflow sot that when we add the hanging
-node to append a source to an entity, the network container
-does not become scrollable */
-.network-container {
-    margin-bottom: 100px;
-    overflow: unset;
-}
 
+/* TODO: handle these */
 div.tf-tree.tf-ancestor-tree {
-    overflow: unset;
-
+    overflow-x: scroll;
+    /* overflow: unset; */
+    padding-bottom: 150px;
+    height: fit-content;
 }
 
 

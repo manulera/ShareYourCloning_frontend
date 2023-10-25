@@ -5,16 +5,16 @@ import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 
-const SequenceEditor = ({ entityId, isRootNode }) => {
+function SequenceEditor({ entityId, isRootNode }) {
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const seq = convertToTeselaJson(entity);
 
   const addSourceButton = !isRootNode ? null : (
     <div className="hang-from-node">
-      <p>
+      <div>
         <NewSourceBox {...{ inputEntitiesIds: [entityId] }} />
-      </p>
+      </div>
     </div>
   );
 
@@ -25,6 +25,6 @@ const SequenceEditor = ({ entityId, isRootNode }) => {
       {addSourceButton}
     </div>
   );
-};
+}
 
 export default React.memo(SequenceEditor);

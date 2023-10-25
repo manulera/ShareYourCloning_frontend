@@ -25,24 +25,25 @@ function PrimerList() {
   primers.forEach((primer) => topPart.push(<PrimerTableRow key={primer.id} {...{ deletePrimer, primer }} />));
 
   return (
-    <div className="description-section">
-      <div className="description-box">
-        <h1>Primers</h1>
-        <div className="primer-table-container">
-          <table>
-            <thead>
-              <tr>
-                <th> </th>
-                <th>Name</th>
-                <th>Sequence</th>
-              </tr>
-            </thead>
-            <tbody>{topPart}</tbody>
-          </table>
-        </div>
+    <>
+
+      <div className="primer-table-container">
+        <table>
+          <thead>
+            <tr>
+              <th> </th>
+              <th>Name</th>
+              <th>Sequence</th>
+            </tr>
+          </thead>
+          <tbody>{topPart}</tbody>
+        </table>
+      </div>
+      <div className="primer-form-container">
         {bottomPart}
       </div>
-    </div>
+
+    </>
   );
 }
 

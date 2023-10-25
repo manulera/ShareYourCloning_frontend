@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import './App.css';
+import Tabs from '@mui/material/Tabs';
 import MainSequenceEditor from './components/MainSequenceEditor';
 import MainAppBar from './components/navigation/MainAppBar';
 import DescriptionEditor from './components/DescriptionEditor';
@@ -10,20 +11,21 @@ import NetWorkNode from './components/NetworkNode';
 import NewSourceBox from './components/sources/NewSourceBox';
 import { cloningActions } from './store/cloning';
 import { primersActions } from './store/primers';
+import TabPannel from './components/navigation/TabPannel';
+import CustomTab from './components/navigation/CustomTab';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
   const [description, setDescription] = React.useState('');
-  const [showDescription, setShowDescription] = React.useState(false);
   const dispatch = useDispatch();
-  const { setState: setCloningState, setMainSequenceId } = cloningActions;
+  const { setState: setCloningState, setMainSequenceId, setCurrentTab: setCurrentTabAction } = cloningActions;
   const { setPrimers } = primersActions;
-  const [showPrimers, setShowPrimers] = React.useState(true);
-
+  const setCurrentTab = (tab) => dispatch(setCurrentTabAction(tab));
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
   const primers = useSelector((state) => state.cloning.entities, shallowEqual);
   const network = useSelector((state) => state.cloning.network, shallowEqual);
+  const currentTab = useSelector((state) => state.cloning.currentTab);
 
   const exportData = () => {
     downloadStateAsJson(entities, sources, description, primers);
@@ -33,29 +35,37 @@ function App() {
     dispatch(setPrimers(newState.primers));
     dispatch(setMainSequenceId(newState.mainSequenceId));
     setDescription(newState.description);
-    setShowDescription(description !== '');
-    setShowPrimers(newState.primers.length > 0);
   };
 
+  const changeTab = (event, newValue) => {
+    setCurrentTab(newValue);
+  };
   return (
     <div className="App">
       <header className="App-header">
         <div className="app-title">
-          <MainAppBar {...{ exportData, loadData, showDescription, setShowDescription, showPrimers, setShowPrimers }} />
+          <MainAppBar {...{ exportData, loadData }} />
         </div>
       </header>
       <div className="app-container">
-        {showDescription === false ? null : (
-          <div className="description-editor">
-            <DescriptionEditor {...{ description, setDescription }} />
-          </div>
-        ) }
-        {showPrimers === false ? null : (
+        <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 6 }}>
+          <CustomTab label="Cloning" index={0} />
+          <CustomTab label="Primers" index={1} />
+          <CustomTab label="Description" index={2} />
+          <CustomTab label="Sequence" index={3} />
+          <CustomTab label="Data model" index={4} />
+        </Tabs>
+        <TabPannel index={1} value={currentTab}>
           <div className="primer-list-container">
             <PrimerList />
           </div>
-        ) }
-        <div className="network-container">
+        </TabPannel>
+        <TabPannel index={2} value={currentTab}>
+          <div className="description-editor">
+            <DescriptionEditor {...{ description, setDescription }} />
+          </div>
+        </TabPannel>
+        <TabPannel index={0} value={currentTab}>
           <div className="tf-tree tf-ancestor-tree">
             <ul>
               {network.map((node) => (
@@ -67,16 +77,17 @@ function App() {
               </li>
             </ul>
           </div>
-        </div>
-        <div className="main-sequence-editor">
-          {/* TODO probably this can be made not be rendered every time the seq is updated */}
-          <MainSequenceEditor />
-        </div>
-        <div>
+        </TabPannel>
+        <TabPannel index={3} value={currentTab}>
+          <div className="main-sequence-editor">
+            <MainSequenceEditor />
+          </div>
+        </TabPannel>
+        <TabPannel index={4} value={currentTab}>
           <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
             {JSON.stringify(network, null, 4)}
           </code>
-        </div>
+        </TabPannel>
       </div>
     </div>
   );

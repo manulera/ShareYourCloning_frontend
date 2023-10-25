@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 import { constructNetwork } from '../utils/network';
 // const createSlice = require("@reduxjs/toolkit").createSlice;
 
@@ -15,10 +15,17 @@ const initialState = {
     },
   ],
   entities: [],
+  network: null,
+  currentTab: 0,
 };
 
 /* eslint-disable no-param-reassign */
 const reducer = {
+
+  setCurrentTab(state, action) {
+    state.currentTab = action.payload;
+  },
+
   setMainSequenceId(state, action) {
     state.mainSequenceId = action.payload;
   },
