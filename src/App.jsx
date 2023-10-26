@@ -16,15 +16,15 @@ import CustomTab from './components/navigation/CustomTab';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
-  const [description, setDescription] = React.useState('');
   const dispatch = useDispatch();
-  const { setState: setCloningState, setMainSequenceId, setCurrentTab: setCurrentTabAction } = cloningActions;
+  const { setState: setCloningState, setMainSequenceId, setCurrentTab: setCurrentTabAction, setDescription } = cloningActions;
   const { setPrimers } = primersActions;
   const setCurrentTab = (tab) => dispatch(setCurrentTabAction(tab));
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
   const primers = useSelector((state) => state.cloning.entities, shallowEqual);
   const network = useSelector((state) => state.cloning.network, shallowEqual);
+  const description = useSelector((state) => state.cloning.description, shallowEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);
 
   const exportData = () => {
@@ -34,15 +34,13 @@ function App() {
     dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
     dispatch(setPrimers(newState.primers));
     dispatch(setMainSequenceId(newState.mainSequenceId));
-    setDescription(newState.description);
+    dispatch(setDescription(newState.description));
   };
 
   const changeTab = (event, newValue) => {
     setCurrentTab(newValue);
   };
 
-  const mainEditorStyle = (currentTab === 3) ? { visibility: 'visible' } : { visibility: 'hidden', height: 0, overflow: 'hidden' };
-  // const mainEditorStyle = (currentTab === 3) ? { display: 'inline' } : { display: 'none', height: 0, overflow: 'hidden' };
   return (
     <div className="App">
       <header className="App-header">
@@ -65,7 +63,7 @@ function App() {
         </TabPannel>
         <TabPannel index={2} value={currentTab}>
           <div className="description-editor">
-            <DescriptionEditor {...{ description, setDescription }} />
+            <DescriptionEditor />
           </div>
         </TabPannel>
         <TabPannel index={0} value={currentTab}>

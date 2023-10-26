@@ -3,15 +3,21 @@ import TextareaAutosize from '@mui/material/TextareaAutosize';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip from '@mui/material/Tooltip';
 import Box from '@mui/material/Box';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { cloningActions } from '../store/cloning';
 
-function DescriptionEditor({ description, setDescription }) {
+function DescriptionEditor() {
+  const description = useSelector((state) => state.cloning.description, shallowEqual);
+  const { setDescription: setDescriptionAction } = cloningActions;
+  const dispatch = useDispatch();
+
   const [text, setText] = React.useState(description);
   const [typing, setTyping] = React.useState(description === '');
   const onChange = (e) => {
     setText(e.target.value);
   };
   const onSubmit = () => {
-    setDescription(text);
+    dispatch(setDescriptionAction(text));
     setTyping(false);
   };
   const onClickEditButton = () => {

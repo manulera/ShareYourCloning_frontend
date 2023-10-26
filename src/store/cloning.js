@@ -17,6 +17,7 @@ const initialState = {
   entities: [],
   network: null,
   currentTab: 0,
+  description: '',
 };
 
 /* eslint-disable no-param-reassign */
@@ -90,6 +91,9 @@ const reducer = {
     state.network = constructNetwork(entities, sources);
   },
 
+  setDescription(state, action) {
+    state.description = action.payload;
+  },
 };
 /* eslint-enable no-param-reassign */
 
