@@ -201,3 +201,12 @@ div.description-container {
     margin-bottom: 2em;
     max-width: 600px;
 }
+
+code {
+    background-color: lightgrey;
+    padding: 15px;
+    border-radius: 5px;
+    min-width: 40%;
+    box-shadow: inset 0px 0px 0px 3px gray;
+    
+}

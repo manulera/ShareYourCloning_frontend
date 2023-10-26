@@ -85,6 +85,7 @@ function App() {
           </div>
         </TabPannel>
         <TabPannel index={4} value={currentTab}>
+          {/* TODO: propper json syntax highlighting here */}
           <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
             {JSON.stringify(network, null, 4)}
           </code>
