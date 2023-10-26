@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button } from '@mui/material';
+import FormHelperText from '@mui/material/FormHelperText';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 
@@ -18,17 +20,27 @@ function SourceFile({ sourceId }) {
   };
 
   return (
-    <div>
-      <h3 className="header-nodes">Submit a file</h3>
-      <p>Ideally a '.gb' or '.dna' file with annotations, but will also take FASTA</p>
-      <input type="file" onChange={onChange} />
+    <form>
+      <Button
+        fullWidth
+        variant="contained"
+        component="label"
+      >
+        Select File
+        <input
+          type="file"
+          hidden
+          onChange={onChange}
+        />
+      </Button>
+      <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
-        sources, entities, sourceId
+        sources, entities, sourceId,
       }}
       />
 
-    </div>
+    </form>
   );
 }
 

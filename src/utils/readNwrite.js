@@ -15,3 +15,11 @@ export const downloadStateAsJson = async (entities, sources, description, primer
   link.click();
   document.body.removeChild(link);
 };
+
+export const fileReceivedToJson = (event, callback) => {
+  console.log('called');
+  const file = event.target.files[0];
+  const reader = new FileReader();
+  reader.readAsText(file, 'UTF-8');
+  reader.onload = (eventFileRead) => callback(JSON.parse(eventFileRead.target.result));
+};
