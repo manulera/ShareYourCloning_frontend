@@ -40,6 +40,9 @@ function App() {
   const changeTab = (event, newValue) => {
     setCurrentTab(newValue);
   };
+
+  const mainEditorStyle = (currentTab === 3) ? { visibility: 'visible' } : { visibility: 'hidden', height: 0, overflow: 'hidden' };
+  // const mainEditorStyle = (currentTab === 3) ? { display: 'inline' } : { display: 'none', height: 0, overflow: 'hidden' };
   return (
     <div className="App">
       <header className="App-header">
@@ -89,6 +92,7 @@ function App() {
           </code>
         </TabPannel>
       </div>
+
     </div>
   );
 }

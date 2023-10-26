@@ -17,8 +17,8 @@ function MainSequenceEditor() {
     };
     const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
     editor.updateEditor(editorProps);
-  }, [seq, mainSequenceId]);
+  }, [mainSequenceId, seq]);
 
   return (<div ref={nodeRef} />);
 }
-export default MainSequenceEditor;
+export default React.memo(MainSequenceEditor);

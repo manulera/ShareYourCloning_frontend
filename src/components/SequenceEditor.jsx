@@ -6,6 +6,7 @@ import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 
 function SequenceEditor({ entityId, isRootNode }) {
+  console.log('SequenceEditor', entityId);
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const seq = convertToTeselaJson(entity);
