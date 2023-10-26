@@ -16,9 +16,8 @@ button {
 }
 
 .main-sequence-editor {
-    width: 100%;
-    max-width: 1000px;
-    display: inline-block;
+    width: 70%;
+    margin: auto;
 }
 
 

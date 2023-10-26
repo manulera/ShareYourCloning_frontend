@@ -49,7 +49,7 @@ function App() {
         </div>
       </header>
       <div className="app-container">
-        <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 6 }}>
+        <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3 }}>
           <CustomTab label="Cloning" index={0} />
           <CustomTab label="Primers" index={1} />
           <CustomTab label="Description" index={2} />

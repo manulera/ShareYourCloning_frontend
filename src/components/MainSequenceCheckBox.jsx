@@ -7,9 +7,13 @@ import './MainSequenceCheckBox.module.css';
 
 function MainSequenceCheckBox({ id }) {
   const dispatch = useDispatch();
-  const { setMainSequenceId } = cloningActions;
+  const { setMainSequenceId, setCurrentTab } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
-  const toggleMain = () => (mainSequenceId === id ? dispatch(setMainSequenceId(null)) : dispatch(setMainSequenceId(id)));
+  const toggleMain = () => {
+    if (mainSequenceId === id) {
+      dispatch(setMainSequenceId(null));
+    } else { dispatch(setMainSequenceId(id)); dispatch(setCurrentTab(3)); }
+  };
   const tooltipText = <div className="tooltip-text">See sequence in main editor</div>;
   return (
     <div className="node-corner">
