@@ -195,3 +195,9 @@ div.select-source {
     margin-bottom: 10px;
     text-align: center;
 }
+
+div.description-container {
+    margin: auto;
+    margin-bottom: 2em;
+    max-width: 600px;
+}
