@@ -42,10 +42,6 @@ button {
     white-space: pre-wrap;
 }
 
-.tooltip-text {
-    font-size: medium;
-}
-
 div.hang-from-node {
     box-sizing: content-box;
     height: 50px;
@@ -88,43 +84,6 @@ div.tf-tree.tf-ancestor-tree {
     /* overflow: unset; */
     padding-bottom: 150px;
     height: fit-content;
-}
-
-
-.description-section {
-    margin: auto;
-    margin-bottom: 2em;
-}
-
-.description-section div.description-box {
-    white-space: pre-wrap;
-    max-width: 600px;
-    margin: auto;
-    padding: 35px;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    box-shadow: inset 0px 0px 0px 3px gray;
-    border-color: gray;
-    border-radius: 20px;
-    position: relative;
-}
-
-div.description-box p {
-    font-family: sans-serif;
-    font-size: large;
-    text-align: justify;
-    margin-bottom: 0;
-}
-
-.description-section button.icon-corner {
-    right: 6px;
-    top: 6px;
-}
-
-.description-box h1 {
-    margin-top: 0px;
-    font-size: x-large;
-    font-weight: bold;
 }
 
 div.corner-id {
@@ -207,5 +166,5 @@ code {
     border-radius: 5px;
     min-width: 40%;
     box-shadow: inset 0px 0px 0px 3px gray;
-    
+    margin-bottom: 30px;
 }
