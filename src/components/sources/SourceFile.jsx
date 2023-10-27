@@ -6,7 +6,7 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component provinding an interface to import a file
 function SourceFile({ sourceId }) {
-  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
+  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
     const formData = new FormData();
@@ -16,7 +16,7 @@ function SourceFile({ sourceId }) {
         'content-type': 'multipart/form-data',
       },
     };
-    sendRequest('read_from_file', formData, config);
+    sendPostRequest('read_from_file', formData, config);
   };
 
   return (

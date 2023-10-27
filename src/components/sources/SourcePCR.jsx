@@ -19,7 +19,7 @@ const MenuProps = {
 function SourcePCR({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
-  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
+  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);
   const minimalAnnealingRef = React.useRef(null);
 
@@ -32,7 +32,7 @@ function SourcePCR({ sourceId }) {
       primers: primers.filter((p) => selectedPrimerIds.includes(p.id)),
       source: { input: inputEntities.map((e) => e.id) },
     };
-    sendRequest('pcr', requestData, { params: { minimal_annealing: minimalAnnealingRef.current.value } });
+    sendPostRequest('pcr', requestData, { params: { minimal_annealing: minimalAnnealingRef.current.value } });
   };
 
   return (

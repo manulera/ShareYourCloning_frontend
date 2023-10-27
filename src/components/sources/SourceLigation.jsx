@@ -10,14 +10,14 @@ import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 function SourceLigation({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const inputEntityIds = inputEntities.map((e) => e.id);
-  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
+  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
       source: { input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    sendRequest('sticky_ligation', requestData);
+    sendPostRequest('sticky_ligation', requestData);
   };
 
   return (

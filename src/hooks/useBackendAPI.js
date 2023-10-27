@@ -11,7 +11,7 @@ export default function useBackendAPI(sourceId) {
   const { addEntityAndItsSource } = cloningActions;
   const dispatch = useDispatch();
 
-  const sendRequest = useCallback(async (endpoint, requestData, config = {}) => {
+  const sendPostRequest = useCallback(async (endpoint, requestData, config = {}) => {
     setWaitingMessage('Request sent to the server');
     const url = import.meta.env.VITE_REACT_APP_BACKEND_URL + endpoint;
     axios
@@ -25,5 +25,5 @@ export default function useBackendAPI(sourceId) {
       }).catch((error) => { setWaitingMessage(error2String(error)); setSources([]); setEntities([]); });
   }, []);
 
-  return { waitingMessage, sources, entities, sendRequest };
+  return { waitingMessage, sources, entities, sendPostRequest };
 }
