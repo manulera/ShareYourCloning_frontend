@@ -10,13 +10,19 @@ export default {
     },
   },
   define: {
-    // By default, Vite doesn't include shims for NodeJS/
-    // necessary for segment analytics lib to work
-    global: {},
+    // used to be global: {}
+    // changed it because it was giving problems with yarn build, it would
+    // replace global as an object field in a file by {}, creating a syntax error.
+    // Some people in stackoverflow said to use global: 'window', but that replaced
+    // the word window in the scripts, creating other problems.
+    // global: {},
   },
   test: {
     globals: true,
     environment: 'jsdom',
     setupFiles: './tests/setup.js',
+  },
+  build: {
+    outDir: 'build',
   },
 };
