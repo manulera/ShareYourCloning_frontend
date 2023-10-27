@@ -1,8 +1,9 @@
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import ForwardIcon from '@mui/icons-material/Forward';
+import { Button, IconButton } from '@mui/material';
 import { convertToTeselaJson } from '../../utils/sequenceParsers';
-import ArrowIcon from '../icons/ArrowIcon';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
 import { cloningActions } from '../../store/cloning';
@@ -23,7 +24,10 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   const decreaseSelectedOutput = () => setSelectedOutput((selectedOutput !== 0) ? (selectedOutput - 1) : sources.length - 1);
 
   // The function to pick the fragment as the output, and execute the step
-  const chooseFragment = () => dispatch(addEntityAndItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
+  const chooseFragment = (e) => {
+    e.preventDefault();
+    dispatch(addEntityAndItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
+  };
 
   const editorName = `source_editor_${sourceId}`;
 
@@ -32,23 +36,24 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   return (
     <div className="multiple-output-selector">
       <div>
-        <button onClick={decreaseSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'left' }} />
-        </button>
-        &nbsp;
-        <button onClick={incrementSelectedOutput} type="button">
-          <ArrowIcon {...{ direction: 'right' }} />
-        </button>
+        <IconButton onClick={decreaseSelectedOutput} type="button" sx={{ height: 'fit-content' }}>
+          <ForwardIcon sx={{ rotate: '180deg' }} />
+        </IconButton>
+        <IconButton onClick={incrementSelectedOutput} type="button" sx={{ height: 'fit-content' }}>
+          <ForwardIcon />
+        </IconButton>
       </div>
-      <div>
+      <div className="fragment-picker">
         <SubSequenceDisplayer {...{
-          sources, selectedOutput, sourceId
+          sources, selectedOutput, sourceId,
         }}
         />
         <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: 'auto' }} />
         <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
-        <button onClick={chooseFragment} type="button">Choose fragment</button>
       </div>
+      <form onSubmit={chooseFragment}>
+        <Button fullWidth type="submit" variant="contained">Choose fragment</Button>
+      </form>
     </div>
   );
 }

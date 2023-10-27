@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { Button, FormControl, TextField } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
@@ -23,17 +24,23 @@ function SourceRestriction({ sourceId }) {
       source: { restriction_enzymes: enzymesCsvRef.current.value.split(','), input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    console.log(inputEntities)
     sendRequest('restriction', requestData);
   };
 
   return (
     <div className="restriction">
-      <h3 className="header-nodes">Write the enzyme names as csv</h3>
       <form onSubmit={onSubmit}>
-        <input type="text" ref={enzymesCsvRef} />
-        <button type="submit">Submit</button>
+        <FormControl fullWidth>
+          <TextField
+            label="Enzymes (comma-separated)"
+            id={`repository-id-${sourceId}`}
+            inputRef={enzymesCsvRef}
+            helperText="Example: EcoRI,BamHI"
+          />
+        </FormControl>
+        <Button type="submit" variant="contained" color="success">Perform restriction</Button>
       </form>
+
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,

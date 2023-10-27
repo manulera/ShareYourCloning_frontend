@@ -2,130 +2,30 @@ button {
     cursor: pointer;
 }
 
-.select-source {
-    margin: 10px auto;
-}
-
 .tf-tree .tf-nc, .tf-tree .tf-node-content {
-    box-shadow: inset 0px 0px 0px 3px #106aa2;
+    box-shadow: inset 0px 0px 0px 3px rgb(25, 118, 210);
     border: none
 }
 
 
-.multiple-output-selector button, .genbank-id button, .restriction button, .ligation button, .description button {
-    background-color: #106aa2;
-    color: white;
-    padding: 0.5em;
-    border-radius: 3px;
-    cursor: pointer;
-    border: none;
-    margin: 0.5em;
-}
-
-.multiple-output-selector button:hover, .genbank-id button:hover, .restriction button:hover, .ligation button:hover, .description button:hover {
-    background-color: #32ADCC;
-    color: #fff;
-}
-
-.multiple-output-selector input, .genbank-id input, .restriction input .ligation input {
-    padding: 0.3em;
-    border-radius: 3px;
-    box-sizing: border-box;
-    border: 1px solid #000;
-    margin: 5px;
-}
-
-.multiple-input-selector select {
-    min-width: 100px;
-}
-
 .app-container {
     text-align: center;
     width: 100%;
+    margin: 0px;
+    padding: 0px;
 }
 
 .main-sequence-editor {
-    width: 800px;
-    display: inline-block;
+    width: 70%;
+    margin: auto;
 }
 
-.app-title h1 {
-    background-color: #106aa2;
-    padding: 30px;
-    color: white;
-    cursor: pointer;
-}
-
-.app-title h1:hover {
-    background-color: #32ADCC;
-}
-
-.app-title h1:drop {
-    background-color: #32ADCC;
-}
-
-.app-title {
-    margin-bottom: 1em;
-}
-
-button.icon-corner {
-    position: absolute;
-    right: -1px;
-    top: 1px;
-    font-size: x-large;
-    padding: 0;
-    border: none;
-    background: none;
-    color: gray;
-}
-
-div.select-source button.icon-corner {
-    color: #FF4433;
-}
-
-button.icon-hanging {
-    color: green;
-    padding: 0;
-    border: none;
-    background: none;
-}
-
-button.icon-hanging:hover {
-    filter: brightness(70%);
-}
-
-
-button.icon-corner:hover {
-    filter: brightness(70%);
-}
 
 .node-corner {
     position: absolute;
     right: -1px;
     top: 1px;
 }
-
-.node-corner-icon {
-    font-size: xx-large;
-}
-
-input[type="checkbox"].hidden-checkbox {
-    display: none;
-}
-
-input[type="checkbox"].hidden-checkbox+label {
-    color: lightgray;
-}
-
-input[type="checkbox"].hidden-checkbox+label:hover {
-    color: gray;
-    cursor: pointer;
-}
-
-input[type="checkbox"].hidden-checkbox:checked+label {
-    color: green;
-}
-
 
 .overhang-representation {
     text-align: center;
@@ -142,10 +42,6 @@ input[type="checkbox"].hidden-checkbox:checked+label {
     white-space: pre-wrap;
 }
 
-.tooltip-text {
-    font-size: medium;
-}
-
 div.hang-from-node {
     box-sizing: content-box;
     height: 50px;
@@ -155,15 +51,15 @@ div.hang-from-node {
     left: 50%;
     transform: translate(-50%, 40px);
     border: 3px solid;
-    border-color: #106aa2;
+    border-color: rgb(25, 118, 210);
     border-radius: 100%;
 }
 
 /* To center the icon vertically */
-div.hang-from-node p {
+div.hang-from-node div {
     margin: 0;
     position: absolute;
-    top: 53%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -181,76 +77,13 @@ div.hang-from-node::before {
     transform: translate(0, -100%);
 }
 
-/* we unset overflow sot that when we add the hanging
-node to append a source to an entity, the network container
-does not become scrollable */
-.network-container {
-    margin-bottom: 100px;
-    overflow: unset;
-}
 
+/* TODO: handle these */
 div.tf-tree.tf-ancestor-tree {
-    overflow: unset;
-
-}
-
-header.app-bar {
-    background-color: #106aa2;
-    box-shadow: none;
-}
-
-header.app-bar button[type="button"] {
-    font-size: large;
-    margin-right: 20px;
-}
-
-header.app-bar button:hover {
-    background-color: #32ADCC;
-}
-
-header.app-bar div.MuiToolbar-root {
-    display: inline-block;
-}
-
-.app-name {
-    font-size: 4em;
-    font-weight: 200;
-}
-
-.description-section {
-    margin: auto;
-    margin-bottom: 2em;
-}
-
-.description-section div.description-box {
-    white-space: pre-wrap;
-    max-width: 600px;
-    margin: auto;
-    padding: 35px;
-    padding-top: 10px;
-    padding-bottom: 20px;
-    box-shadow: inset 0px 0px 0px 3px gray;
-    border-color: gray;
-    border-radius: 20px;
-    position: relative;
-}
-
-div.description-box p {
-    font-family: sans-serif;
-    font-size: large;
-    text-align: justify;
-    margin-bottom: 0;
-}
-
-.description-section button.icon-corner {
-    right: 6px;
-    top: 6px;
-}
-
-.description-box h1 {
-    margin-top: 0px;
-    font-size: x-large;
-    font-weight: bold;
+    overflow-x: scroll;
+    /* overflow: unset; */
+    padding-bottom: 150px;
+    height: fit-content;
 }
 
 div.corner-id {
@@ -259,7 +92,7 @@ div.corner-id {
     top: 0px;
     font-family: sans-serif;
     font-size: large;
-    color: #106aa2;
+    color: rgb(25, 118, 210);
     font-weight: bold;
 }
 
@@ -278,11 +111,6 @@ div.collapsed button {
     margin-top: 0px;
 }
 
-div.primer-row {
-    display: flex;
-    align-items: center;
-}
-
 /* Prevents scollbar from showing on small editors,
    that was caused by overflowing numbers at the edges
    of the x axis */
@@ -299,3 +127,44 @@ span.node-text > div:first-child {
     overflow: visible;
 
 } */
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+div.select-source div.MuiFormControl-root {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+div.select-source h2 {
+    margin-bottom: 5px;
+    font-size: x-large;
+}
+
+
+div.select-source {
+    width: 275px;
+}
+
+.fragment-picker {
+    margin-top: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+div.description-container {
+    margin: auto;
+    margin-bottom: 2em;
+    max-width: 600px;
+}
+
+code {
+    background-color: lightgrey;
+    padding: 15px;
+    border-radius: 5px;
+    min-width: 40%;
+    box-shadow: inset 0px 0px 0px 3px gray;
+    margin-bottom: 30px;
+}

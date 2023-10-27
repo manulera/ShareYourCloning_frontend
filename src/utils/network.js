@@ -8,6 +8,11 @@ export function getParentNodes(node, entities, sources) {
   });
 }
 
+function getAllSourceIdsInParentNodes(node) {
+  const parentNodesSourceIds = node.parentNodes.map((parentNode) => parentNode.source.id);
+  return parentNodesSourceIds.concat(node.parentNodes.flatMap((parentNode) => getAllSourceIdsInParentNodes(parentNode)));
+}
+
 export function constructNetwork(entities, sources) {
   const shortEntities = entities.map((entity) => ({ ...entity, sequence: '' }));
   const network = [];
@@ -21,5 +26,11 @@ export function constructNetwork(entities, sources) {
   entitiesThatAreNotInput.forEach((entity) => network.push({ entity, source: sources.find((s) => s.output === entity.id) }));
   sourcesWithoutOutput.forEach((source) => network.push({ entity: null, source }));
 
-  return network.map((node) => ({ ...node, parentNodes: getParentNodes(node, shortEntities, sources) }));
+  const unsortedNetwork = network.map((node) => ({ ...node, parentNodes: getParentNodes(node, shortEntities, sources) }));
+
+  return unsortedNetwork.sort((a, b) => {
+    const aValue = getAllSourceIdsInParentNodes(a).concat(a.source.id);
+    const bValue = getAllSourceIdsInParentNodes(b).concat(b.source.id);
+    return Math.min(...aValue) - Math.min(...bValue);
+  });
 }

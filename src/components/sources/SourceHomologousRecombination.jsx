@@ -1,5 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Button, FormControl, TextField } from '@mui/material';
 import SingleInputSelector from './SingleInputSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
@@ -13,14 +14,14 @@ function SourceHomologousRecombination({ sourceId }) {
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
   const inputEntityIds = inputEntities.map((e) => e.id);
-
+  const minimalHomologyRef = React.useRef(null);
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
       source: { input: inputEntityIds },
       sequences: inputEntities,
     };
-    const config = { minimal_homology: 40 };
+    const config = { params: { minimal_homology: minimalHomologyRef.current.value } };
     sendRequest('homologous_recombination', requestData, config);
   };
 
@@ -32,21 +33,22 @@ function SourceHomologousRecombination({ sourceId }) {
 
   return (
     <div className="ligation">
-
-      <div>Select template:</div>
-      {/* TODO: switch to ref usage */}
-      <SingleInputSelector {...{
-        selectedId: template, onChange: setTemplate,
-      }}
-      />
-
-      <div>Select insert:</div>
-      <SingleInputSelector {...{
-        selectedId: insert, onChange: setInsert,
-      }}
-      />
       <form onSubmit={onSubmit}>
-        <button type="submit">Submit</button>
+        <FormControl fullWidth>
+          <SingleInputSelector label="Template sequence" {...{ selectedId: template, onChange: setTemplate, inputEntityIds }} />
+        </FormControl>
+        <FormControl fullWidth>
+          <SingleInputSelector label="Insert sequence" {...{ selectedId: insert, onChange: setInsert, inputEntityIds }} />
+        </FormControl>
+        <FormControl fullWidth>
+          <TextField
+            label="Minimal homology length (in bp)"
+            inputRef={minimalHomologyRef}
+            type="number"
+            defaultValue={40}
+          />
+        </FormControl>
+        <Button type="submit" variant="contained" color="success">Recombine</Button>
       </form>
       <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{

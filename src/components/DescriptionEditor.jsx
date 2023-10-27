@@ -1,63 +1,59 @@
 import React from 'react';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
-import { AiFillEdit } from 'react-icons/ai';
-import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import TextField from '@mui/material/TextField';
+import { Button, FormControl } from '@mui/material';
+import { cloningActions } from '../store/cloning';
 
-function DescriptionEditor({ description, setDescription }) {
+function DescriptionEditor() {
+  const description = useSelector((state) => state.cloning.description, shallowEqual);
+  const { setDescription: setDescriptionAction } = cloningActions;
+  const dispatch = useDispatch();
+
   const [text, setText] = React.useState(description);
   const [typing, setTyping] = React.useState(description === '');
   const onChange = (e) => {
     setText(e.target.value);
   };
-  const onSubmit = () => {
-    setDescription(text);
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (text === '') {
+      return;
+    }
+    dispatch(setDescriptionAction(text));
     setTyping(false);
   };
   const onClickEditButton = () => {
     setTyping(true);
   };
-  const tooltipText = <div className="tooltip-text">Edit description</div>;
   let textShown = (
     <>
-      <button className="icon-corner" type="submit" onClick={onClickEditButton}>
-        <Tooltip title={tooltipText} arrow placement="top">
-          <Box>
-            <AiFillEdit />
-          </Box>
-        </Tooltip>
-
-      </button>
       <p>{text}</p>
+      <Button onClick={onClickEditButton} variant="contained" color="success" style={{ marginTop: 15 }}>Edit description</Button>
+
     </>
   );
   if (typing) {
     textShown = (
-      <div className="description description-edit">
-        <TextareaAutosize
-          aria-label="empty textarea"
-          placeholder="Add a description of your cloning strategy here"
-          style={{ width: '100%' }}
-          onChange={onChange}
-          value={text}
-        />
-        <div>
-          <button type="submit" onClick={onSubmit}>Submit</button>
-        </div>
-      </div>
+      <form onSubmit={onSubmit}>
+        <FormControl fullWidth>
+          <TextField
+            id="outlined-multiline-flexible"
+            multiline
+            fullWidth
+            onChange={onChange}
+            value={text}
+            label="Add a brief description"
+          />
+        </FormControl>
+        <Button type="submit" variant="contained" style={{ marginTop: 15 }}>Save description</Button>
+      </form>
     );
   }
 
   return (
-    <div>
-
-      <div className="description-section">
-        <div className="description-box">
-          <h1>Description:</h1>
-          {textShown}
-        </div>
-      </div>
-
+    <div className="description-container">
+      {textShown}
     </div>
   );
 }

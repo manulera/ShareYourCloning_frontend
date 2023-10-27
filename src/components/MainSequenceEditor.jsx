@@ -6,11 +6,10 @@ import defaultMainEditorProps from '../config/defaultMainEditorProps';
 
 function MainSequenceEditor() {
   const editorName = 'mainEditor';
-
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId), shallowEqual);
   const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
   const nodeRef = React.useRef(null);
-
   React.useEffect(() => {
     const editorProps = {
       sequenceData: seq,
@@ -18,8 +17,8 @@ function MainSequenceEditor() {
     };
     const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
     editor.updateEditor(editorProps);
-  }, [seq]);
+  }, [mainSequenceId, seq]);
 
   return (<div ref={nodeRef} />);
 }
-export default MainSequenceEditor;
+export default React.memo(MainSequenceEditor);
