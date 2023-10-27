@@ -13,6 +13,7 @@ import { cloningActions } from './store/cloning';
 import { primersActions } from './store/primers';
 import TabPannel from './components/navigation/TabPannel';
 import CustomTab from './components/navigation/CustomTab';
+import EnzymeMultiSelect from './components/form/EnzymeMultiSelect';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
@@ -91,7 +92,6 @@ function App() {
           </code>
         </TabPannel>
       </div>
-
     </div>
   );
 }

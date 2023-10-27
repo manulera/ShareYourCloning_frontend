@@ -10,7 +10,7 @@ import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { waitingMessage, sources, entities, sendRequest } = useBackendAPI(sourceId);
+  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
   const inputEntityIds = inputEntities.map((e) => e.id);
@@ -22,7 +22,7 @@ function SourceHomologousRecombination({ sourceId }) {
       sequences: inputEntities,
     };
     const config = { params: { minimal_homology: minimalHomologyRef.current.value } };
-    sendRequest('homologous_recombination', requestData, config);
+    sendPostRequest('homologous_recombination', requestData, config);
   };
 
   const template = inputEntityIds.length > 0 ? inputEntityIds[0] : null;

@@ -13,11 +13,11 @@ function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef('');
 
-  const { waitingMessage, sendRequest } = useBackendAPI(sourceId);
+  const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    sendRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
+    sendPostRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
   };
 
   return (
