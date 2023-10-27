@@ -1570,7 +1570,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/ui@npm:0.3.28, @teselagen/ui@npm:^0.3.28":
+"@teselagen/ui@npm:0.3.28":
   version: 0.3.28
   resolution: "@teselagen/ui@npm:0.3.28"
   dependencies:
@@ -7485,7 +7485,6 @@ __metadata:
     "@teselagen/bio-parsers": ^0.3.8
     "@teselagen/ove": ^0.3.26
     "@teselagen/sequence-utils": ^0.3.7
-    "@teselagen/ui": ^0.3.28
     "@testing-library/jest-dom": ^6.1.4
     "@testing-library/react": ^14.0.0
     "@testing-library/user-event": ^14.5.1
