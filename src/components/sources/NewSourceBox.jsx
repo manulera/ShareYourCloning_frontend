@@ -1,8 +1,8 @@
 import React from 'react';
-import { AiFillPlusCircle } from 'react-icons/ai';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Tooltip from '@mui/material/Tooltip';
-import Box from '@mui/material/Box';
 import { useDispatch } from 'react-redux';
+import { IconButton } from '@mui/material';
 import { cloningActions } from '../../store/cloning';
 
 // A component that is rendered on the side of the tree to add a new source
@@ -12,13 +12,11 @@ function NewSourceBox({ inputEntitiesIds = [] }) {
   const onClick = () => { dispatch(addEmptySource(inputEntitiesIds)); };
   const tooltipText = <div className="tooltip-text">Add source</div>;
   return (
-    <button type="button" className="icon-hanging" onClick={onClick}>
+    <IconButton type="submit" sx={{ height: 'fit-content' }} onClick={onClick}>
       <Tooltip title={tooltipText} arrow placement="bottom">
-        <Box>
-          <AiFillPlusCircle className="node-corner-icon" />
-        </Box>
+        <AddCircleIcon sx={{ fontSize: '1.8em' }} className="node-corner-icon" color="success" />
       </Tooltip>
-    </button>
+    </IconButton>
   );
 }
 

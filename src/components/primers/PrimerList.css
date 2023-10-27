@@ -1,0 +1,45 @@
+table {
+    width: auto;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.primer-table-container {
+    width: 60%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.primer-form-container {
+    width: 60%;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+table th:first-child, td:first-child {
+    width: 10%;
+}
+
+th, td {
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+}
+
+
+tr:hover {
+    background-color: #f0f0f0;
+}
+
+div.primer-table-container {
+    overflow-x: scroll;
+}
+
+.sequence, #sequence {
+    font-family: monospace;
+    font-size: medium;
+}

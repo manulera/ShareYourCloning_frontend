@@ -1,0 +1,14 @@
+.primer-row {
+    display: flex;
+    align-items: center;
+}
+
+.primer-row div.primer-sequence{
+    font-family: monospace;
+    text-align: left;
+    padding-left: 10px;
+}
+
+.primer-row svg[data-testid] {
+    font-size: 1.2em;
+}
