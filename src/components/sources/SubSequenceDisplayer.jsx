@@ -14,8 +14,7 @@ function SubSequenceDisplayer({
   const editorName = `subsequence_editor_${sourceId}`;
   if (['restriction', 'PCR'].includes(source.type)) {
     const seq = convertToTeselaJson(inputEntities[0]);
-    const selectionLayer = source.type === 'homologous_recombination' ? parseFeatureLocation(source.location) : { start: source.fragment_boundaries[0], end: source.fragment_boundaries[1] };
-
+    const selectionLayer = { start: source.fragment_boundaries[0], end: source.fragment_boundaries[1] };
 
     return (
       <div className="multiple-output-selector">
