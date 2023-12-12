@@ -13,7 +13,6 @@ import { cloningActions } from './store/cloning';
 import { primersActions } from './store/primers';
 import TabPannel from './components/navigation/TabPannel';
 import CustomTab from './components/navigation/CustomTab';
-import EnzymeMultiSelect from './components/form/EnzymeMultiSelect';
 
 function App() {
   // A counter with the next unique id to be assigned to a node
@@ -23,7 +22,7 @@ function App() {
   const setCurrentTab = (tab) => dispatch(setCurrentTabAction(tab));
   const entities = useSelector((state) => state.cloning.entities, shallowEqual);
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
-  const primers = useSelector((state) => state.cloning.entities, shallowEqual);
+  const primers = useSelector((state) => state.primers.primers, shallowEqual);
   const network = useSelector((state) => state.cloning.network, shallowEqual);
   const description = useSelector((state) => state.cloning.description, shallowEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);

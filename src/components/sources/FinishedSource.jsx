@@ -11,7 +11,11 @@ function FinishedSource({ sourceId }) {
     case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
     case 'sticky_ligation': message = 'Ligation of fragments with sticky ends'; break;
     case 'restriction': message = `Restriction reaction with ${source.restriction_enzymes.join(' ')}`; break;
-    case 'PCR': message = `PCR with primers ${source.primers.join(' and ')}`; break;
+    case 'PCR': {
+      const primers = useSelector((state) => state.primers.primers);
+      message = `PCR with primers ${source.primers.map((id) => primers.find((p) => id === p.id).name).join(' and ')}`;
+    }
+      break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
     case 'repository_id': {
       const { repository } = source;

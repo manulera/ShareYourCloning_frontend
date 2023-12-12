@@ -7,7 +7,6 @@ import { convertToTeselaJson } from '../../utils/sequenceParsers';
 function SubSequenceDisplayer({
   source, sourceId, overhangs,
 }) {
-  console.log(source);
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
 
   const editorName = `subsequence_editor_${sourceId}`;
