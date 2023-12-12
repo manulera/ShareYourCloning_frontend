@@ -17,7 +17,6 @@ export const downloadStateAsJson = async (entities, sources, description, primer
 };
 
 export const fileReceivedToJson = (event, callback) => {
-  console.log('called');
   const file = event.target.files[0];
   const reader = new FileReader();
   reader.readAsText(file, 'UTF-8');

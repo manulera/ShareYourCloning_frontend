@@ -45,7 +45,9 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
       </div>
       <div className="fragment-picker">
         <SubSequenceDisplayer {...{
-          sources, selectedOutput, sourceId,
+          source: sources[selectedOutput],
+          sourceId,
+          overhangs: [entities[selectedOutput].sequence.overhang_crick_3prime, entities[selectedOutput].sequence.overhang_watson_3prime],
         }}
         />
         <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: 'auto' }} />
