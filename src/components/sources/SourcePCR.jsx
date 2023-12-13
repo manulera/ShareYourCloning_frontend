@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Box, Button, Chip, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
@@ -20,17 +20,20 @@ function SourcePCR({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
   const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
-  const [selectedPrimerIds, setSelectedPrimersIds] = React.useState([]);
+  const [forwardPrimerId, setForwardPrimerId] = React.useState('');
+  const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
 
-  const onChange = (event) => setSelectedPrimersIds(event.target.value);
+  const onChangeForward = (event) => setForwardPrimerId(event.target.value);
+  const onChangeReverse = (event) => setReversePrimerId(event.target.value);
 
   const onSubmit = (event) => {
     event.preventDefault();
+
     const requestData = {
       sequences: inputEntities,
-      primers: primers.filter((p) => selectedPrimerIds.includes(p.id)),
-      source: { input: inputEntities.map((e) => e.id) },
+      primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
+      source: { input: inputEntities.map((e) => e.id), forward_primer: forwardPrimerId, reverse_primer: reversePrimerId },
     };
     sendPostRequest('pcr', requestData, { params: { minimal_annealing: minimalAnnealingRef.current.value } });
   };
@@ -40,21 +43,26 @@ function SourcePCR({ sourceId }) {
       <form onSubmit={onSubmit}>
         {/* TODO: set id */}
         <FormControl fullWidth>
-          <InputLabel id="demo-multiple-chip-label">Primers</InputLabel>
+          <InputLabel id="select-forward-primer-label">Forward primer</InputLabel>
           <Select
-            labelId="demo-multiple-chip-label"
-            id="demo-multiple-chip"
-            multiple
-            value={selectedPrimerIds}
-            onChange={onChange}
-            label="Primers"
-            renderValue={(selected) => (
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                {selected.map((value) => (
-                  <Chip key={value} label={primers.find((p) => p.id === value).name} />
-                ))}
-              </Box>
-            )}
+            labelId="select-forward-primer-label"
+            id="select-forward-primer"
+            value={forwardPrimerId}
+            onChange={onChangeForward}
+            label="Forward primer"
+            MenuProps={MenuProps}
+          >
+            {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
+          <InputLabel id="select-reverse-primer-label">Reverse primer</InputLabel>
+          <Select
+            labelId="select-reverse-primer-label"
+            id="select-reverse-primer"
+            value={reversePrimerId}
+            onChange={onChangeReverse}
+            label="Reverse primer"
             MenuProps={MenuProps}
           >
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
