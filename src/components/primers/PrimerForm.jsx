@@ -23,7 +23,6 @@ function PrimerForm({
       [fieldName]: valid,
     }));
   };
-  console.log(errorStatus);
   const submissionAllowed = touched && Object.values(errorStatus).every((error) => !error);
 
   const onSubmit = (e) => {

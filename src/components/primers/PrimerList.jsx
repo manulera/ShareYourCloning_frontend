@@ -14,7 +14,11 @@ function PrimerList() {
   const addPrimer = (newPrimer) => dispatch(addAction(newPrimer));
   const [addingPrimer, setAddingPrimer] = React.useState(false);
   const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
-
+  // We don't allow used primers to be deleted
+  const primerIdsInUse = useSelector(
+    (state) => state.cloning.sources.filter((s) => s.type === 'PCR')
+      .map((s) => [s.forward_primer, s.reverse_primer]).flat(),
+  );
   const bottomPart = addingPrimer ? (
     <PrimerForm {...{ submitPrimer: addPrimer, cancelForm: switchAddingPrimer, existingNames: primers.map((p) => p.name) }} />
   ) : (
@@ -22,7 +26,7 @@ function PrimerList() {
   );
 
   const topPart = [];
-  primers.forEach((primer) => topPart.push(<PrimerTableRow key={primer.id} {...{ deletePrimer, primer }} />));
+  primers.forEach((primer) => topPart.push(<PrimerTableRow key={primer.id} {...{ deletePrimer, primer, canBeDeleted: !primerIdsInUse.includes(primer.id) }} />));
 
   return (
     <>
