@@ -1532,6 +1532,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@teselagen/range-utils@npm:^0.3.8":
+  version: 0.3.8
+  resolution: "@teselagen/range-utils@npm:0.3.8"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: 5ead5b091cd8ac143fd8d3654c246ee92af04949c230295eb4277105af8c7ae174a8b963c47953530004f9389a7ad8dc3ecfc5d8f63a9ab2485d860c13c6a9f9
+  languageName: node
+  linkType: hard
+
 "@teselagen/react-list@npm:0.8.18":
   version: 0.8.18
   resolution: "@teselagen/react-list@npm:0.8.18"
@@ -7484,6 +7493,7 @@ __metadata:
     "@reduxjs/toolkit": ^1.9.7
     "@teselagen/bio-parsers": ^0.3.8
     "@teselagen/ove": ^0.3.26
+    "@teselagen/range-utils": ^0.3.8
     "@teselagen/sequence-utils": ^0.3.7
     "@testing-library/jest-dom": ^6.1.4
     "@testing-library/react": ^14.0.0

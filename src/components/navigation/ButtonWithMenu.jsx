@@ -35,7 +35,7 @@ export default function ButtonWithMenu({ children, menuItems }) {
         }}
       >
         {menuItems.map((item) => (
-          <MenuItem onClick={() => { item.onClick(); handleClose(); }}>{item.display}</MenuItem>
+          <MenuItem key={item.display} onClick={() => { item.onClick(); handleClose(); }}>{item.display}</MenuItem>
         ))}
       </Menu>
     </>

@@ -20,27 +20,28 @@ function SourceFile({ sourceId }) {
   };
 
   return (
-    <form>
-      <Button
-        fullWidth
-        variant="contained"
-        component="label"
-      >
-        Select File
-        <input
-          type="file"
-          hidden
-          onChange={onChange}
-        />
-      </Button>
-      <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
-      <div>{waitingMessage}</div>
+    <>
+      <form>
+        <Button
+          fullWidth
+          variant="contained"
+          component="label"
+        >
+          Select File
+          <input
+            type="file"
+            hidden
+            onChange={onChange}
+          />
+        </Button>
+        <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
+        <div>{waitingMessage}</div>
+      </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,
       }}
       />
-
-    </form>
+    </>
   );
 }
 
