@@ -17,7 +17,7 @@ function MainAppBar({ exportData, loadData }) {
   const fileInputRef = React.useRef(null);
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
-    { display: 'Load from file', onClick: () => fileInputRef.current.click() },
+    { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     { display: 'Load example', onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)) },
   ];
 
