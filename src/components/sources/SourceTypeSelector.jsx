@@ -14,15 +14,15 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
   const hasInputEntities = inputEntities.length > 0;
   const options = !hasInputEntities ? (
     [
-      <MenuItem value="file">Submit file</MenuItem>,
-      <MenuItem value="repository_id">Repository ID</MenuItem>,
+      <MenuItem key="file" value="file">Submit file</MenuItem>,
+      <MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>,
     ]
   ) : (
     [
-      <MenuItem value="restriction">Restriction</MenuItem>,
-      <MenuItem value="sticky_ligation">Ligation with sticky ends</MenuItem>,
-      <MenuItem value="PCR">PCR</MenuItem>,
-      <MenuItem value="homologous_recombination">Homologous recombination</MenuItem>,
+      <MenuItem key="restriction" value="restriction">Restriction</MenuItem>,
+      <MenuItem key="sticky_ligation" value="sticky_ligation">Ligation with sticky ends</MenuItem>,
+      <MenuItem key="PCR" value="PCR">PCR</MenuItem>,
+      <MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>,
     ]
   );
 

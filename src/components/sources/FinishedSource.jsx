@@ -13,7 +13,7 @@ function FinishedSource({ sourceId }) {
     case 'restriction': message = `Restriction reaction with ${source.restriction_enzymes.join(' ')}`; break;
     case 'PCR': {
       const primers = useSelector((state) => state.primers.primers);
-      message = `PCR with primers ${source.primers.map((id) => primers.find((p) => id === p.id).name).join(' and ')}`;
+      message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
     }
       break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;

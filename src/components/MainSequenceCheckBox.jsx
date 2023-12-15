@@ -12,7 +12,12 @@ function MainSequenceCheckBox({ id }) {
   const toggleMain = () => {
     if (mainSequenceId === id) {
       dispatch(setMainSequenceId(null));
-    } else { dispatch(setMainSequenceId(id)); dispatch(setCurrentTab(3)); }
+    } else {
+      dispatch(setMainSequenceId(id));
+      dispatch(setCurrentTab(3));
+      // TODO: ideally this should be done with a ref
+      document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
+    }
   };
   const tooltipText = <div className="tooltip-text">See sequence in main editor</div>;
   return (
