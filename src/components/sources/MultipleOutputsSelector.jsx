@@ -32,7 +32,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   const editorName = `source_editor_${sourceId}`;
 
   const seq = convertToTeselaJson(entities[selectedOutput]);
-
+  console.log(sources[selectedOutput].assembly);
   return (
     <div className="multiple-output-selector">
       <div>
