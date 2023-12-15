@@ -7,6 +7,7 @@ import { convertToTeselaJson } from '../../utils/sequenceParsers';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
 import { cloningActions } from '../../store/cloning';
+import AssemblyPlanDisplayer from './AssemblyPlanDisplayer';
 
 function MultipleOutputsSelector({ sources, entities, sourceId }) {
   // If the output is already set or the list of outputs is empty, do not show this element
@@ -32,7 +33,6 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   const editorName = `source_editor_${sourceId}`;
 
   const seq = convertToTeselaJson(entities[selectedOutput]);
-
   return (
     <div className="multiple-output-selector">
       <div>
@@ -50,6 +50,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
           overhangs: [entities[selectedOutput].sequence.overhang_crick_3prime, entities[selectedOutput].sequence.overhang_watson_3prime],
         }}
         />
+        <AssemblyPlanDisplayer {...{ source: sources[selectedOutput] }} />
         <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: 'auto' }} />
         <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
       </div>

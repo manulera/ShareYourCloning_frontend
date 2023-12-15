@@ -28,8 +28,8 @@ function SourceHomologousRecombination({ sourceId }) {
   const template = inputEntityIds.length > 0 ? inputEntityIds[0] : null;
   const insert = inputEntityIds.length > 1 ? inputEntityIds[1] : null;
 
-  const setTemplate = (event) => dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert], type: 'sticky_ligation' }));
-  const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)], type: 'sticky_ligation' }));
+  const setTemplate = (event) => dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert], type: 'homologous_recombination' }));
+  const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)], type: 'homologous_recombination' }));
 
   return (
     <div className="ligation">

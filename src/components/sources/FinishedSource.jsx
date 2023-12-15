@@ -10,6 +10,7 @@ function FinishedSource({ sourceId }) {
   switch (source.type) {
     case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
     case 'sticky_ligation': message = 'Ligation of fragments with sticky ends'; break;
+    case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
     case 'restriction': message = `Restriction reaction with ${source.restriction_enzymes.join(' ')}`; break;
     case 'PCR': {
       const primers = useSelector((state) => state.primers.primers);

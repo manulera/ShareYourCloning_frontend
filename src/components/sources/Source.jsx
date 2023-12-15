@@ -3,7 +3,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
-import SourceLigation from './SourceLigation';
+import SourceAssembly from './SourceAssembly';
 import SourceTypeSelector from './SourceTypeSelector';
 import SourceBox from './SourceBox';
 import SourcePCR from './SourcePCR';
@@ -28,7 +28,9 @@ function Source({ sourceId }) {
     case 'repository_id':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'sticky_ligation':
-      specificSource = <SourceLigation {...{ sourceId }} />; break;
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'sticky_ligation' }} />; break;
+    case 'gibson_assembly':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'gibson_assembly' }} />; break;
     case 'homologous_recombination':
       specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
     case 'PCR':
