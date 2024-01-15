@@ -35,27 +35,24 @@ export default function EnzymeMultiSelect({ setEnzymes }) {
     );
   }
   return (
-    <>
-      <FormControl fullWidth>
-        <Autocomplete
-          multiple
-          onChange={(event, value) => { setEnzymes(value); }}
-          id="tags-standard"
-          options={options}
-          getOptionLabel={(option) => option}
-          defaultValue={[]}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="standard"
-              label="Enzymes used"
-              helperText={waitingMessage}
-              error={error}
-            />
-          )}
-        />
-      </FormControl>
-      <Button type="submit" variant="contained" color="success">Perform restriction</Button>
-    </>
+    <FormControl fullWidth>
+      <Autocomplete
+        multiple
+        onChange={(event, value) => { setEnzymes(value); }}
+        id="tags-standard"
+        options={options}
+        getOptionLabel={(option) => option}
+        defaultValue={[]}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            variant="standard"
+            label="Enzymes used"
+            helperText={waitingMessage}
+            error={error}
+          />
+        )}
+      />
+    </FormControl>
   );
 }

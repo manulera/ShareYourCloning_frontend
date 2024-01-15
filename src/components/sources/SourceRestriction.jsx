@@ -28,6 +28,7 @@ function SourceRestriction({ sourceId }) {
     <div className="restriction">
       <form onSubmit={onSubmit}>
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
+        <Button type="submit" variant="contained" color="success">Perform restriction</Button>
       </form>
 
       <div>{waitingMessage}</div>

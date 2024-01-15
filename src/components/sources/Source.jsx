@@ -35,6 +35,8 @@ function Source({ sourceId }) {
       specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
     case 'PCR':
       specificSource = <SourcePCR {...{ sourceId }} />; break;
+    case 'restriction_and_ligation':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
     default:
       break;
     /* eslint-enable */

@@ -1,0 +1,36 @@
+{
+  "sequences": [
+    { "id": 3, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       pj5_00001                 27 bp    DNA     linear   SYN 15-JAN-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    10..17\n                     /label=\"A\"\nORIGIN\n        1 ggtctcaatt aaaaaattaa agagacc\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
+    { "id": 5, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       pj5_00001                 27 bp    DNA     linear   SYN 15-JAN-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    complement(10..17)\n                     /label=\"B\"\nORIGIN\n        1 ggtctcatta acccccatat agagacc\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
+    { "id": 7, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       pj5_00001                 27 bp    DNA     linear   SYN 15-JAN-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    10..17\n                     /label=\"C\"\nORIGIN\n        1 ggtctcaata tgggggccgg agagacc\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
+    { "id": 15, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       pj5_00001                 35 bp    DNA     circular SYN 15-JAN-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    11..25\n                     /label=\"VectorOUT\"\n     misc_feature    32..36\n                     /label=\"VectorIN\"\nORIGIN\n        1 ttttattaag agaccttttt ggtctcaccg gtttt\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
+    { "id": 19, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       name                      39 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     misc_feature    3..10\n                     /label=\"A\"\n     misc_feature    complement(12..19)\n                     /label=\"B\"\n     misc_feature    21..28\n                     /label=\"C\"\n     misc_feature    32..36\n                     /label=\"VectorIN\"\nORIGIN\n        1 attaaaaaat taacccccat atgggggccg gtttttttt\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } }
+  ],
+  "sources": [
+    { "id": 1, "input": [], "output": 3, "type": "file", "kind": "source", "info": {}, "file_name": "golden_gate.gb", "file_format": "genbank", "index_in_file": 0 },
+    { "id": 4, "input": [], "output": 5, "type": "file", "kind": "source", "info": {}, "file_name": "golden_gate.gb", "file_format": "genbank", "index_in_file": 1 },
+    { "id": 6, "input": [], "output": 7, "type": "file", "kind": "source", "info": {}, "file_name": "golden_gate.gb", "file_format": "genbank", "index_in_file": 2 },
+    { "id": 14, "input": [], "output": 15, "type": "file", "kind": "source", "info": {}, "file_name": "golden_gate.gb", "file_format": "genbank", "index_in_file": 3 },
+    {
+      "id": 18,
+      "input": [3, 5, 7, 15],
+      "output": 19,
+      "type": "restriction_and_ligation",
+      "kind": "source",
+      "info": {},
+      "assembly": [
+        [1, 2, "17..20", "8..11"],
+        [2, 3, "17..20", "8..11"],
+        [3, 4, "17..20", "28..31"],
+        [4, 1, "5..8", "8..11"]
+      ],
+      "circular": true,
+      "restriction_enzymes": ["BsaI"]
+    }
+  ],
+  "description": "",
+  "primers": [
+    { "id": 1, "name": "fwd", "sequence": "gatctcgccataaaagacag" },
+    { "id": 2, "name": "rvs", "sequence": "ttaacaaagcgactataagt" }
+  ]
+}
