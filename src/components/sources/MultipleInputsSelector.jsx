@@ -30,14 +30,14 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-multiple-chip-label">Select input sequences</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">Input sequences</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
         value={inputEntityIds}
         onChange={onChange}
-        label="Select input sequences"
+        label="Input sequences"
         // input={<OutlinedInput id="select-multiple-chip" label="Select input sequences" />}
         renderValue={(selected) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

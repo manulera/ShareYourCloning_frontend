@@ -46,7 +46,6 @@ export default function EnzymeMultiSelect({ setEnzymes }) {
         renderInput={(params) => (
           <TextField
             {...params}
-            variant="standard"
             label="Enzymes used"
             helperText={waitingMessage}
             error={error}
