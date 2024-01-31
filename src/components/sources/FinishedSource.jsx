@@ -11,7 +11,8 @@ function FinishedSource({ sourceId }) {
     case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
     case 'sticky_ligation': message = 'Ligation of fragments with sticky ends'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
-    case 'restriction': message = `Restriction reaction with ${source.restriction_enzymes.join(' ')}`; break;
+    case 'restriction': message = `Restriction with ${source.restriction_enzymes.join(' ')}`; break;
+    case 'restriction_and_ligation': message = `Restriction with ${source.restriction_enzymes.join(' ')}, then ligation`; break;
     case 'PCR': {
       const primers = useSelector((state) => state.primers.primers);
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;

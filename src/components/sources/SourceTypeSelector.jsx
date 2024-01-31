@@ -24,6 +24,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
       <MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>,
       <MenuItem key="PCR" value="PCR">PCR</MenuItem>,
       <MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>,
+      <MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>,
     ]
   );
 
