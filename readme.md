@@ -102,32 +102,4 @@ Check [contribution guidelines in the main repository](https://github.com/manule
 
 ## Settings for vscode :desktop_computer:
 
-If you are going to develop using vscode, you can create a folder in the directory of the project called `.vscode`, and create a `settings.json` inside of it, with this content:
-
-```json
-{
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/*.pyc": true,
-        "**/__pycache__": true
-    },
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact"
-     },
-     "eslint.nodePath": "../node_modules",
-     "eslint.options": { "overrideConfigFile": "../.eslintrc.json"},
-     "eslint.format.enable": true,
-     "[javascript]": {
-         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-     },
-     "[javascriptreact]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "editor.formatOnSave": true
-}
-```
 For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
