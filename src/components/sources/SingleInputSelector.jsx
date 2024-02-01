@@ -1,16 +1,10 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { InputLabel, MenuItem, Select } from '@mui/material';
-import { createSelector } from '@reduxjs/toolkit';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-const customSelector = createSelector(
-  [({ cloning }) => ({ sources: cloning.sources, entities: cloning.entities })],
-  ({ sources, entities }) => getIdsOfEntitiesWithoutChildSource(sources, entities),
-);
-
 function SingleInputSelector({ selectedId, onChange, label, inputEntityIds }) {
-  const idsWithoutChild = useSelector(customSelector);
+  const idsWithoutChild = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
   const options = [...idsWithoutChild, ...inputEntityIds];
   return (
     <>
