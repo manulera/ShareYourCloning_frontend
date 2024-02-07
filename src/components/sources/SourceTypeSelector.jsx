@@ -20,7 +20,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
   ) : (
     [
       <MenuItem key="restriction" value="restriction">Restriction</MenuItem>,
-      <MenuItem key="sticky_ligation" value="sticky_ligation">Ligation with sticky ends</MenuItem>,
+      <MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>,
       <MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>,
       <MenuItem key="PCR" value="PCR">PCR</MenuItem>,
       <MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>,

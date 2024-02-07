@@ -9,7 +9,7 @@ function FinishedSource({ sourceId }) {
   let message = '';
   switch (source.type) {
     case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
-    case 'sticky_ligation': message = 'Ligation of fragments with sticky ends'; break;
+    case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
     case 'restriction': message = `Restriction with ${source.restriction_enzymes.join(' ')}`; break;
     case 'restriction_and_ligation': message = `Restriction with ${source.restriction_enzymes.join(' ')}, then ligation`; break;

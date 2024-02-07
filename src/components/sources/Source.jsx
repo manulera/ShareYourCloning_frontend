@@ -27,8 +27,8 @@ function Source({ sourceId }) {
       specificSource = <SourceRestriction {...{ sourceId }} />; break;
     case 'repository_id':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
-    case 'sticky_ligation':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'sticky_ligation' }} />; break;
+    case 'ligation':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'ligation' }} />; break;
     case 'gibson_assembly':
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'gibson_assembly' }} />; break;
     case 'homologous_recombination':

@@ -16,6 +16,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
   const minimalHomologyRef = React.useRef(null);
   const allowPartialOverlapsRef = React.useRef(null);
   const circularOnlyRef = React.useRef(null);
+  const bluntLigationRef = React.useRef(null);
   const [enzymes, setEnzymes] = React.useState([]);
   const onSubmit = (event) => {
     event.preventDefault();
@@ -38,7 +39,12 @@ function SourceAssembly({ sourceId, assemblyType }) {
       } };
       sendPostRequest('restriction_and_ligation', requestData, config);
     } else {
-      sendPostRequest(assemblyType, requestData);
+      const config = { params: {
+        allow_partial_overlaps: allowPartialOverlapsRef.current.checked,
+        circular_only: circularOnlyRef.current.checked,
+        blunt: bluntLigationRef.current.checked,
+      } };
+      sendPostRequest(assemblyType, requestData, config);
     }
   };
 
@@ -66,15 +72,20 @@ function SourceAssembly({ sourceId, assemblyType }) {
         { (assemblyType === 'restriction_and_ligation') && (
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
         )}
-        { ['restriction_and_ligation', 'gibson_assembly'].includes(assemblyType) && (
+        { ['restriction_and_ligation', 'gibson_assembly', 'ligation'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel fullWidth control={<Checkbox inputRef={circularOnlyRef} />} label="Circular assemblies only" />
           </FormControl>
         )}
-        { assemblyType === 'restriction_and_ligation' && (
+        { ['restriction_and_ligation', 'ligation'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel fullWidth control={<Checkbox inputRef={allowPartialOverlapsRef} />} label="Allow partial overlaps" />
           </FormControl>
+        )}
+        { (assemblyType === 'ligation') && (
+        <FormControl fullWidth style={{ textAlign: 'left' }}>
+          <FormControlLabel fullWidth control={<Checkbox inputRef={bluntLigationRef} />} label="Blunt ligation" />
+        </FormControl>
         )}
         <Button fullWidth type="submit" variant="contained">Submit</Button>
       </form>
