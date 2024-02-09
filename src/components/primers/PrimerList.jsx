@@ -1,5 +1,5 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
 import { primersActions } from '../../store/primers';
 import PrimerForm from './PrimerForm';
@@ -7,7 +7,7 @@ import PrimerTableRow from './PrimerTableRow';
 import './PrimerList.css';
 
 function PrimerList() {
-  const primers = useSelector((state) => state.primers.primers);
+  const primers = useSelector((state) => state.primers.primers, shallowEqual);
   const { deletePrimer: deleteAction, addPrimer: addAction } = primersActions;
   const dispatch = useDispatch();
   const deletePrimer = (id) => dispatch(deleteAction(id));
@@ -16,8 +16,8 @@ function PrimerList() {
   const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
   // We don't allow used primers to be deleted
   const primerIdsInUse = useSelector(
-    (state) => state.cloning.sources.filter((s) => s.type === 'PCR')
-      .map((s) => [s.forward_primer, s.reverse_primer]).flat(),
+    (state) => state.cloning.sources.filter((s) => s.type === 'PCR').map((s) => [s.forward_primer, s.reverse_primer]).flat(),
+    shallowEqual,
   );
   const bottomPart = addingPrimer ? (
     <PrimerForm {...{ submitPrimer: addPrimer, cancelForm: switchAddingPrimer, existingNames: primers.map((p) => p.name) }} />

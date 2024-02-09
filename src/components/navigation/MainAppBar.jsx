@@ -6,10 +6,20 @@ import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
+import { useDispatch } from 'react-redux';
 import ButtonWithMenu from './ButtonWithMenu';
-import { fileReceivedToJson } from '../../utils/readNwrite';
+import { exportStateThunk, fileReceivedToJson, loadStateThunk } from '../../utils/readNwrite';
+import SelectExampleDialog from './SelectExampleDialog';
 
-function MainAppBar({ exportData, loadData }) {
+function MainAppBar() {
+  const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
+  const dispatch = useDispatch();
+  const exportData = () => {
+    dispatch(exportStateThunk());
+  };
+  const loadData = (newState) => {
+    dispatch(loadStateThunk(newState));
+  };
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   const theme = useTheme();
   const wideMode = useMediaQuery(theme.breakpoints.up('md'));
@@ -18,8 +28,14 @@ function MainAppBar({ exportData, loadData }) {
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
-    { display: 'Load example', onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)) },
   ];
+
+  const handleCloseDialog = (fileName) => {
+    if (fileName) {
+      setOpenExampleDialog(false);
+      fetch(`examples/${fileName}`).then((r) => r.json()).then((d) => loadData(d));
+    }
+  };
 
   // TODO: turn these into <a> elements.
   const helpMenu = [
@@ -43,6 +59,7 @@ function MainAppBar({ exportData, loadData }) {
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
             <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => fileReceivedToJson(e, loadData)} />
             <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
+            <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Tooltip title={tooltipText} arrow placement="right">
               <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
                 <GitHubIcon />
@@ -51,6 +68,7 @@ function MainAppBar({ exportData, loadData }) {
           </Box>
         </Toolbar>
       </Container>
+      <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
     </AppBar>
   );
 }
