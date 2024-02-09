@@ -1,5 +1,4 @@
-import React from 'react';
-import TextareaAutosize from '@mui/material/TextareaAutosize';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import TextField from '@mui/material/TextField';
 import { Button, FormControl } from '@mui/material';
@@ -7,11 +6,19 @@ import { cloningActions } from '../store/cloning';
 
 function DescriptionEditor() {
   const description = useSelector((state) => state.cloning.description, shallowEqual);
+  const [text, setText] = React.useState('');
+  const [typing, setTyping] = React.useState('');
+
+  useEffect(
+    () => {
+      setText(description);
+      setTyping(description === '');
+    },
+    [description],
+  );
   const { setDescription: setDescriptionAction } = cloningActions;
   const dispatch = useDispatch();
 
-  const [text, setText] = React.useState(description);
-  const [typing, setTyping] = React.useState(description === '');
   const onChange = (e) => {
     setText(e.target.value);
   };
