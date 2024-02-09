@@ -9,8 +9,10 @@ import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
 import ButtonWithMenu from './ButtonWithMenu';
 import { exportStateThunk, fileReceivedToJson, loadStateThunk } from '../../utils/readNwrite';
+import SelectExampleDialog from './SelectExampleDialog';
 
 function MainAppBar() {
+  const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const dispatch = useDispatch();
   const exportData = () => {
     dispatch(exportStateThunk());
@@ -26,8 +28,14 @@ function MainAppBar() {
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
-    { display: 'Load example', onClick: () => fetch('examples/history.json').then((r) => r.json()).then((d) => loadData(d)) },
   ];
+
+  const handleCloseDialog = (fileName) => {
+    if (fileName) {
+      setOpenExampleDialog(false);
+      fetch(`examples/${fileName}`).then((r) => r.json()).then((d) => loadData(d));
+    }
+  };
 
   // TODO: turn these into <a> elements.
   const helpMenu = [
@@ -51,6 +59,7 @@ function MainAppBar() {
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
             <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={(e) => fileReceivedToJson(e, loadData)} />
             <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
+            <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Tooltip title={tooltipText} arrow placement="right">
               <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
                 <GitHubIcon />
@@ -59,6 +68,7 @@ function MainAppBar() {
           </Box>
         </Toolbar>
       </Container>
+      <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
     </AppBar>
   );
 }

@@ -3,6 +3,7 @@ header.app-bar button[type="button"] {
     font-size: large;
     margin-left: 20px;
     margin-right: 20px;
+    color: white;
 }
 
 header.app-bar div.MuiToolbar-root {
@@ -22,4 +23,8 @@ header.app-bar div.MuiToolbar-root {
 
 .app-title {
     margin-bottom: 1em;
+}
+
+button {
+    
 }
