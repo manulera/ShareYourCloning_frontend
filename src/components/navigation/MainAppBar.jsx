@@ -6,10 +6,18 @@ import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
+import { useDispatch } from 'react-redux';
 import ButtonWithMenu from './ButtonWithMenu';
-import { fileReceivedToJson } from '../../utils/readNwrite';
+import { exportStateThunk, fileReceivedToJson, loadStateThunk } from '../../utils/readNwrite';
 
-function MainAppBar({ exportData, loadData }) {
+function MainAppBar() {
+  const dispatch = useDispatch();
+  const exportData = () => {
+    dispatch(exportStateThunk());
+  };
+  const loadData = (newState) => {
+    dispatch(loadStateThunk(newState));
+  };
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   const theme = useTheme();
   const wideMode = useMediaQuery(theme.breakpoints.up('md'));
