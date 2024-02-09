@@ -23,6 +23,7 @@ function SourcePCR({ sourceId }) {
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
+  const allowedMismatchesRef = React.useRef(null);
 
   const onChangeForward = (event) => setForwardPrimerId(event.target.value);
   const onChangeReverse = (event) => setReversePrimerId(event.target.value);
@@ -35,7 +36,10 @@ function SourcePCR({ sourceId }) {
       primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
       source: { input: inputEntities.map((e) => e.id), forward_primer: forwardPrimerId, reverse_primer: reversePrimerId },
     };
-    sendPostRequest('pcr', requestData, { params: { minimal_annealing: minimalAnnealingRef.current.value } });
+    sendPostRequest('pcr', requestData, { params: {
+      minimal_annealing: minimalAnnealingRef.current.value,
+      allowed_mismatches: allowedMismatchesRef.current.value,
+    } });
   };
 
   return (
@@ -74,6 +78,14 @@ function SourcePCR({ sourceId }) {
             inputRef={minimalAnnealingRef}
             type="number"
             defaultValue={20}
+          />
+        </FormControl>
+        <FormControl fullWidth>
+          <TextField
+            label="Mismatches allowed"
+            inputRef={allowedMismatchesRef}
+            type="number"
+            defaultValue={0}
           />
         </FormControl>
         <Button type="submit" variant="contained" color="success">Perform PCR</Button>
