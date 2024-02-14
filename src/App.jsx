@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import MainAppBar from './components/navigation/MainAppBar';
 import ShareYourCloning from './components/ShareYourCloning';
+import SpeciesSelect from './components/form/SpeciesSelect';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <MainAppBar />
         </div>
       </header>
+      <SpeciesSelect />
       <ShareYourCloning />
     </div>
   );

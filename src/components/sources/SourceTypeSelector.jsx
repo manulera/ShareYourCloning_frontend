@@ -16,6 +16,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     [
       <MenuItem key="file" value="file">Submit file</MenuItem>,
       <MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>,
+      <MenuItem key="genome_region" value="genome_region">Genome region</MenuItem>,
     ]
   ) : (
     [
