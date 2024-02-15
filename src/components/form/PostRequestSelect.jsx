@@ -10,20 +10,24 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
   const [waitingMessage, setWaitingMessage] = React.useState('');
   // user input state
   const [userInput, setUserInput] = React.useState('');
+  const [noOptionsText, setNoOptionsText] = React.useState('');
 
   React.useEffect(() => {
     async function fetchData() {
       if (userInput.length >= 3) {
-        setWaitingMessage('retrieving species from NCBI...');
+        setWaitingMessage('retrieving data from NCBI...');
         try {
-          setOptions(await getOptions(userInput));
+          const receivedOptions = await getOptions(userInput);
+          setOptions(receivedOptions);
           setWaitingMessage(null);
           setError(false);
+          if (receivedOptions.length === 0) { setNoOptionsText('No results found'); }
         } catch (e) {
-          setWaitingMessage('Could not retrieve species from NCBI');
+          console.log(e);
+          setWaitingMessage('Could not retrieve data from NCBI');
           setError(true);
         }
-      }
+      } else { setNoOptionsText(''); setOptions([]); }
     }
     // Delay the fetch to avoid too many requests
     const timeOutId = setTimeout(() => fetchData(), 500);
@@ -53,7 +57,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
         onInputChange={(event, newInputValue) => { setUserInput(newInputValue); }}
         id="tags-standard"
         options={options}
-        noOptionsText="Type at least 3 characters to search"
+        noOptionsText={noOptionsText || 'Type at least 3 characters to search'}
         getOptionLabel={getOptionLabel}
         isOptionEqualToValue={isOptionEqualToValue}
         renderInput={(params) => (

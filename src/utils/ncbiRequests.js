@@ -41,7 +41,9 @@ export async function querySpecies(userInput) {
 export async function taxonSuggest(userInput) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy/taxon_suggest/${userInput}`;
   const resp = await axios.get(url);
-  return resp.data.sci_name_and_ids.filter((e) => e.rank === 'SPECIES');
+  const taxons = resp.data.sci_name_and_ids;
+  // This might change if the API endpoint changes
+  return taxons === undefined ? [] : taxons.filter((e) => e.rank === 'SPECIES');
 }
 
 export async function getReferenceAssemblyId(taxonId) {
@@ -53,5 +55,16 @@ export async function getReferenceAssemblyId(taxonId) {
 export async function geneSuggest(assemblyId, userInput) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/annotation_report?search_text=${userInput}`;
   const resp = await axios.get(url);
-  return resp.data.reports;
+  const { reports } = resp.data;
+  return reports === undefined ? [] : reports;
+}
+
+export async function getSpeciesFromAssemblyId(assemblyId) {
+  const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/dataset_report`;
+  const resp = await axios.get(url, { validateStatus: false });
+  if (resp.status === 404) {
+    return null;
+  }
+  console.log(resp);
+  return resp.data.reports[0].organism;
 }

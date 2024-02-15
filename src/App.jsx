@@ -2,7 +2,6 @@ import React from 'react';
 import './App.css';
 import MainAppBar from './components/navigation/MainAppBar';
 import ShareYourCloning from './components/ShareYourCloning';
-import PostRequestSelect from './components/form/PostRequestSelect';
 
 function App() {
   return (

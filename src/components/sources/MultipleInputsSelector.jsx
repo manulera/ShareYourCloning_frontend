@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Box, Chip, FormControl, InputLabel, MenuItem, OutlinedInput, Select } from '@mui/material';
+import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { cloningActions } from '../../store/cloning';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
