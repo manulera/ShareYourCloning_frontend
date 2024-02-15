@@ -5,23 +5,34 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Button } from '@mui/material';
-import axios from 'axios';
 import useBackendAPI from '../../hooks/useBackendAPI';
-import SpeciesSelect from '../form/SpeciesSelect';
-import { getReferenceAssemblyId } from '../../utils/ncbiRequests';
-
-// async function getAssemblyId(taxonId) {
-//   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/taxon/${taxonId}/dataset_report?filters.reference_only=true`;
-//   axios.get(url).then((response) => {
-//     console.log(response);
-//   });
-// }
+import PostRequestSelect from '../form/PostRequestSelect';
+import { getReferenceAssemblyId, taxonSuggest, geneSuggest } from '../../utils/ncbiRequests';
 
 function SourceGenomeRegion({ sourceId }) {
   const [selectionMode, setSelectionMode] = React.useState('');
   const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
+  const [geneId, setGeneId] = React.useState('');
+  const [geneCoords, setGeneCoords] = React.useState('');
+
+  const speciesPostRequestSettings = React.useMemo(() => ({
+    setValue: setSpecies,
+    getOptions: taxonSuggest,
+    getOptionLabel: (option) => (option ? `${option.sci_name} - ${option.tax_id}` : ''),
+    isOptionEqualToValue: (option, value) => option.tax_id === value.tax_id,
+    textLabel: 'Species',
+  }));
+
+  const genePostRequestSettings = React.useMemo(() => ({
+    setValue: setGeneId,
+    getOptions: (userInput) => geneSuggest(assemblyId, userInput),
+    getOptionLabel: ({ annotation }) => (annotation ? `${annotation.symbol} ${annotation.locus_tag} ${annotation.name}` : ''),
+    isOptionEqualToValue: (option, value) => option.locus_tag === value.locus_tag,
+    textLabel: 'Gene',
+  }), [assemblyId]);
+
   const onSubmit = (event) => {
     event.preventDefault();
     console.log('hello');
@@ -51,7 +62,7 @@ function SourceGenomeRegion({ sourceId }) {
             <MenuItem value="other_assembly">Other assembly</MenuItem>
           </Select>
         </FormControl>
-        {selectionMode === 'reference_genome' && (<SpeciesSelect setSpecies={setSpecies} />)}
+        {selectionMode === 'reference_genome' && (<PostRequestSelect {...speciesPostRequestSettings} />)}
         {(assemblyId && selectionMode === 'reference_genome') && (
         <TextField
           fullWidth
@@ -68,6 +79,7 @@ function SourceGenomeRegion({ sourceId }) {
           onChange={(event) => setAssemblyId(event.target.value)}
         />
         )}
+        {assemblyId && (<PostRequestSelect {...genePostRequestSettings} />)}
         <Button fullWidth type="submit" variant="contained">Submit</Button>
       </form>
 

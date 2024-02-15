@@ -2,9 +2,8 @@ import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { Alert, Button, FormControl } from '@mui/material';
-import { taxonSuggest } from '../../utils/ncbiRequests';
 
-export default function SpeciesSelect({ setSpecies }) {
+export default function PostRequestSelect({ setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel }) {
   const [options, setOptions] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [error, setError] = React.useState(false);
@@ -17,7 +16,7 @@ export default function SpeciesSelect({ setSpecies }) {
       if (userInput.length >= 3) {
         setWaitingMessage('retrieving species from NCBI...');
         try {
-          setOptions(await taxonSuggest(userInput));
+          setOptions(await getOptions(userInput));
           setWaitingMessage(null);
           setError(false);
         } catch (e) {
@@ -49,17 +48,18 @@ export default function SpeciesSelect({ setSpecies }) {
   return (
     <FormControl fullWidth>
       <Autocomplete
-        onChange={(event, value) => { setSpecies(value); }}
+        onChange={(event, value) => { setValue(value); }}
+        // Prevent change here
         onInputChange={(event, newInputValue) => { setUserInput(newInputValue); }}
         id="tags-standard"
         options={options}
         noOptionsText="Type at least 3 characters to search"
-        getOptionLabel={(option) => (option ? `${option.sci_name} - ${option.tax_id}` : '')}
-        isOptionEqualToValue={(option, value) => option.tax_id === value.tax_id}
+        getOptionLabel={getOptionLabel}
+        isOptionEqualToValue={isOptionEqualToValue}
         renderInput={(params) => (
           <TextField
             {...params}
-            label="Species"
+            label={textLabel}
             helperText={waitingMessage}
             error={error}
           />
