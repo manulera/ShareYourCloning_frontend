@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Button } from '@mui/material';
+import { Alert, Button } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import PostRequestSelect from '../form/PostRequestSelect';
 import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getSpeciesFromAssemblyId } from '../../utils/ncbiRequests';
@@ -22,7 +22,7 @@ function formatGeneCoords(gene) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionReference({ assemblyId, speciesPostRequestSettings }) {
+function SourceGenomeRegionReference({ assemblyId, speciesPostRequestSettings, assemblyExists }) {
   return (
     <>
       <PostRequestSelect {...speciesPostRequestSettings} />
@@ -34,6 +34,11 @@ function SourceGenomeRegionReference({ assemblyId, speciesPostRequestSettings })
           disabled
         />
       </FormControl>
+      )}
+      { assemblyExists === false && (
+        <Alert sx={{ alignItems: 'center' }} severity="error">
+          The selected species does not have a reference assembly.
+        </Alert>
       )}
     </>
   );
@@ -89,7 +94,7 @@ function SourceGenomeRegion({ sourceId }) {
   const genePostRequestSettings = React.useMemo(() => ({
     setValue: setGene,
     getOptions: (userInput) => geneSuggest(assemblyId, userInput),
-    getOptionLabel: ({ annotation }) => (annotation ? `${annotation.symbol} ${annotation.locus_tag} ${annotation.name}` : ''),
+    getOptionLabel: ({ annotation }) => (annotation ? `${annotation.symbol} ${annotation.locus_tag === undefined ? '' : annotation.locus_tag} ${annotation.name}` : ''),
     isOptionEqualToValue: (option, value) => option.locus_tag === value.locus_tag,
     textLabel: 'Gene',
   }), [assemblyId]);
@@ -108,18 +113,20 @@ function SourceGenomeRegion({ sourceId }) {
       sequence_accession: accessionVersion,
       assembly_accession: assemblyId,
       locus_tag: gene.annotation.locus_tag ? gene.annotation.locus_tag : null,
+      gene_id: gene.annotation.gene_id ? gene.annotation.gene_id : null,
       start: shiftedStart,
       stop: shiftedStop,
       strand,
     };
-    console.log(payload);
     sendPostRequest('genome_coordinates', payload);
   };
 
   React.useEffect(() => {
     if (selectionMode === 'reference_genome') {
       getReferenceAssemblyId(species.tax_id).then((response) => {
-        setAssemblyId(response);
+        if (response !== null) {
+          setAssemblyId(response);
+        } else { setAssemblyExists(false); }
       });
     }
   }, [species]);
@@ -127,7 +134,6 @@ function SourceGenomeRegion({ sourceId }) {
   React.useEffect(() => {
     async function validateAssembly() {
       const speciesObj = await getSpeciesFromAssemblyId(assemblyId);
-      console.log(speciesObj);
       setAssemblyExists(speciesObj !== null);
       setSpecies(speciesObj);
     }
@@ -155,8 +161,13 @@ function SourceGenomeRegion({ sourceId }) {
             <MenuItem value="custom_coordinates">Custom coordinates</MenuItem>
           </Select>
         </FormControl>
-        {selectionMode === 'reference_genome' && (<SourceGenomeRegionReference {...{ assemblyId, speciesPostRequestSettings }} />)}
+        {selectionMode === 'reference_genome' && (<SourceGenomeRegionReference {...{ assemblyId, speciesPostRequestSettings, assemblyExists }} />)}
         {selectionMode === 'other_assembly' && (<SourceGenomeRegionOther {...{ assemblyId, setAssemblyId, assemblyExists, species }} />)}
+        {selectionMode === 'custom_coordinates' && (
+        <Alert sx={{ alignItems: 'center' }} severity="info">
+          Not implemented yet
+        </Alert>
+        )}
         {(assemblyId && assemblyExists !== false) && (<PostRequestSelect {...genePostRequestSettings} />)}
         {gene && (
           <>

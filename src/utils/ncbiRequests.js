@@ -49,7 +49,8 @@ export async function taxonSuggest(userInput) {
 export async function getReferenceAssemblyId(taxonId) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/taxon/${taxonId}/dataset_report?filters.reference_only=true`;
   const resp = await axios.get(url);
-  return resp.data.reports[0].accession;
+  const { reports } = resp.data;
+  return reports === undefined ? null : resp.data.reports[0].accession;
 }
 
 export async function geneSuggest(assemblyId, userInput) {

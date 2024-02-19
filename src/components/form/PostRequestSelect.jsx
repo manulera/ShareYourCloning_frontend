@@ -7,7 +7,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
   const [options, setOptions] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [error, setError] = React.useState(false);
-  const [waitingMessage, setWaitingMessage] = React.useState('');
+  const [errorMessage, setErrorMessage] = React.useState('');
   // user input state
   const [userInput, setUserInput] = React.useState('');
   const [noOptionsText, setNoOptionsText] = React.useState('');
@@ -15,16 +15,14 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
   React.useEffect(() => {
     async function fetchData() {
       if (userInput.length >= 3) {
-        setWaitingMessage('retrieving data from NCBI...');
         try {
           const receivedOptions = await getOptions(userInput);
           setOptions(receivedOptions);
-          setWaitingMessage(null);
+          setErrorMessage(null);
           setError(false);
           if (receivedOptions.length === 0) { setNoOptionsText('No results found'); }
         } catch (e) {
-          console.log(e);
-          setWaitingMessage('Could not retrieve data from NCBI');
+          setErrorMessage('Could not retrieve data');
           setError(true);
         }
       } else { setNoOptionsText(''); setOptions([]); }
@@ -40,12 +38,12 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
         sx={{ alignItems: 'center' }}
         severity="error"
         action={(
-          <Button color="inherit" size="small" onClick={() => { setWaitingMessage('Retrying...'); setConnectAttemp(connectAttempt + 1); }}>
+          <Button color="inherit" size="small" onClick={() => { setErrorMessage('Retrying...'); setConnectAttemp(connectAttempt + 1); }}>
             Retry
           </Button>
         )}
       >
-        {waitingMessage}
+        {errorMessage}
       </Alert>
     );
   }
@@ -53,8 +51,8 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
     <FormControl fullWidth>
       <Autocomplete
         onChange={(event, value) => { setValue(value); }}
-        // Prevent change here
-        onInputChange={(event, newInputValue) => { setUserInput(newInputValue); }}
+        // Change options only when input changes (not when an option is picked)
+        onInputChange={(event, newInputValue, reason) => (reason === 'input') && setUserInput(newInputValue)}
         id="tags-standard"
         options={options}
         noOptionsText={noOptionsText || 'Type at least 3 characters to search'}
@@ -64,8 +62,6 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
           <TextField
             {...params}
             label={textLabel}
-            helperText={waitingMessage}
-            error={error}
           />
         )}
       />
