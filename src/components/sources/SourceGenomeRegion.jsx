@@ -21,6 +21,51 @@ function formatGeneCoords(gene) {
   return `${accessionVersion} (${start}..${stop}${strand === -1 ? ', complement' : ''})`;
 }
 
+// Extra component to be used in SourceGenomeRegion
+function SourceGenomeRegionReference({ assemblyId, speciesPostRequestSettings }) {
+  return (
+    <>
+      <PostRequestSelect {...speciesPostRequestSettings} />
+      {assemblyId && (
+      <FormControl fullWidth>
+        <TextField
+          label="Assembly ID"
+          value={assemblyId}
+          disabled
+        />
+      </FormControl>
+      )}
+    </>
+  );
+}
+
+// Extra component to be used in SourceGenomeRegion
+function SourceGenomeRegionOther({ assemblyId, setAssemblyId, assemblyExists, species }) {
+  return (
+    <>
+      <FormControl fullWidth>
+        <TextField
+          label="Assembly ID"
+          value={assemblyId}
+          error={assemblyExists === false}
+          helperText={assemblyExists === false ? 'Assembly ID does not exist' : ''}
+          onChange={(event) => setAssemblyId(event.target.value)}
+        />
+      </FormControl>
+
+      {(species !== null) && (
+      <FormControl fullWidth>
+        <TextField
+          label="Species"
+          value={`${species.organism_name} - ${species.tax_id}`}
+          disabled
+        />
+      </FormControl>
+      )}
+    </>
+  );
+}
+
 function SourceGenomeRegion({ sourceId }) {
   const [selectionMode, setSelectionMode] = React.useState('');
   const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
@@ -110,65 +155,40 @@ function SourceGenomeRegion({ sourceId }) {
             <MenuItem value="custom_coordinates">Custom coordinates</MenuItem>
           </Select>
         </FormControl>
-        {selectionMode === 'reference_genome' && (<PostRequestSelect {...speciesPostRequestSettings} />)}
-        {(assemblyId && selectionMode === 'reference_genome') && (
-        <FormControl fullWidth>
-          <TextField
-            label="Assembly ID"
-            value={assemblyId}
-            disabled
-          />
-        </FormControl>
-        )}
-        {selectionMode === 'other_assembly' && (
-        <FormControl fullWidth>
-          <TextField
-            label="Assembly ID"
-            value={assemblyId}
-            error={assemblyExists === false}
-            helperText={assemblyExists === false ? 'Assembly ID does not exist' : ''}
-            onChange={(event) => setAssemblyId(event.target.value)}
-          />
-        </FormControl>
-        )}
-        {(selectionMode === 'other_assembly' && species !== null) && (
-        <FormControl fullWidth>
-          <TextField
-            label="Species"
-            value={`${species.organism_name} - ${species.tax_id}`}
-            disabled
-          />
-        </FormControl>
-        )}
+        {selectionMode === 'reference_genome' && (<SourceGenomeRegionReference {...{ assemblyId, speciesPostRequestSettings }} />)}
+        {selectionMode === 'other_assembly' && (<SourceGenomeRegionOther {...{ assemblyId, setAssemblyId, assemblyExists, species }} />)}
         {(assemblyId && assemblyExists !== false) && (<PostRequestSelect {...genePostRequestSettings} />)}
         {gene && (
-          <FormControl fullWidth>
-            <TextField
-              label="Gene coordinates"
-              value={formatGeneCoords(gene)}
-              disabled
-            />
-          </FormControl>
+          <>
+            <FormControl fullWidth>
+              <TextField
+                label="Gene coordinates"
+                value={formatGeneCoords(gene)}
+                disabled
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                fullWidth
+                label="Upstream bases"
+                inputRef={upstreamBasesRef}
+                type="number"
+                defaultValue={1000}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                fullWidth
+                label="Downstream bases"
+                inputRef={downstreamBasesRef}
+                type="number"
+                defaultValue={1000}
+              />
+            </FormControl>
+            <Button fullWidth type="submit" variant="contained">Submit</Button>
+          </>
         )}
-        <FormControl fullWidth>
-          <TextField
-            fullWidth
-            label="Upstream bases"
-            inputRef={upstreamBasesRef}
-            type="number"
-            defaultValue={1000}
-          />
-        </FormControl>
-        <FormControl fullWidth>
-          <TextField
-            fullWidth
-            label="Downstream bases"
-            inputRef={downstreamBasesRef}
-            type="number"
-            defaultValue={1000}
-          />
-        </FormControl>
-        <Button fullWidth type="submit" variant="contained">Submit</Button>
+
       </form>
 
       <div className="waiting-message">{waitingMessage}</div>
