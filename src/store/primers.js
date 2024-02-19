@@ -20,6 +20,7 @@ const reducer = {
 
   setPrimers(state, action) {
     const primers = action.payload;
+    state.nextUniqueId = Math.max(...primers.map((s) => s.id)) + 1;
     state.primers = primers;
   },
 

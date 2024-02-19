@@ -31,12 +31,50 @@ function FinishedSource({ sourceId }) {
         <>
           {`Request to ${repository} with ID `}
           <strong>
-            <a href={url}>{source.repository_id}</a>
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              {source.repository_id}
+              {' '}
+            </a>
           </strong>
         </>
       );
     }
       break;
+    case 'genome_coordinates': {
+      message = (
+        <>
+          <div>
+            <strong>Assembly:</strong>
+            {' '}
+            <a href={`https://www.ncbi.nlm.nih.gov/datasets/genome/${source.assembly_accession}`} target="_blank" rel="noopener noreferrer">{source.assembly_accession}</a>
+          </div>
+          <div>
+            <strong>Coords:</strong>
+            {' '}
+            <a href={`https://www.ncbi.nlm.nih.gov/nuccore/${source.sequence_accession}`} target="_blank" rel="noopener noreferrer">{source.sequence_accession}</a>
+            {`(${source.start}-${source.stop})`}
+          </div>
+          {source.locus_tag && (
+          <div>
+            <strong>Locus tag:</strong>
+            {' '}
+            {source.locus_tag}
+          </div>
+          )}
+          {source.gene_id && (
+          <div>
+            <strong>Gene ID:</strong>
+            {' '}
+            <a href={`https://www.ncbi.nlm.nih.gov/gene/${source.gene_id}`} target="_blank" rel="noopener noreferrer">
+              {source.gene_id}
+            </a>
+          </div>
+          )}
+
+        </>
+      );
+      console.log(source);
+      const a = 1 + 1; } break;
     default: break;
   }
   return (
