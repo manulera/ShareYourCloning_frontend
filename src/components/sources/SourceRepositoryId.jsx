@@ -11,7 +11,7 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 // and get a sequence
 function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
-  const repositoryIdRef = React.useRef('');
+  const repositoryIdRef = React.useRef(null);
 
   const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
 
