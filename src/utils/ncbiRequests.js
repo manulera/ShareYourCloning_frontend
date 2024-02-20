@@ -66,6 +66,6 @@ export async function getSpeciesFromAssemblyId(assemblyId) {
   if (resp.status === 404) {
     return null;
   }
-  console.log(resp);
-  return resp.data.reports[0].organism;
+  const { reports } = resp.data;
+  return reports === undefined ? null : resp.data.reports[0].organism;
 }
