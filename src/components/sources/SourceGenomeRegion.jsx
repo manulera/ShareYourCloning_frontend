@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Alert, Button } from '@mui/material';
+import { Alert, Box, Button, FormLabel } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import PostRequestSelect from '../form/PostRequestSelect';
 import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
@@ -39,51 +39,6 @@ function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDown
   };
 }
 
-function AssemblyPicker({ setAssemblyId, setSpecies }) {
-  const [helperText, setHelperText] = React.useState('');
-  const [userInput, setUserInput] = React.useState('');
-  const [assemblyExists, setAssemblyExists] = React.useState(null);
-
-  React.useEffect(() => {
-    // Validate assemblyId with a 500ms delay
-    if ((userInput !== '')) {
-      setHelperText('Validating assembly ID...');
-      const timeOutId = setTimeout(async () => {
-        const speciesObj = await getInfoFromAssemblyId(userInput);
-        if (speciesObj === null) {
-          setHelperText('Assembly ID does not exist');
-          setAssemblyExists(false);
-          setSpecies(null);
-          setAssemblyId(null);
-        } else {
-          setSpecies(speciesObj);
-          setAssemblyId(userInput);
-          setHelperText('');
-          setAssemblyExists(true);
-        }
-      }, 500);
-      return () => clearTimeout(timeOutId);
-    }
-    // Also set to null if assemblyId is empty
-    setHelperText('');
-    setAssemblyExists(null);
-    return () => {};
-  }, [userInput]);
-
-  return (
-    <FormControl fullWidth>
-      <TextField
-        label="Assembly ID"
-        value={userInput}
-        error={assemblyExists === false}
-        helperText={helperText}
-        onChange={(event) => setUserInput(event.target.value)}
-      />
-    </FormControl>
-
-  );
-}
-
 function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
   const speciesPostRequestSettings = React.useMemo(() => ({
     setValue: (v) => {
@@ -111,7 +66,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
   const [assemblyId, setAssemblyId] = React.useState('');
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -134,7 +89,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
           The selected species does not have a reference assembly.
         </Alert>
       )}
-      <div className="waiting-message">{waitingMessage}</div>
+      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }
@@ -171,7 +126,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
   const [noAnnotationError, setNoAnnotationError] = React.useState(false);
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -197,7 +152,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
         </>
       )}
       {noAnnotationError && (<Alert severity="error">The selected assembly has no gene annotations</Alert>)}
-      <div className="waiting-message">{waitingMessage}</div>
+      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }
@@ -212,22 +167,19 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
   const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
   const [coordsStrand, setCoordsStrand] = React.useState('');
-  const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
   const onSubmit = (event) => {
     event.preventDefault();
 
-    const payload = {
-      sequence_accession: accessionVersion,
+    sendPostRequest('genome_coordinates', {
+      sequence_accession: sequenceAccession,
       assembly_accession: assemblyId,
-      locus_tag: gene.annotation.locus_tag ? gene.annotation.locus_tag : null,
-      gene_id: gene.annotation.gene_id ? gene.annotation.gene_id : null,
-      start: shiftedStart,
-      stop: shiftedStop,
-      strand,
-    };
-    // const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
-    // sendPostRequest('genome_coordinates', payload);
+      start: coordsStartRef.current.value,
+      stop: coordsEndRef.current.value,
+      strand: coordsStrand === 'plus' ? 1 : -1,
+    });
   };
+
   const onAccessionChange = async (userInput, resp) => {
     if (resp === null) {
       setSpecies(null);
@@ -255,39 +207,41 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
       {sequenceAccession && !assemblyId && (<Alert severity="warning">The sequence accession is not linked to an assembly</Alert>)}
       {sequenceAccession && (
         <>
-          <div>Enter the sequence coordinates</div>
-          <FormControl fullWidth>
-            <TextField
-              fullWidth
-              label="Start"
-              inputRef={coordsStartRef}
-              type="number"
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <TextField
-              fullWidth
-              label="End"
-              inputRef={coordsEndRef}
-              type="number"
-            />
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id={`selection-mode-${sourceId}-strand-label`}>Strand</InputLabel>
-            <Select
-              labelId={`selection-mode-${sourceId}-strand-label`}
-              label="Strand"
-              value={coordsStrand}
-              onChange={(event) => setCoordsStrand(event.target.value)}
-            >
-              <MenuItem value="plus">plus</MenuItem>
-              <MenuItem value="minus">minus</MenuItem>
-            </Select>
-          </FormControl>
+          <Box component="fieldset" sx={{ p: 1, mb: 1 }} style={{ borderRadius: '.5em', boxShadow: null }}>
+            <legend><FormLabel>Sequence coordinates</FormLabel></legend>
+            <FormControl fullWidth>
+              <TextField
+                fullWidth
+                label="Start"
+                inputRef={coordsStartRef}
+                type="number"
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                fullWidth
+                label="End"
+                inputRef={coordsEndRef}
+                type="number"
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id={`selection-mode-${sourceId}-strand-label`}>Strand</InputLabel>
+              <Select
+                labelId={`selection-mode-${sourceId}-strand-label`}
+                label="Strand"
+                value={coordsStrand}
+                onChange={(event) => setCoordsStrand(event.target.value)}
+              >
+                <MenuItem value="plus">plus</MenuItem>
+                <MenuItem value="minus">minus</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
           <Button fullWidth type="submit" variant="contained">Submit</Button>
         </>
       )}
-      <div className="waiting-message">{waitingMessage}</div>
+      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }
@@ -349,7 +303,7 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
 }
 
 function SourceGenomeRegion({ sourceId }) {
-  const [selectionMode, setSelectionMode] = React.useState('custom_coordinates');
+  const [selectionMode, setSelectionMode] = React.useState('');
   const changeSelectionMode = (event) => { setSelectionMode(event.target.value); };
 
   return (

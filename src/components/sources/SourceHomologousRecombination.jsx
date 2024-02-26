@@ -10,7 +10,7 @@ import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
   const inputEntityIds = inputEntities.map((e) => e.id);
@@ -49,7 +49,7 @@ function SourceHomologousRecombination({ sourceId }) {
         </FormControl>
         <Button type="submit" variant="contained" color="success">Recombine</Button>
       </form>
-      <div>{waitingMessage}</div>
+      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,
       }}

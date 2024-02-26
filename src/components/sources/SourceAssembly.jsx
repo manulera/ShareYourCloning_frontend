@@ -12,7 +12,7 @@ import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 function SourceAssembly({ sourceId, assemblyType }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const inputEntityIds = inputEntities.map((e) => e.id);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const minimalHomologyRef = React.useRef(null);
   const allowPartialOverlapsRef = React.useRef(null);
   const circularOnlyRef = React.useRef(null);
@@ -89,7 +89,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
         )}
         <Button fullWidth type="submit" variant="contained">Submit</Button>
       </form>
-      <div>{waitingMessage}</div>
+      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}

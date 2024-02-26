@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Button, FormControl } from '@mui/material';
+import { Button } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
@@ -12,7 +12,7 @@ import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 function SourceRestriction({ sourceId }) {
   const [enzymes, setEnzymes] = React.useState([]);
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -31,7 +31,7 @@ function SourceRestriction({ sourceId }) {
         <Button type="submit" variant="contained" color="success">Perform restriction</Button>
       </form>
 
-      <div>{waitingMessage}</div>
+      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}

@@ -6,7 +6,7 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component provinding an interface to import a file
 function SourceFile({ sourceId }) {
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
     const formData = new FormData();
@@ -35,7 +35,7 @@ function SourceFile({ sourceId }) {
           />
         </Button>
         <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
-        <div>{waitingMessage}</div>
+        <div>{requestStatus}</div>
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,

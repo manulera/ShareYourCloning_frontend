@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 
 // A component providing an interface for the user to type a Genbank ID
@@ -13,7 +13,7 @@ function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef(null);
 
-  const { waitingMessage, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -44,10 +44,12 @@ function SourceRepositoryId({ sourceId }) {
             helperText={`Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`}
           />
         </FormControl>
-        <Button fullWidth type="submit" variant="contained">Submit</Button>
+        <Button fullWidth type="submit" variant="contained">
+          {requestStatus.status !== 'loading' ? 'Submit' : (<CircularProgress />)}
+        </Button>
       </form>
       )}
-      <div className="waiting-message">{waitingMessage}</div>
+      <div className="waiting-message">{requestStatus.message}</div>
     </>
   );
 }

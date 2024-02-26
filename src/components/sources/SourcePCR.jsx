@@ -19,7 +19,7 @@ const MenuProps = {
 function SourcePCR({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
@@ -90,7 +90,7 @@ function SourcePCR({ sourceId }) {
         </FormControl>
         <Button type="submit" variant="contained" color="success">Perform PCR</Button>
       </form>
-      <div>{waitingMessage}</div>
+      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}
