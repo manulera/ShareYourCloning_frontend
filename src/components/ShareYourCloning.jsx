@@ -9,6 +9,7 @@ import NewSourceBox from './sources/NewSourceBox';
 import { cloningActions } from '../store/cloning';
 import TabPannel from './navigation/TabPannel';
 import CustomTab from './navigation/CustomTab';
+import DataModelDisplayer from './DataModelDisplayer';
 
 function ShareYourCloning() {
   const dispatch = useDispatch();
@@ -59,10 +60,7 @@ function ShareYourCloning() {
         </div>
       </TabPannel>
       <TabPannel index={4} value={currentTab}>
-        {/* TODO: propper json syntax highlighting here */}
-        <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
-          {JSON.stringify(network, null, 4)}
-        </code>
+        <DataModelDisplayer />
       </TabPannel>
     </div>
   );
