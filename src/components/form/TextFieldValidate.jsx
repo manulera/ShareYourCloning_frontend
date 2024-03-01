@@ -1,7 +1,7 @@
 import React from 'react';
 import { FormControl, TextField } from '@mui/material';
 
-export default function TextFieldValidate({ getterFunction, onChange, label }) {
+export default function TextFieldValidate({ getterFunction, onChange, label, defaultHelperText = '' }) {
   const [helperText, setHelperText] = React.useState('');
   const [userInput, setUserInput] = React.useState('');
   const [assemblyExists, setAssemblyExists] = React.useState(null);
@@ -24,7 +24,7 @@ export default function TextFieldValidate({ getterFunction, onChange, label }) {
       return () => clearTimeout(timeOutId);
     }
     // Also set to null if assemblyId is empty
-    setHelperText('');
+    setHelperText(defaultHelperText);
     setAssemblyExists(null);
     return () => {};
   }, [userInput]);

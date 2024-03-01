@@ -143,7 +143,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
 
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onAssemblyIdChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" />
+      <TextFieldValidate onChange={onAssemblyIdChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCF_000002945.1" />
       {assemblyId && !noAnnotationError && (
         <>
           <KnownSpeciesField species={species} />
@@ -200,7 +200,7 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
 
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" />
+      <TextFieldValidate onChange={onAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
       {species && (<KnownSpeciesField species={species} />)}
       {assemblyId && (<KnownAssemblyField assemblyId={assemblyId} />)}
       {sequenceAccession && !assemblyId && (<Alert severity="warning">The sequence accession is not linked to an assembly</Alert>)}
