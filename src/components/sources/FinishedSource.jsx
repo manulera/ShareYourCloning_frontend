@@ -9,6 +9,7 @@ function FinishedSource({ sourceId }) {
   let message = '';
   switch (source.type) {
     case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
+    case 'manually_typed': message = 'Manually typed sequence'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
     case 'restriction': message = `Restriction with ${source.restriction_enzymes.join(' ')}`; break;

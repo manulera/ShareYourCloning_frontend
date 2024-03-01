@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';

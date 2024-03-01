@@ -9,6 +9,7 @@ import SourceBox from './SourceBox';
 import SourcePCR from './SourcePCR';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
+import SourceManuallyTyped from './SourceManuallyTyped';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -40,6 +41,8 @@ function Source({ sourceId }) {
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
     case 'genome_region':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
+    case 'manually_typed':
+      specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */
