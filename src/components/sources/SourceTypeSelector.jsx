@@ -16,6 +16,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     options.push(<MenuItem key="file" value="file">Submit file</MenuItem>);
     options.push(<MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>);
     options.push(<MenuItem key="genome_region" value="genome_region">Genome region</MenuItem>);
+    options.push(<MenuItem key="manually_typed" value="manually_typed">Enter manually</MenuItem>);
   } else {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
     if (inputEntities.length < 2) {

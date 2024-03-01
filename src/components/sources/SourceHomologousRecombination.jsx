@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Button, FormControl, TextField } from '@mui/material';
+import { FormControl, TextField } from '@mui/material';
 import SingleInputSelector from './SingleInputSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
