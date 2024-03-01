@@ -17,5 +17,6 @@ export function getIdsOfEntitiesWithoutChildSource(sources, entities) {
 
 export function getInputEntitiesFromSourceId(state, sourceId) {
   const thisSource = state.cloning.sources.find((s) => s.id === sourceId);
-  return state.cloning.entities.filter((entity) => thisSource.input.includes(entity.id))
+  // Entities must be returned in the same order as in the source input
+  return thisSource.input.map((id) => state.cloning.entities.find((e) => e.id === id));
 }

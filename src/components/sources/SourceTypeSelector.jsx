@@ -11,22 +11,22 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     setSourceType(event.target.value);
   }
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const hasInputEntities = inputEntities.length > 0;
-  const options = !hasInputEntities ? (
-    [
-      <MenuItem key="file" value="file">Submit file</MenuItem>,
-      <MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>,
-    ]
-  ) : (
-    [
-      <MenuItem key="restriction" value="restriction">Restriction</MenuItem>,
-      <MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>,
-      <MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>,
-      <MenuItem key="PCR" value="PCR">PCR</MenuItem>,
-      <MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>,
-      <MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>,
-    ]
-  );
+  const options = [];
+  if (inputEntities.length === 0) {
+    options.push(<MenuItem key="file" value="file">Submit file</MenuItem>);
+    options.push(<MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>);
+    options.push(<MenuItem key="genome_region" value="genome_region">Genome region</MenuItem>);
+  } else {
+    // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
+    if (inputEntities.length < 2) {
+      options.push(<MenuItem key="restriction" value="restriction">Restriction</MenuItem>);
+      options.push(<MenuItem key="PCR" value="PCR">PCR</MenuItem>);
+    }
+    options.push(<MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>);
+    options.push(<MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>);
+    options.push(<MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>);
+    options.push(<MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>);
+  }
 
   return (
     <>

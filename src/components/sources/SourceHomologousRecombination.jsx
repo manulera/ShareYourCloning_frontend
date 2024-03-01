@@ -6,11 +6,12 @@ import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { cloningActions } from '../../store/cloning';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
   const inputEntityIds = inputEntities.map((e) => e.id);
@@ -27,9 +28,8 @@ function SourceHomologousRecombination({ sourceId }) {
 
   const template = inputEntityIds.length > 0 ? inputEntityIds[0] : null;
   const insert = inputEntityIds.length > 1 ? inputEntityIds[1] : null;
-
-  const setTemplate = (event) => dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert], type: 'homologous_recombination' }));
-  const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)], type: 'homologous_recombination' }));
+  const setTemplate = (event) => dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert] }));
+  const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)] }));
 
   return (
     <div className="ligation">
@@ -48,9 +48,8 @@ function SourceHomologousRecombination({ sourceId }) {
             defaultValue={40}
           />
         </FormControl>
-        <Button type="submit" variant="contained" color="success">Recombine</Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">Recombine</SubmitButtonBackendAPI>
       </form>
-      <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,
       }}

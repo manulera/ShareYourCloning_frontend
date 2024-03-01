@@ -4,6 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@m
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -19,7 +20,7 @@ const MenuProps = {
 function SourcePCR({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
@@ -88,9 +89,8 @@ function SourcePCR({ sourceId }) {
             defaultValue={0}
           />
         </FormControl>
-        <Button type="submit" variant="contained" color="success">Perform PCR</Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus}>Perform PCR</SubmitButtonBackendAPI>
       </form>
-      <div>{waitingMessage}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}

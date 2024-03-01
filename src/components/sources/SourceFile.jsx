@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button } from '@mui/material';
 import FormHelperText from '@mui/material/FormHelperText';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component provinding an interface to import a file
 function SourceFile({ sourceId }) {
-  const { waitingMessage, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
     const formData = new FormData();
@@ -21,11 +21,10 @@ function SourceFile({ sourceId }) {
 
   return (
     <>
-      <form>
-        <Button
-          fullWidth
-          variant="contained"
+      <form onSubmit={(e) => e.preventDefault()}>
+        <SubmitButtonBackendAPI
           component="label"
+          requestStatus={requestStatus}
         >
           Select File
           <input
@@ -33,9 +32,8 @@ function SourceFile({ sourceId }) {
             hidden
             onChange={onChange}
           />
-        </Button>
+        </SubmitButtonBackendAPI>
         <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
-        <div>{waitingMessage}</div>
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,
