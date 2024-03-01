@@ -63,7 +63,6 @@ export async function geneSuggest(assemblyId, userInput) {
 export async function getInfoFromAssemblyId(assemblyId) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/dataset_report`;
   const resp = await axios.get(url, { validateStatus: false });
-  console.log(resp);
   if (resp.status === 404 || resp.data.reports === undefined) {
     return null;
   }
@@ -82,7 +81,6 @@ export async function getInfoFromSequenceAccession(sequenceAccession) {
   if (resp.status === 404) {
     return null;
   }
-  console.log(resp.data.linksets);
   // This is what you get with wrong ids (it's not json, it's plain text)
   // https:// eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=aaaaaa&idtype=acc&retmode=json
   if (resp.data.linksets === undefined || resp.data.linksets.length === 0) {

@@ -1,12 +1,13 @@
 import React from 'react';
 import { useSelector, shallowEqual } from 'react-redux';
-import { Button, Checkbox, FormControlLabel, TextField } from '@mui/material';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { FormControl } from '@mui/base';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ sourceId, assemblyType }) {
@@ -51,7 +52,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
   return (
     <div className="assembly">
       <form onSubmit={onSubmit}>
-        <FormControl fullWidth>
+        <FormControl>
           <MultipleInputsSelector {...{
             inputEntityIds, sourceId, sourceType: assemblyType,
           }}
@@ -59,7 +60,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
         </FormControl>
         { (assemblyType === 'gibson_assembly') && (
         // I don't really understand why fullWidth is required here
-        <FormControl fullWidth>
+        <FormControl>
           <TextField
             fullWidth
             label="Minimal homology length (in bp)"
@@ -87,9 +88,8 @@ function SourceAssembly({ sourceId, assemblyType }) {
           <FormControlLabel fullWidth control={<Checkbox inputRef={bluntLigationRef} />} label="Blunt ligation" />
         </FormControl>
         )}
-        <Button fullWidth type="submit" variant="contained">Submit</Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
       </form>
-      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}

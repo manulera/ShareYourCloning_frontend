@@ -4,6 +4,7 @@ import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@m
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -88,9 +89,8 @@ function SourcePCR({ sourceId }) {
             defaultValue={0}
           />
         </FormControl>
-        <Button type="submit" variant="contained" color="success">Perform PCR</Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus}>Perform PCR</SubmitButtonBackendAPI>
       </form>
-      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
       }}

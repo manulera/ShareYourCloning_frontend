@@ -4,11 +4,12 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Alert, Box, Button, FormLabel } from '@mui/material';
+import { Alert, Box, FormLabel } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import PostRequestSelect from '../form/PostRequestSelect';
 import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
 import TextFieldValidate from '../form/TextFieldValidate';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 function getGeneCoordsInfo(gene) {
   const { range: geneRange, accession_version: accessionVersion } = gene.annotation.genomic_regions[0].gene_range;
@@ -81,7 +82,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
         <>
           <KnownAssemblyField assemblyId={assemblyId} />
           <SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, setGene, assemblyId }} />
-          <Button fullWidth type="submit" variant="contained">Submit</Button>
+          <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
         </>
       )}
       { (species && assemblyId === '') && (
@@ -89,7 +90,6 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
           The selected species does not have a reference assembly.
         </Alert>
       )}
-      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }
@@ -148,11 +148,10 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
         <>
           <KnownSpeciesField species={species} />
           <SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, setGene, assemblyId }} />
-          <Button fullWidth type="submit" variant="contained">Submit</Button>
+          <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
         </>
       )}
       {noAnnotationError && (<Alert severity="error">The selected assembly has no gene annotations</Alert>)}
-      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }
@@ -238,10 +237,9 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
               </Select>
             </FormControl>
           </Box>
-          <Button fullWidth type="submit" variant="contained">Submit</Button>
+          <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
         </>
       )}
-      <div className="waiting-message">{requestStatus}</div>
     </form>
   );
 }

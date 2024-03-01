@@ -73,9 +73,9 @@ function FinishedSource({ sourceId }) {
 
         </>
       );
-      console.log(source);
-      const a = 1 + 1; } break;
-    default: break;
+      break;
+    }
+    default: message = '';
   }
   return (
     <SourceBox {...{ sourceId: source.id }}>

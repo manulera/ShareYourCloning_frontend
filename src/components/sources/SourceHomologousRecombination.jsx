@@ -6,6 +6,7 @@ import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { cloningActions } from '../../store/cloning';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ sourceId }) {
@@ -47,9 +48,8 @@ function SourceHomologousRecombination({ sourceId }) {
             defaultValue={40}
           />
         </FormControl>
-        <Button type="submit" variant="contained" color="success">Recombine</Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">Recombine</SubmitButtonBackendAPI>
       </form>
-      <div>{requestStatus}</div>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,
       }}

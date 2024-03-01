@@ -4,8 +4,8 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Button, CircularProgress } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
+import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component providing an interface for the user to type a Genbank ID
 // and get a sequence
@@ -44,12 +44,9 @@ function SourceRepositoryId({ sourceId }) {
             helperText={`Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`}
           />
         </FormControl>
-        <Button fullWidth type="submit" variant="contained">
-          {requestStatus.status !== 'loading' ? 'Submit' : (<CircularProgress />)}
-        </Button>
+        <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
       </form>
       )}
-      <div className="waiting-message">{requestStatus.message}</div>
     </>
   );
 }
