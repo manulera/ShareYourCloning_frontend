@@ -1,0 +1,24 @@
+{
+    "statusCode": 422,
+    "body": {
+        "detail": [
+            {
+                "type": "string_pattern_mismatch",
+                "loc": [
+                    "body",
+                    "user_input"
+                ],
+                "msg": "String should match pattern '^[acgtACGT]+$'",
+                "input": "afafa",
+                "ctx": {
+                    "pattern": "^[acgtACGT]+$"
+                },
+                "url": "https://errors.pydantic.dev/2.4/v/string_pattern_mismatch"
+            }
+        ]
+    },
+    "headers": {
+        "content-length": "243",
+        "content-type": "application/json"
+    }
+}
