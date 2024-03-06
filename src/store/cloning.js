@@ -47,9 +47,9 @@ const reducer = {
   addEntityAndItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
-    state.nextUniqueId += 1;
     newEntity.id = state.nextUniqueId;
     newSource.output = state.nextUniqueId;
+    state.nextUniqueId += 1;
     entities.push(newEntity);
     // Replace the source with the new one
     const source = sources.find((s) => s.id === newSource.id);

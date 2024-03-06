@@ -42,7 +42,6 @@ function PrimerForm({
       <ValidatedTextField
         id="name"
         label="Name"
-        variant="outlined"
         inputRef={nameRef}
         sx={{ m: 1, display: { width: '20%' } }}
         submissionAttempted={submissionAttempted}
@@ -50,11 +49,11 @@ function PrimerForm({
         required
         errorChecker={nameErrorChecker}
         updateValidationStatus={updateValidationStatus}
+        floatingHelperText
       />
       <ValidatedTextField
         id="sequence"
         label="Sequence"
-        variant="outlined"
         inputRef={sequenceRef}
         sx={{ m: 1, display: { width: '60%' } }}
         className="sequence"
@@ -63,6 +62,7 @@ function PrimerForm({
         required
         errorChecker={sequenceErrorChecker}
         updateValidationStatus={updateValidationStatus}
+        floatingHelperText
       />
       {touched && (
       <IconButton type="submit" sx={{ height: 'fit-content' }}>
