@@ -3,7 +3,7 @@ on: [push, pull_request]
 
 jobs:
   cypress-run:
-    if: github.event_name == 'pull_request'
+    # if: github.event_name == 'pull_request'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
