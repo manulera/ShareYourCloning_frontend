@@ -1,15 +1,3 @@
-// async function responseGenerator(req) {
-//   if (req.body.repository_id === '39282') {
-//     req.reply({ statusCode: 200, fixture: 'repository_id/addgene_correct/response_body.json' });
-//   } else if (req.body.repository_id === 'NM_001018957.2') {
-//     req.reply({ statusCode: 200, fixture: 'repository_id/ncbi_correct/response_body.json' });
-//   } else if (req.body.repository === 'addgene') {
-//     req.reply({ statusCode: 404, fixture: 'repository_id/addgene_wrong/response_body.json' });
-//   } else if (req.body.repository === 'genbank') {
-//     req.reply({ statusCode: 404, fixture: 'repository_id/ncbi_wrong/response_body.json' });
-//   }
-// }
-
 describe('RepositoryId Source', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -25,5 +13,27 @@ describe('RepositoryId Source', () => {
     cy.get('#repository-id-1').type('39282');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > .node-text > .corner-id').should('have.text', '2');
+  });
+  it('handles empty submissions and wrong IDs', () => {
+    cy.get('body').click();
+    cy.get('[aria-labelledby="select-repository-1-label"]').click();
+    cy.get('li[data-value="addgene"]').click();
+    cy.get('#repository-id-1').clear('');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('#repository-id-1-helper-text').should('have.text', 'Field cannot be empty');
+    cy.get('#repository-id-1').clear('a');
+    cy.get('#repository-id-1').type('aaa');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('.MuiAlert-message').should('be.visible');
+    cy.get('body').click();
+    cy.get('[aria-labelledby="select-repository-1-label"]').click();
+    cy.get('li[data-value="genbank"]').click();
+    cy.get('#repository-id-1').clear('');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('#repository-id-1-helper-text').should('have.text', 'Field cannot be empty');
+    cy.get('#repository-id-1').clear('a');
+    cy.get('#repository-id-1').type('aaa');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('.MuiAlert-message').should('be.visible');
   });
 });

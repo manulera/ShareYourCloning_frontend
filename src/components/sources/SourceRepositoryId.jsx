@@ -12,14 +12,19 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 function SourceRepositoryId({ sourceId }) {
   const [selectedRepository, setSelectedRepository] = React.useState('');
   const repositoryIdRef = React.useRef(null);
-
+  const [error, setError] = React.useState(false);
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const onSubmit = (event) => {
     event.preventDefault();
-    sendPostRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
+    if (repositoryIdRef.current.value === '') {
+      setError(true);
+    } else {
+      setError(false);
+      sendPostRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
+    }
   };
-
+  const helperText = error ? 'Field cannot be empty' : `Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`;
   return (
     <>
       <FormControl fullWidth>
@@ -41,7 +46,8 @@ function SourceRepositoryId({ sourceId }) {
             label="ID in repository"
             id={`repository-id-${sourceId}`}
             inputRef={repositoryIdRef}
-            helperText={`Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`}
+            helperText={helperText}
+            error={error}
           />
         </FormControl>
         <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
