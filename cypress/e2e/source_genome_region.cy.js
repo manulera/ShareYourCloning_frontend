@@ -24,7 +24,7 @@ describe('RepositoryId Source', () => {
     cy.get('#\\:r17\\:').clear('');
     cy.get('#\\:r17\\:').type('2000');
     cy.get(':nth-child(5) > .MuiButton-root').click();
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#source-1 a').contains('GCF_000002945.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.1');
     cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
     cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
@@ -51,7 +51,7 @@ describe('RepositoryId Source', () => {
     cy.get('#tags-standard-option-0').click();
     cy.get('#\\:r15\\:').should('have.value', 'NC_003424.3 (1878009..1880726)');
     cy.get(':nth-child(5) > .MuiButton-root').click();
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#source-1 a').contains('GCF_000002945.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.1');
     cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
     cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
@@ -67,7 +67,7 @@ describe('RepositoryId Source', () => {
     // Select an input field that is after a label that contains the text "assembly ID"
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
       .type('GCF_000002945.1');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('label').contains('Species').siblings('div').children('input')
       .should('have.value', 'Schizosaccharomyces pombe - 4896');
     cy.get('label').contains('Gene').siblings('div').click();
@@ -82,7 +82,7 @@ describe('RepositoryId Source', () => {
     cy.get('label').contains('Gene coordinates').siblings('div').children('input')
       .should('have.value', 'NC_003424.3 (1878009..1880726)');
     cy.get(':nth-child(5) > .MuiButton-root').click();
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#source-1 a').contains('GCF_000002945.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.1');
     cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
     cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
@@ -99,7 +99,7 @@ describe('RepositoryId Source', () => {
     // Select an input field that is after a label that contains the text "assembly ID"
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
       .type('blah');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.contains('Assembly ID does not exist');
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
       .clear('');
@@ -148,7 +148,7 @@ describe('RepositoryId Source', () => {
     cy.get('label').contains('Strand').siblings('div.MuiInputBase-root ').click();
     cy.get('li[data-value="plus"]').click();
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('li#sequence-2 .veLinearView').contains('DQ208311');
     cy.get('li#sequence-2 .veLinearView').contains('20 bps');
   });
@@ -158,13 +158,13 @@ describe('RepositoryId Source', () => {
     // Shows species and assembly ID if sequence accession belongs to assembly
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('blah');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.contains('Sequence accession does not exist');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .clear();
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('NC_003424.3');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     // Clears form if sequence accession changes
     cy.get('label').contains('Start').siblings('div').children('input')
       .type('1');
@@ -176,13 +176,13 @@ describe('RepositoryId Source', () => {
       .clear('');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('blah');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.contains('Sequence accession does not exist');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .clear('');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('NC_003424.3');
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('label').contains('Start').siblings('div').children('input')
       .should('have.value', '');
     cy.get('label').contains('End').siblings('div').children('input')
@@ -221,7 +221,7 @@ describe('RepositoryId Source', () => {
     cy.get('label').contains('End').siblings('div').children('input')
       .type('5579135');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
-    cy.wait('@getRequest', { timeout: 20000 });
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('.MuiAlert-message').should('be.visible');
   });
 });
