@@ -25,7 +25,9 @@ jobs:
           poetry install --with test
 
       - name: run python dev server in background
-        run: poetry run uvicorn app.main:app --reload &
+        run: |
+          cd ShareYourCloning_backend
+          poetry run uvicorn app.main:app --reload &
 
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
