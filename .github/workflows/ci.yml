@@ -3,11 +3,24 @@ on: [push, pull_request]
 
 jobs:
   cypress-run:
-    # if: github.event_name == 'pull_request'
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Checkout submodules
+        uses: textbook/git-checkout-submodule-action@master
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --with test
+      - name: run dev server
+        run: poetry run uvicorn app.main:app --reload &
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run

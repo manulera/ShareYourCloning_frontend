@@ -6,14 +6,14 @@ async function responseGenerator(req) {
   }
 }
 
-describe('The ManuallyTyped Source', () => {
+describe('ManuallyTyped Source', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="manually_typed"]').click();
     cy.intercept('POST', '**/manually_typed', (req) => responseGenerator(req)).as('manuallyTyped');
   });
-  it('successfully loads', () => {
+  it('works on normal case', () => {
     cy.get('#tab-panel-0 #sequence').clear('a');
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
