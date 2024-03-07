@@ -33,7 +33,6 @@ const reducer = {
   addEmptySource(state, action) {
     const inputEntitiesIds = action.payload;
     const { sources } = state;
-    state.nextUniqueId += 1;
     sources.push({
       id: state.nextUniqueId,
       input: inputEntitiesIds,
@@ -41,6 +40,7 @@ const reducer = {
       type: null,
       kind: 'source',
     });
+    state.nextUniqueId += 1;
     state.network = constructNetwork(state.entities, state.sources);
   },
 
