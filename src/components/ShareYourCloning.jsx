@@ -31,17 +31,17 @@ function ShareYourCloning() {
         <CustomTab label="Sequence" index={3} />
         <CustomTab label="Data model" index={4} />
       </Tabs>
-      <TabPannel index={1} value={currentTab}>
+      <TabPannel index={1} value={currentTab} className="primer-tab-pannel">
         <div className="primer-list-container">
           <PrimerList />
         </div>
       </TabPannel>
-      <TabPannel index={2} value={currentTab}>
+      <TabPannel index={2} value={currentTab} className="description-tab-pannel">
         <div className="description-editor">
           <DescriptionEditor />
         </div>
       </TabPannel>
-      <TabPannel index={0} value={currentTab}>
+      <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
         <div className="tf-tree tf-ancestor-tree">
           <ul>
             {network.map((node) => (
@@ -54,12 +54,12 @@ function ShareYourCloning() {
           </ul>
         </div>
       </TabPannel>
-      <TabPannel index={3} value={currentTab}>
+      <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">
         <div className="main-sequence-editor">
           <MainSequenceEditor />
         </div>
       </TabPannel>
-      <TabPannel index={4} value={currentTab}>
+      <TabPannel index={4} value={currentTab} className="data-model-tab-pannel">
         <DataModelDisplayer />
       </TabPannel>
     </div>

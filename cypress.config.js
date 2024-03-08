@@ -7,6 +7,6 @@ module.exports = defineConfig({
     },
     baseUrl: 'http://localhost:3000',
     experimentalStudio: true,
-    numTestsKeptInMemory: 0,
+    numTestsKeptInMemory: 50,
   },
 });
