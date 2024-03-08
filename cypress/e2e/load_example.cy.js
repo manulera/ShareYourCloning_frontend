@@ -1,4 +1,4 @@
-describe('RepositoryId Source', () => {
+describe('Test load example functionality', () => {
   beforeEach(() => {
     cy.visit('/');
   });

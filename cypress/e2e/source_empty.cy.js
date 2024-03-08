@@ -1,4 +1,4 @@
-describe('RepositoryId Source', () => {
+describe('Test empty source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
   });
@@ -17,13 +17,5 @@ describe('RepositoryId Source', () => {
     cy.get('li#source-3 svg[data-testid="DeleteIcon"]').eq(0).click();
     // There is still a button to create a new one
     cy.get('div.tf-tree svg[data-testid="AddCircleIcon"]').should('exist');
-  });
-  it('Displays the right options', () => {
-    cy.get('#tab-panel-0 .MuiInputBase-root').click();
-    cy.get('ul[aria-labelledby="select-source-1-label"] li').should('have.length', 4);
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="repository_id"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
   });
 });

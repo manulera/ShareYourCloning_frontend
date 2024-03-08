@@ -84,14 +84,28 @@ const reducer = {
 
   setState(state, action) {
     const { sources, entities } = action.payload;
+    state.nextUniqueId = Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
+    const ids = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
+    // They should all be positive integers
+    if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
+      throw new Error('Some ids are not positive integers');
+    }
+    // None should be repeated
+    if (new Set(ids).size !== ids.length) {
+      throw new Error('Repeated ids in the sources and entities');
+    }
     state.sources = sources;
     state.entities = entities;
-    state.nextUniqueId = Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
     state.network = constructNetwork(entities, sources);
   },
 
   setDescription(state, action) {
     state.description = action.payload;
+  },
+
+  revertToInitialState(state) {
+    Object.assign(state, initialState);
+    state.network = constructNetwork(initialState.entities, initialState.sources);
   },
 };
 /* eslint-enable no-param-reassign */

@@ -20,6 +20,15 @@ const reducer = {
 
   setPrimers(state, action) {
     const primers = action.payload;
+    // Ids are unique and all are positive integers
+    const ids = primers.map((p) => p.id);
+    if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
+      throw new Error('Some ids are not positive integers');
+    }
+    // None should be repeated
+    if (new Set(ids).size !== ids.length) {
+      throw new Error('Repeated ids in the primers');
+    }
     state.nextUniqueId = Math.max(...primers.map((s) => s.id)) + 1;
     state.primers = primers;
   },
@@ -29,6 +38,9 @@ const reducer = {
     state.primers = state.primers.filter((p) => p.id !== primerId);
   },
 
+  revertToInitialState(state) {
+    Object.assign(state, initialState);
+  },
 };
 
 /* eslint-enable no-param-reassign */

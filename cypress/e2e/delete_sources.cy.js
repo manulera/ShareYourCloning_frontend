@@ -1,4 +1,4 @@
-describe('RepositoryId Source', () => {
+describe('Test delete source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
   });

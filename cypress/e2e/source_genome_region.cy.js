@@ -1,4 +1,4 @@
-describe('RepositoryId Source', () => {
+describe('GenomeRegion Source', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();

@@ -1,7 +1,7 @@
-describe('RepositoryId Source', () => {
+describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    cy.get('button#tab-1').click();
+    cy.get('button.MuiTab-root').contains('Primers').click();
   });
   it('Can delete primers', () => {
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', 2);
@@ -10,9 +10,20 @@ describe('RepositoryId Source', () => {
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('not.exist');
   });
+  it('Can add primers', () => {
+    // Add two dummy primers
+    cy.get('.primer-form-container').contains('Add Primer').click();
+    cy.get('form.primer-row').should('exist');
+    cy.get('form.primer-row input#name').type('fwd-2');
+    cy.get('form.primer-row input#sequence').type('atg');
+    cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
+    cy.get('form.primer-row').should('not.exist');
+    cy.get('.primer-form-container').contains('Add Primer').should('exist');
+    cy.get('.primer-table-container tr').contains('fwd-2').should('exist');
+    cy.get('.primer-table-container tr').contains('atg').should('exist');
+  });
   it('Can close form', () => {
     // Add two dummy primers
-    cy.get('button#tab-1').click();
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
     cy.get('.primer-form-container [data-testid="CancelIcon"').click();
@@ -23,19 +34,6 @@ describe('RepositoryId Source', () => {
     cy.get('form.primer-row input#sequence').type('atg');
     cy.get('.primer-form-container [data-testid="CancelIcon"').click();
     cy.get('form.primer-row').should('not.exist');
-  });
-  it('Can add primers', () => {
-    // Add two dummy primers
-    cy.get('button#tab-1').click();
-    cy.get('.primer-form-container').contains('Add Primer').click();
-    cy.get('form.primer-row').should('exist');
-    cy.get('form.primer-row input#name').type('fwd-2');
-    cy.get('form.primer-row input#sequence').type('atg');
-    cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
-    cy.get('form.primer-row').should('not.exist');
-    cy.get('.primer-form-container').contains('Add Primer').should('exist');
-    cy.get('.primer-table-container tr').contains('fwd-2').should('exist');
-    cy.get('.primer-table-container tr').contains('atg').should('exist');
   });
 
   it('Applies constrains', () => {
