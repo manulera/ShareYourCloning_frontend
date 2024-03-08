@@ -108,7 +108,7 @@ For the `eslint` to work, you will need the [eslint module](https://marketplace.
 
 ### Recording video with cypress
 
-Settings:
+Settings (they can also be set as env vars or passed with flags).
 
 ```javascript
 module.exports = defineConfig({
@@ -118,6 +118,8 @@ module.exports = defineConfig({
   ...
 ```
 
+Then, when running the video.
 ```
 CYPRESS_NO_COMMAND_LOG=1 yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
 ```
+
