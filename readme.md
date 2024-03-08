@@ -103,3 +103,21 @@ Check [contribution guidelines in the main repository](https://github.com/manule
 ## Settings for vscode :desktop_computer:
 
 For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+## Random
+
+### Recording video with cypress
+
+Settings:
+
+```javascript
+module.exports = defineConfig({
+  video: true,
+  viewportWidth: 1000,
+  viewportHeight: 1000,
+  ...
+```
+
+```
+CYPRESS_NO_COMMAND_LOG=1 yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
+```
