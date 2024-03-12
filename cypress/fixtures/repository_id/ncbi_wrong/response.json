@@ -1,0 +1,10 @@
+{
+    "statusCode": 404,
+    "body": {
+        "detail": "RepositoryName.genbank returned: HTTP Error 400: Bad Request - Likely you inserted a wrong RepositoryName.genbank id"
+    },
+    "headers": {
+        "content-length": "129",
+        "content-type": "application/json"
+    }
+}

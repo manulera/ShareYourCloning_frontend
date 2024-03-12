@@ -1,0 +1,10 @@
+{
+    "statusCode": 404,
+    "body": {
+        "detail": "RepositoryName.addgene returned: HTTP Error 404: wrong addgene id - Likely you inserted a wrong RepositoryName.addgene id"
+    },
+    "headers": {
+        "content-length": "134",
+        "content-type": "application/json"
+    }
+}

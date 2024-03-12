@@ -4,7 +4,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { Alert, Box, FormLabel } from '@mui/material';
+import { Alert, Box, FormHelperText, FormLabel } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import PostRequestSelect from '../form/PostRequestSelect';
 import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
@@ -82,7 +82,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
         <>
           <KnownAssemblyField assemblyId={assemblyId} />
           <SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, setGene, assemblyId }} />
-          <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
+          {gene && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
         </>
       )}
       { (species && assemblyId === '') && (
@@ -148,7 +148,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
         <>
           <KnownSpeciesField species={species} />
           <SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, setGene, assemblyId }} />
-          <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
+          {gene && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
         </>
       )}
       {noAnnotationError && (<Alert severity="error">The selected assembly has no gene annotations</Alert>)}
@@ -160,8 +160,10 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
 function SourceGenomeRegionCustomCoordinates({ sourceId }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
   const [species, setSpecies] = React.useState(null);
-  const [assemblyId, setAssemblyId] = React.useState('');
+  const [assemblyId, setAssemblyId] = React.useState(null);
   const [sequenceAccession, setSequenceAccession] = React.useState('');
+  const noError = { start: null, end: null, strand: null };
+  const [formError, setFormError] = React.useState({ ...noError });
   const coordsStartRef = React.useRef(null);
   const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
@@ -169,6 +171,29 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
   const onSubmit = (event) => {
     event.preventDefault();
+    if (coordsStartRef.current.value === '') {
+      setFormError({ ...noError, start: 'Field required' });
+      return;
+    }
+    if (coordsEndRef.current.value === '') {
+      setFormError({ ...noError, end: 'Field required' });
+      return;
+    }
+    if (coordsStrand === '') {
+      setFormError({ ...noError, strand: 'Field required' });
+      return;
+    }
+    // Start must be greater than zero
+    if (Number(coordsStartRef.current.value) < 1) {
+      setFormError({ ...noError, start: 'Start must be greater than zero' });
+      return;
+    }
+    if (Number(coordsStartRef.current.value) >= Number(coordsEndRef.current.value)) {
+      setFormError({ ...noError, end: 'End must be greater than start' });
+      return;
+    }
+
+    setFormError({ ...noError });
 
     sendPostRequest('genome_coordinates', {
       sequence_accession: sequenceAccession,
@@ -182,8 +207,10 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
   const onAccessionChange = async (userInput, resp) => {
     if (resp === null) {
       setSpecies(null);
-      setAssemblyId('');
+      setAssemblyId(null);
       setSequenceAccession('');
+      setFormError({ ...noError });
+      setCoordsStrand('');
       return;
     }
     if (resp.assemblyAccession !== null) {
@@ -192,10 +219,12 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
       setSpecies(assemblySpecies);
     } else {
       // The sequence accession is not linked to an assembly
-      setAssemblyId('');
+      setAssemblyId(null);
       setSpecies(null);
     }
     setSequenceAccession(resp.sequenceAccessionStandard);
+    setFormError({ ...noError });
+    setCoordsStrand('');
   };
 
   return (
@@ -214,6 +243,8 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
                 label="Start"
                 inputRef={coordsStartRef}
                 type="number"
+                error={formError.start !== null}
+                helperText={formError.start}
               />
             </FormControl>
             <FormControl fullWidth>
@@ -222,19 +253,23 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
                 label="End"
                 inputRef={coordsEndRef}
                 type="number"
+                error={formError.end !== null}
+                helperText={formError.end}
               />
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel id={`selection-mode-${sourceId}-strand-label`}>Strand</InputLabel>
+              <InputLabel error={formError.strand !== null} id={`selection-mode-${sourceId}-strand-label`}>Strand</InputLabel>
               <Select
                 labelId={`selection-mode-${sourceId}-strand-label`}
                 label="Strand"
                 value={coordsStrand}
                 onChange={(event) => setCoordsStrand(event.target.value)}
+                error={formError.strand !== null}
               >
                 <MenuItem value="plus">plus</MenuItem>
                 <MenuItem value="minus">minus</MenuItem>
               </Select>
+              <FormHelperText error={formError.strand !== null}>{formError.strand}</FormHelperText>
             </FormControl>
           </Box>
           <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
@@ -324,9 +359,6 @@ function SourceGenomeRegion({ sourceId }) {
       {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference sourceId={sourceId} />)}
       {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther sourceId={sourceId} />)}
       {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates sourceId={sourceId} />)}
-      {/* {selectionMode !== 'custom_coordinates' && (<SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, assemblyId, assemblyExists }} />)} */}
-
-      {/* {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates {...{ assemblyId, setAssemblyId, assemblyExists, species }} />)} */}
 
     </>
   );

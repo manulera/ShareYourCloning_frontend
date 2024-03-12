@@ -16,7 +16,7 @@ function NetWorkNode({
           node={parentNode}
           key={`node-${parentNode.source.id}`}
           {...{
-            isRootNode: false
+            isRootNode: false,
           }}
         />
       ))}
@@ -30,7 +30,7 @@ function NetWorkNode({
     <Source {...{ sourceId: node.source.id }} />
   );
   const sourceSection = (
-    <li key={sourceId}>
+    <li key={sourceId} id={`source-${sourceId}`}>
       <span className="tf-nc">
         <span className="node-text">
           {sourceComponent}
@@ -49,7 +49,7 @@ function NetWorkNode({
   }
 
   return (
-    <li key={entity.id}>
+    <li key={entity.id} id={`sequence-${entity.id}`}>
       <span className="tf-nc">
         <span className="node-text">
           <SequenceEditor {...{ entityId: entity.id, isRootNode }} />

@@ -34,15 +34,14 @@ function PrimerForm({
     }
   };
 
-  const sequenceErrorChecker = (s) => (stringIsNotDNA(s) ? { error: true, helperText: 'invalid DNA sequence' } : { error: false, helperText: '' });
-  const nameErrorChecker = (s) => (existingNames.includes(s) ? { error: true, helperText: 'name exists' } : { error: false, helperText: '' });
+  const sequenceErrorChecker = (s) => (stringIsNotDNA(s) ? { error: true, helperText: 'Invalid DNA sequence' } : { error: false, helperText: '' });
+  const nameErrorChecker = (s) => (existingNames.includes(s) ? { error: true, helperText: 'Name exists' } : { error: false, helperText: '' });
 
   return (
     <form className="primer-row" onSubmit={onSubmit}>
       <ValidatedTextField
         id="name"
         label="Name"
-        variant="outlined"
         inputRef={nameRef}
         sx={{ m: 1, display: { width: '20%' } }}
         submissionAttempted={submissionAttempted}
@@ -50,11 +49,11 @@ function PrimerForm({
         required
         errorChecker={nameErrorChecker}
         updateValidationStatus={updateValidationStatus}
+        floatingHelperText
       />
       <ValidatedTextField
         id="sequence"
         label="Sequence"
-        variant="outlined"
         inputRef={sequenceRef}
         sx={{ m: 1, display: { width: '60%' } }}
         className="sequence"
@@ -63,14 +62,14 @@ function PrimerForm({
         required
         errorChecker={sequenceErrorChecker}
         updateValidationStatus={updateValidationStatus}
+        floatingHelperText
       />
-      {touched && (
+
       <IconButton type="submit" sx={{ height: 'fit-content' }}>
         <Tooltip title={submissionAllowed ? 'Save changes' : 'Incorrect values'} arrow placement="top">
           <CheckCircleIcon size={25} className={submissionAllowed ? '' : 'form-invalid'} color={submissionAllowed ? 'success' : 'grey'} />
         </Tooltip>
       </IconButton>
-      )}
 
       <IconButton onClick={cancelForm} type="button" sx={{ height: 'fit-content' }}>
         <Tooltip title="Discard changes" arrow placement="top">

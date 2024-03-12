@@ -2,6 +2,39 @@ name: Python tests
 on: [push, pull_request]
 
 jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Install Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.11
+
+      - name: Install python dependencies
+        run: |
+          cd ShareYourCloning_backend
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --with test
+
+      - name: run python dev server in background
+        run: |
+          cd ShareYourCloning_backend
+          poetry run uvicorn main:app &
+
+      # Install npm dependencies, cache them correctly
+      # and run all Cypress tests
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: yarn start
   # Update docker image when committing to prod branch if tests pass
   push_to_registry:
     name: Push Docker image to Docker Hub

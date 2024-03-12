@@ -1,8 +1,9 @@
+import { batch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import { primersActions } from '../store/primers';
 
-const { setState: setCloningState, setMainSequenceId, setDescription } = cloningActions;
-const { setPrimers } = primersActions;
+const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState: resetCloning } = cloningActions;
+const { setPrimers, revertToInitialState: resetPrimers } = primersActions;
 
 export const downloadStateAsJson = async (entities, sources, description, primers) => {
   // from https://stackoverflow.com/a/55613750/5622322
@@ -33,11 +34,19 @@ export const exportStateThunk = () => async (dispatch, getState) => {
   downloadStateAsJson(entities, sources, description, primers);
 };
 
-export const fileReceivedToJson = (event, callback) => {
+export const fileReceivedToJson = (event, callback, onError) => {
   const file = event.target.files[0];
   const reader = new FileReader();
   reader.readAsText(file, 'UTF-8');
-  reader.onload = (eventFileRead) => callback(JSON.parse(eventFileRead.target.result));
+  reader.onload = (eventFileRead) => {
+    try {
+      const parsed = JSON.parse(eventFileRead.target.result);
+      callback(parsed);
+    } catch (e) {
+      onError('Input file should be a JSON file with the history');
+    }
+  };
+  return reader;
 };
 
 export const loadStateThunk = (newState) => async (dispatch, getState) => {
@@ -45,4 +54,11 @@ export const loadStateThunk = (newState) => async (dispatch, getState) => {
   dispatch(setPrimers(newState.primers));
   dispatch(setMainSequenceId(null));
   dispatch(setDescription(newState.description));
+};
+
+export const resetStateThunk = () => async (dispatch) => {
+  batch(() => {
+    dispatch(resetCloning());
+    dispatch(resetPrimers());
+  });
 };

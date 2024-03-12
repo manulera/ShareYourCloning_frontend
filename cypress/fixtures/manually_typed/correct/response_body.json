@@ -1,0 +1,26 @@
+{
+    "sources": [
+        {
+            "id": null,
+            "kind": "source",
+            "input": [],
+            "output": null,
+            "type": "manually_typed",
+            "info": {},
+            "user_input": "atata"
+        }
+    ],
+    "sequences": [
+        {
+            "id": null,
+            "kind": "entity",
+            "sequence": {
+                "type": "file",
+                "file_extension": "gb",
+                "file_content": "LOCUS       name                       5 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 atata\n//",
+                "overhang_crick_3prime": 0,
+                "overhang_watson_3prime": 0
+            }
+        }
+    ]
+}

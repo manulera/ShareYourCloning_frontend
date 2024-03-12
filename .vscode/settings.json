@@ -10,14 +10,19 @@
     },
     "emmet.includeLanguages": {
         "javascript": "javascriptreact"
-     },
-     "eslint.nodePath": "../node_modules",
-     "eslint.options": { "overrideConfigFile": "../.eslintrc.json"},
-     "eslint.format.enable": true,
-     "[javascript]": {
-         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-     },
-     "[javascriptreact]": {
+    },
+    "eslint.nodePath": "../node_modules",
+    "eslint.options": {
+        "overrideConfigFile": "../.eslintrc.json"
+    },
+    "eslint.format.enable": true,
+    "[javascript]": {
         "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "search.exclude": {
+        "**/ShareYourCloning_backend": true,
+    }
 }
