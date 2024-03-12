@@ -8,9 +8,9 @@ import { stringIsNotDNA } from './validators';
 import './PrimerForm.css';
 
 function PrimerForm({
-  primer = { name: '', sequence: '', id: '' }, submitPrimer, cancelForm, existingNames,
+  primer = { name: '', sequence: '', id: null }, submitPrimer, cancelForm, existingNames, disabledSequenceField,
 }) {
-  const [errorStatus, setErrorStatus] = React.useState({ name: true, sequence: true });
+  const [errorStatus, setErrorStatus] = React.useState(primer.id ? { name: false, sequence: false } : { name: true, sequence: true });
   const [touched, setTouched] = React.useState(false);
   const [submissionAttempted, setSubmissionAttempted] = React.useState(false);
   const nameRef = React.useRef(null);
@@ -23,13 +23,15 @@ function PrimerForm({
       [fieldName]: valid,
     }));
   };
-  const submissionAllowed = touched && Object.values(errorStatus).every((error) => !error);
+  const submissionAllowed = Object.values(errorStatus).every((error) => !error);
 
   const onSubmit = (e) => {
     e.preventDefault();
     setSubmissionAttempted(true);
     if (submissionAllowed) {
-      submitPrimer({ name: nameRef.current.value, sequence: sequenceRef.current.value });
+      // Id is null in the case of adding new primer
+      const { id } = primer;
+      submitPrimer({ id, name: nameRef.current.value, sequence: sequenceRef.current.value });
       cancelForm();
     }
   };
@@ -63,13 +65,17 @@ function PrimerForm({
         errorChecker={sequenceErrorChecker}
         updateValidationStatus={updateValidationStatus}
         floatingHelperText
+        disabled={disabledSequenceField}
+        initialHelperText={disabledSequenceField ? 'Cannot edit sequence in use' : ''}
       />
-
+      {touched
+      && (
       <IconButton type="submit" sx={{ height: 'fit-content' }}>
         <Tooltip title={submissionAllowed ? 'Save changes' : 'Incorrect values'} arrow placement="top">
           <CheckCircleIcon size={25} className={submissionAllowed ? '' : 'form-invalid'} color={submissionAllowed ? 'success' : 'grey'} />
         </Tooltip>
       </IconButton>
+      )}
 
       <IconButton onClick={cancelForm} type="button" sx={{ height: 'fit-content' }}>
         <Tooltip title="Discard changes" arrow placement="top">

@@ -2,13 +2,13 @@ import { TextField } from '@mui/material';
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
 
-function ValidatedTextField({ inputRef, errorChecker, updateValidationStatus, required, submissionAttempted, floatingHelperText, ...rest }) {
+function ValidatedTextField({ inputRef, errorChecker, updateValidationStatus, required, submissionAttempted, floatingHelperText, initialHelperText = '', ...rest }) {
   const defaultPars = { inputProps: { style: { fontSize: 14 } }, FormHelperTextProps: { component: 'div' } };
   const [error, setError] = React.useState(false);
-  const [helperText, setHelperText] = React.useState('');
+  const [helperText, setHelperText] = React.useState(initialHelperText);
   const [value, setValue] = React.useState(rest.defaultValue || '');
   const [touched, setTouched] = React.useState(false);
-  console.log(helperText);
+
   const handleChange = (event) => {
     setValue(event.target.value);
     setTouched(true);

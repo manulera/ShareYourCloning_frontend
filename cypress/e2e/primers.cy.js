@@ -22,7 +22,7 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-table-container tr').contains('fwd-2').should('exist');
     cy.get('.primer-table-container tr').contains('atg').should('exist');
   });
-  it('Can close form', () => {
+  it('Can close add form', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
@@ -35,8 +35,25 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-form-container [data-testid="CancelIcon"').click();
     cy.get('form.primer-row').should('not.exist');
   });
-
-  it('Applies constrains', () => {
+  it('Can edit primers', () => {
+    cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
+    cy.get('form.primer-row').should('exist');
+    cy.get('form.primer-row input#name').should('have.value', 'fwd');
+    cy.get('form.primer-row input#sequence').should('have.value', 'gatctcgccataaaagacag');
+    cy.get('form.primer-row input#name').clear();
+    cy.get('form.primer-row input#name').type('blah');
+    cy.get('form.primer-row input#sequence').clear();
+    cy.get('form.primer-row input#sequence').type('gggggggggggg');
+    cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
+    cy.get('form.primer-row').should('not.exist');
+    cy.get('.primer-form-container').contains('Add Primer').should('exist');
+    cy.get('.primer-table-container tr').contains('blah').should('exist');
+    cy.get('.primer-table-container tr').contains('gggggggggggg').should('exist');
+    cy.get('.primer-table-container tr').contains('fwd').should('not.exist');
+    cy.get('.primer-table-container tr').contains('gatctcgccataaaagacag').should('not.exist');
+  });
+  it('Applies contrains to edit primer');
+  it('Applies constrains to new primer', () => {
     // Useful to check the form is not submitted
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
