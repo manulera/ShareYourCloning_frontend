@@ -16,8 +16,10 @@ table {
     margin-bottom: 10px;
 }
 
-table th:first-child, td:first-child {
-    width: 10%;
+table th:first-child, td.icons {
+    width: 15%;
+    /* Prevent icons from appear as column is sequence is very long */
+    white-space: nowrap;
 }
 
 th, td {

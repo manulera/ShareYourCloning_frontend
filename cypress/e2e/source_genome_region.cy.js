@@ -13,16 +13,20 @@ describe('GenomeRegion Source', () => {
     cy.get('#tags-standard').clear('p');
     cy.get('#tags-standard').type('pombe');
     cy.get('#tags-standard-option-0').click();
-    cy.get('#\\:rv\\:').should('have.value', 'GCF_000002945.1');
+    cy.get('label').contains('Assembly ID').siblings('div').children('input')
+      .should('have.value', 'GCF_000002945.1');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').click();
     cy.get('div[role="presentation"]').contains('Type at least 3 characters to search');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').clear('a');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').type('ase1');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').click();
     cy.get('#tags-standard-option-0').click();
-    cy.get('#\\:r15\\:').should('have.value', 'NC_003424.3 (1878009..1880726)');
-    cy.get('#\\:r17\\:').clear('');
-    cy.get('#\\:r17\\:').type('2000');
+    cy.get('label').contains('Gene coordinates').siblings('div').children('input')
+      .should('have.value', 'NC_003424.3 (1878009..1880726)');
+    cy.get('label').contains('Downstream bases').siblings('div').children('input')
+      .clear('');
+    cy.get('label').contains('Downstream bases').siblings('div').children('input')
+      .type('2000');
     cy.get(':nth-child(5) > .MuiButton-root').click();
     cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#source-1 a').contains('GCF_000002945.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.1');
@@ -30,7 +34,6 @@ describe('GenomeRegion Source', () => {
     cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
     cy.get('[style="text-align: center;"]').click();
     cy.get('[style="text-align: center;"] > :nth-child(3)').should('have.text', '5718 bps');
-    cy.get('[style="text-align: center;"] > :nth-child(1)').click();
     cy.get('[style="text-align: center;"] > :nth-child(1)').should('have.text', 'NC_003424 ');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('5718 bps');
   });
@@ -42,14 +45,16 @@ describe('GenomeRegion Source', () => {
     cy.get('#tags-standard').clear('p');
     cy.get('#tags-standard').type('pombe');
     cy.get('#tags-standard-option-0').click();
-    cy.get('#\\:rv\\:').should('have.value', 'GCF_000002945.1');
+    cy.get('label').contains('Assembly ID').siblings('div').children('input')
+      .should('have.value', 'GCF_000002945.1');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').click();
     cy.get('div[role="presentation"]').contains('Type at least 3 characters to search');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').clear('a');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').type('ase1');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').click();
     cy.get('#tags-standard-option-0').click();
-    cy.get('#\\:r15\\:').should('have.value', 'NC_003424.3 (1878009..1880726)');
+    cy.get('label').contains('Gene coordinates').siblings('div').children('input')
+      .should('have.value', 'NC_003424.3 (1878009..1880726)');
     cy.get(':nth-child(5) > .MuiButton-root').click();
     cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#source-1 a').contains('GCF_000002945.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.1');
@@ -106,6 +111,7 @@ describe('GenomeRegion Source', () => {
     cy.contains('Assembly ID does not exist').should('not.exist');
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
       .type('GCF_000002945.1');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('label').contains('Gene').siblings('div').children('input')
       .type('dummy');
     cy.get('div[role="presentation"]').contains('No results found');
@@ -130,6 +136,7 @@ describe('GenomeRegion Source', () => {
     // Shows species and assembly ID if sequence accession belongs to assembly
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('NC_003424.3');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('label').contains('Species').siblings('div').children('input')
       .should('have.value', 'Schizosaccharomyces pombe - 4896');
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
@@ -140,6 +147,7 @@ describe('GenomeRegion Source', () => {
       .clear('');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('DQ208311.2');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('.MuiAlert-message').contains('not linked to an assembly');
     cy.get('label').contains('Start').siblings('div').children('input')
       .type('1');
@@ -182,6 +190,7 @@ describe('GenomeRegion Source', () => {
       .clear('');
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('NC_003424.3');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('label').contains('Start').siblings('div').children('input')
       .should('have.value', '');

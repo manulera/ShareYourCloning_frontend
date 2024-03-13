@@ -38,6 +38,15 @@ const reducer = {
     state.primers = state.primers.filter((p) => p.id !== primerId);
   },
 
+  editPrimer(state, action) {
+    const editedPrimer = action.payload;
+    const targetPrimer = state.primers.find((p) => p.id === editedPrimer.id);
+    if (!targetPrimer) {
+      throw new Error('Primer not found');
+    }
+    Object.assign(targetPrimer, editedPrimer);
+  },
+
   revertToInitialState(state) {
     Object.assign(state, initialState);
   },
