@@ -1,8 +1,9 @@
-name: Python tests
+name: CI / CD
 on: [push, pull_request]
 
 jobs:
   cypress-run:
+    name: Run Cypress tests
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
@@ -22,7 +23,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install poetry
           poetry config virtualenvs.create false
-          poetry install --with test
+          poetry install
 
       - name: run python dev server in background
         run: |
@@ -35,6 +36,12 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: yarn start
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
   # Update docker image when committing to prod branch if tests pass
   push_to_registry:
     name: Push Docker image to Docker Hub
