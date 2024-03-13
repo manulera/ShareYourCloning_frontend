@@ -1,8 +1,9 @@
-name: Python tests
+name: CI / CD
 on: [push, pull_request]
 
 jobs:
   cypress-run:
+    name: Run Cypress tests
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout
