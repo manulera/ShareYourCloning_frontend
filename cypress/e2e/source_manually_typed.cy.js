@@ -3,11 +3,13 @@ describe('ManuallyTyped Source', () => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="manually_typed"]').click();
+    cy.intercept('**').as('request');
   });
   it('works on normal case', () => {
     cy.get('#tab-panel-0 #sequence').clear('a');
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.wait('@request', { requestTimeout: 20000 });
     cy.get('.select-source > :nth-child(2)').should('have.text', 'Manually typed sequence');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > .node-text > .corner-id').should('have.text', '2');
   });

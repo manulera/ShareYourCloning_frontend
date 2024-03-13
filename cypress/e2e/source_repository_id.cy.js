@@ -3,7 +3,7 @@ describe('RepositoryId Source', () => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="repository_id"]').click();
-    // cy.intercept('POST', '**/repository_id', (req) => responseGenerator(req)).as('repositoryId');
+    cy.intercept('**').as('request');
   });
   it('works with addgene', () => {
     cy.get('body').click();
@@ -12,6 +12,7 @@ describe('RepositoryId Source', () => {
     cy.get('#repository-id-1').clear('3');
     cy.get('#repository-id-1').type('39282');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.wait('@request', { requestTimeout: 20000 });
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > .node-text > .corner-id').should('have.text', '2');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('pFA6a');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('5086 bps');
@@ -26,6 +27,7 @@ describe('RepositoryId Source', () => {
     cy.get('#repository-id-1').clear('');
     cy.get('#repository-id-1').type('NM_001018957.2');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.wait('@request', { requestTimeout: 20000 });
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > .node-text > .corner-id').should('have.text', '2');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('NM_001018957.2');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('2671 bps');
