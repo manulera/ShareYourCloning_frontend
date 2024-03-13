@@ -3,7 +3,6 @@ import { constructNetwork } from '../utils/network';
 
 const initialState = {
   mainSequenceId: null,
-  nextUniqueId: 2,
   sources: [
     {
       id: 1,
@@ -19,6 +18,10 @@ const initialState = {
   description: '',
 };
 
+function getNextUniqueId({ sources, entities }) {
+  return Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
+}
+
 /* eslint-disable no-param-reassign */
 const reducer = {
 
@@ -33,23 +36,23 @@ const reducer = {
   addEmptySource(state, action) {
     const inputEntitiesIds = action.payload;
     const { sources } = state;
+    const nextUniqueId = getNextUniqueId(state);
     sources.push({
-      id: state.nextUniqueId,
+      id: nextUniqueId,
       input: inputEntitiesIds,
       output: null,
       type: null,
       kind: 'source',
     });
-    state.nextUniqueId += 1;
     state.network = constructNetwork(state.entities, state.sources);
   },
 
   addEntityAndItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
-    newEntity.id = state.nextUniqueId;
-    newSource.output = state.nextUniqueId;
-    state.nextUniqueId += 1;
+    const nextUniqueId = getNextUniqueId(state);
+    newEntity.id = nextUniqueId;
+    newSource.output = nextUniqueId;
     entities.push(newEntity);
     // Replace the source with the new one
     const source = sources.find((s) => s.id === newSource.id);
@@ -84,7 +87,6 @@ const reducer = {
 
   setState(state, action) {
     const { sources, entities } = action.payload;
-    state.nextUniqueId = Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
     const ids = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
     // They should all be positive integers
     if (ids.some((id) => id < 1 || !Number.isInteger(id))) {

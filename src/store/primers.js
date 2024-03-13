@@ -1,20 +1,22 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  nextUniqueId: 3,
   primers: [
     { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
     { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
   ],
 };
 
+function nextUniqueId(primers) {
+  return Math.max(...primers.map((p) => p.id)) + 1;
+}
+
 /* eslint-disable no-param-reassign */
 const reducer = {
   addPrimer(state, action) {
     const newPrimer = action.payload;
     const { primers } = state;
-    newPrimer.id = state.nextUniqueId;
-    state.nextUniqueId += 1;
+    newPrimer.id = nextUniqueId(primers);
     primers.push(newPrimer);
   },
 
@@ -29,7 +31,6 @@ const reducer = {
     if (new Set(ids).size !== ids.length) {
       throw new Error('Repeated ids in the primers');
     }
-    state.nextUniqueId = Math.max(...primers.map((s) => s.id)) + 1;
     state.primers = primers;
   },
 

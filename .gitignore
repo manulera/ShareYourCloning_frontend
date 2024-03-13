@@ -34,3 +34,4 @@ yarn-error.log*
 # tests
 cypress/downloads
 cypress/videos
+cypress/screenshots

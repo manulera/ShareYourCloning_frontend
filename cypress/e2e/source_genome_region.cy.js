@@ -12,6 +12,7 @@ describe('GenomeRegion Source', () => {
     cy.get('div[role="presentation"]').contains('Type at least 3 characters to search');
     cy.get('#tags-standard').clear('p');
     cy.get('#tags-standard').type('pombe');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#tags-standard-option-0').click();
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
       .should('have.value', 'GCF_000002945.1');
@@ -19,7 +20,9 @@ describe('GenomeRegion Source', () => {
     cy.get('div[role="presentation"]').contains('Type at least 3 characters to search');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').clear('a');
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').type('ase1');
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get(':nth-child(3) > .MuiAutocomplete-root > .MuiFormControl-root > .MuiInputBase-root > #tags-standard').click();
+    cy.wait('@getRequest', { requestTimeout: 20000 });
     cy.get('#tags-standard-option-0').click();
     cy.get('label').contains('Gene coordinates').siblings('div').children('input')
       .should('have.value', 'NC_003424.3 (1878009..1880726)');
