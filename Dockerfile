@@ -8,8 +8,7 @@ COPY . /app
 RUN corepack enable
 RUN yarn install
 # This parameter can be changed at build time with --build-arg option
-# Note: trailing slash is required!
-ARG BACKEND_URL=http://localhost:8000/
+ARG BACKEND_URL=http://localhost:8000
 RUN VITE_REACT_APP_BACKEND_URL=$BACKEND_URL yarn build
 
 # For now the image contains the dev server. Ideally we want to be able to set

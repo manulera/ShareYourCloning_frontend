@@ -13,7 +13,7 @@ export default function useBackendAPI(sourceId) {
 
   const sendPostRequest = useCallback(async (endpoint, requestData, config = {}) => {
     setRequestStatus({ status: 'loading', message: 'loading' });
-    const url = import.meta.env.VITE_REACT_APP_BACKEND_URL + endpoint;
+    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/${endpoint}`;
     axios
       .post(url, requestData, config)
       .then((resp) => {

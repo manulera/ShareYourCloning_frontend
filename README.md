@@ -19,8 +19,8 @@ After cloning the repository, place yourself at project's root and build with:
 ```bash
 # default backend url
 docker build -t manulera/shareyourcloningfrontend .
-# with a custom backend url (trailing slash is important!)
-docker build --build-arg BACKEND_URL=http://localhost:9837/ -t manulera/shareyourcloningfrontend .
+# with a custom backend url
+docker build --build-arg BACKEND_URL=http://localhost:9837 -t manulera/shareyourcloningfrontend .
 ```
 
 You can then deploy with with `docker-compose` or run it directly with:
@@ -74,16 +74,16 @@ For the application to work, you must have a running backend. For that, see the 
 
 The requests to the backend are made to the url set at build time (Docker), or `VITE_REACT_APP_BACKEND_URL` environment variable given to the `yarn build` command.
 
-* When you run the application with the development server using `yarn start`, `VITE_REACT_APP_BACKEND_URL` is set to `http://127.0.0.1:8000/`, indicated in the file `.env.development` (the default address used when running FastAPI locally).
-* When you build the static assets using `yarn build`, the url is set to the address of the hosted api `https://shareyourcloning.api.genestorian.org/`.
+* When you run the application with the development server using `yarn start`, `VITE_REACT_APP_BACKEND_URL` is set to `http://127.0.0.1:8000`, indicated in the file `.env.development` (the default address used when running FastAPI locally).
+* When you build the static assets using `yarn build`, the url is set to the address of the hosted api `https://shareyourcloning.api.genestorian.org`.
 
 If you want to specify the backend url (for example, if you are running the api in Docker at `http://localhost:8000`), you can do:
 
 ```bash
 # To run the dev server
-VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn start
+VITE_REACT_APP_BACKEND_URL=http://localhost:8000 yarn start
 # To build the static assets
-VITE_REACT_APP_BACKEND_URL=http://localhost:8000/ yarn build
+VITE_REACT_APP_BACKEND_URL=http://localhost:8000 yarn build
 ```
 
 Finally, if you are serving the frontend at an address different from `http://localhost:3000`, you will have to add the url of the frontend to the CORS allowed origins in the backend ([see here](https://github.com/manulera/ShareYourCloning_backend#connecting-to-the-frontend)). Note that you will also get a CORS error if you run `yarn build` and try to make a request to the backend from `build/index.html` if you just open it in your browser instead of serving it at `localhost:3000`.
