@@ -8,7 +8,11 @@ const initialState = {
 };
 
 function nextUniqueId(primers) {
-  return Math.max(...primers.map((p) => p.id)) + 1;
+  const allIds = [...primers.map((p) => p.id)];
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
 }
 
 /* eslint-disable no-param-reassign */

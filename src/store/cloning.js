@@ -19,7 +19,11 @@ const initialState = {
 };
 
 function getNextUniqueId({ sources, entities }) {
-  return Math.max(...sources.map((s) => s.id), ...entities.map((e) => e.id)) + 1;
+  const allIds = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
 }
 
 /* eslint-disable no-param-reassign */
