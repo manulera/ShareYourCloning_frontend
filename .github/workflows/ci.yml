@@ -30,6 +30,9 @@ jobs:
           cd ShareYourCloning_backend
           poetry run uvicorn main:app &
 
+      - name: enable yarn 3
+        run: corepack enable
+
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
       - name: Cypress run
