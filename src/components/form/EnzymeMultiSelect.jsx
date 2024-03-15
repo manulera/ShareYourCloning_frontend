@@ -10,7 +10,8 @@ export default function EnzymeMultiSelect({ setEnzymes }) {
   const [error, setError] = React.useState(false);
   const [waitingMessage, setWaitingMessage] = React.useState('retrieving enzyme list from server...');
   React.useEffect(() => {
-    const url = `${import.meta.env.VITE_REACT_APP_BACKEND_URL}/restriction_enzyme_list`;
+    // Built like this in case trailing slash
+    const url = new URL('restriction_enzyme_list', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     axios
       .get(url).then(({ data }) => {
         setWaitingMessage(null);
