@@ -10,6 +10,7 @@ import SourcePCR from './SourcePCR';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
+import SourceTemplatelessPCR from './SourceTemplatelessPCR';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -43,6 +44,8 @@ function Source({ sourceId }) {
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'manually_typed':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
+    case 'templateless_pcr':
+      specificSource = <SourceTemplatelessPCR {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */
