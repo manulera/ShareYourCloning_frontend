@@ -17,7 +17,9 @@ const MenuProps = {
   },
 };
 
-function SourcePCR({ sourceId , templateLess = false}) {
+function SourcePCR({ sourceId }) {
+  // Represents a PCR, if inputEntities is empty, it is a templateless PCR
+
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
@@ -37,18 +39,8 @@ function SourcePCR({ sourceId , templateLess = false}) {
       primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
       source: { input: inputEntities.map((e) => e.id), forward_primer: forwardPrimerId, reverse_primer: reversePrimerId },
     };
-    
-    /* TODO: I don't think templateLess variable is needed, as inputEntities is empty when performing templateless PCR
 
-    if (!inputEntities || inputEntities.length === 0) {
-        sendPostRequest('templateless_pcr', requestData, { params: {
-        minimal_annealing: minimalAnnealingRef.current.value,
-        allowed_mismatches: 0,
-      } }); ...
-    }
-    */
-
-    if (templateLess) {
+    if (inputEntities.length === 0) {
       sendPostRequest('templateless_pcr', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: 0,
@@ -99,7 +91,7 @@ function SourcePCR({ sourceId , templateLess = false}) {
             defaultValue={20}
           />
         </FormControl>
-        {!templateLess && (
+        {inputEntities.length !== 0 && (
           <FormControl fullWidth>
             <TextField
               label="Mismatches allowed"
