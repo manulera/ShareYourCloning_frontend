@@ -20,10 +20,10 @@ function FinishedSource({ sourceId }) {
     }
       break;
     case 'templateless_PCR': {
-        const primers = useSelector((state) => state.primers.primers);
-        message = `Templateless PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
+      const primers = useSelector((state) => state.primers.primers);
+      message = `Templateless PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
     }
-    break;
+      break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
     case 'repository_id': {
       const { repository } = source;
