@@ -18,6 +18,8 @@ const MenuProps = {
 };
 
 function SourcePCR({ sourceId }) {
+  // Represents a PCR, if inputEntities is empty, it is a templateless PCR
+
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
@@ -37,10 +39,18 @@ function SourcePCR({ sourceId }) {
       primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
       source: { input: inputEntities.map((e) => e.id), forward_primer: forwardPrimerId, reverse_primer: reversePrimerId },
     };
-    sendPostRequest('pcr', requestData, { params: {
-      minimal_annealing: minimalAnnealingRef.current.value,
-      allowed_mismatches: allowedMismatchesRef.current.value,
-    } });
+
+    if (inputEntities.length === 0) {
+      sendPostRequest('templateless_pcr', requestData, { params: {
+        minimal_annealing: minimalAnnealingRef.current.value,
+        allowed_mismatches: 0,
+      } });
+    } else {
+      sendPostRequest('pcr', requestData, { params: {
+        minimal_annealing: minimalAnnealingRef.current.value,
+        allowed_mismatches: allowedMismatchesRef.current.value,
+     } });
+    }
   };
 
   return (
@@ -81,15 +91,19 @@ function SourcePCR({ sourceId }) {
             defaultValue={20}
           />
         </FormControl>
-        <FormControl fullWidth>
-          <TextField
-            label="Mismatches allowed"
-            inputRef={allowedMismatchesRef}
-            type="number"
-            defaultValue={0}
-          />
-        </FormControl>
-        <SubmitButtonBackendAPI requestStatus={requestStatus}>Perform PCR</SubmitButtonBackendAPI>
+        {inputEntities.length !== 0 && (
+          <FormControl fullWidth>
+            <TextField
+              label="Mismatches allowed"
+              inputRef={allowedMismatchesRef}
+              type="number"
+              defaultValue={0}
+            />
+          </FormControl>
+        )}
+        {reversePrimerId && forwardPrimerId && (
+          <SubmitButtonBackendAPI requestStatus={requestStatus}>Perform PCR</SubmitButtonBackendAPI>
+        )}
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
