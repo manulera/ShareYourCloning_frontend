@@ -43,13 +43,12 @@ function SourcePCR({ sourceId }) {
     if (inputEntities.length === 0) {
       sendPostRequest('templateless_pcr', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
-        allowed_mismatches: 0,
       } });
     } else {
       sendPostRequest('pcr', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
-     } });
+      } });
     }
   };
 
