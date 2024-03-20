@@ -10,6 +10,7 @@ import SourcePCR from './SourcePCR';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
+import ELabFTWSource from './ELabFTWSource';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -45,6 +46,8 @@ function Source({ sourceId }) {
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
     case 'templateless_pcr':
       specificSource = <SourcePCR {...{ sourceId, templateLess: true }} />; break;
+    case 'elabftw':
+      specificSource = <ELabFTWSource {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */

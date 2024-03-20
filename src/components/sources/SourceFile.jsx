@@ -9,6 +9,7 @@ function SourceFile({ sourceId }) {
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
+    console.log('file', files[0]);
     const formData = new FormData();
     formData.append('file', files[0]);
     const config = {

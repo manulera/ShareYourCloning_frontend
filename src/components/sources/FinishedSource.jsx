@@ -81,6 +81,10 @@ function FinishedSource({ sourceId }) {
       );
       break;
     }
+    case 'elabftw': {
+      message = 'Request to eLabFTW';
+    }
+      break;
     default: message = '';
   }
   return (
