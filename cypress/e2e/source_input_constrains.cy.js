@@ -18,23 +18,24 @@ describe('Test Source input constrains', () => {
     cy.visit('/');
   });
 
-  //   it('Empty source displays the right options', () => {
-  //     cy.get('#tab-panel-0 .MuiInputBase-root').click();
-  //     cy.get('ul[aria-labelledby="select-source-1-label"] li').should('have.length', 4);
-  //     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="repository_id"]').should('exist');
-  //     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
-  //     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
-  //     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
-  //   });
-  //   it('All experimental sources are available as children of a sequence', () => {
-  //     cy.get('#tab-panel-0 .MuiInputBase-root').click();
-  //     cy.get('li[data-value="manually_typed"]').click();
-  //     cy.get('#tab-panel-0 #sequence').type('atata');
-  //     cy.get('.select-source > form > .MuiButtonBase-root').click();
-  //     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
-  //     cy.get('li#source-3 .MuiInputBase-root').click();
-  //     checkAllOptions(3);
-  //   });
+  it('Empty source displays the right options', () => {
+    cy.get('#tab-panel-0 .MuiInputBase-root').click();
+    cy.get('ul[aria-labelledby="select-source-1-label"] li').should('have.length', 5);
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="repository_id"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="templateless_pcr"]').should('exist');
+  });
+  it('All experimental sources are available as children of a sequence', () => {
+    cy.get('#tab-panel-0 .MuiInputBase-root').click();
+    cy.get('li[data-value="manually_typed"]').click();
+    cy.get('#tab-panel-0 #sequence').type('atata');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('svg[data-testid="AddCircleIcon"]').first().click();
+    cy.get('li#source-3 .MuiInputBase-root').click();
+    checkAllOptions(3);
+  });
   it('All experimental sources are available as children of a sequence', () => {
     // Manually type one sequence
     cy.get('#tab-panel-0 .MuiInputBase-root').click();

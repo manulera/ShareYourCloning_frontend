@@ -43,6 +43,8 @@ function Source({ sourceId }) {
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'manually_typed':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
+    case 'templateless_pcr':
+      specificSource = <SourcePCR {...{ sourceId, templateLess: true }} />; break;
     default:
       break;
     /* eslint-enable */

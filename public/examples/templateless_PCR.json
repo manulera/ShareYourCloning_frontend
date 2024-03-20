@@ -1,0 +1,9 @@
+{
+  "sequences": [{ "id": 2, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       name                     139 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 agaactcaac cattacgggt ttgacgaata tagacgagat tcgcaattac ttgtctgatg\n       61 gattaccaag atgatgggct tggtgaaatg attgagtttt tggagggtat gcatgaagtt\n      121 taactcaaat atctcgtaa\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } }],
+  "sources": [{ "id": 1, "input": [], "output": 2, "type": "templateless_PCR", "kind": "source", "info": {}, "assembly": [[1, -2, "60..80", "1..21"]], "circular": false, "forward_primer": 1, "reverse_primer": 2 }],
+  "description": "",
+  "primers": [
+    { "id": 1, "name": "fwd", "sequence": "agaactcaaccattacgggtttgacgaatatagacgagattcgcaattacttgtctgatggattaccaagatgatgggct" },
+    { "id": 2, "name": "rvs", "sequence": "ttacgagatatttgagttaaacttcatgcataccctccaaaaactcaatcatttcaccaagcccatcatcttggtaatcc" }
+  ]
+}

@@ -22,6 +22,10 @@ const examples = [
     title: 'Restriction + ligation assembly (v2)',
     link: 'history.json',
   },
+  {
+    title: 'Templateless PCR',
+    link: 'templateless_PCR.json',
+  },
 ];
 
 function SelectExampleDialog({ onClose, open }) {
