@@ -1,58 +1,21 @@
 import * as React from 'react';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import axios from 'axios';
-import { Alert, Button, FormControl } from '@mui/material';
+import GetRequestMultiSelect from './GetRequestMultiSelect';
 
 export default function EnzymeMultiSelect({ setEnzymes }) {
-  const [options, setOptions] = React.useState([]);
-  const [connectAttempt, setConnectAttemp] = React.useState(0);
-  const [error, setError] = React.useState(false);
-  const [waitingMessage, setWaitingMessage] = React.useState('retrieving enzyme list from server...');
-  React.useEffect(() => {
-    // Built like this in case trailing slash
-    const url = new URL('restriction_enzyme_list', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
-    axios
-      .get(url).then(({ data }) => {
-        setWaitingMessage(null);
-        setOptions(data.enzyme_names);
-        setError(false);
-      }).catch((e) => { setWaitingMessage('Could not retrieve enzymes from server'); setError(true); });
-  }, [connectAttempt]);
+  const url = new URL('restriction_enzyme_list', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+  const getOptionsFromResponse = (data) => data.enzyme_names;
+  const label = 'Enzymes used';
+  const messages = { loadingMessage: 'retrieving enzyme list from server...', errorMessage: 'Could not retrieve enzymes from server' };
+  const onChange = (value) => setEnzymes(value);
 
-  if (error) {
-    return (
-      <Alert
-        sx={{ alignItems: 'center' }}
-        severity="error"
-        action={(
-          <Button color="inherit" size="small" onClick={() => { setWaitingMessage('Retrying...'); setConnectAttemp(connectAttempt + 1); }}>
-            Retry
-          </Button>
-        )}
-      >
-        {waitingMessage}
-      </Alert>
-    );
-  }
   return (
-    <FormControl fullWidth>
-      <Autocomplete
-        multiple
-        onChange={(event, value) => { setEnzymes(value); }}
-        id="tags-standard"
-        options={options}
-        getOptionLabel={(option) => option}
-        defaultValue={[]}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Enzymes used"
-            helperText={waitingMessage}
-            error={error}
-          />
-        )}
-      />
-    </FormControl>
+    <GetRequestMultiSelect
+      getOptionsFromResponse={getOptionsFromResponse}
+      url={url}
+      label={label}
+      messages={messages}
+      onChange={onChange}
+      getOptionLabel={(option) => option}
+    />
   );
 }

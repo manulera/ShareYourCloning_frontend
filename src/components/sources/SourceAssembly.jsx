@@ -19,6 +19,16 @@ function SourceAssembly({ sourceId, assemblyType }) {
   const circularOnlyRef = React.useRef(null);
   const bluntLigationRef = React.useRef(null);
   const [enzymes, setEnzymes] = React.useState([]);
+  const [allowSubmit, setAllowSubmit] = React.useState(true);
+
+  React.useEffect(() => {
+    if (assemblyType === 'restriction_and_ligation' && enzymes.length === 0) {
+      setAllowSubmit(false);
+    } else {
+      setAllowSubmit(true);
+    }
+  }, [enzymes]);
+
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
@@ -88,7 +98,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
           <FormControlLabel fullWidth control={<Checkbox inputRef={bluntLigationRef} />} label="Blunt ligation" />
         </FormControl>
         )}
-        <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
+        {allowSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,

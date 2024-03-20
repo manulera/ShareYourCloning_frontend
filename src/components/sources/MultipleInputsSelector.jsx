@@ -21,6 +21,11 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
 
   const onChange = (event) => {
     const input = event.target.value;
+    // We prevent setting empty input
+    // TODO: test this
+    if (input.length === 0) {
+      return;
+    }
     dispatch(updateSource({ id: sourceId, input, type: sourceType }));
   };
   const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
