@@ -28,7 +28,7 @@ function SourceRestriction({ sourceId }) {
     <div className="restriction">
       <form onSubmit={onSubmit}>
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
-        <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">Perform restriction</SubmitButtonBackendAPI>
+        {(enzymes.length > 0) && <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">Perform restriction</SubmitButtonBackendAPI>}
       </form>
 
       <MultipleOutputsSelector {...{
