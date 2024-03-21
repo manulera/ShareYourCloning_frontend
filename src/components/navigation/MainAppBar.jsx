@@ -10,10 +10,12 @@ import { useDispatch } from 'react-redux';
 import ButtonWithMenu from './ButtonWithMenu';
 import { exportStateThunk, fileReceivedToJson, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
+import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
+  const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const dispatch = useDispatch();
   const exportData = () => {
     dispatch(exportStateThunk());
@@ -23,7 +25,6 @@ function MainAppBar() {
       // TODO: this should be handled by the store
       dispatch(resetStateThunk());
       setLoadedFileError('JSON file in wrong format');
-      console.log('json error:', e);
     });
   };
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
@@ -34,6 +35,7 @@ function MainAppBar() {
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
+    { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
 
   const handleCloseDialog = (fileName) => {
@@ -80,6 +82,7 @@ function MainAppBar() {
         </Toolbar>
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
+      <DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />
     </AppBar>
   );
 }

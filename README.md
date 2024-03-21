@@ -117,3 +117,6 @@ Then, when running the video.
 CYPRESS_NO_COMMAND_LOG=1 yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
 ```
 
+### eLabFTW
+
+The API keys should be in the ignored file `.env.development.local`

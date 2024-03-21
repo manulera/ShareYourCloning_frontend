@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import ElabFTWCategorySelect from '../form/eLabFTW/elabFTWCategorySelect';
+import ElabFTWCategorySelect from '../form/eLabFTW/ElabFTWCategorySelect';
 import ElabFTWResourceSelect from '../form/eLabFTW/ElabFTWResourceSelect';
 import ElabFTWFileSelect from '../form/eLabFTW/ElabFTWFileSelect';
 import useBackendAPI from '../../hooks/useBackendAPI';
@@ -33,6 +33,7 @@ function ELabFTWSource({ sourceId }) {
     const file = new File([resp.data], fileInfo.real_name);
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('info_str', JSON.stringify({ file_from: 'eLabFTW', item_id: resource.id, upload_id: fileInfo.id }));
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
