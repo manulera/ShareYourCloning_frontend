@@ -24,6 +24,7 @@ function FinishedSource({ sourceId }) {
       }
       break;
     case 'manually_typed': message = 'Manually typed sequence'; break;
+    case 'crispr': message = 'CRISPR'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
     case 'restriction': message = `Restriction with ${source.restriction_enzymes.join(' ')}`; break;
@@ -39,6 +40,7 @@ function FinishedSource({ sourceId }) {
     }
       break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
+    case 'crispr': message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${primers.find((p) => source.guide === p.id).name} as a guide`; break;
     case 'repository_id': {
       const { repository } = source;
       let url = '';
