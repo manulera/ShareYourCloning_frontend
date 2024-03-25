@@ -28,17 +28,23 @@ function SourceHomologousRecombination({ sourceId }) {
 
   const template = inputEntityIds.length > 0 ? inputEntityIds[0] : null;
   const insert = inputEntityIds.length > 1 ? inputEntityIds[1] : null;
-  const setTemplate = (event) => dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert] }));
+  const setTemplate = (event) => {
+    if (insert) {
+      dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert] }));
+    } else {
+      dispatch(updateSource({ id: sourceId, input: [Number(event.target.value)] }));
+    }
+  };
   const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)] }));
 
   return (
     <div className="ligation">
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
-          <SingleInputSelector label="Template sequence" {...{ selectedId: template, onChange: setTemplate, inputEntityIds }} />
+          <SingleInputSelector label="Template sequence" {...{ selectedId: template, onChange: setTemplate, inputEntityIds: [...new Set(inputEntityIds)] }} />
         </FormControl>
         <FormControl fullWidth>
-          <SingleInputSelector label="Insert sequence" {...{ selectedId: insert, onChange: setInsert, inputEntityIds }} />
+          <SingleInputSelector label="Insert sequence" {...{ selectedId: insert, onChange: setInsert, inputEntityIds: [...new Set(inputEntityIds)] }} />
         </FormControl>
         <FormControl fullWidth>
           <TextField

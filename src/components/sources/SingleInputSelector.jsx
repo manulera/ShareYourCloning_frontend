@@ -15,7 +15,7 @@ function SingleInputSelector({ selectedId, onChange, label, inputEntityIds }) {
         labelId="select-single-inputs"
         label={label}
       >
-        {options.map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>)}
+        {options.sort().map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>)}
       </Select>
     </>
   );
