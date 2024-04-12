@@ -96,6 +96,40 @@ Check [contribution guidelines in the main repository](https://github.com/manule
 
 For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
+## Tests
+
+To run the tests, first run the dev server with `yarn start`.
+
+To run most tests, you will need the backend to be running at localhost:3000. You can see how to do that in the [backend repo](https://github.com/manulera/ShareYourCloning_backend). For the github actions tests, a submodule is used (see below).
+
+To run the tests:
+
+```bash
+# Open cypress UI
+yarn cypress open
+
+# Run a particular test in the command line
+yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
+```
+
+### Actions and submodule
+
+The tests run with cypress require the submodule ShareYourCloning_backend to be included. If you want to include it locally:
+
+```bash
+git submodule update --init
+```
+
+If you want to change the commit of the submodule:
+
+```bash
+cd ShareYourCloning_backend
+git checkout -b the-branch
+git pull origin the-branch
+cd ..
+# commit the frontend repo normally
+```
+
 ## Random
 
 This project was started with the [demo of Open Vector Editor](https://github.com/tnrich/ove-react-demo-repo).
@@ -117,3 +151,6 @@ Then, when running the video.
 CYPRESS_NO_COMMAND_LOG=1 yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
 ```
 
+### eLabFTW
+
+The API keys should be in the ignored file `.env.development.local`

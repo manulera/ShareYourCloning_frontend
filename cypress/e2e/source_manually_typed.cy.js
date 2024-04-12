@@ -9,8 +9,7 @@ describe('ManuallyTyped Source', () => {
     cy.get('#tab-panel-0 #sequence').clear('a');
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
-    cy.wait('@request', { requestTimeout: 20000 });
-    cy.get('.select-source > :nth-child(2)').should('have.text', 'Manually typed sequence');
+    cy.get('.select-source > :nth-child(2)', { timeout: 20000 }).should('have.text', 'Manually typed sequence');
     cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1) > .node-text > .corner-id').should('have.text', '2');
   });
 

@@ -8,7 +8,21 @@ function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   let message = '';
   switch (source.type) {
-    case 'file': message = `Sequence ${source.index_in_file + 1} read from file ${source.file_name}`; break;
+    case 'file':
+      if (source.info && source.info.file_from === 'eLabFTW') {
+        message = (
+          <>
+            Read from file
+            {' '}
+            <a target="_blank" rel="noopener noreferrer" href={`https://elab.local:3148/database.php?mode=view&id=${source.info.item_id}`}>{source.file_name}</a>
+            {' '}
+            from eLabFTW
+          </>
+        );
+      } else {
+        message = `Read from uploaded file ${source.file_name}`; break;
+      }
+      break;
     case 'manually_typed': message = 'Manually typed sequence'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
@@ -81,6 +95,7 @@ function FinishedSource({ sourceId }) {
       );
       break;
     }
+    case 'elabftw': message = 'Request to eLabFTW'; break;
     default: message = '';
   }
   return (

@@ -11,6 +11,7 @@ function SourceFile({ sourceId }) {
     const files = Array.from(event.target.files);
     const formData = new FormData();
     formData.append('file', files[0]);
+    formData.append('info_str', JSON.stringify({ file_from: 'browser_upload' }));
     const config = {
       headers: {
         'content-type': 'multipart/form-data',

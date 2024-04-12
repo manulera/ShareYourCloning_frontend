@@ -143,7 +143,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
 
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onAssemblyIdChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCF_000002945.1" />
+      <TextFieldValidate onChange={onAssemblyIdChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCA_000002945.3" />
       {assemblyId && !noAnnotationError && (
         <>
           <KnownSpeciesField species={species} />

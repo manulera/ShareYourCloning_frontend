@@ -2,24 +2,22 @@ import * as React from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import { Alert, Button, FormControl } from '@mui/material';
+import { Alert, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-export default function GetRequestMultiSelect({ getOptionsFromResponse, url, label, messages, onChange, multiple = true, getOptionLabel }) {
+export default function GetRequestMultiSelect({ getOptionsFromResponse, url, label, messages, onChange, multiple = true, autoComplete = true, getOptionLabel, requestHeaders = {} }) {
   const { loadingMessage, errorMessage } = messages;
   const [options, setOptions] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [error, setError] = React.useState(false);
   const [waitingMessage, setWaitingMessage] = React.useState(loadingMessage);
   React.useEffect(() => {
-    console.log(url);
-    // Built like this in case trailing slash
     axios
-      .get(url).then(({ data }) => {
+      .get(url, { headers: requestHeaders }).then(({ data }) => {
         setWaitingMessage(null);
         setOptions(getOptionsFromResponse(data));
         setError(false);
       }).catch((e) => { setWaitingMessage(errorMessage); setError(true); });
-  }, [connectAttempt]);
+  }, [connectAttempt, url, requestHeaders, getOptionsFromResponse]);
 
   if (error) {
     return (
@@ -36,24 +34,55 @@ export default function GetRequestMultiSelect({ getOptionsFromResponse, url, lab
       </Alert>
     );
   }
+
+  if (waitingMessage) {
+    return (
+
+      <Alert severity="info" icon={<CircularProgress color="inherit" size="1em" />}>
+        {waitingMessage}
+      </Alert>
+
+    );
+  }
+
   return (
     <FormControl fullWidth>
-      <Autocomplete
-        multiple={multiple}
-        onChange={(event, value) => { onChange(value); }}
-        id="tags-standard"
-        options={options}
-        getOptionLabel={getOptionLabel}
-        defaultValue={[]}
-        renderInput={(params) => (
-          <TextField
-            {...params}
+      {autoComplete ? (
+        <Autocomplete
+          multiple={multiple}
+          onChange={(event, value) => { onChange(value); }}
+          id="tags-standard"
+          options={options}
+          getOptionLabel={getOptionLabel}
+          defaultValue={multiple ? [] : ''}
+          freeSolo
+          forcePopupIcon
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={label}
+              helperText={waitingMessage}
+              error={error}
+            />
+          )}
+        />
+      ) : (
+        <>
+          <InputLabel id={`select-${label.replaceAll(' ', '-')}`}>{label}</InputLabel>
+          <Select
+            multiple={multiple}
+            onChange={(event) => { onChange(event.target.value, options); }}
             label={label}
-            helperText={waitingMessage}
-            error={error}
-          />
-        )}
-      />
+            defaultValue={multiple ? [] : ''}
+          >
+            {options.map((option) => (
+              <MenuItem key={getOptionLabel(option)} value={getOptionLabel(option)}>
+                {getOptionLabel(option)}
+              </MenuItem>
+            ))}
+          </Select>
+        </>
+      )}
     </FormControl>
   );
 }
