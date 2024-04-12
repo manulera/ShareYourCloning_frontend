@@ -38,7 +38,7 @@ function SourceManuallyTyped({ sourceId }) {
     event.preventDefault();
     setSubmissionAttempted(true);
     if (submissionAllowed) {
-      sendPostRequest('manually_typed', { user_input: userInputRef.current.value, circular: isCircular });
+      sendPostRequest('manually_typed', { user_input: userInput, circular: isCircular });
     }
   };
 
