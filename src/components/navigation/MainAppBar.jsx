@@ -35,7 +35,8 @@ function MainAppBar() {
   const fileMenu = [
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
-    { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
+    // elab-demo
+    // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
 
   const handleCloseDialog = (fileName) => {
@@ -82,7 +83,8 @@ function MainAppBar() {
         </Toolbar>
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
-      <DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />
+      {/* elab-demo */}
+      {/* <DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} /> */}
     </AppBar>
   );
 }

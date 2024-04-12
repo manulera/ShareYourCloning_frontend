@@ -68,7 +68,7 @@ export default function GetRequestMultiSelect({ getOptionsFromResponse, url, lab
         />
       ) : (
         <>
-          <InputLabel id="select-single-file-elabtw">{label}</InputLabel>
+          <InputLabel id={`select-${label.replaceAll(' ', '-')}`}>{label}</InputLabel>
           <Select
             multiple={multiple}
             onChange={(event) => { onChange(event.target.value, options); }}
