@@ -96,6 +96,25 @@ Check [contribution guidelines in the main repository](https://github.com/manule
 
 For the `eslint` to work, you will need the [eslint module](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
+## Tests
+
+The tests run with cypress require the submodule ShareYourCloning_backend to be included. For that:
+
+```bash
+git submodule update --init
+```
+
+If you want to change the commit of the submodule:
+
+```bash
+cd ShareYourCloning_backend
+git checkout -b the-branch
+git pull origin the-branch
+cd ..
+# commit normally
+```
+
+
 ## Random
 
 This project was started with the [demo of Open Vector Editor](https://github.com/tnrich/ove-react-demo-repo).
