@@ -98,7 +98,23 @@ For the `eslint` to work, you will need the [eslint module](https://marketplace.
 
 ## Tests
 
-The tests run with cypress require the submodule ShareYourCloning_backend to be included. For that:
+To run the tests, first run the dev server with `yarn start`.
+
+To run most tests, you will need the backend to be running at localhost:3000. You can see how to do that in the [backend repo](https://github.com/manulera/ShareYourCloning_backend). For the github actions tests, a submodule is used (see below).
+
+To run the tests:
+
+```bash
+# Open cypress UI
+yarn cypress open
+
+# Run a particular test in the command line
+yarn cypress run --spec cypress/e2e/source_genome_region.cy.js
+```
+
+### Actions and submodule
+
+The tests run with cypress require the submodule ShareYourCloning_backend to be included. If you want to include it locally:
 
 ```bash
 git submodule update --init
@@ -111,9 +127,8 @@ cd ShareYourCloning_backend
 git checkout -b the-branch
 git pull origin the-branch
 cd ..
-# commit normally
+# commit the frontend repo normally
 ```
-
 
 ## Random
 

@@ -9,7 +9,7 @@ function FinishedSource({ sourceId }) {
   let message = '';
   switch (source.type) {
     case 'file':
-      if (source.info.file_from === 'eLabFTW') {
+      if (source.info && source.info.file_from === 'eLabFTW') {
         message = (
           <>
             Read from file
