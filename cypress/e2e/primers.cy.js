@@ -22,6 +22,11 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-table-container tr').contains('fwd-2').should('exist');
     cy.get('.primer-table-container tr').contains('atg').should('exist');
   });
+  // it('removes spaces on paste', () => {
+  //   cy.get('.primer-form-container').contains('Add Primer').click();
+  //   cy.get('form.primer-row').should('exist');
+  //   // TODO: Implement paste command
+  // });
   it('Can close add form', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
