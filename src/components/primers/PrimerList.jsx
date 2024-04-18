@@ -8,7 +8,6 @@ import './PrimerList.css';
 
 function PrimerList() {
   const primers = useSelector((state) => state.primers.primers, shallowEqual);
-  console.log(primers);
   const { deletePrimer: deleteAction, addPrimer: addAction, editPrimer: editAction } = primersActions;
   const dispatch = useDispatch();
   const deletePrimer = (id) => dispatch(deleteAction(id));

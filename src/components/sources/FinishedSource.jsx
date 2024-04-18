@@ -33,9 +33,9 @@ function FinishedSource({ sourceId }) {
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
     }
       break;
-    case 'templateless_PCR': {
+    case 'oligonucleotide_hybridization': {
       const primers = useSelector((state) => state.primers.primers);
-      message = `Templateless PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
+      message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;
     }
       break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
@@ -96,6 +96,7 @@ function FinishedSource({ sourceId }) {
       break;
     }
     case 'elabftw': message = 'Request to eLabFTW'; break;
+    case 'polymerase_extension': message = 'Polymerase extension'; break;
     default: message = '';
   }
   return (

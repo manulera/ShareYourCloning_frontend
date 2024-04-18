@@ -17,8 +17,8 @@ const MenuProps = {
   },
 };
 
-function SourcePCR({ sourceId }) {
-  // Represents a PCR, if inputEntities is empty, it is a templateless PCR
+function SourcePCRorHybridization({ sourceId }) {
+  // Represents a PCR if inputs != [], else is a oligo hybridization
 
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
@@ -37,14 +37,18 @@ function SourcePCR({ sourceId }) {
     const requestData = {
       sequences: inputEntities,
       primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
-      source: { input: inputEntities.map((e) => e.id), forward_primer: forwardPrimerId, reverse_primer: reversePrimerId },
+      source: { input: inputEntities.map((e) => e.id) },
     };
 
     if (inputEntities.length === 0) {
-      sendPostRequest('templateless_pcr', requestData, { params: {
+      requestData.source.forward_oligo = forwardPrimerId;
+      requestData.source.reverse_oligo = reversePrimerId;
+      sendPostRequest('oligonucleotide_hybridization', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
       } });
     } else {
+      requestData.source.forward_primer = forwardPrimerId;
+      requestData.source.reverse_primer = reversePrimerId;
       sendPostRequest('pcr', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
@@ -53,7 +57,7 @@ function SourcePCR({ sourceId }) {
   };
 
   return (
-    <div className="restriction">
+    <div className="pcr_or_hybridization">
       <form onSubmit={onSubmit}>
         {/* TODO: set id */}
         <FormControl fullWidth>
@@ -101,7 +105,9 @@ function SourcePCR({ sourceId }) {
           </FormControl>
         )}
         {reversePrimerId && forwardPrimerId && (
-          <SubmitButtonBackendAPI requestStatus={requestStatus}>Perform PCR</SubmitButtonBackendAPI>
+          <SubmitButtonBackendAPI requestStatus={requestStatus}>
+            {inputEntities.length === 0 ? 'Perform hybridization' : 'Perform PCR'}
+          </SubmitButtonBackendAPI>
         )}
       </form>
       <MultipleOutputsSelector {...{
@@ -112,4 +118,4 @@ function SourcePCR({ sourceId }) {
   );
 }
 
-export default SourcePCR;
+export default SourcePCRorHybridization;

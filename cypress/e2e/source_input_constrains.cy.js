@@ -1,4 +1,4 @@
-const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation'];
+const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'polymerase_extension'];
 const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
@@ -25,7 +25,7 @@ describe('Test Source input constrains', () => {
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="templateless_pcr"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="oligonucleotide_hybridization"]').should('exist');
   });
   it('All experimental sources are available as children of a sequence', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
@@ -62,7 +62,7 @@ describe('Test Source input constrains', () => {
         cy.get(`li[data-value="${value}"]`).click();
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
         // Should have all options since there is only one input
-        cy.get('ul[aria-labelledby="select-source-5-label"] li').should('have.length', 6);
+        cy.get('ul[aria-labelledby="select-source-5-label"] li').should('have.length', 7);
         cy.get(`li[data-value="${value}"]`).click();
         // Add another source
         cy.get('li#source-5 .MuiInputBase-root').eq(1).click();
