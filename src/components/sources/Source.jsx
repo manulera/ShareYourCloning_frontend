@@ -6,15 +6,12 @@ import SourceRestriction from './SourceRestriction';
 import SourceAssembly from './SourceAssembly';
 import SourceTypeSelector from './SourceTypeSelector';
 import SourceBox from './SourceBox';
-import SourcePCR from './SourcePCR';
+import SourcePCRorHybridization from './SourcePCRorHybridization';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
 import ELabFTWSource from './ELabFTWSource';
-
-// TODO
-// You should be able to chose based on the input. No input -> only file or request
-// An input -> no file nor request, but the others yes
+import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -37,15 +34,17 @@ function Source({ sourceId }) {
     case 'homologous_recombination':
       specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
     case 'PCR':
-      specificSource = <SourcePCR {...{ sourceId }} />; break;
+      specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
     case 'restriction_and_ligation':
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
     case 'genome_region':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'manually_typed':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
-    case 'templateless_pcr':
-      specificSource = <SourcePCR {...{ sourceId, templateLess: true }} />; break;
+    case 'oligonucleotide_hybridization':
+      specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
+    case 'polymerase_extension':
+      specificSource = <SourcePolymeraseExtension {...{ sourceId }} />; break;
     case 'elabftw':
       specificSource = <ELabFTWSource {...{ sourceId }} />; break;
     default:

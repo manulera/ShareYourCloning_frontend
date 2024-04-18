@@ -15,9 +15,11 @@ function OverhangsDisplay({ entity }) {
 
   return (
     <div className="overhang-representation">
-      <div>{watson}</div>
-      <div>{middle}</div>
-      <div>{crick}</div>
+      {watson}
+      <br />
+      {middle}
+      <br />
+      {crick}
     </div>
   );
 }

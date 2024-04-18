@@ -28,19 +28,16 @@ button {
 }
 
 .overhang-representation {
-    text-align: center;
     display: inline-block;
     margin-top: 10px;
     font-family: monospace;
     font-size: small;
-}
-
-.overhang-representation div {
-
-    text-align: left;
     /* Prevent the removal of spaces that make sequences align correctly */
-    white-space: pre-wrap;
+    white-space: pre;
+    max-width: 300px;
+    overflow-x: scroll;
 }
+
 
 div.hang-from-node {
     box-sizing: content-box;

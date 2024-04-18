@@ -1,8 +1,6 @@
 import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
 
-export function formatSequenceForOverhangDisplay(
-  sequenceString, overhangCrick3prime, overhangWatson3prime,
-) {
+export function formatSequenceForOverhangDisplay(sequenceString, overhangCrick3prime, overhangWatson3prime) {
   let watson = sequenceString;
   let crick = getReverseComplementSequenceString(sequenceString);
   // If necessary, we trim the left side
