@@ -3,9 +3,14 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { InputLabel, MenuItem, Select } from '@mui/material';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-function SingleInputSelector({ selectedId, onChange, label, inputEntityIds }) {
+function SingleInputSelector({ selectedId, onChange, label, inputEntityIds, allowUnset = false }) {
   const idsWithoutChild = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
   const options = [...idsWithoutChild, ...inputEntityIds];
+  const renderedOptions = options.sort().map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>);
+  if (allowUnset) {
+    renderedOptions.unshift(<MenuItem key="unset" value=""><em>None</em></MenuItem>);
+  }
+  console.log(selectedId);
   return (
     <>
       <InputLabel id="select-single-inputs">{label}</InputLabel>
@@ -15,7 +20,7 @@ function SingleInputSelector({ selectedId, onChange, label, inputEntityIds }) {
         labelId="select-single-inputs"
         label={label}
       >
-        {options.sort().map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>)}
+        {renderedOptions}
       </Select>
     </>
   );
