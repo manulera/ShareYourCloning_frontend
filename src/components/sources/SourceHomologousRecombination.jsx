@@ -11,10 +11,13 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ sourceId }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const inputEntityIds = inputEntities.map((e) => e.id);
+  const [template, setTemplate] = React.useState(inputEntityIds.length > 0 ? inputEntityIds[0] : null);
+  const [insert, setInsert] = React.useState(inputEntityIds.length > 1 ? inputEntityIds[1] : null);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
-  const inputEntityIds = inputEntities.map((e) => e.id);
+
   const minimalHomologyRef = React.useRef(null);
   const onSubmit = (event) => {
     event.preventDefault();
@@ -26,25 +29,48 @@ function SourceHomologousRecombination({ sourceId }) {
     sendPostRequest('homologous_recombination', requestData, config);
   };
 
-  const template = inputEntityIds.length > 0 ? inputEntityIds[0] : null;
-  const insert = inputEntityIds.length > 1 ? inputEntityIds[1] : null;
-  const setTemplate = (event) => {
+  const onTemplateChange = (event) => {
+    setTemplate(Number(event.target.value));
+    const newInput = [Number(event.target.value)];
     if (insert) {
-      dispatch(updateSource({ id: sourceId, input: [Number(event.target.value), insert] }));
+      newInput.push(insert);
+    }
+    dispatch(updateSource({ id: sourceId, input: newInput }));
+  };
+
+  const onInsertChange = (event) => {
+    if (event.target.value === '') {
+      setInsert(null);
+      dispatch(updateSource({ id: sourceId, input: [template] }));
     } else {
-      dispatch(updateSource({ id: sourceId, input: [Number(event.target.value)] }));
+      setInsert(Number(event.target.value));
+      dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)] }));
     }
   };
-  const setInsert = (event) => dispatch(updateSource({ id: sourceId, input: [template, Number(event.target.value)] }));
 
   return (
     <div className="ligation">
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
-          <SingleInputSelector label="Template sequence" {...{ selectedId: template, onChange: setTemplate, inputEntityIds: [...new Set(inputEntityIds)] }} />
+          <SingleInputSelector
+            label="Template sequence"
+            {...{ selectedId: template,
+              onChange: onTemplateChange,
+              inputEntityIds: [...new Set(inputEntityIds)].filter(
+                (id) => id !== insert,
+              ) }}
+          />
         </FormControl>
         <FormControl fullWidth>
-          <SingleInputSelector label="Insert sequence" {...{ selectedId: insert, onChange: setInsert, inputEntityIds: [...new Set(inputEntityIds)] }} />
+          <SingleInputSelector
+            label="Insert sequence"
+            allowUnset
+            {...{ selectedId: insert,
+              onChange: onInsertChange,
+              inputEntityIds: [...new Set(inputEntityIds)].filter(
+                (id) => id !== template,
+              ) }}
+          />
         </FormControl>
         <FormControl fullWidth>
           <TextField
