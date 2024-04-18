@@ -13,8 +13,8 @@ function PrimerForm({
   const [errorStatus, setErrorStatus] = React.useState(primer.id ? { name: false, sequence: false } : { name: true, sequence: true });
   const [touched, setTouched] = React.useState(false);
   const [submissionAttempted, setSubmissionAttempted] = React.useState(false);
-  const nameRef = React.useRef(null);
-  const sequenceRef = React.useRef(null);
+  const [name, setName] = React.useState(primer.name);
+  const [sequence, setSequence] = React.useState(primer.sequence);
   const updateValidationStatus = (fieldName, valid) => {
     setTouched(true);
     // Update the validation status for the given field (taken from the ref.id)
@@ -31,8 +31,17 @@ function PrimerForm({
     if (submissionAllowed) {
       // Id is null in the case of adding new primer
       const { id } = primer;
-      submitPrimer({ id, name: nameRef.current.value, sequence: sequenceRef.current.value });
+      submitPrimer({ id, name, sequence });
       cancelForm();
+    }
+  };
+
+  const onSequenceChange = (event) => {
+    // Remove all non-letter characters on paste
+    if (event.nativeEvent.inputType === 'insertFromPaste') {
+      setSequence(event.target.value.replace(/[^a-zA-Z]/g, ''));
+    } else {
+      setSequence(event.target.value);
     }
   };
 
@@ -44,7 +53,8 @@ function PrimerForm({
       <ValidatedTextField
         id="name"
         label="Name"
-        inputRef={nameRef}
+        value={name}
+        onInputChange={(e) => setName(e.target.value)}
         sx={{ m: 1, display: { width: '20%' } }}
         submissionAttempted={submissionAttempted}
         defaultValue={primer.name}
@@ -56,7 +66,8 @@ function PrimerForm({
       <ValidatedTextField
         id="sequence"
         label="Sequence"
-        inputRef={sequenceRef}
+        value={sequence}
+        onInputChange={onSequenceChange}
         sx={{ m: 1, display: { width: '60%' } }}
         className="sequence"
         submissionAttempted={submissionAttempted}

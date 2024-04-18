@@ -33,21 +33,23 @@ describe('Test Source input constrains', () => {
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
-    cy.get('li#source-3 .MuiInputBase-root').click();
+    cy.get('li#source-3 .MuiInputBase-root', { timeout: 20000 }).click();
     checkAllOptions(3);
   });
-  it('All experimental sources are available as children of a sequence', () => {
+  it('Constrains based on inputs are applied correctly', () => {
     // Manually type one sequence
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="manually_typed"]').click();
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     // Manually type another one
-    cy.get('svg[data-testid="AddCircleIcon"]').last().click();
+    cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="manually_typed"]').click();
     cy.get('#tab-panel-0 #sequence').type('atata');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
+    // Wait for request to resolve
+    cy.get('li#sequence-4', { timeout: 20000 }).should('exist');
     // Go into PCR
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
     cy.get('li#source-5 .MuiInputBase-root').click();

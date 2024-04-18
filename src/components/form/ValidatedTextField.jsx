@@ -2,15 +2,14 @@ import { TextField } from '@mui/material';
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
 
-function ValidatedTextField({ inputRef, errorChecker, updateValidationStatus, required, submissionAttempted, floatingHelperText, initialHelperText = '', ...rest }) {
+function ValidatedTextField({ id, value, onInputChange, errorChecker, updateValidationStatus, required, submissionAttempted, floatingHelperText, initialHelperText = '', ...rest }) {
   const defaultPars = { inputProps: { style: { fontSize: 14 } }, FormHelperTextProps: { component: 'div' } };
   const [error, setError] = React.useState(false);
   const [helperText, setHelperText] = React.useState(initialHelperText);
-  const [value, setValue] = React.useState(rest.defaultValue || '');
   const [touched, setTouched] = React.useState(false);
 
   const handleChange = (event) => {
-    setValue(event.target.value);
+    onInputChange(event);
     setTouched(true);
   };
 
@@ -24,16 +23,16 @@ function ValidatedTextField({ inputRef, errorChecker, updateValidationStatus, re
     if (required && value.length === 0) {
       setError(true);
       setHelperText('Field required');
-      updateValidationStatus(inputRef.current.id, true);
+      updateValidationStatus(id, true);
       return;
     }
     const { error: newError, helperText: newHelperText } = errorChecker(value);
     setError(newError);
     setHelperText(newHelperText);
-    updateValidationStatus(inputRef.current.id, newError);
+    updateValidationStatus(id, newError);
   }, [value, touched, submissionAttempted]);
   const renderedHelperText = floatingHelperText ? formHelperFormatted(helperText) : helperText;
-  return (<TextField inputRef={inputRef} {...defaultPars} {...rest} onChange={handleChange} error={error} helperText={renderedHelperText} />);
+  return (<TextField id={id} value={value} {...defaultPars} {...rest} onChange={handleChange} error={error} helperText={renderedHelperText} />);
 }
 
 export default ValidatedTextField;
