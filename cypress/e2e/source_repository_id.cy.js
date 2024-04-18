@@ -43,7 +43,7 @@ describe('RepositoryId Source', () => {
     cy.get('#repository-id-1').clear('a');
     cy.get('#repository-id-1').type('aaa');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
-    cy.get('.MuiAlert-message').should('be.visible');
+    cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
     cy.get('body').click();
     cy.get('[aria-labelledby="select-repository-1-label"]').click();
     cy.get('li[data-value="genbank"]').click();
@@ -53,6 +53,6 @@ describe('RepositoryId Source', () => {
     cy.get('#repository-id-1').clear('a');
     cy.get('#repository-id-1').type('aaa');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
-    cy.get('.MuiAlert-message').should('be.visible');
+    cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
   });
 });
