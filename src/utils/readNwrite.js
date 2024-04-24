@@ -13,7 +13,8 @@ export const downloadStateAsJson = async (entities, sources, description, primer
   };
   // json
   const fileName = 'file';
-  const json = JSON.stringify(output);
+  // Pretty print json and add a newline at the end
+  const json = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([json], { type: 'application/json' });
   const href = await URL.createObjectURL(blob);
   const link = document.createElement('a');
