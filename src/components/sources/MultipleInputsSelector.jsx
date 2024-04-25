@@ -4,17 +4,6 @@ import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/mater
 import { cloningActions } from '../../store/cloning';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
-const MenuProps = {
-  PaperProps: {
-    style: {
-      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
-};
-
 function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
   const dispatch = useDispatch();
   const { updateSource } = cloningActions;
@@ -51,13 +40,11 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
             ))}
           </Box>
         )}
-        MenuProps={MenuProps}
       >
         {options.map((id) => (
           <MenuItem
             key={id}
             value={id}
-            // style={getStyles(name, personName, theme)}
           >
             {id}
           </MenuItem>

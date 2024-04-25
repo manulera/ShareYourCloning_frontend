@@ -10,7 +10,6 @@ function SingleInputSelector({ selectedId, onChange, label, inputEntityIds, allo
   if (allowUnset) {
     renderedOptions.unshift(<MenuItem key="unset" value=""><em>None</em></MenuItem>);
   }
-  console.log(selectedId);
   return (
     <>
       <InputLabel id="select-single-inputs">{label}</InputLabel>
