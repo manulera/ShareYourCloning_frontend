@@ -84,18 +84,59 @@ describe('Test Source input constrains', () => {
         checkAllOptions(5);
         cy.get('body').click(0, 0);
       } else {
-        cy.log('Skipping homologous_recombination');
-        console.warn('Skipping homologous_recombination');
-        // cy.get('li#source-5 .MuiInputBase-root').eq(2).click();
-        // cy.get('li[data-value="4"]').click();
-        // cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
-        // checkMultiInputOptions(5);
-        // cy.get('body').click(0, 0);
-        // cy.get('li#source-5 .MuiInputBase-root').eq(2).click();
-        // cy.get('li[data-value="2"]').click();
-        // cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
-        // checkAllOptions(5);
-        // cy.get('body').click(0, 0);
+        cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
+        cy.get(`li[data-value="${value}"]`).click();
+        cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
+        // Should have all options since there is only one input
+        checkAllOptions(5);
+        cy.get(`li[data-value="${value}"]`).click();
+        cy.get('label').contains('Template sequence').siblings('div').children('[aria-labelledby="select-single-inputs"]')
+          .first()
+          .click();
+        // Two inputs listed
+        cy.get('ul[role="listbox"] li').should('have.length', 2);
+        // Cannot unselect (source still hanging from sequence)
+        cy.get('li[data-value="2"]').click();
+        cy.get('li#source-5').children('ul').children('li#sequence-2').should('exist');
+
+        // Can switch template
+        cy.get('label').contains('Template sequence').siblings('div').children('[aria-labelledby="select-single-inputs"]')
+          .first()
+          .click();
+        cy.get('li[data-value="4"]').click();
+        cy.get('li#source-5').children('ul').children('li#sequence-4').should('exist');
+
+        // Can select insert
+        cy.get('label').contains('Insert sequence').siblings('div').children('[aria-labelledby="select-single-inputs"]')
+          .first()
+          .click();
+        cy.get('ul[role="listbox"] li').should('have.length', 2);
+        cy.get('ul[role="listbox"] li').contains('None');
+        cy.get('ul[role="listbox"] li').contains('2');
+        cy.get('li[data-value="2"]').click();
+
+        // Insert is set as input of the source
+        cy.get('li#source-5').children('ul').children('li#sequence-2').should('exist');
+        cy.get('li#source-5').children('ul').children('li#sequence-4').should('exist');
+
+        // Can unset insert
+        cy.get('label').contains('Insert sequence').siblings('div').children('[aria-labelledby="select-single-inputs"]')
+          .first()
+          .click();
+        cy.get('ul[role="listbox"] li').should('have.length', 2);
+        cy.get('ul[role="listbox"] li').contains('None');
+        cy.get('ul[role="listbox"] li').contains('2');
+        cy.get('li[data-value=""]').click();
+
+        // Insert is unset
+        cy.get('li#source-5').children('ul').children('li#sequence-2').should('not.exist');
+        cy.get('li#source-5').children('ul').children('li#sequence-4').should('exist');
+
+        // Switch back to template being 2
+        cy.get('label').contains('Template sequence').siblings('div').children('[aria-labelledby="select-single-inputs"]')
+          .first()
+          .click();
+        cy.get('li[data-value="2"]').click();
       }
     });
   });
