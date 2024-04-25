@@ -7,17 +7,20 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 import { cloningActions } from '../../store/cloning';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
+import MultiplePrimerSelector from '../primers/MultiplePrimerSelector';
 
 // A component representing the ligation of several fragments
-function SourceHomologousRecombination({ sourceId }) {
+function SourceHomologousRecombination({ sourceId, isCrispr = false }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const inputEntityIds = inputEntities.map((e) => e.id);
   const [template, setTemplate] = React.useState(inputEntityIds.length > 0 ? inputEntityIds[0] : null);
   const [insert, setInsert] = React.useState(inputEntityIds.length > 1 ? inputEntityIds[1] : null);
+  const [selectedPrimers, setSelectedPrimers] = React.useState([]);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
 
+  const allowSubmit = (template !== null && insert !== null) && (isCrispr ? selectedPrimers.length > 0 : true);
   const minimalHomologyRef = React.useRef(null);
   const onSubmit = (event) => {
     event.preventDefault();
@@ -26,7 +29,13 @@ function SourceHomologousRecombination({ sourceId }) {
       sequences: inputEntities,
     };
     const config = { params: { minimal_homology: minimalHomologyRef.current.value } };
-    sendPostRequest('homologous_recombination', requestData, config);
+    if (isCrispr) {
+      requestData.guides = selectedPrimers;
+      requestData.source.guides = selectedPrimers.map((p) => p.id);
+      sendPostRequest('crispr', requestData, config);
+    } else {
+      sendPostRequest('homologous_recombination', requestData, config);
+    }
   };
 
   const onTemplateChange = (event) => {
@@ -80,7 +89,12 @@ function SourceHomologousRecombination({ sourceId }) {
             defaultValue={40}
           />
         </FormControl>
-        <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">Recombine</SubmitButtonBackendAPI>
+        {isCrispr && (<MultiplePrimerSelector {...{ onChange: setSelectedPrimers, label: 'Select gRNAs (from primers)' }} />)}
+        { allowSubmit && (
+        <SubmitButtonBackendAPI requestStatus={requestStatus} color="success">
+          {isCrispr ? 'Perform CRISPR' : 'Recombine'}
+        </SubmitButtonBackendAPI>
+        )}
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,

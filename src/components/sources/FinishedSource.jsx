@@ -39,6 +39,12 @@ function FinishedSource({ sourceId }) {
     }
       break;
     case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
+    case 'crispr': {
+      const primers = useSelector((state) => state.primers.primers);
+      const guidesString = source.guides.map((id) => primers.find((p) => id === p.id).name).join(', ');
+      message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${guidesString} as a guide${source.guides.length > 1 ? 's' : ''}`;
+    }
+      break;
     case 'repository_id': {
       const { repository } = source;
       let url = '';

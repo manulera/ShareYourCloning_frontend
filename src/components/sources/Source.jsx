@@ -41,6 +41,8 @@ function Source({ sourceId }) {
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'manually_typed':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
+    case 'crispr':
+      specificSource = <SourceHomologousRecombination {...{ sourceId, isCrispr: true }} />; break;
     case 'oligonucleotide_hybridization':
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
     case 'polymerase_extension':

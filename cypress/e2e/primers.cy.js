@@ -4,10 +4,12 @@ describe('Tests primer functionality', () => {
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
   it('Can delete primers', () => {
-    cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', 2);
-    cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
-    cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', 1);
-    cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
+    let examplePrimerNumber = 5;
+    while (examplePrimerNumber > 0) {
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', examplePrimerNumber);
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
+      examplePrimerNumber -= 1;
+    }
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('not.exist');
   });
   it('Can add primers', () => {

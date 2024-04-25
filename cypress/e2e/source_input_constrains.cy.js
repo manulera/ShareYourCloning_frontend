@@ -1,5 +1,5 @@
-const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'polymerase_extension'];
-const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation'];
+const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'polymerase_extension', 'crispr'];
+const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'crispr'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
   allOptions.forEach((value) => {
@@ -57,12 +57,12 @@ describe('Test Source input constrains', () => {
     cy.get('body').click(0, 0);
     // Change to multi-input
     multiInputOptions.forEach((value) => {
-      if (value !== 'homologous_recombination') {
+      if (value !== 'homologous_recombination' && value !== 'crispr') {
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
         cy.get(`li[data-value="${value}"]`).click();
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
         // Should have all options since there is only one input
-        cy.get('ul[aria-labelledby="select-source-5-label"] li').should('have.length', 7);
+        checkAllOptions(5);
         cy.get(`li[data-value="${value}"]`).click();
         // Add another source
         cy.get('li#source-5 .MuiInputBase-root').eq(1).click();

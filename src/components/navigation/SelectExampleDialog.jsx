@@ -26,6 +26,10 @@ const examples = [
     title: 'Templateless PCR',
     link: 'templateless_PCR.json',
   },
+  {
+    title: 'CRISPR HDR',
+    link: 'crispr_hdr.json',
+  },
 ];
 
 function SelectExampleDialog({ onClose, open }) {

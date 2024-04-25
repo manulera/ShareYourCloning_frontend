@@ -30,6 +30,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     options.push(<MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>);
     options.push(<MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>);
     options.push(<MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>);
+    options.push(<MenuItem key="crispr" value="crispr">CRISPR</MenuItem>);
     options.push(<MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>);
   }
 
