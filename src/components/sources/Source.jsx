@@ -10,7 +10,6 @@ import SourcePCRorHybridization from './SourcePCRorHybridization';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
-import SourceCrispr from './SourceCrispr';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 
