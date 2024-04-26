@@ -53,9 +53,13 @@ export const fileReceivedToJson = (event, callback, onError) => {
 
 export const loadStateThunk = (newState) => async (dispatch, getState) => {
   dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
-  dispatch(setPrimers(newState.primers));
+  if (newState.primers) {
+    dispatch(setPrimers(newState.primers));
+  }
   dispatch(setMainSequenceId(null));
-  dispatch(setDescription(newState.description));
+  if (newState.description) {
+    dispatch(setDescription(newState.description));
+  }
 };
 
 export const resetStateThunk = () => async (dispatch) => {
