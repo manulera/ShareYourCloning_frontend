@@ -14,14 +14,20 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
-import './commands'
+import './commands';
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+import React from 'react';
+import { mount } from 'cypress/react18';
+import { Provider } from 'react-redux';
+import store from '../../src/store';
 
-import { mount } from 'cypress/react18'
-
-Cypress.Commands.add('mount', mount)
+Cypress.Commands.add('mount', (component, options = {}) => {
+  const { reduxStore = store, ...mountOptions } = options;
+  const wrapped = React.createElement(Provider, { store: reduxStore }, component);
+  return mount(wrapped, mountOptions);
+});
 
 // Example use:
 // cy.mount(<MyComponent />)
