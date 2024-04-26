@@ -1,3 +1,5 @@
+import { checkInputValue, setInputValue } from './common_functions';
+
 describe('ManuallyTyped Source', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -35,5 +37,16 @@ describe('ManuallyTyped Source', () => {
     cy.get('#tab-panel-0 #sequence-helper-text').should('have.text', 'Field required');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('#tab-panel-0 #sequence-helper-text').should('have.text', 'Field required');
+  });
+
+  it('applies the right constraints', () => {
+    // Set an overhang value
+    setInputValue('Overhang crick 3\'', '1', 'li#source-1');
+    cy.get('#tab-panel-0 span').contains('Circular DNA').click();
+    // Clicking on the circular should hide the overhang
+    cy.get('#source-1 label').contains('Overhang crick 3\'').should('not.exist');
+    // When unswitching, the value should be zero
+    cy.get('#tab-panel-0 span').contains('Circular DNA').click();
+    checkInputValue('Overhang crick 3\'', '0', 'li#source-1');
   });
 });
