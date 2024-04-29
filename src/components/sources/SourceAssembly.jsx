@@ -14,20 +14,27 @@ function SourceAssembly({ sourceId, assemblyType }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const inputEntityIds = inputEntities.map((e) => e.id);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
-  const minimalHomologyRef = React.useRef(null);
-  const allowPartialOverlapsRef = React.useRef(null);
-  const circularOnlyRef = React.useRef(null);
-  const bluntLigationRef = React.useRef(null);
+  const [minimalHomology, setMinimalHomology] = React.useState(20);
+  const [allowPartialOverlaps, setAllowPartialOverlaps] = React.useState(false);
+  const [circularOnly, setCircularOnly] = React.useState(false);
+  const [bluntLigation, setBluntLigation] = React.useState(false);
   const [enzymes, setEnzymes] = React.useState([]);
-  const [allowSubmit, setAllowSubmit] = React.useState(true);
 
-  React.useEffect(() => {
-    if (assemblyType === 'restriction_and_ligation' && enzymes.length === 0) {
-      setAllowSubmit(false);
-    } else {
-      setAllowSubmit(true);
+  const preventSubmit = (assemblyType === 'restriction_and_ligation' && enzymes.length === 0);
+
+  const flipAllowPartialOverlaps = () => {
+    setAllowPartialOverlaps(!allowPartialOverlaps);
+    if (!allowPartialOverlaps) {
+      setBluntLigation(false);
     }
-  }, [enzymes]);
+  };
+
+  const flipBluntLigation = () => {
+    setBluntLigation(!bluntLigation);
+    if (!bluntLigation) {
+      setAllowPartialOverlaps(false);
+    }
+  };
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -37,23 +44,23 @@ function SourceAssembly({ sourceId, assemblyType }) {
     };
     if (assemblyType === 'gibson_assembly') {
       const config = { params: {
-        minimal_homology: minimalHomologyRef.current.value,
-        circular_only: circularOnlyRef.current.checked,
+        minimal_homology: minimalHomology,
+        circular_only: circularOnly,
       } };
       sendPostRequest('gibson_assembly', requestData, config);
     } else if (assemblyType === 'restriction_and_ligation') {
       if (enzymes.length === 0) { return; }
       requestData.source.restriction_enzymes = enzymes;
       const config = { params: {
-        allow_partial_overlaps: allowPartialOverlapsRef.current.checked,
-        circular_only: circularOnlyRef.current.checked,
+        allow_partial_overlaps: allowPartialOverlaps,
+        circular_only: circularOnly,
       } };
       sendPostRequest('restriction_and_ligation', requestData, config);
     } else {
       const config = { params: {
-        allow_partial_overlaps: allowPartialOverlapsRef.current.checked,
-        circular_only: circularOnlyRef.current.checked,
-        blunt: bluntLigationRef.current.checked,
+        allow_partial_overlaps: allowPartialOverlaps,
+        circular_only: circularOnly,
+        blunt: bluntLigation,
       } };
       sendPostRequest(assemblyType, requestData, config);
     }
@@ -74,7 +81,8 @@ function SourceAssembly({ sourceId, assemblyType }) {
           <TextField
             fullWidth
             label="Minimal homology length (in bp)"
-            inputRef={minimalHomologyRef}
+            value={minimalHomology}
+            onChange={(e) => { setMinimalHomology(e.target.value); }}
             type="number"
             defaultValue={20}
           />
@@ -85,20 +93,20 @@ function SourceAssembly({ sourceId, assemblyType }) {
         )}
         { ['restriction_and_ligation', 'gibson_assembly', 'ligation'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
-            <FormControlLabel fullWidth control={<Checkbox inputRef={circularOnlyRef} />} label="Circular assemblies only" />
+            <FormControlLabel fullWidth control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
         )}
         { ['restriction_and_ligation', 'ligation'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
-            <FormControlLabel fullWidth control={<Checkbox inputRef={allowPartialOverlapsRef} />} label="Allow partial overlaps" />
+            <FormControlLabel fullWidth control={<Checkbox checked={allowPartialOverlaps} onChange={flipAllowPartialOverlaps} />} label="Allow partial overlaps" />
           </FormControl>
         )}
         { (assemblyType === 'ligation') && (
         <FormControl fullWidth style={{ textAlign: 'left' }}>
-          <FormControlLabel fullWidth control={<Checkbox inputRef={bluntLigationRef} />} label="Blunt ligation" />
+          <FormControlLabel fullWidth control={<Checkbox checked={bluntLigation} onChange={flipBluntLigation} />} label="Blunt ligation" />
         </FormControl>
         )}
-        {allowSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
+        {!preventSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId, inputEntities,
