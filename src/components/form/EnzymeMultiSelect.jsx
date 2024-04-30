@@ -7,7 +7,6 @@ export default function EnzymeMultiSelect({ setEnzymes }) {
   const label = 'Enzymes used';
   const messages = { loadingMessage: 'retrieving enzymes...', errorMessage: 'Could not retrieve enzymes from server' };
   const onChange = (value) => setEnzymes(value);
-
   return (
     <GetRequestMultiSelect
       getOptionsFromResponse={getOptionsFromResponse}

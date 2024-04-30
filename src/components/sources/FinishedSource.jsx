@@ -26,8 +26,18 @@ function FinishedSource({ sourceId }) {
     case 'manually_typed': message = 'Manually typed sequence'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
-    case 'restriction': message = `Restriction with ${source.restriction_enzymes.join(' ')}`; break;
-    case 'restriction_and_ligation': message = `Restriction with ${source.restriction_enzymes.join(' ')}, then ligation`; break;
+    case 'restriction': {
+      const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
+      uniqueEnzymes.sort();
+      message = `Restriction with ${uniqueEnzymes.join(' and ')}`;
+    }
+      break;
+    case 'restriction_and_ligation': {
+      const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
+      uniqueEnzymes.sort();
+      message = `Restriction with ${uniqueEnzymes.join(' and ')}, then ligation`;
+    }
+      break;
     case 'PCR': {
       const primers = useSelector((state) => state.primers.primers);
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;

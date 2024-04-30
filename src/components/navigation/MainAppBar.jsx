@@ -8,7 +8,7 @@ import { Alert, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
 import ButtonWithMenu from './ButtonWithMenu';
-import { exportStateThunk, fileReceivedToJson, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
+import { exportStateThunk, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 
@@ -52,8 +52,21 @@ function MainAppBar() {
     { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') },
   ];
 
-  const onFileChange = (e) => {
-    fileReceivedToJson(e, loadData, (err) => setLoadedFileError(err));
+  const onFileChange = (event) => {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = (eventFileRead) => {
+      let jsonObject = {};
+      try {
+        jsonObject = JSON.parse(eventFileRead.target.result);
+      } catch (e) {
+        console.log(eventFileRead.target.result);
+        setLoadedFileError('Input file should be a JSON file with the history');
+        return;
+      }
+      loadData(jsonObject);
+    };
   };
 
   return (

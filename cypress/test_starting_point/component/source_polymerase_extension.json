@@ -1,0 +1,36 @@
+{
+    "sequences": [
+        {
+            "id": 2,
+            "kind": "entity",
+            "sequence": {
+                "type": "file",
+                "file_extension": "gb",
+                "file_content": "LOCUS       name                      10 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 aaaaaaaaaa\n//",
+                "overhang_crick_3prime": 0,
+                "overhang_watson_3prime": 0
+            }
+        }
+    ],
+    "sources": [
+        {
+            "id": 1,
+            "input": [],
+            "output": 2,
+            "type": "manually_typed",
+            "kind": "source",
+            "info": {},
+            "user_input": "AAAAAAAAAA",
+            "circular": false
+        },
+        {
+            "id": 3,
+            "input": [
+                2
+            ],
+            "output": null,
+            "type": null,
+            "kind": "source"
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, TextField } from '@mui/material';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import ValidatedTextField from '../form/ValidatedTextField';
@@ -10,7 +10,8 @@ function SourceManuallyTyped({ sourceId }) {
 
   const [userInput, setUserInput] = React.useState('');
   const [isCircular, setIsCircular] = React.useState(false);
-
+  const [overhangCrick3prime, setOverhangCrick3prime] = React.useState(0);
+  const [overhangWatson3prime, setOverhangWatson3prime] = React.useState(0);
   const [errorStatus, setErrorStatus] = React.useState({ sequence: true });
   const [touched, setTouched] = React.useState(false);
   const [submissionAttempted, setSubmissionAttempted] = React.useState(false);
@@ -38,7 +39,22 @@ function SourceManuallyTyped({ sourceId }) {
     event.preventDefault();
     setSubmissionAttempted(true);
     if (submissionAllowed) {
-      sendPostRequest('manually_typed', { user_input: userInput, circular: isCircular });
+      sendPostRequest('manually_typed', {
+        user_input: userInput,
+        circular: isCircular,
+        overhang_crick_3prime: overhangCrick3prime,
+        overhang_watson_3prime: overhangWatson3prime,
+      });
+    }
+  };
+
+  const onCircularChange = () => {
+    // See constrains of ManuallyTyped in the backend
+    const newIsCircular = !isCircular;
+    setIsCircular(newIsCircular);
+    if (newIsCircular) {
+      setOverhangCrick3prime(0);
+      setOverhangWatson3prime(0);
     }
   };
 
@@ -59,8 +75,33 @@ function SourceManuallyTyped({ sourceId }) {
         errorChecker={sequenceErrorChecker}
         updateValidationStatus={updateValidationStatus}
       />
+      {
+        !isCircular && (
+          <>
+            <FormControl fullWidth>
+              <TextField
+                label="Overhang crick 3'"
+                value={overhangCrick3prime}
+                type="number"
+                defaultValue={0}
+                onChange={(event) => setOverhangCrick3prime(event.target.value)}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <TextField
+                label="Overhang watson 3'"
+                value={overhangWatson3prime}
+                type="number"
+                defaultValue={0}
+                onChange={(event) => setOverhangWatson3prime(event.target.value)}
+              />
+            </FormControl>
+          </>
+        )
+      }
+
       <FormControl fullWidth style={{ textAlign: 'left' }}>
-        <FormControlLabel control={<Checkbox value={isCircular} onChange={() => setIsCircular(!isCircular)} />} label="Circular DNA" />
+        <FormControlLabel control={<Checkbox value={isCircular} onChange={onCircularChange} />} label="Circular DNA" />
       </FormControl>
       <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>
     </form>

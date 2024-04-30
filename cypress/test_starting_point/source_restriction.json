@@ -1,0 +1,55 @@
+{
+  "sequences": [
+    {
+      "id": 2,
+      "kind": "entity",
+      "sequence": {
+        "type": "file",
+        "file_extension": "gb",
+        "file_content": "LOCUS       name                      20 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 aagaattcaa aagaattcaa\n//",
+        "overhang_crick_3prime": 0,
+        "overhang_watson_3prime": 0
+      }
+    }
+  ],
+  "sources": [
+    {
+      "id": 1,
+      "input": [],
+      "output": 2,
+      "type": "manually_typed",
+      "kind": "source",
+      "info": {},
+      "user_input": "aagaattcaaaagaattcaa",
+      "circular": false
+    }
+  ],
+  "description": "",
+  "primers": [
+    {
+      "id": 1,
+      "name": "fwd",
+      "sequence": "gatctcgccataaaagacag"
+    },
+    {
+      "id": 2,
+      "name": "rvs",
+      "sequence": "ttaacaaagcgactataagt"
+    },
+    {
+      "id": 5,
+      "name": "ase1_sgRNA",
+      "sequence": "CATTACTGTTTGCATTGAAC"
+    },
+    {
+      "id": 6,
+      "name": "ase1_Fw",
+      "sequence": "TTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAAACATCGTTTTATTGAGCTCATTTACATCAACCGGTTCAATGtacccatacgatgttcctga"
+    },
+    {
+      "id": 7,
+      "name": "ase1_Rv",
+      "sequence": "AAGTTAGATTCATTATTAGAGTGATTATCTTTTTCAGCAATAGAATCAGTGCTTTGAATGTCATCCATCATTACTGTTTGagcgtaatctggaacgtcat"
+    }
+  ]
+}
