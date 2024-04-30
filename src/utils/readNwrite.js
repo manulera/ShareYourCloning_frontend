@@ -36,21 +36,6 @@ export const exportStateThunk = () => async (dispatch, getState) => {
   downloadStateAsJson(entities, sources, description, primers);
 };
 
-export const fileReceivedToJson = (event, callback, onError) => {
-  const file = event.target.files[0];
-  const reader = new FileReader();
-  reader.readAsText(file, 'UTF-8');
-  reader.onload = (eventFileRead) => {
-    try {
-      const parsed = JSON.parse(eventFileRead.target.result);
-      callback(parsed);
-    } catch (e) {
-      onError('Input file should be a JSON file with the history');
-    }
-  };
-  return reader;
-};
-
 export const loadStateThunk = (newState) => async (dispatch, getState) => {
   dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
   if (newState.primers) {

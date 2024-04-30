@@ -104,4 +104,7 @@ describe('Tests PCR functionality', () => {
     cy.get('li#sequence-4 li#source-3', { timeout: 20000 }).should('exist');
     cy.get('li#sequence-4').contains('22 bps');
   });
+  it('dummy', () => {
+    manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
+  });
 });
