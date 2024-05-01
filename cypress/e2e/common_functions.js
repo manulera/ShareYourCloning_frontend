@@ -62,7 +62,7 @@ export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
       cy.get('#tab-panel-0 .select-source h2').last().contains('Define a sequence source').siblings('div')
         .children('.MuiInputBase-root')
         .click();
-      cy.get('li[data-value="manually_typed"]').click();
+      cy.get('li[data-value="ManuallyTypedSource"]').click();
       cy.get('#tab-panel-0 #sequence').clear('');
       cy.get('#tab-panel-0 #sequence').type(seq);
       if (circular) {

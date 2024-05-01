@@ -39,7 +39,7 @@ function Source({ sourceId }) {
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
     case 'genome_region':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
-    case 'manually_typed':
+    case 'ManuallyTypedSource':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
     case 'crispr':
       specificSource = <SourceHomologousRecombination {...{ sourceId, isCrispr: true }} />; break;

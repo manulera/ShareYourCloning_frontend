@@ -16,7 +16,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     options.push(<MenuItem key="file" value="file">Submit file</MenuItem>);
     options.push(<MenuItem key="RepositoryIdSource" value="RepositoryIdSource">Repository ID</MenuItem>);
     options.push(<MenuItem key="genome_region" value="genome_region">Genome region</MenuItem>);
-    options.push(<MenuItem key="manually_typed" value="manually_typed">Enter manually</MenuItem>);
+    options.push(<MenuItem key="ManuallyTypedSource" value="ManuallyTypedSource">Enter manually</MenuItem>);
     options.push(<MenuItem key="OligoHybridizationSource" value="OligoHybridizationSource">Oligonucleotide hybridization</MenuItem>);
     // elab-demo
     // options.push(<MenuItem key="elabftw" value="elabftw">Import from eLabFTW</MenuItem>);

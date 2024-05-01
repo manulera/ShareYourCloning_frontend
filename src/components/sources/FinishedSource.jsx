@@ -23,7 +23,7 @@ function FinishedSource({ sourceId }) {
         message = `Read from uploaded file ${source.file_name}`; break;
       }
       break;
-    case 'manually_typed': message = 'Manually typed sequence'; break;
+    case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
     case 'restriction': {

@@ -17,7 +17,7 @@
             "id": 1,
             "input": [],
             "output": 2,
-            "type": "manually_typed",
+            "type": "ManuallyTypedSource",
             "kind": "source",
             "info": {},
             "user_input": "AAAAAAAAAA",
