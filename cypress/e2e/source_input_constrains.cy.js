@@ -1,6 +1,6 @@
 import { clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
 
-const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'polymerase_extension', 'crispr'];
+const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'PolymeraseExtensionSource', 'crispr'];
 const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'crispr'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
@@ -27,7 +27,7 @@ describe('Test Source input constrains', () => {
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="oligonucleotide_hybridization"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="OligoHybridizationSource"]').should('exist');
   });
   it('All experimental sources are available as children of a sequence', () => {
     manuallyTypeSequence('atata');

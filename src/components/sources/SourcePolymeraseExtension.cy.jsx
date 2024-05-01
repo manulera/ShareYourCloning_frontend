@@ -15,7 +15,7 @@ describe('<SourcePolymeraseExtension />', () => {
     cy.get('button').contains('Extend with polymerase').click();
     cy.wait('@polymeraseExtension').its('request.body').should('deep.equal', {
       sequences: [editableInitialState.sequences[0]],
-      source: { input: [2] },
+      source: { input: [2], id: 3 },
     });
   });
   it('prevents submission if no overhangs', () => {

@@ -15,13 +15,13 @@ function SourcePolymeraseExtension({ sourceId }) {
 
     const requestData = {
       sequences: inputEntities,
-      source: { input: inputEntities.map((e) => e.id) },
+      source: { id: sourceId, input: inputEntities.map((e) => e.id) },
     };
     sendPostRequest('polymerase_extension', requestData);
   };
   // No need for MultipleOutputsSelector, since there is only one output
   return (
-    <div className="polymerase_extension">
+    <div className="PolymeraseExtensionSource">
       <form onSubmit={onSubmit}>
         {invalidInput ? (
           <Alert severity="error">

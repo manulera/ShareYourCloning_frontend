@@ -3,8 +3,14 @@ describe('Test load example functionality', () => {
     cy.visit('/');
   });
   it('Can load examples', () => {
-    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
-    cy.get('li span').contains('Integration of cassette by homologous recombination').click();
+    cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
+
+    cy.get('.load-example-dialog .load-example-item').each((el, index) => {
+      cy.get('.load-example-dialog .load-example-item').eq(index).click();
+      cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
+    });
+    // Verify one in particular
+    cy.get('.load-example-dialog .load-example-item').contains('Integration of cassette by homologous recombination').click();
     // Loads cloning
     cy.get('div.cloning-tab-pannel').contains('Request to addgene with ID 19342');
     cy.get('div.cloning-tab-pannel').contains('4548 bps');

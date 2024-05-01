@@ -34,12 +34,12 @@ const examples = [
 
 function SelectExampleDialog({ onClose, open }) {
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} className="load-example-dialog">
       <DialogTitle>Load an example</DialogTitle>
       <List>
         {
         examples.map((example) => (
-          <ListItem key={example.link}>
+          <ListItem key={example.link} className="load-example-item">
             <ListItemButton onClick={() => onClose(example.link)}><ListItemText>{example.title}</ListItemText></ListItemButton>
           </ListItem>
         ))

@@ -9,7 +9,7 @@ describe('Tests oligo hybridization source', () => {
     addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
     addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
     cy.get('button.MuiTab-root').contains('Cloning').click();
-    addSource('oligonucleotide_hybridization', true);
+    addSource('OligoHybridizationSource', true);
     // Select the primers
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');
@@ -24,7 +24,7 @@ describe('Tests oligo hybridization source', () => {
     addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
     addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
     cy.get('button.MuiTab-root').contains('Cloning').click();
-    addSource('oligonucleotide_hybridization', true);
+    addSource('OligoHybridizationSource', true);
     cy.get('button').contains('Perform hybridization').should('not.exist');
     // Select the primers
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
@@ -39,7 +39,7 @@ describe('Tests oligo hybridization source', () => {
     addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
     addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
     cy.get('button.MuiTab-root').contains('Cloning').click();
-    addSource('oligonucleotide_hybridization', true);
+    addSource('OligoHybridizationSource', true);
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-1');
     cy.get('button').contains('Perform hybridization').click();
@@ -55,7 +55,7 @@ describe('Tests oligo hybridization source', () => {
     addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
     addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
     cy.get('button.MuiTab-root').contains('Cloning').click();
-    addSource('oligonucleotide_hybridization', true);
+    addSource('OligoHybridizationSource', true);
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');
 

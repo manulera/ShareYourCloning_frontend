@@ -43,7 +43,7 @@ function FinishedSource({ sourceId }) {
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
     }
       break;
-    case 'oligonucleotide_hybridization': {
+    case 'OligoHybridizationSource': {
       const primers = useSelector((state) => state.primers.primers);
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;
     }
@@ -88,7 +88,7 @@ function FinishedSource({ sourceId }) {
             <strong>Coords:</strong>
             {' '}
             <a href={`https://www.ncbi.nlm.nih.gov/nuccore/${source.sequence_accession}`} target="_blank" rel="noopener noreferrer">{source.sequence_accession}</a>
-            {`(${source.start}-${source.stop})`}
+            {`(${source.start}-${source.end})`}
           </div>
           {source.locus_tag && (
           <div>
@@ -112,7 +112,7 @@ function FinishedSource({ sourceId }) {
       break;
     }
     case 'elabftw': message = 'Request to eLabFTW'; break;
-    case 'polymerase_extension': message = 'Polymerase extension'; break;
+    case 'PolymeraseExtensionSource': message = 'Polymerase extension'; break;
     default: message = '';
   }
   return (
