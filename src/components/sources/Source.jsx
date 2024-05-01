@@ -25,7 +25,7 @@ function Source({ sourceId }) {
       specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
       specificSource = <SourceRestriction {...{ sourceId }} />; break;
-    case 'repository_id':
+    case 'RepositoryIdSource':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
     case 'ligation':
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'ligation' }} />; break;

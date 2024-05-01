@@ -55,17 +55,17 @@ function FinishedSource({ sourceId }) {
       message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${guidesString} as a guide${source.guides.length > 1 ? 's' : ''}`;
     }
       break;
-    case 'repository_id': {
-      const { repository } = source;
+    case 'RepositoryIdSource': {
+      const { repository_name: repositoryName } = source;
       let url = '';
-      if (repository === 'genbank') {
+      if (repositoryName === 'genbank') {
         url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
-      } else if (repository === 'addgene') {
+      } else if (repositoryName === 'addgene') {
         url = `https://www.addgene.org/${source.repository_id}/sequences/`;
       }
       message = (
         <>
-          {`Request to ${repository} with ID `}
+          {`Request to ${repositoryName} with ID `}
           <strong>
             <a href={url} target="_blank" rel="noopener noreferrer">
               {source.repository_id}

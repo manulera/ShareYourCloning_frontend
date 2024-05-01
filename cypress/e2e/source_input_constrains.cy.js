@@ -23,7 +23,7 @@ describe('Test Source input constrains', () => {
   it('Empty source displays the right options', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('ul[aria-labelledby="select-source-1-label"] li').should('have.length', 5);
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="repository_id"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="RepositoryIdSource"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
