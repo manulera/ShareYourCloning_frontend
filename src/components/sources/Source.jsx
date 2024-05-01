@@ -21,7 +21,7 @@ function Source({ sourceId }) {
   let specificSource = null;
   switch (sourceType) {
     /* eslint-disable */
-    case 'file':
+    case 'UploadedFileSource':
       specificSource = <SourceFile {...{ sourceId }} />; break;
     case 'restriction':
       specificSource = <SourceRestriction {...{ sourceId }} />; break;

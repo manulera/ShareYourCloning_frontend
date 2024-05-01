@@ -4,14 +4,13 @@ import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
-// A component provinding an interface to import a file
+// A component providing an interface to import a file
 function SourceFile({ sourceId }) {
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
     const formData = new FormData();
     formData.append('file', files[0]);
-    formData.append('info_str', JSON.stringify({ file_from: 'browser_upload' }));
     const config = {
       headers: {
         'content-type': 'multipart/form-data',

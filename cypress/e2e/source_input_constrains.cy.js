@@ -26,7 +26,7 @@ describe('Test Source input constrains', () => {
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="RepositoryIdSource"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="ManuallyTypedSource"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="UploadedFileSource"]').should('exist');
     cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="OligoHybridizationSource"]').should('exist');
   });
   it('All experimental sources are available as children of a sequence', () => {

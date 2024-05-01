@@ -51,9 +51,9 @@
       "kind": "source",
       "input": [],
       "output": 10,
-      "type": "file",
+      "type": "UploadedFileSource",
       "file_name": "addgene-plasmid-39296-sequence-49545.dna",
-      "file_format": "snapgene",
+      "sequence_file_format": "snapgene",
       "index_in_file": 0
     },
     {

@@ -8,7 +8,7 @@ function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   let message = '';
   switch (source.type) {
-    case 'file':
+    case 'UploadedFileSource':
       if (source.info && source.info.file_from === 'eLabFTW') {
         message = (
           <>

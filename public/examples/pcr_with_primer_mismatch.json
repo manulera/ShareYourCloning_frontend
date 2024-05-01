@@ -1,1 +1,79 @@
-{"sequences":[{"id":3,"kind":"entity","sequence":{"type":"file","file_extension":"gb","file_content":"LOCUS       template                  18 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  template.\nACCESSION   template\nVERSION     template\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 aattagcagc gatcgagt\n//","overhang_crick_3prime":0,"overhang_watson_3prime":0}},{"id":5,"kind":"entity","sequence":{"type":"file","file_extension":"gb","file_content":"LOCUS       name                      16 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 atttagcagc gttcga\n//","overhang_crick_3prime":0,"overhang_watson_3prime":0}}],"sources":[{"id":1,"input":[],"output":3,"type":"file","kind":"source","info":{},"file_name":"pcr_template.fasta","file_format":"fasta","index_in_file":0},{"id":4,"input":[3],"output":5,"type":"PCR","kind":"source","info":{},"assembly":[[1,2,"3..8","3..8"],[2,-3,"9..11","1..3"]],"circular":false,"forward_primer":6,"reverse_primer":5}],"description":"","primers":[{"name":"rvs","sequence":"TCGAaCGC","id":5},{"name":"fwd","sequence":"AtTTAGCA","id":6}]}
+{
+    "sequences": [
+        {
+            "id": 3,
+            "kind": "entity",
+            "sequence": {
+                "type": "file",
+                "file_extension": "gb",
+                "file_content": "LOCUS       template                  18 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  template.\nACCESSION   template\nVERSION     template\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 aattagcagc gatcgagt\n//",
+                "overhang_crick_3prime": 0,
+                "overhang_watson_3prime": 0
+            }
+        },
+        {
+            "id": 5,
+            "kind": "entity",
+            "sequence": {
+                "type": "file",
+                "file_extension": "gb",
+                "file_content": "LOCUS       name                      16 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 atttagcagc gttcga\n//",
+                "overhang_crick_3prime": 0,
+                "overhang_watson_3prime": 0
+            }
+        }
+    ],
+    "sources": [
+        {
+            "id": 1,
+            "input": [],
+            "output": 3,
+            "type": "UploadedFileSource",
+            "kind": "source",
+            "info": {},
+            "file_name": "pcr_template.fasta",
+            "sequence_file_format": "fasta",
+            "index_in_file": 0
+        },
+        {
+            "id": 4,
+            "input": [
+                3
+            ],
+            "output": 5,
+            "type": "PCR",
+            "kind": "source",
+            "info": {},
+            "assembly": [
+                [
+                    1,
+                    2,
+                    "3..8",
+                    "3..8"
+                ],
+                [
+                    2,
+                    -3,
+                    "9..11",
+                    "1..3"
+                ]
+            ],
+            "circular": false,
+            "forward_primer": 6,
+            "reverse_primer": 5
+        }
+    ],
+    "description": "",
+    "primers": [
+        {
+            "name": "rvs",
+            "sequence": "TCGAaCGC",
+            "id": 5
+        },
+        {
+            "name": "fwd",
+            "sequence": "AtTTAGCA",
+            "id": 6
+        }
+    ]
+}

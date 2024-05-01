@@ -50,39 +50,30 @@
       "id": 1,
       "input": [],
       "output": 2,
-      "type": "file",
+      "type": "UploadedFileSource",
       "kind": "source",
-      "info": {
-        "file_from": "browser_upload"
-      },
       "file_name": "part1.gb",
-      "file_format": "genbank",
+      "sequence_file_format": "genbank",
       "index_in_file": 0
     },
     {
       "id": 3,
       "input": [],
       "output": 4,
-      "type": "file",
+      "type": "UploadedFileSource",
       "kind": "source",
-      "info": {
-        "file_from": "browser_upload"
-      },
       "file_name": "part2.gb",
-      "file_format": "genbank",
+      "sequence_file_format": "genbank",
       "index_in_file": 0
     },
     {
       "id": 5,
       "input": [],
       "output": 6,
-      "type": "file",
+      "type": "UploadedFileSource",
       "kind": "source",
-      "info": {
-        "file_from": "browser_upload"
-      },
       "file_name": "part3.gb",
-      "file_format": "genbank",
+      "sequence_file_format": "genbank",
       "index_in_file": 0
     },
     {
