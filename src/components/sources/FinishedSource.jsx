@@ -76,7 +76,7 @@ function FinishedSource({ sourceId }) {
       );
     }
       break;
-    case 'genome_coordinates': {
+    case 'GenomeCoordinatesSource': {
       message = (
         <>
           <div>

@@ -2,7 +2,7 @@ describe('GenomeRegion Source', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
-    cy.get('li[data-value="genome_region"]').click();
+    cy.get('li[data-value="GenomeCoordinatesSource"]').click();
   });
   it('works for reference genome', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
@@ -123,6 +123,7 @@ describe('GenomeRegion Source', () => {
     cy.get('li#sequence-2 .veLinearView').contains('20 bps');
   });
   it('gives the right errors and warnings for sequence accesion', () => {
+    // TODO: move some of this to component tests (e.g. coordinates constraints)
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
     cy.get('li[data-value="custom_coordinates"]').click();
     // Shows species and assembly ID if sequence accession belongs to assembly

@@ -60,7 +60,7 @@
       "id": 36,
       "input": [],
       "output": 37,
-      "type": "genome_coordinates",
+      "type": "GenomeCoordinatesSource",
       "kind": "source",
       "info": {},
       "assembly_accession": "GCF_000002945.1",

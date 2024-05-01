@@ -37,7 +37,7 @@ function Source({ sourceId }) {
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
     case 'restriction_and_ligation':
       specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
-    case 'genome_region':
+    case 'GenomeCoordinatesSource':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'ManuallyTypedSource':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;

@@ -72,6 +72,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    payload.id = sourceId;
     sendPostRequest('genome_coordinates', payload);
   };
 
@@ -131,6 +132,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    payload.id = sourceId;
     sendPostRequest('genome_coordinates', payload);
   };
 
@@ -196,6 +198,7 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
     setFormError({ ...noError });
 
     sendPostRequest('genome_coordinates', {
+      id: sourceId,
       sequence_accession: sequenceAccession,
       assembly_accession: assemblyId,
       start: coordsStartRef.current.value,
