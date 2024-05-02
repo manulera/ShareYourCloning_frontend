@@ -23,7 +23,7 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
   } else {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
     if (inputEntities.length < 2) {
-      options.push(<MenuItem key="restriction" value="restriction">Restriction</MenuItem>);
+      options.push(<MenuItem key="RestrictionEnzymeDigestionSource" value="RestrictionEnzymeDigestionSource">Restriction</MenuItem>);
       options.push(<MenuItem key="PCR" value="PCR">PCR</MenuItem>);
       options.push(<MenuItem key="PolymeraseExtensionSource" value="PolymeraseExtensionSource">Polymerase extension</MenuItem>);
     }

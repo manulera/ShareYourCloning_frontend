@@ -18,10 +18,10 @@ function SourceRestriction({ sourceId }) {
     e.preventDefault();
     if (enzymes.length === 0) { return; }
     const requestData = {
-      source: { restriction_enzymes: enzymes, input: inputEntities.map((e) => e.id) },
+      source: { id: sourceId, input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    sendPostRequest('restriction', requestData);
+    sendPostRequest('restriction', requestData, { params: { restriction_enzymes: enzymes } });
   };
 
   return (

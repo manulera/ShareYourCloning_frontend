@@ -51,7 +51,7 @@
                 10
             ],
             "output": 34,
-            "type": "restriction",
+            "type": "RestrictionEnzymeDigestionSource",
             "kind": "source",
             "info": {},
             "left_edge": [

@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import SourceBox from './SourceBox';
+import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFunctions';
 
 // TODO refactor this to use common part
 
@@ -26,9 +27,8 @@ function FinishedSource({ sourceId }) {
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
     case 'ligation': message = 'Ligation of fragments'; break;
     case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
-    case 'restriction': {
-      const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
-      uniqueEnzymes.sort();
+    case 'RestrictionEnzymeDigestionSource': {
+      const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
       message = `Restriction with ${uniqueEnzymes.join(' and ')}`;
     }
       break;

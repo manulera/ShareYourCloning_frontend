@@ -23,7 +23,7 @@ function Source({ sourceId }) {
     /* eslint-disable */
     case 'UploadedFileSource':
       specificSource = <SourceFile {...{ sourceId }} />; break;
-    case 'restriction':
+    case 'RestrictionEnzymeDigestionSource':
       specificSource = <SourceRestriction {...{ sourceId }} />; break;
     case 'RepositoryIdSource':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;

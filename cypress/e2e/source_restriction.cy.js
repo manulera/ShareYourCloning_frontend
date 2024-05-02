@@ -6,7 +6,7 @@ describe('Test restriction component', () => {
   });
   it('Works with single enzyme', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Click the selector
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     // Select EcoRI
@@ -37,7 +37,7 @@ describe('Test restriction component', () => {
   });
   it('works with multiple enzymes', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
@@ -61,7 +61,7 @@ describe('Test restriction component', () => {
   });
   it('does not show choices if there is one possible output', () => {
     manuallyTypeSequence('aagaattcaaaa', true);
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Cut with EcoRI
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     cy.get('div[role="presentation"]').contains('EcoRI').click();
@@ -72,13 +72,13 @@ describe('Test restriction component', () => {
   });
   it('applies the right constraints', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Before selecting an enzyme, you cannot submit
     cy.get('button').contains('Perform restriction').should('not.exist');
   });
   it('allows re-restriction', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
@@ -102,7 +102,7 @@ describe('Test restriction component', () => {
   it('shows the right error if the enzyme does not cut', () => {
     // Type the sequence
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     cy.get('div[role="presentation"]', { timeout: 20000 }).contains('AanI').click();
@@ -114,7 +114,7 @@ describe('Test restriction component', () => {
   });
   it('shows the right error if the backend server fails', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
-    addSource('restriction');
+    addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
     cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
     cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
