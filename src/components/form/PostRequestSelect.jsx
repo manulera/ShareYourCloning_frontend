@@ -16,6 +16,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
     async function fetchData() {
       if (userInput.length >= 3) {
         try {
+          setNoOptionsText('Loading options...');
           const receivedOptions = await getOptions(userInput);
           setOptions(receivedOptions);
           setErrorMessage(null);
