@@ -8,7 +8,7 @@ describe('<SourcePolymeraseExtension />', () => {
   it('works with normal case', () => {
     // see: https://on.cypress.io/mounting-react
     const editableInitialState = structuredClone(initialState);
-    editableInitialState.sequences[0].sequence.overhang_crick_3prime = -3;
+    editableInitialState.sequences[0].overhang_crick_3prime = -3;
     store.dispatch(loadStateThunk(editableInitialState));
     cy.mount(<SourcePolymeraseExtension sourceId={3} />);
     cy.intercept('POST', '/polymerase_extension').as('polymeraseExtension');

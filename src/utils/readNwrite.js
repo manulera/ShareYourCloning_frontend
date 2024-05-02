@@ -63,7 +63,6 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
 
   const eLabFTWSources = sources.filter((source) => source.type === 'UploadedFileSource' && source.info.file_from === 'eLabFTW');
   const links2add = eLabFTWSources.map((source) => source.info.item_id);
-  console.log(links2add);
 
   const history = {
     sources, primersToUpload,
@@ -72,7 +71,6 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
     throw new Error('Only one final product should be present');
   }
   const entity2export = entities.find((e) => e.id === network[0].entity.id);
-  console.log(entity2export.sequence.file_content);
 
   // Create item
   const createdItemResponse = await axios.post(

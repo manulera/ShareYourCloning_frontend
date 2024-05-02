@@ -9,7 +9,7 @@ describe('File Source', () => {
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     //  This does not really test that clicking the button opens the file interface, but I did not see how
     cy.get('.MuiButtonBase-root > input').selectFile('public/examples/ase1.gb', { force: true });
-    cy.get('li#sequence-2', { timeout: 20000 }).should('have.text', 'CU329670 ');
+    cy.get('li#sequence-2', { timeout: 20000 }).contains('CU329670');
     cy.get('li#sequence-2 li#source-1').contains('Read from uploaded file ase1.gb');
   });
   it('gives the right error when file has a wrong extension', () => {

@@ -2,47 +2,35 @@
   "sequences": [
     {
       "id": 2,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       pj5_00001                 48 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology A in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 1\"\n     misc_feature    29..48\n                     /label=\"Homology B in 1\"\nORIGIN\n        1 acttgacggc tacatcattc acacacactc gctcgggctg gccccggt\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       pj5_00001                 48 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology A in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 1\"\n     misc_feature    29..48\n                     /label=\"Homology B in 1\"\nORIGIN\n        1 acttgacggc tacatcattc acacacactc gctcgggctg gccccggt\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 4,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       pj5_00001                 48 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 2\"\nORIGIN\n        1 tcgctcgggc tggccccggt acacacactc aaaaccaaca ttgcgacc\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       pj5_00001                 48 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 2\"\nORIGIN\n        1 tcgctcgggc tggccccggt acacacactc aaaaccaaca ttgcgacc\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 6,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       pj5_00001                 46 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology C in 3\"\n     misc_feature    21..26\n                     /label=\"Payload 3\"\n     misc_feature    27..46\n                     /label=\"Homology A in 3\"\nORIGIN\n        1 tcaaaaccaa cattgcgacc acacacactt gacggctaca tcattc\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       pj5_00001                 46 bp    DNA     linear   SYN 29-APR-2024\nDEFINITION  .\nACCESSION   pj5_00001\nVERSION     pj5_00001\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nCOMMENT     teselagen_unique_id: 5adf735aa1811801e17d8aac\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology C in 3\"\n     misc_feature    21..26\n                     /label=\"Payload 3\"\n     misc_feature    27..46\n                     /label=\"Homology A in 3\"\nORIGIN\n        1 tcaaaaccaa cattgcgacc acacacactt gacggctaca tcattc\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 8,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       name                      82 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 3\"\n     misc_feature    49..54\n                     /label=\"Payload 3\"\n     misc_feature    55..74\n                     /label=\"Homology A in 3\"\n     misc_feature    55..74\n                     /label=\"Homology A in 1\"\n     misc_feature    75..82\n                     /label=\"Payload 1\"\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\nORIGIN\n        1 tcgctcgggc tggccccggt acacacactc aaaaccaaca ttgcgaccac acacacttga\n       61 cggctacatc attcacacac ac\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       name                      82 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\n     misc_feature    21..28\n                     /label=\"Payload 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 2\"\n     misc_feature    29..48\n                     /label=\"Homology C in 3\"\n     misc_feature    49..54\n                     /label=\"Payload 3\"\n     misc_feature    55..74\n                     /label=\"Homology A in 3\"\n     misc_feature    55..74\n                     /label=\"Homology A in 1\"\n     misc_feature    75..82\n                     /label=\"Payload 1\"\n     misc_feature    1..20\n                     /label=\"Homology B in 1\"\nORIGIN\n        1 tcgctcgggc tggccccggt acacacactc aaaaccaaca ttgcgaccac acacacttga\n       61 cggctacatc attcacacac ac\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     }
   ],
   "sources": [
@@ -51,7 +39,6 @@
       "input": [],
       "output": 2,
       "type": "UploadedFileSource",
-      "kind": "source",
       "file_name": "part1.gb",
       "sequence_file_format": "genbank",
       "index_in_file": 0
@@ -61,7 +48,6 @@
       "input": [],
       "output": 4,
       "type": "UploadedFileSource",
-      "kind": "source",
       "file_name": "part2.gb",
       "sequence_file_format": "genbank",
       "index_in_file": 0
@@ -71,7 +57,6 @@
       "input": [],
       "output": 6,
       "type": "UploadedFileSource",
-      "kind": "source",
       "file_name": "part3.gb",
       "sequence_file_format": "genbank",
       "index_in_file": 0
@@ -85,8 +70,6 @@
       ],
       "output": 8,
       "type": "gibson_assembly",
-      "kind": "source",
-      "info": {},
       "assembly": [
         [
           1,

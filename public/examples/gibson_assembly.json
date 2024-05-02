@@ -2,47 +2,35 @@
   "sequences": [
     {
       "id": 3,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       first                     21 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  first.\nACCESSION   first\nVERSION     first\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc c\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       first                     21 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  first.\nACCESSION   first\nVERSION     first\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc c\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 5,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       second                    12 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  second.\nACCESSION   second\nVERSION     second\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg gg\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       second                    12 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  second.\nACCESSION   second\nVERSION     second\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg gg\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 7,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       third                     13 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  third.\nACCESSION   third\nVERSION     third\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ggggatatat ttt\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       third                     13 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  third.\nACCESSION   third\nVERSION     third\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ggggatatat ttt\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     },
     {
       "id": 12,
-      "kind": "entity",
-      "sequence": {
-        "type": "file",
-        "file_extension": "gb",
-        "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc ctcatgggga tata\n//",
-        "overhang_crick_3prime": 0,
-        "overhang_watson_3prime": 0
-      }
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc ctcatgggga tata\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
     }
   ],
   "sources": [
@@ -51,8 +39,6 @@
       "input": [],
       "output": 3,
       "type": "UploadedFileSource",
-      "kind": "source",
-      "info": {},
       "file_name": "gibson_assembly_fragments.fasta",
       "sequence_file_format": "fasta",
       "index_in_file": 0
@@ -62,8 +48,6 @@
       "input": [],
       "output": 5,
       "type": "UploadedFileSource",
-      "kind": "source",
-      "info": {},
       "file_name": "gibson_assembly_fragments.fasta",
       "sequence_file_format": "fasta",
       "index_in_file": 1
@@ -73,8 +57,6 @@
       "input": [],
       "output": 7,
       "type": "UploadedFileSource",
-      "kind": "source",
-      "info": {},
       "file_name": "gibson_assembly_fragments.fasta",
       "sequence_file_format": "fasta",
       "index_in_file": 2
@@ -88,8 +70,6 @@
       ],
       "output": 12,
       "type": "gibson_assembly",
-      "kind": "source",
-      "info": {},
       "assembly": [
         [
           1,

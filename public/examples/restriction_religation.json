@@ -2,7 +2,8 @@
     "sequences": [
         {
             "id": 10,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -13,7 +14,8 @@
         },
         {
             "id": 34,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -24,7 +26,8 @@
         },
         {
             "id": 36,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -37,7 +40,6 @@
     "sources": [
         {
             "id": 9,
-            "kind": "source",
             "input": [],
             "output": 10,
             "type": "UploadedFileSource",
@@ -52,8 +54,6 @@
             ],
             "output": 34,
             "type": "RestrictionEnzymeDigestionSource",
-            "kind": "source",
-            "info": {},
             "left_edge": [
                 63,
                 -4
@@ -74,8 +74,6 @@
             ],
             "output": 36,
             "type": "ligation",
-            "kind": "source",
-            "info": {},
             "assembly": [
                 [
                     1,

@@ -2,7 +2,8 @@
     "sequences": [
         {
             "id": 3,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -13,7 +14,8 @@
         },
         {
             "id": 5,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -24,7 +26,8 @@
         },
         {
             "id": 8,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -35,7 +38,8 @@
         },
         {
             "id": 10,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -51,8 +55,6 @@
             "input": [],
             "output": 3,
             "type": "UploadedFileSource",
-            "kind": "source",
-            "info": {},
             "file_name": "pj5_00001.fasta",
             "sequence_file_format": "fasta",
             "index_in_file": 0
@@ -64,8 +66,6 @@
             ],
             "output": 5,
             "type": "restriction_and_ligation",
-            "kind": "source",
-            "info": {},
             "assembly": [
                 [
                     1,
@@ -84,8 +84,6 @@
             "input": [],
             "output": 8,
             "type": "UploadedFileSource",
-            "kind": "source",
-            "info": {},
             "file_name": "pj5_00001.fasta",
             "sequence_file_format": "fasta",
             "index_in_file": 0
@@ -97,8 +95,6 @@
             ],
             "output": 10,
             "type": "restriction_and_ligation",
-            "kind": "source",
-            "info": {},
             "assembly": [
                 [
                     1,
