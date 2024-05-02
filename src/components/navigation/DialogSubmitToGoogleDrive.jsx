@@ -10,10 +10,7 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useDispatch } from "react-redux";
-import {
-  exportGoogleDriveStateThunk,
-  submitFileToGoogleDriveAsJSON,
-} from "../../utils/readNwrite";
+import { exportGoogleDriveStateThunk } from "../../utils/readNwrite";
 import useGoogleDriveApi from "../useGoogleDriveAPI";
 
 function DialogSubmitToGoogleDrive({ dialogOpen, setDialogOpen }) {
