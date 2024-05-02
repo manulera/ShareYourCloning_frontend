@@ -33,6 +33,7 @@ describe('Test restriction component', () => {
     cy.get('button').contains('Choose fragment').click();
     // The result is shown
     cy.get('li#sequence-4 li#source-3').should('exist');
+    cy.get('li#sequence-4 li#source-3').contains('Restriction with EcoRI');
     cy.get('li#sequence-4', { timeout: 20000 }).contains('14 bps');
   });
   it('works with multiple enzymes', () => {
@@ -53,10 +54,11 @@ describe('Test restriction component', () => {
     cy.get('li#source-3 .multiple-output-selector [data-testid="ForwardIcon"]').eq(1).click();
     cy.get('li#source-3 .overhang-representation').contains('ttcttaa');
 
-    // We select the first fragment
+    // We select the first fragment (only EcoRI)
     cy.get('button').contains('Choose fragment').click();
     // The result is shown
     cy.get('li#sequence-4 li#source-3').should('exist');
+    cy.get('li#sequence-4 li#source-3').contains('Restriction with EcoRI');
     cy.get('li#sequence-4 .overhang-representation').contains('ttcttaa');
   });
   it('does not show choices if there is one possible output', () => {
@@ -120,7 +122,7 @@ describe('Test restriction component', () => {
     cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
     // Intercept the request
     // simulate backend not connected
-    cy.intercept('POST', '/restriction', { forceNetworkError: true });
+    cy.intercept('POST', '/restriction*', { forceNetworkError: true });
     cy.get('button').contains('Perform restriction').click();
     cy.get('li#source-3').contains('Cannot connect to backend server');
   });

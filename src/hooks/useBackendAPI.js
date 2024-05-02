@@ -15,8 +15,10 @@ export default function useBackendAPI(sourceId) {
     setRequestStatus({ status: 'loading', message: 'loading' });
     // Built like this in case trailing slash
     const url = new URL(endpoint, import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    // paramsSerializer: { indexes: null } is to correctly serialize arrays in the URL
+    const fullConfig = { ...config, paramsSerializer: { indexes: null } };
     axios
-      .post(url, requestData, config)
+      .post(url, requestData, fullConfig)
       .then((resp) => {
         setRequestStatus({ status: null, message: '' });
 
