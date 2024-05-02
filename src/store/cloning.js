@@ -9,7 +9,6 @@ const initialState = {
       input: [],
       output: null,
       type: null,
-      kind: 'source',
     },
   ],
   entities: [],
@@ -46,7 +45,6 @@ const reducer = {
       input: inputEntitiesIds,
       output: null,
       type: null,
-      kind: 'source',
     });
     state.network = constructNetwork(state.entities, state.sources);
   },
