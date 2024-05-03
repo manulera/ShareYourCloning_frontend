@@ -9,7 +9,6 @@ describe('RepositoryId Source', () => {
     clickMultiSelectOption('Select repository', 'AddGene', 'li#source-1');
     setInputValue('ID in repository', '39282', 'li#source-1');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
-    cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#sequence-2 .corner-id', { timeout: 20000 }).first().should('have.text', '2');
     cy.get('li#sequence-2 li#source-1').should('exist');
     cy.get('li#sequence-2 li#source-1').contains('Request to addgene with ID 39282');

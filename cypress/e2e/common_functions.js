@@ -7,18 +7,26 @@ export function addSource(sourceType, isFirst = false) {
   cy.get(`li[data-value="${sourceType}"]`).click();
 }
 
+export function addLane() {
+  cy.get('svg[data-testid="AddCircleIcon"]').last().click();
+}
+
 export function clearPrimers() {
   // click on [data-testid="DeleteIcon"] until there are no more
+  cy.get('button.MuiTab-root').contains('Primers').click();
   cy.get('.primer-table-container [data-testid="DeleteIcon"]').each((el) => {
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
   });
+  cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
-export function addPrimer(seq, name) {
+export function addPrimer(name, seq) {
+  cy.get('button.MuiTab-root').contains('Primers').click();
   cy.get('.primer-form-container').contains('Add Primer').click();
   cy.get('form.primer-row input#name').type(name);
   cy.get('form.primer-row input#sequence').type(seq);
   cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
+  cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
 export function clickMultiSelectOption(label, option, parentSelector = '') {

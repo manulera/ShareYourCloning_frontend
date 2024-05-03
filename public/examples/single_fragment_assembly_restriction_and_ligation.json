@@ -65,7 +65,7 @@
                 3
             ],
             "output": 5,
-            "type": "restriction_and_ligation",
+            "type": "RestrictionAndLigationSource",
             "assembly": [
                 [
                     1,
@@ -94,7 +94,7 @@
                 8
             ],
             "output": 10,
-            "type": "restriction_and_ligation",
+            "type": "RestrictionAndLigationSource",
             "assembly": [
                 [
                     1,

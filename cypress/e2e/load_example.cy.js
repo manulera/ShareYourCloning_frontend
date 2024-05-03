@@ -8,6 +8,11 @@ describe('Test load example functionality', () => {
     cy.get('.load-example-dialog .load-example-item').each((el, index) => {
       cy.get('.load-example-dialog .load-example-item').eq(index).click();
       cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
+      cy.get('div.finished-source').should('exist');
+      // None of those divs should be empty
+      cy.get('div.finished-source').each((el) => {
+        cy.get(el).should('not.be.empty');
+      });
     });
     // Verify one in particular
     cy.get('.load-example-dialog .load-example-item').contains('Integration of cassette by homologous recombination').click();

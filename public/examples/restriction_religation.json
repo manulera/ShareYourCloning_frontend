@@ -73,7 +73,7 @@
                 34
             ],
             "output": 36,
-            "type": "ligation",
+            "type": "LigationSource",
             "assembly": [
                 [
                     1,

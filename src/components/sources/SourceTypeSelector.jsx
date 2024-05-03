@@ -24,14 +24,14 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
     if (inputEntities.length < 2) {
       options.push(<MenuItem key="RestrictionEnzymeDigestionSource" value="RestrictionEnzymeDigestionSource">Restriction</MenuItem>);
-      options.push(<MenuItem key="PCR" value="PCR">PCR</MenuItem>);
+      options.push(<MenuItem key="PCRSource" value="PCRSource">PCR</MenuItem>);
       options.push(<MenuItem key="PolymeraseExtensionSource" value="PolymeraseExtensionSource">Polymerase extension</MenuItem>);
     }
-    options.push(<MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>);
-    options.push(<MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>);
-    options.push(<MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>);
-    options.push(<MenuItem key="crispr" value="crispr">CRISPR</MenuItem>);
-    options.push(<MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>);
+    options.push(<MenuItem key="LigationSource" value="LigationSource">Ligation (sticky / blunt)</MenuItem>);
+    options.push(<MenuItem key="GibsonAssemblySource" value="GibsonAssemblySource">Gibson assembly</MenuItem>);
+    options.push(<MenuItem key="HomologousRecombinationSource" value="HomologousRecombinationSource">Homologous recombination</MenuItem>);
+    options.push(<MenuItem key="CRISPRSource" value="CRISPRSource">CRISPR</MenuItem>);
+    options.push(<MenuItem key="RestrictionAndLigationSource" value="RestrictionAndLigationSource">Restriction + ligation / Golden Gate</MenuItem>);
   }
 
   return (

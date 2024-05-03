@@ -8,6 +8,11 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
   const dispatch = useDispatch();
   const { updateSource } = cloningActions;
 
+  const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
+
+  // The possible options should include the already selected ones + the one without children
+  const options = inputEntityIds.concat(entityNotChildSourceIds);
+
   const onChange = (event) => {
     const input = event.target.value;
     // We prevent setting empty input
@@ -15,12 +20,12 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
     if (input.length === 0) {
       return;
     }
+    if (input.includes('all')) {
+      dispatch(updateSource({ id: sourceId, input: options, type: sourceType }));
+      return;
+    }
     dispatch(updateSource({ id: sourceId, input, type: sourceType }));
   };
-  const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
-
-  // The possible options should include the already selected ones + the one without children
-  const options = inputEntityIds.concat(entityNotChildSourceIds);
 
   return (
     <FormControl fullWidth>
@@ -41,6 +46,12 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
           </Box>
         )}
       >
+        <MenuItem
+          key="all"
+          value="all"
+        >
+          <em>Select all</em>
+        </MenuItem>
         {options.map((id) => (
           <MenuItem
             key={id}
@@ -49,6 +60,7 @@ function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
             {id}
           </MenuItem>
         ))}
+
       </Select>
     </FormControl>
   );

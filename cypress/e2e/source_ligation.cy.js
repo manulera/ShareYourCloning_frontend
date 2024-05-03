@@ -8,10 +8,11 @@ describe('Tests ligation assembly functionality', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('ligation');
+    addSource('LigationSource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-5');
     cy.get('#tab-panel-0 span').contains('Blunt ligation').click();
     cy.get('li#source-5 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('not.exist');
     clickSequenceOutputArrow('li#source-5');
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('exist');
@@ -21,9 +22,11 @@ describe('Tests ligation assembly functionality', () => {
   });
   it('works with a single input for circularisation', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('ligation');
+    addSource('LigationSource');
     cy.get('#tab-panel-0 span').contains('Blunt ligation').click();
     cy.get('li#source-3 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#sequence-4 li#source-3');
     cy.get('li#sequence-4').contains('20 bps');
   });
@@ -31,9 +34,10 @@ describe('Tests ligation assembly functionality', () => {
     manuallyTypeSequence('AAAcaa', false, [0, -3]);
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('caaGGG', false, [-3, 0]);
-    addSource('ligation');
+    addSource('LigationSource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#sequence-6 li#source-5');
     cy.get('li#sequence-6').contains('9 bps');
   });
@@ -41,9 +45,10 @@ describe('Tests ligation assembly functionality', () => {
     manuallyTypeSequence('AAAcaa', false, [0, -3]);
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('caaGGGgtt', false, [-3, -3]);
-    addSource('ligation');
+    addSource('LigationSource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.multiple-output-selector', { timeout: 20000 }).should('exist');
     clickSequenceOutputArrow('li#source-5');
     clickSequenceOutputArrow('li#source-5');
@@ -56,10 +61,11 @@ describe('Tests ligation assembly functionality', () => {
     manuallyTypeSequence('AAAcaa', false, [0, -3]);
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('aaGGG', false, [-3, 0]);
-    addSource('ligation');
+    addSource('LigationSource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-5');
     cy.get('#tab-panel-0 span').contains('Allow partial overlaps').click();
     cy.get('li#source-5 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#sequence-6 li#source-5');
     cy.get('li#sequence-6').contains('9 bps');
   });
@@ -67,7 +73,7 @@ describe('Tests ligation assembly functionality', () => {
     // If we click on the blunt ligation option, the partial overlaps option should be disabled
     // and vice versa
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('ligation');
+    addSource('LigationSource');
     cy.get('#tab-panel-0 span').contains('Blunt ligation').click();
     cy.get('#tab-panel-0 span').contains('Blunt ligation').find('svg[data-testid="CheckBoxIcon"]');
     cy.get('#tab-panel-0 span').contains('Allow partial overlaps').click();
@@ -83,26 +89,30 @@ describe('Tests ligation assembly functionality', () => {
   });
   it('displays an error when ligations cannot be made', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('ligation');
+    addSource('LigationSource');
     cy.get('li#source-3 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message');
     // same with two inputs
     cy.get('svg[data-testid="AddCircleIcon"]').last().click();
     manuallyTypeSequence('aagaattcaaaagaattcaa');
     clickMultiSelectOption('Input sequences', '5', 'li#source-3');
     cy.get('li#source-3 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message');
   });
   it('displays errors when server fails', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    addSource('ligation');
+    addSource('LigationSource');
     cy.get('#tab-panel-0 span').contains('Blunt ligation').click();
-    cy.intercept('POST', 'http://127.0.0.1:8000/ligation*', { forceNetworkError: true }).as('ligation');
+    cy.intercept('POST', 'http://127.0.0.1:8000/ligation*', { forceNetworkError: true }).as('LigationSource');
     cy.get('li#source-3 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message').contains('Cannot connect');
     // Internal server error
     cy.intercept('POST', 'http://127.0.0.1:8000/ligation*', { statusCode: 500 }).as('ligation2');
     cy.get('li#source-3 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message').contains('Internal server error');
   });
 });

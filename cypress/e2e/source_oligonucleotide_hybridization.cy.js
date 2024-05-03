@@ -5,10 +5,8 @@ describe('Tests oligo hybridization source', () => {
     cy.visit('/');
   });
   it('works in the normal case', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
-    addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
+    addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
     // Select the primers
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
@@ -20,10 +18,8 @@ describe('Tests oligo hybridization source', () => {
     cy.get('li#sequence-2 li#source-1').contains('Hybridization of primers fwd-hyb and rvs-hyb');
   });
   it('shows the submission button only after the primers are selected', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
-    addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
+    addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
     cy.get('button').contains('Perform hybridization').should('not.exist');
     // Select the primers
@@ -33,12 +29,10 @@ describe('Tests oligo hybridization source', () => {
     cy.get('button').contains('Perform hybridization').should('exist');
   });
   it('gives the right error for no annealing', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('CCCCCCCC', 'fwd_test');
-    addPrimer('aaaaaaaa', 'rvs_test');
-    addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
-    addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'CCCCCCCC');
+    addPrimer('rvs_test', 'aaaaaaaa');
+    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
+    addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-1');
@@ -51,10 +45,8 @@ describe('Tests oligo hybridization source', () => {
     cy.get('.MuiAlert-message').contains('No pair of annealing oligos');
   });
   it('works with several options', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('aaGCGGCCGCgtagaactttatgtgcttccttacattggt', 'fwd-hyb');
-    addPrimer('aaGCGGCCGCaccaatgtaaggaagcacataaagttctac', 'rvs-hyb');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
+    addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');

@@ -63,7 +63,7 @@
                 4
             ],
             "output": 6,
-            "type": "PCR",
+            "type": "PCRSource",
             "assembly": [
                 [
                     1,
@@ -89,7 +89,7 @@
                 6
             ],
             "output": 8,
-            "type": "crispr",
+            "type": "CRISPRSource",
             "assembly": [
                 [
                     1,

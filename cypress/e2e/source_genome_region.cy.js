@@ -93,6 +93,7 @@ describe('GenomeRegion Source', () => {
     cy.get('label').contains('Upstream bases').siblings('div').children('input')
       .type('187800900');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.MuiAlert-message').should('be.visible');
   });
   it('works for sequence accession', () => {

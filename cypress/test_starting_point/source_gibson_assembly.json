@@ -69,7 +69,7 @@
         6
       ],
       "output": 8,
-      "type": "gibson_assembly",
+      "type": "GibsonAssemblySource",
       "assembly": [
         [
           1,

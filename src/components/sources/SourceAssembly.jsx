@@ -8,6 +8,7 @@ import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
+import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ sourceId, assemblyType }) {
@@ -20,7 +21,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
   const [bluntLigation, setBluntLigation] = React.useState(false);
   const [enzymes, setEnzymes] = React.useState([]);
 
-  const preventSubmit = (assemblyType === 'restriction_and_ligation' && enzymes.length === 0);
+  const preventSubmit = (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0);
 
   const flipAllowPartialOverlaps = () => {
     setAllowPartialOverlaps(!allowPartialOverlaps);
@@ -39,16 +40,16 @@ function SourceAssembly({ sourceId, assemblyType }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
-      source: { input: inputEntities.map((e) => e.id) },
+      source: { id: sourceId, input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    if (assemblyType === 'gibson_assembly') {
+    if (assemblyType === 'GibsonAssemblySource') {
       const config = { params: {
         minimal_homology: minimalHomology,
         circular_only: circularOnly,
       } };
       sendPostRequest('gibson_assembly', requestData, config);
-    } else if (assemblyType === 'restriction_and_ligation') {
+    } else if (assemblyType === 'RestrictionAndLigationSource') {
       if (enzymes.length === 0) { return; }
       requestData.source.restriction_enzymes = enzymes;
       const config = { params: {
@@ -62,7 +63,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
         circular_only: circularOnly,
         blunt: bluntLigation,
       } };
-      sendPostRequest(assemblyType, requestData, config);
+      sendPostRequest(classNameToEndPointMap[assemblyType], requestData, config);
     }
   };
 
@@ -75,7 +76,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
           }}
           />
         </FormControl>
-        { (assemblyType === 'gibson_assembly') && (
+        { (assemblyType === 'GibsonAssemblySource') && (
         // I don't really understand why fullWidth is required here
         <FormControl>
           <TextField
@@ -88,20 +89,20 @@ function SourceAssembly({ sourceId, assemblyType }) {
           />
         </FormControl>
         )}
-        { (assemblyType === 'restriction_and_ligation') && (
+        { (assemblyType === 'RestrictionAndLigationSource') && (
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
         )}
-        { ['restriction_and_ligation', 'gibson_assembly', 'ligation'].includes(assemblyType) && (
+        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel fullWidth control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
         )}
-        { ['restriction_and_ligation', 'ligation'].includes(assemblyType) && (
+        { ['RestrictionAndLigationSource', 'LigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel fullWidth control={<Checkbox checked={allowPartialOverlaps} onChange={flipAllowPartialOverlaps} />} label="Allow partial overlaps" />
           </FormControl>
         )}
-        { (assemblyType === 'ligation') && (
+        { (assemblyType === 'LigationSource') && (
         <FormControl fullWidth style={{ textAlign: 'left' }}>
           <FormControlLabel fullWidth control={<Checkbox checked={bluntLigation} onChange={flipBluntLigation} />} label="Blunt ligation" />
         </FormControl>

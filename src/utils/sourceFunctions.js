@@ -15,3 +15,19 @@ export function enzymesInRestrictionEnzymeDigestionSource(source) {
 
   return output;
 }
+
+export const classNameToEndPointMap = {
+  UploadedFileSource: 'uploaded_file',
+  RepositoryIdSource: 'repository_id',
+  GenomeCoordinatesSource: 'genome_coordinates',
+  ManuallyTypedSource: 'manually_typed',
+  OligoHybridizationSource: 'oligo_hybridization',
+  RestrictionEnzymeDigestionSource: 'restriction_enzyme_digestion',
+  PCRSource: 'pcr',
+  PolymeraseExtensionSource: 'polymerase_extension',
+  LigationSource: 'ligation',
+  GibsonAssemblySource: 'gibson_assembly',
+  HomologousRecombinationSource: 'homologous_recombination',
+  CRISPRSource: 'crispr',
+  RestrictionAndLigationSource: 'restriction_and_ligation',
+};

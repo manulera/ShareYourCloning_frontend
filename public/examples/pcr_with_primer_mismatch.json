@@ -41,7 +41,7 @@
                 3
             ],
             "output": 5,
-            "type": "PCR",
+            "type": "PCRSource",
             "assembly": [
                 [
                     1,

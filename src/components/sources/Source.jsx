@@ -27,21 +27,21 @@ function Source({ sourceId }) {
       specificSource = <SourceRestriction {...{ sourceId }} />; break;
     case 'RepositoryIdSource':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
-    case 'ligation':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'ligation' }} />; break;
-    case 'gibson_assembly':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'gibson_assembly' }} />; break;
-    case 'homologous_recombination':
+    case 'LigationSource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'LigationSource' }} />; break;
+    case 'GibsonAssemblySource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'GibsonAssemblySource' }} />; break;
+    case 'HomologousRecombinationSource':
       specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
-    case 'PCR':
+    case 'PCRSource':
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
-    case 'restriction_and_ligation':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
+    case 'RestrictionAndLigationSource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'RestrictionAndLigationSource' }} />; break;
     case 'GenomeCoordinatesSource':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'ManuallyTypedSource':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
-    case 'crispr':
+    case 'CRISPRSource':
       specificSource = <SourceHomologousRecombination {...{ sourceId, isCrispr: true }} />; break;
     case 'OligoHybridizationSource':
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;

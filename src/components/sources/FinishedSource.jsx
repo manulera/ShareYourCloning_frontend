@@ -5,6 +5,27 @@ import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFun
 
 // TODO refactor this to use common part
 
+function RepositoryIdMessage({ source }) {
+  const { repository_name: repositoryName } = source;
+  let url = '';
+  if (repositoryName === 'genbank') {
+    url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
+  } else if (repositoryName === 'addgene') {
+    url = `https://www.addgene.org/${source.repository_id}/sequences/`;
+  }
+  return (
+    <>
+      {`Request to ${repositoryName} with ID `}
+      <strong>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {source.repository_id}
+          {' '}
+        </a>
+      </strong>
+    </>
+  );
+}
+
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   let message = '';
@@ -25,20 +46,20 @@ function FinishedSource({ sourceId }) {
       }
       break;
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
-    case 'ligation': message = 'Ligation of fragments'; break;
-    case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
+    case 'LigationSource': message = 'Ligation of fragments'; break;
+    case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
     case 'RestrictionEnzymeDigestionSource': {
       const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
       message = `Restriction with ${uniqueEnzymes.join(' and ')}`;
     }
       break;
-    case 'restriction_and_ligation': {
+    case 'RestrictionAndLigationSource': {
       const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
       uniqueEnzymes.sort();
       message = `Restriction with ${uniqueEnzymes.join(' and ')}, then ligation`;
     }
       break;
-    case 'PCR': {
+    case 'PCRSource': {
       const primers = useSelector((state) => state.primers.primers);
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
     }
@@ -48,33 +69,16 @@ function FinishedSource({ sourceId }) {
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;
     }
       break;
-    case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
-    case 'crispr': {
+    case 'HomologousRecombinationSource': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
+    case 'CRISPRSource': {
       const primers = useSelector((state) => state.primers.primers);
       const guidesString = source.guides.map((id) => primers.find((p) => id === p.id).name).join(', ');
       message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${guidesString} as a guide${source.guides.length > 1 ? 's' : ''}`;
     }
       break;
-    case 'RepositoryIdSource': {
-      const { repository_name: repositoryName } = source;
-      let url = '';
-      if (repositoryName === 'genbank') {
-        url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
-      } else if (repositoryName === 'addgene') {
-        url = `https://www.addgene.org/${source.repository_id}/sequences/`;
-      }
-      message = (
-        <>
-          {`Request to ${repositoryName} with ID `}
-          <strong>
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {source.repository_id}
-              {' '}
-            </a>
-          </strong>
-        </>
-      );
-    }
+    case 'RepositoryIdSource': message = <RepositoryIdMessage source={source} />;
+      break;
+    case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
       break;
     case 'GenomeCoordinatesSource': {
       message = (
@@ -117,7 +121,7 @@ function FinishedSource({ sourceId }) {
   }
   return (
     <SourceBox {...{ sourceId: source.id }}>
-      <div>{message}</div>
+      <div className="finished-source">{message}</div>
     </SourceBox>
   );
 }

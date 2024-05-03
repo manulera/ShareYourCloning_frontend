@@ -50,7 +50,7 @@
         3
       ],
       "output": 8,
-      "type": "PCR",
+      "type": "PCRSource",
       "assembly": [
         [
           1,
@@ -89,7 +89,7 @@
         8
       ],
       "output": 20,
-      "type": "homologous_recombination",
+      "type": "HomologousRecombinationSource",
       "assembly": [
         [
           1,

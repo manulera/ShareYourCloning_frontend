@@ -13,14 +13,12 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence(`${homology1}acaa${homology2}`);
     // Add gRNA
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer(guideRNASeq, 'gRNA-1');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('gRNA-1', guideRNASeq);
 
-    ['crispr', 'homologous_recombination'].forEach((sourceType) => {
+    ['CRISPRSource', 'HomologousRecombinationSource'].forEach((sourceType) => {
       addSource(sourceType);
       clickMultiSelectOption('Insert sequence', '4', 'li#source-5');
-      if (sourceType === 'crispr') {
+      if (sourceType === 'CRISPRSource') {
         clickMultiSelectOption('Select gRNAs', 'gRNA-1', 'li#source-5');
       }
       cy.get('li#source-5 button.submit-backend-api').click();
@@ -34,14 +32,12 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence(`${homology1}acaa${homology1}`);
     // Add gRNA
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer(guideRNASeq, 'gRNA-1');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('gRNA-1', guideRNASeq);
 
-    ['crispr', 'homologous_recombination'].forEach((sourceType) => {
+    ['CRISPRSource', 'HomologousRecombinationSource'].forEach((sourceType) => {
       addSource(sourceType);
       clickMultiSelectOption('Insert sequence', '4', 'li#source-5');
-      if (sourceType === 'crispr') {
+      if (sourceType === 'CRISPRSource') {
         clickMultiSelectOption('Select gRNAs', 'gRNA-1', 'li#source-5');
       }
       cy.get('li#source-5 button.submit-backend-api').click();
@@ -58,14 +54,12 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence(`${homology1}acaa${homology1}`);
     // Add gRNA
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer(guideRNASeq, 'gRNA-1');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('gRNA-1', guideRNASeq);
 
-    ['crispr', 'homologous_recombination'].forEach((sourceType) => {
+    ['CRISPRSource', 'HomologousRecombinationSource'].forEach((sourceType) => {
       addSource(sourceType);
       clickMultiSelectOption('Insert sequence', '4', 'li#source-5');
-      if (sourceType === 'crispr') {
+      if (sourceType === 'CRISPRSource') {
         clickMultiSelectOption('Select gRNAs', 'gRNA-1', 'li#source-5');
       }
       cy.get('li#source-5 button.submit-backend-api').click();
@@ -81,15 +75,12 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence(`${homology1}acaa${homology2}`);
 
-    addSource('crispr');
+    addSource('CRISPRSource');
     clickMultiSelectOption('Insert sequence', '4', 'li#source-5');
 
     // Add gRNAs
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('CTTTACACCTATGTATGAAG', 'gRNA-cut-outside');
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('CTTTACACCCTATGTATGAAG', 'gRNA-no-cut');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('gRNA-cut-outside', 'CTTTACACCTATGTATGAAG');
+    addPrimer('gRNA-no-cut', 'CTTTACACCCTATGTATGAAG');
 
     // Test gRNA that cuts outside
     clickMultiSelectOption('Select gRNAs', 'gRNA-cut-outside', 'li#source-5');
@@ -106,14 +97,12 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence(`${homology1}acaa${homology2}`);
     // Add gRNA
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer(guideRNASeq, 'gRNA-1');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('gRNA-1', guideRNASeq);
 
-    ['crispr', 'homologous_recombination'].forEach((sourceType) => {
+    ['CRISPRSource', 'HomologousRecombinationSource'].forEach((sourceType) => {
       addSource(sourceType);
       clickMultiSelectOption('Insert sequence', '4', 'li#source-5');
-      if (sourceType === 'crispr') {
+      if (sourceType === 'CRISPRSource') {
         clickMultiSelectOption('Select gRNAs', 'gRNA-1', 'li#source-5');
       }
       cy.intercept('POST', 'http://127.0.0.1:8000/*', { forceNetworkError: true }).as('interc');

@@ -78,7 +78,7 @@
         37
       ],
       "output": 39,
-      "type": "PCR",
+      "type": "PCRSource",
       "assembly": [
         [
           1,
@@ -144,7 +144,7 @@
         43
       ],
       "output": 47,
-      "type": "ligation",
+      "type": "LigationSource",
       "assembly": [
         [
           1,

@@ -1,7 +1,7 @@
 import { clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
 
-const allOptions = ['RestrictionEnzymeDigestionSource', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'PolymeraseExtensionSource', 'crispr'];
-const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'crispr'];
+const allOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'PolymeraseExtensionSource', 'CRISPRSource'];
+const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
   allOptions.forEach((value) => {
@@ -50,7 +50,7 @@ describe('Test Source input constrains', () => {
     cy.get('body').click(0, 0);
     // Change to multi-input
     multiInputOptions.forEach((value) => {
-      if (value !== 'homologous_recombination' && value !== 'crispr') {
+      if (value !== 'HomologousRecombinationSource' && value !== 'CRISPRSource') {
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
         cy.get(`li[data-value="${value}"]`).click();
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
