@@ -56,6 +56,10 @@ export async function getReferenceAssemblyId(taxonId) {
 export async function geneSuggest(assemblyId, userInput) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/annotation_report?search_text=${userInput}`;
   const resp = await axios.get(url);
+  // TODO: add support for api key
+  // const resp = await axios.get(url, { params: {
+  //   api_key: 'blah',
+  // } });
   const { reports } = resp.data;
   return reports === undefined ? [] : reports;
 }

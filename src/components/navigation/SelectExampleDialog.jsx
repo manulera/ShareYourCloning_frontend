@@ -20,7 +20,7 @@ const examples = [
   },
   {
     title: 'Restriction + ligation assembly (v2)',
-    link: 'history.json',
+    link: 'restriction_then_ligation.json',
   },
   {
     title: 'Templateless PCR',

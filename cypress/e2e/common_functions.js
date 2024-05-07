@@ -23,8 +23,8 @@ export function clearPrimers() {
 export function addPrimer(name, seq) {
   cy.get('button.MuiTab-root').contains('Primers').click();
   cy.get('.primer-form-container').contains('Add Primer').click();
-  cy.get('form.primer-row input#name').type(name);
-  cy.get('form.primer-row input#sequence').type(seq);
+  cy.get('form.primer-row input#name').type(name, { delay: 0 });
+  cy.get('form.primer-row input#sequence').type(seq, { delay: 0 });
   cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
   cy.get('button.MuiTab-root').contains('Cloning').click();
 }
