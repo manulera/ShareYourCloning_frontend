@@ -11,7 +11,7 @@ export default function useBackendAPI(sourceId) {
   const { addEntityAndItsSource } = cloningActions;
   const dispatch = useDispatch();
 
-  const sendPostRequest = useCallback(async (endpoint, requestData, config = {}) => {
+  const sendPostRequest = useCallback(async (endpoint, requestData, config = {}, modifySource = (s) => s) => {
     setRequestStatus({ status: 'loading', message: 'loading' });
     // Built like this in case trailing slash
     const url = new URL(endpoint, import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
@@ -21,11 +21,11 @@ export default function useBackendAPI(sourceId) {
       .post(url, requestData, fullConfig)
       .then((resp) => {
         setRequestStatus({ status: null, message: '' });
-
+        const receivedSources = resp.data.sources.map(modifySource);
         // If there is only a single product, commit the result, else allow choosing
-        if (resp.data.sources.length === 1) {
-          dispatch(addEntityAndItsSource({ newSource: { ...resp.data.sources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
-        } else { setSources(resp.data.sources); setEntities(resp.data.sequences); }
+        if (receivedSources.length === 1) {
+          dispatch(addEntityAndItsSource({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
+        } else { setSources(receivedSources); setEntities(resp.data.sequences); }
       }).catch((error) => { setRequestStatus({ status: 'error', message: error2String(error) }); setSources([]); setEntities([]); });
   }, []);
 

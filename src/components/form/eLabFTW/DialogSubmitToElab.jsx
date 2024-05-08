@@ -1,6 +1,6 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, TextField } from '@mui/material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { uploadToELabFTWThunk } from '../../../utils/readNwrite';
 import ElabFTWCategorySelect from './ElabFTWCategorySelect';
 
@@ -8,13 +8,23 @@ function DialogSubmitToElab({ dialogOpen, setDialogOpen }) {
   const dispatch = useDispatch();
   const apiKey = import.meta.env.VITE_ELABFTW_API_WRITE_KEY;
   const [category, setCategory] = React.useState('');
-  const [title, setTitle] = React.useState('');
+  const entity2export = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.network[0].entity.id, shallowEqual));
+  // Read the name with a regex of the file_content
+  const name = entity2export ? entity2export.file_content.match(/(?<=LOCUS\s+)(\S+)/)[0] : '';
+  const [title, setTitle] = React.useState(name);
   const [errorMessage, setErrorMessage] = React.useState('');
+
+  const handleClose = () => {
+    setDialogOpen(false);
+    setErrorMessage('');
+    setCategory('');
+    setTitle('');
+  };
 
   return (
     <Dialog
       open={dialogOpen}
-      onClose={() => setDialogOpen(false)}
+      onClose={handleClose}
       PaperProps={{
         component: 'form',
         onSubmit: (event) => {
@@ -42,7 +52,7 @@ function DialogSubmitToElab({ dialogOpen, setDialogOpen }) {
         {errorMessage && <Alert severity="error" sx={{ mt: 2 }}>{errorMessage}</Alert>}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => { setDialogOpen(false); setErrorMessage(''); }}>Cancel</Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button type="submit">Submit</Button>
       </DialogActions>
     </Dialog>

@@ -30,21 +30,7 @@ function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   let message = '';
   switch (source.type) {
-    case 'UploadedFileSource':
-      if (source.info && source.info.file_from === 'eLabFTW') {
-        message = (
-          <>
-            Read from file
-            {' '}
-            <a target="_blank" rel="noopener noreferrer" href={`https://elab.local:3148/database.php?mode=view&id=${source.info.item_id}`}>{source.file_name}</a>
-            {' '}
-            from eLabFTW
-          </>
-        );
-      } else {
-        message = `Read from uploaded file ${source.file_name}`; break;
-      }
-      break;
+    case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
     case 'LigationSource': message = 'Ligation of fragments'; break;
     case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
@@ -115,8 +101,19 @@ function FinishedSource({ sourceId }) {
       );
       break;
     }
-    case 'elabftw': message = 'Request to eLabFTW'; break;
     case 'PolymeraseExtensionSource': message = 'Polymerase extension'; break;
+    case 'ELabFTWFileSource': {
+      message = (
+        <>
+          Read from file
+          {' '}
+          <a target="_blank" rel="noopener noreferrer" href={`https://elab.local:3148/database.php?mode=view&id=${source.item_id}`}>{source.file_name}</a>
+          {' '}
+          from eLabFTW
+        </>
+      );
+      break;
+    }
     default: message = '';
   }
   return (

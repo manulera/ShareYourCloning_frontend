@@ -36,7 +36,7 @@ function MainAppBar() {
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     // elab-demo
-    // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
+    { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
 
   const handleCloseDialog = (fileName) => {
@@ -61,7 +61,6 @@ function MainAppBar() {
       try {
         jsonObject = JSON.parse(eventFileRead.target.result);
       } catch (e) {
-        console.log(eventFileRead.target.result);
         setLoadedFileError('Input file should be a JSON file with the history');
         return;
       }
@@ -97,7 +96,10 @@ function MainAppBar() {
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
       {/* elab-demo */}
-      {/* <DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} /> */}
+      (
+      {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
+      )
+
     </AppBar>
   );
 }
