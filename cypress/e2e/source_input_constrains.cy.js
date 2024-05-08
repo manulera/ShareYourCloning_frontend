@@ -59,8 +59,8 @@ describe('Test Source input constrains', () => {
         cy.get(`li[data-value="${value}"]`).click();
         // Add another input
         cy.get('li#source-5 .MuiInputBase-root').eq(1).click();
-        // Two inputs listed
-        cy.get('ul[role="listbox"] li').should('have.length', 2);
+        // Two inputs listed + select all
+        cy.get('ul[role="listbox"] li').should('have.length', 3);
         // Select the second input and click outside to close select element
         cy.get('li[data-value="4"]').click();
         cy.get('body').click(0, 0);

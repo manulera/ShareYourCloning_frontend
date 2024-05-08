@@ -16,7 +16,7 @@ module.exports = defineConfig({
     },
     baseUrl: 'http://localhost:3000',
     experimentalStudio: true,
-    numTestsKeptInMemory: 50,
+    numTestsKeptInMemory: 2,
   },
 
   component: {

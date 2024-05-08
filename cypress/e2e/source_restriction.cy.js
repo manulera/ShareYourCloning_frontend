@@ -1,4 +1,4 @@
-import { manuallyTypeSequence, addSource } from './common_functions';
+import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes } from './common_functions';
 
 describe('Test restriction component', () => {
   beforeEach(() => {
@@ -7,12 +7,9 @@ describe('Test restriction component', () => {
   it('Works with single enzyme', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');
     addSource('RestrictionEnzymeDigestionSource');
+    waitForEnzymes('li#source-3');
     // Click the selector
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    // Select EcoRI
-    cy.get('label').contains('Enzymes used').siblings('div').children('input')
-      .type('EcoRI');
-    cy.get('div[role="presentation"]').contains('EcoRI').click();
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
     // Cut with EcoRI
     cy.get('button').contains('Perform restriction').click();
     // Contains both the parent with the subset, and the child with the result
@@ -40,10 +37,9 @@ describe('Test restriction component', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
     addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]').contains('SalI').click();
+    waitForEnzymes('li#source-3');
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
+    clickMultiSelectOption('Enzymes used', 'SalI', 'li#source-3');
     cy.get('button').contains('Perform restriction').click();
     // The result is shown and there are 3 possible fragments (both enzymes were sent)
     cy.get('li#source-3 .overhang-representation').contains('ttcttaa');
@@ -65,8 +61,8 @@ describe('Test restriction component', () => {
     manuallyTypeSequence('aagaattcaaaa', true);
     addSource('RestrictionEnzymeDigestionSource');
     // Cut with EcoRI
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]').contains('EcoRI').click();
+    waitForEnzymes('li#source-3');
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
     cy.get('button').contains('Perform restriction').click();
     // Directly displays the result
     cy.get('li#sequence-4 li#source-3').should('exist');
@@ -82,23 +78,21 @@ describe('Test restriction component', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
     addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
+    waitForEnzymes('li#source-3');
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
     cy.get('button').contains('Perform restriction').click();
     // The cut shown is EcoRI
     cy.get('li#source-3 .overhang-representation').contains('ttcttaa');
     // Unselect EcoRI and select SalI
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]').contains('EcoRI').click();
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]').contains('SalI').click();
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
+    clickMultiSelectOption('Enzymes used', 'SalI', 'li#source-3');
     cy.get('button').contains('Perform restriction').click();
     // The cut shown is SalI
-    cy.get('li#source-3 .overhang-representation').contains('TTCTT...TTTTCAGCT');
+    cy.get('li#source-3 .overhang-representation', { timeout: 20000 }).contains('TTCTT...TTTTCAGCT');
     // Select this cut
     cy.get('button').contains('Choose fragment').click();
     // The result is shown
-    cy.get('li#sequence-4 li#source-3').should('exist');
+    cy.get('li#sequence-4 li#source-3', { timeout: 20000 }).should('exist');
     cy.get('li#sequence-4 .overhang-representation').contains('TTCTT...TTTTCAGCT');
   });
   it('shows the right error if the enzyme does not cut', () => {
@@ -106,10 +100,9 @@ describe('Test restriction component', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
     addSource('RestrictionEnzymeDigestionSource');
     // Select the enzymes and submit
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]', { timeout: 20000 }).contains('AanI').click();
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]').contains('AatII').click();
+    waitForEnzymes('li#source-3');
+    clickMultiSelectOption('Enzymes used', 'AanI', 'li#source-3');
+    clickMultiSelectOption('Enzymes used', 'AatII', 'li#source-3');
     cy.get('button').contains('Perform restriction').click();
     // The cut shown is EcoRI
     cy.get('li#source-3').contains('These enzymes do not cut');
@@ -117,9 +110,9 @@ describe('Test restriction component', () => {
   it('shows the right error if the backend server fails', () => {
     manuallyTypeSequence('aagaattcaaaaGTCGACaa');
     addSource('RestrictionEnzymeDigestionSource');
+    waitForEnzymes('li#source-3');
     // Select the enzymes and submit
-    cy.get('li#source-3 .MuiInputBase-root').eq(1).click();
-    cy.get('div[role="presentation"]', { timeout: 20000 }).contains('EcoRI').click();
+    clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-3');
     // Intercept the request
     // simulate backend not connected
     cy.intercept('POST', '/restriction*', { forceNetworkError: true });

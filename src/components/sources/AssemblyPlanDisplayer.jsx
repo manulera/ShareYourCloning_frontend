@@ -7,14 +7,15 @@ function AssemblyPlanDisplayer({
     return null;
   }
   const mappedAssembly = source.assembly.map((a) => {
-    const { left_fragment, right_fragment, left_location, right_location } = a;
-
-    const u = source.input[Math.abs(left_fragment) - 1];
-    const uText = left_fragment > 0 ? `${u}` : `rc(${u})`;
-    const v = source.input[Math.abs(right_fragment) - 1];
-    const vText = right_fragment > 0 ? `${v}` : `rc(${v})`;
-    const locU = `${left_location.start}:${left_location.end}`;
-    const locV = `${right_location.start}:${right_location.end}`;
+    const { left, right } = a;
+    const { sequence: leftFragment, location: leftLocation, reverse_complemented: leftRc } = left;
+    const { sequence: rightFragment, location: rightLocation, reverse_complemented: rightRc } = right;
+    const u = source.input[Math.abs(leftFragment) - 1];
+    const uText = leftRc ? `rc(${u})` : `${u}`;
+    const v = source.input[Math.abs(rightFragment) - 1];
+    const vText = rightRc ? `rc(${v})` : `${v}`;
+    const locU = `${leftLocation.start}:${leftLocation.end}`;
+    const locV = `${rightLocation.start}:${rightLocation.end}`;
     return `${uText}[${locU}]:${vText}[${locV}]`;
   });
 
@@ -25,4 +26,4 @@ function AssemblyPlanDisplayer({
   );
 }
 
-export default AssemblyPlanDisplayer;
+export default React.memo(AssemblyPlanDisplayer);

@@ -7,18 +7,20 @@ describe('Test load example functionality', () => {
 
     cy.get('.load-example-dialog .load-example-item').each((el, index) => {
       cy.get('.load-example-dialog .load-example-item').eq(index).click();
-      cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
       cy.get('div.finished-source').should('exist');
+      // No error should be displayed
+      cy.get('header .MuiAlert-message').should('not.exist');
       // None of those divs should be empty
       cy.get('div.finished-source').each((el) => {
         cy.get(el).should('not.be.empty');
       });
+      cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
     });
     // Verify one in particular
     cy.get('.load-example-dialog .load-example-item').contains('Integration of cassette by homologous recombination').click();
     // Loads cloning
-    cy.get('div.cloning-tab-pannel').contains('Request to addgene with ID 19342');
-    cy.get('div.cloning-tab-pannel').contains('4548 bps');
+    cy.get('div.cloning-tab-pannel').contains('Request to addgene with ID 19342', { timeout: 10000 });
+    cy.get('div.cloning-tab-pannel').contains('4368 bps');
     cy.get('div.cloning-tab-pannel').should('be.visible');
     cy.get('div.description-tab-pannel').should('not.be.visible');
     // Loads primers

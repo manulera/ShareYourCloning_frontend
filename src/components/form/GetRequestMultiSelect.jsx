@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import { Alert, Button, CircularProgress, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
-export default function GetRequestMultiSelect({ getOptionsFromResponse, url, label, messages, onChange, multiple = true, autoComplete = true, getOptionLabel, requestHeaders = {} }) {
+export default function GetRequestMultiSelect({ getOptionsFromResponse, url, label, messages, onChange, multiple = true, autoComplete = true, getOptionLabel, requestHeaders = {}, className }) {
   const { loadingMessage, errorMessage } = messages;
   const [options, setOptions] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
@@ -46,7 +46,7 @@ export default function GetRequestMultiSelect({ getOptionsFromResponse, url, lab
   }
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth className={className}>
       {autoComplete ? (
         <Autocomplete
           multiple={multiple}

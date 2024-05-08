@@ -9,14 +9,6 @@
       "file_content": "LOCUS       pFA6a-5FLAG-hphMX6      4531 bp    ds-DNA  circular SYN 12-MAY-2021\nDEFINITION  synthetic circular DNA.\nACCESSION   .\nVERSION     .\nKEYWORDS    pFA6a-5FLAG-hphMX6.\nSOURCE      synthetic DNA construct\n  ORGANISM  synthetic DNA construct\n            .\nREFERENCE   1  (bases 1 to 4531)\n  AUTHORS   Noguchi C, Garabedian MV, Malik M, Noguchi E\n  TITLE     A vector system for genomic FLAG epitope-tagging in\n            Schizosaccharomyces pombe.\n  JOURNAL   Biotechnol J. 2008 Aug 26. ():.\n   PUBMED   18729046\nREFERENCE   2  (bases 1 to 4531)\n  AUTHORS   .\n  TITLE     Direct Submission\n  JOURNAL   Exported May 12, 2021 from SnapGene Server 1.1.58\n            http://www.snapgene.com\nFEATURES             Location/Qualifiers\n     source          1..4531\n                     /organism=\"synthetic DNA construct\"\n                     /mol_type=\"other DNA\"\n     CDS             69..200\n                     /codon_start=1\n                     /product=\"five tandem FLAG(R) epitope tags\"\n                     /label=\"5xFLAG\"\n                     /translation=\"DYKDDDDKDYKDDDDKLMDYKDDDDKDYKDDDDKLMDYKDDDDK\"\n     terminator      227..414\n                     /gene=\"S. cerevisiae ADH1\"\n                     /label=\"ADH1 terminator\"\n                     /note=\"transcription terminator for the S. cerevisiae\n                     alcohol dehydrogenase 1 (ADH1) gene\"\n     primer_bind     complement(282..306)\n                     /label=\"pHybLex-R\"\n                     /note=\"ADH terminator, reverse primer\"\n     gene            489..2064\n                     /label=\"hphMX6\"\n                     /note=\"yeast selectable marker conferring hygromycin\n                     resistance\"\n     promoter        489..832\n                     /label=\"TEF promoter\"\n                     /note=\"Ashbya gossypii TEF promoter\"\n     CDS             833..1861\n                     /codon_start=1\n                     /gene=\"aph(4)-Ia\"\n                     /product=\"aminoglycoside phosphotransferase from E. coli\"\n                     /label=\"HygR\"\n                     /note=\"confers resistance to hygromycin\"\n                     /translation=\"MGKKPELTATSVEKFLIEKFDSVSDLMQLSEGEESRAFSFDVGGR\n                     GYVLRVNSCADGFYKDRYVYRHFASAALPIPEVLDIGEFSESLTYCISRRAQGVTLQDL\n                     PETELPAVLQPVAEAMDAIAAADLSQTSGFGPFGPQGIGQYTTWRDFICAIADPHVYHW\n                     QTVMDDTVSASVAQALDELMLWAEDCPEVRHLVHADFGSNNVLTDNGRITAVIDWSEAM\n                     FGDSQYEVANIFFWRPWLACMEQQTRYFERRHPELAGSPRLRAYMLRIGLDQLYQSLVD\n                     GNFDDAAWAQGRCDAIVRSGAGTVGRTQIARRSAAVWTDGCVEVLADSGNRRPSTRPRA\n                     KE\"\n     terminator      1867..2064\n                     /label=\"TEF terminator\"\n                     /note=\"Ashbya gossypii TEF terminator\"\n     primer_bind     complement(2168..2187)\n                     /label=\"T7\"\n                     /note=\"T7 promoter, forward primer\"\n     promoter        complement(2169..2187)\n                     /label=\"T7 promoter\"\n                     /note=\"promoter for bacteriophage T7 RNA polymerase\"\n     primer_bind     complement(2274..2291)\n                     /label=\"L4440\"\n                     /note=\"L4440 vector, forward primer\"\n     rep_origin      complement(2445..3033)\n                     /direction=LEFT\n                     /label=\"ori\"\n                     /note=\"high-copy-number ColE1/pMB1/pBR322/pUC origin of\n                     replication\"\n     primer_bind     complement(2525..2544)\n                     /label=\"pBR322ori-F\"\n                     /note=\"pBR322 origin, forward primer\"\n     CDS             complement(3204..4064)\n                     /codon_start=1\n                     /gene=\"bla\"\n                     /product=\"beta-lactamase\"\n                     /label=\"AmpR\"\n                     /note=\"confers resistance to ampicillin, carbenicillin, and\n                     related antibiotics\"\n                     /translation=\"MSIQHFRVALIPFFAAFCLPVFAHPETLVKVKDAEDQLGARVGYI\n                     ELDLNSGKILESFRPEERFPMMSTFKVLLCGAVLSRIDAGQEQLGRRIHYSQNDLVEYS\n                     PVTEKHLTDGMTVRELCSAAITMSDNTAANLLLTTIGGPKELTAFLHNMGDHVTRLDRW\n                     EPELNEAIPNDERDTTMPVAMATTLRKLLTGELLTLASRQQLIDWMEADKVAGPLLRSA\n                     LPAGWFIADKSGAGERGSRGIIAALGPDGKPSRIVVIYTTGSQATMDERNRQIAEIGAS\n                     LIKHW\"\n     primer_bind     3827..3846\n                     /label=\"Amp-R\"\n                     /note=\"Ampicillin resistance gene, reverse primer\"\n     promoter        complement(4065..4169)\n                     /gene=\"bla\"\n                     /label=\"AmpR promoter\"\n     primer_bind     4237..4255\n                     /label=\"pBRforEco\"\n                     /note=\"pBR322 vectors, upsteam of EcoRI site, forward\n                     primer\"\n     primer_bind     complement(4293..4315)\n                     /label=\"pGEX 3'\"\n                     /note=\"pGEX vectors, reverse primer\"\n     primer_bind     4415..4434\n                     /label=\"pRS-marker\"\n                     /note=\"pRS vectors, use to sequence yeast selectable\n                     marker\"\n     promoter        join(4515..4531,1..2)\n                     /label=\"SP6 promoter\"\n                     /note=\"promoter for bacteriophage SP6 RNA polymerase\"\n     primer_bind     join(4515..4531,1)\n                     /label=\"SP6\"\n                     /note=\"SP6 promoter, forward primer\"\nORIGIN\n        1 gaacgcggcc gccagctgaa gcttcgtacg ctgcaggtcg acggatcccc gggttaatta\n       61 atcatatgga ctacaaggac gacgatgaca aggattacaa agatgacgac gataagctta\n      121 tggactacaa ggacgacgat gacaaggatt acaaagatga cgacgataag cttatggact\n      181 acaaggacga cgatgacaag catatgggcg cgccacttct aaataagcga atttcttatg\n      241 atttatgatt tttattatta aataagttat aaaaaaaata agtgtataca aattttaaag\n      301 tgactcttag gttttaaaac gaaaattctt attcttgagt aactctttcc tgtaggtcag\n      361 gttgctttct caggtatagt atgaggtcgc tcttattgac cacacctcta ccggcagatc\n      421 cgctagggat aacagggtaa tatagatctg tttagcttgc ctcgtccccg ccgggtcacc\n      481 cggccagcga catggaggcc cagaataccc tccttgacag tcttgacgtg cgcagctcag\n      541 gggcatgatg tgactgtcgc ccgtacattt agcccataca tccccatgta taatcatttg\n      601 catccataca ttttgatggc cgcacggcgc gaagcaaaaa ttacggctcc tcgctgcaga\n      661 cctgcgagca gggaaacgct cccctcacag acgcgttgaa ttgtccccac gccgcgcccc\n      721 tgtagagaaa tataaaaggt taggatttgc cactgaggtt cttctttcat atacttcctt\n      781 ttaaaatctt gctaggatac agttctcaca tcacatccga acataaacaa ccatgggtaa\n      841 aaagcctgaa ctcaccgcga cgtctgtcga gaagtttctg atcgaaaagt tcgacagcgt\n      901 ctccgacctg atgcagctct cggagggcga agaatctcgt gctttcagct tcgatgtagg\n      961 agggcgtgga tatgtcctgc gggtaaatag ctgcgccgat ggtttctaca aagatcgtta\n     1021 tgtttatcgg cactttgcat cggccgcgct cccgattccg gaagtgcttg acattgggga\n     1081 attcagcgag agcctgacct attgcatctc ccgccgtgca cagggtgtca cgttgcaaga\n     1141 cctgcctgaa accgaactgc ccgctgttct gcagccggtc gcggaggcca tggatgcgat\n     1201 cgctgcggcc gatcttagcc agacgagcgg gttcggccca ttcggaccgc aaggaatcgg\n     1261 tcaatacact acatggcgtg atttcatatg cgcgattgct gatccccatg tgtatcactg\n     1321 gcaaactgtg atggacgaca ccgtcagtgc gtccgtcgcg caggctctcg atgagctgat\n     1381 gctttgggcc gaggactgcc ccgaagtccg gcacctcgtg cacgcggatt tcggctccaa\n     1441 caatgtcctg acggacaatg gccgcataac agcggtcatt gactggagcg aggcgatgtt\n     1501 cggggattcc caatacgagg tcgccaacat cttcttctgg aggccgtggt tggcttgtat\n     1561 ggagcagcag acgcgctact tcgagcggag gcatccggag cttgcaggat cgccgcggct\n     1621 ccgggcgtat atgctccgca ttggtcttga ccaactctat cagagcttgg ttgacggcaa\n     1681 tttcgatgat gcagcttggg cgcagggtcg atgcgacgca atcgtccgat ccggagccgg\n     1741 gactgtcggg cgtacacaaa tcgcccgcag aagcgcggcc gtctggaccg atggctgtgt\n     1801 agaagtactc gccgatagtg gaaaccgacg ccccagcact cgtccgaggg caaaggaata\n     1861 atcagtactg acaataaaaa gattcttgtt ttcaagaact tgtcatttgt atagtttttt\n     1921 tatattgtag ttgttctatt ttaatcaaat gttagcgtga tttatatttt ttttcgcctc\n     1981 gacatcatct gcccagatgc gaagttaagt gcgcagaaag taatatcatg cgtcaatcgt\n     2041 atgtgaatgc tggtcgctat actgctgtcg attcgatact aacgccgcca tccagtttaa\n     2101 acgagctcga attcatcgat gatatcagat ccactagtgg cctatgcggc cgcggatctg\n     2161 ccggtctccc tatagtgagt cgtattaatt tcgataagcc aggttaacct gcattaatga\n     2221 atcggccaac gcgcggggag aggcggtttg cgtattgggc gctcttccgc ttcctcgctc\n     2281 actgactcgc tgcgctcggt cgttcggctg cggcgagcgg tatcagctca ctcaaaggcg\n     2341 gtaatacggt tatccacaga atcaggggat aacgcaggaa agaacatgtg agcaaaaggc\n     2401 cagcaaaagg ccaggaaccg taaaaaggcc gcgttgctgg cgtttttcca taggctccgc\n     2461 ccccctgacg agcatcacaa aaatcgacgc tcaagtcaga ggtggcgaaa cccgacagga\n     2521 ctataaagat accaggcgtt tccccctgga agctccctcg tgcgctctcc tgttccgacc\n     2581 ctgccgctta ccggatacct gtccgccttt ctcccttcgg gaagcgtggc gctttctcaa\n     2641 tgctcacgct gtaggtatct cagttcggtg taggtcgttc gctccaagct gggctgtgtg\n     2701 cacgaacccc ccgttcagcc cgaccgctgc gccttatccg gtaactatcg tcttgagtcc\n     2761 aacccggtaa gacacgactt atcgccactg gcagcagcca ctggtaacag gattagcaga\n     2821 gcgaggtatg taggcggtgc tacagagttc ttgaagtggt ggcctaacta cggctacact\n     2881 agaaggacag tatttggtat ctgcgctctg ctgaagccag ttaccttcgg aaaaagagtt\n     2941 ggtagctctt gatccggcaa acaaaccacc gctggtagcg gtggtttttt tgtttgcaag\n     3001 cagcagatta cgcgcagaaa aaaaggatct caagaagatc ctttgatctt ttctacgggg\n     3061 tctgacgctc agtggaacga aaactcacgt taagggattt tggtcatgag attatcaaaa\n     3121 aggatcttca cctagatcct tttaaattaa aaatgaagtt ttaaatcaat ctaaagtata\n     3181 tatgagtaaa cttggtctga cagttaccaa tgcttaatca gtgaggcacc tatctcagcg\n     3241 atctgtctat ttcgttcatc catagttgcc tgactccccg tcgtgtagat aactacgata\n     3301 cgggagggct taccatctgg ccccagtgct gcaatgatac cgcgagaccc acgctcaccg\n     3361 gctccagatt tatcagcaat aaaccagcca gccggaaggg ccgagcgcag aagtggtcct\n     3421 gcaactttat ccgcctccat ccagtctatt aattgttgcc gggaagctag agtaagtagt\n     3481 tcgccagtta atagtttgcg caacgttgtt gccattgcta caggcatcgt ggtgtcacgc\n     3541 tcgtcgtttg gtatggcttc attcagctcc ggttcccaac gatcaaggcg agttacatga\n     3601 tcccccatgt tgtgcaaaaa agcggttagc tccttcggtc ctccgatcgt tgtcagaagt\n     3661 aagttggccg cagtgttatc actcatggtt atggcagcac tgcataattc tcttactgtc\n     3721 atgccatccg taagatgctt ttctgtgact ggtgagtact caaccaagtc attctgagaa\n     3781 tagtgtatgc ggcgaccgag ttgctcttgc ccggcgtcaa tacgggataa taccgcgcca\n     3841 catagcagaa ctttaaaagt gctcatcatt ggaaaacgtt cttcggggcg aaaactctca\n     3901 aggatcttac cgctgttgag atccagttcg atgtaaccca ctcgtgcacc caactgatct\n     3961 tcagcatctt ttactttcac cagcgtttct gggtgagcaa aaacaggaag gcaaaatgcc\n     4021 gcaaaaaagg gaataagggc gacacggaaa tgttgaatac tcatactctt cctttttcaa\n     4081 tattattgaa gcatttatca gggttattgt ctcatgagcg gatacatatt tgaatgtatt\n     4141 tagaaaaata aacaaatagg ggttccgcgc acatttcccc gaaaagtgcc acctgacgtc\n     4201 taagaaacca ttattatcat gacattaacc tataaaaata ggcgtatcac gaggcccttt\n     4261 cgtctcgcgc gtttcggtga tgacggtgaa aacctctgac acatgcagct cccggagacg\n     4321 gtcacagctt gtctgtaagc ggatgccggg agcagacaag cccgtcaggg cgcgtcagcg\n     4381 ggtgttggcg ggtgtcgggg ctggcttaac tatgcggcat cagagcagat tgtactgaga\n     4441 gtgcaccata tggacatatt gtcgttagaa cgcggctaca attaatacat aaccttatgt\n     4501 atcatacaca tacgatttag gtgacactat a\n//"
     },
     {
-      "id": 4,
-      "type": "TextFileSequence",
-      "sequence_file_format": "genbank",
-      "overhang_crick_3prime": 0,
-      "overhang_watson_3prime": 0,
-      "file_content": "LOCUS       name                    2233 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     CDS             108..239\n                     /codon_start=1\n                     /product=\"five tandem FLAG(R) epitope tags\"\n                     /label=\"5xFLAG\"\n                     /translation=\"DYKDDDDKDYKDDDDKLMDYKDDDDKDYKDDDDKLMDYKDDDDK\"\n     terminator      266..453\n                     /gene=\"S. cerevisiae ADH1\"\n                     /label=\"ADH1 terminator\"\n                     /note=\"transcription terminator for the S. cerevisiae\n                     alcohol dehydrogenase 1 (ADH1) gene\"\n     primer_bind     complement(321..345)\n                     /label=\"pHybLex-R\"\n                     /note=\"ADH terminator, reverse primer\"\n     gene            528..2103\n                     /label=\"hphMX6\"\n                     /note=\"yeast selectable marker conferring hygromycin\n                     resistance\"\n     promoter        528..871\n                     /label=\"TEF promoter\"\n                     /note=\"Ashbya gossypii TEF promoter\"\n     CDS             872..1900\n                     /codon_start=1\n                     /gene=\"aph(4)-Ia\"\n                     /product=\"aminoglycoside phosphotransferase from E. coli\"\n                     /label=\"HygR\"\n                     /note=\"confers resistance to hygromycin\"\n                     /translation=\"MGKKPELTATSVEKFLIEKFDSVSDLMQLSEGEESRAFSFDVGGR\n                     GYVLRVNSCADGFYKDRYVYRHFASAALPIPEVLDIGEFSESLTYCISRRAQGVTLQDL\n                     PETELPAVLQPVAEAMDAIAAADLSQTSGFGPFGPQGIGQYTTWRDFICAIADPHVYHW\n                     QTVMDDTVSASVAQALDELMLWAEDCPEVRHLVHADFGSNNVLTDNGRITAVIDWSEAM\n                     FGDSQYEVANIFFWRPWLACMEQQTRYFERRHPELAGSPRLRAYMLRIGLDQLYQSLVD\n                     GNFDDAAWAQGRCDAIVRSGAGTVGRTQIARRSAAVWTDGCVEVLADSGNRRPSTRPRA\n                     KE\"\n     terminator      1906..2103\n                     /label=\"TEF terminator\"\n                     /note=\"Ashbya gossypii TEF terminator\"\nORIGIN\n        1 agttttcata tcttccttta tattctatta attgaatttc aaacatcgtt ttattgagct\n       61 catttacatc aaccggttca cggatccccg ggttaattaa tcatatggac tacaaggacg\n      121 acgatgacaa ggattacaaa gatgacgacg ataagcttat ggactacaag gacgacgatg\n      181 acaaggatta caaagatgac gacgataagc ttatggacta caaggacgac gatgacaagc\n      241 atatgggcgc gccacttcta aataagcgaa tttcttatga tttatgattt ttattattaa\n      301 ataagttata aaaaaaataa gtgtatacaa attttaaagt gactcttagg ttttaaaacg\n      361 aaaattctta ttcttgagta actctttcct gtaggtcagg ttgctttctc aggtatagta\n      421 tgaggtcgct cttattgacc acacctctac cggcagatcc gctagggata acagggtaat\n      481 atagatctgt ttagcttgcc tcgtccccgc cgggtcaccc ggccagcgac atggaggccc\n      541 agaataccct ccttgacagt cttgacgtgc gcagctcagg ggcatgatgt gactgtcgcc\n      601 cgtacattta gcccatacat ccccatgtat aatcatttgc atccatacat tttgatggcc\n      661 gcacggcgcg aagcaaaaat tacggctcct cgctgcagac ctgcgagcag ggaaacgctc\n      721 ccctcacaga cgcgttgaat tgtccccacg ccgcgcccct gtagagaaat ataaaaggtt\n      781 aggatttgcc actgaggttc ttctttcata tacttccttt taaaatcttg ctaggataca\n      841 gttctcacat cacatccgaa cataaacaac catgggtaaa aagcctgaac tcaccgcgac\n      901 gtctgtcgag aagtttctga tcgaaaagtt cgacagcgtc tccgacctga tgcagctctc\n      961 ggagggcgaa gaatctcgtg ctttcagctt cgatgtagga gggcgtggat atgtcctgcg\n     1021 ggtaaatagc tgcgccgatg gtttctacaa agatcgttat gtttatcggc actttgcatc\n     1081 ggccgcgctc ccgattccgg aagtgcttga cattggggaa ttcagcgaga gcctgaccta\n     1141 ttgcatctcc cgccgtgcac agggtgtcac gttgcaagac ctgcctgaaa ccgaactgcc\n     1201 cgctgttctg cagccggtcg cggaggccat ggatgcgatc gctgcggccg atcttagcca\n     1261 gacgagcggg ttcggcccat tcggaccgca aggaatcggt caatacacta catggcgtga\n     1321 tttcatatgc gcgattgctg atccccatgt gtatcactgg caaactgtga tggacgacac\n     1381 cgtcagtgcg tccgtcgcgc aggctctcga tgagctgatg ctttgggccg aggactgccc\n     1441 cgaagtccgg cacctcgtgc acgcggattt cggctccaac aatgtcctga cggacaatgg\n     1501 ccgcataaca gcggtcattg actggagcga ggcgatgttc ggggattccc aatacgaggt\n     1561 cgccaacatc ttcttctgga ggccgtggtt ggcttgtatg gagcagcaga cgcgctactt\n     1621 cgagcggagg catccggagc ttgcaggatc gccgcggctc cgggcgtata tgctccgcat\n     1681 tggtcttgac caactctatc agagcttggt tgacggcaat ttcgatgatg cagcttgggc\n     1741 gcagggtcga tgcgacgcaa tcgtccgatc cggagccggg actgtcgggc gtacacaaat\n     1801 cgcccgcaga agcgcggccg tctggaccga tggctgtgta gaagtactcg ccgatagtgg\n     1861 aaaccgacgc cccagcactc gtccgagggc aaaggaataa tcagtactga caataaaaag\n     1921 attcttgttt tcaagaactt gtcatttgta tagttttttt atattgtagt tgttctattt\n     1981 taatcaaatg ttagcgtgat ttatattttt tttcgcctcg acatcatctg cccagatgcg\n     2041 aagttaagtg cgcagaaagt aatatcatgc gtcaatcgta tgtgaatgct ggtcgctata\n     2101 ctgctgtcga ttcgatacta acgccgccat ccagtttaaa cgagctcgaa ttcgcttctt\n     2161 atttacctaa tcgatcaaat ttaaatatac atatttttgc atatgaatac agcatataga\n     2221 taattcataa aag\n//"
-    },
-    {
       "id": 6,
       "type": "TextFileSequence",
       "sequence_file_format": "genbank",
@@ -26,6 +18,14 @@
     },
     {
       "id": 8,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0,
+      "file_content": "LOCUS       name                    2233 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     CDS             108..239\n                     /codon_start=1\n                     /product=\"five tandem FLAG(R) epitope tags\"\n                     /label=\"5xFLAG\"\n                     /translation=\"DYKDDDDKDYKDDDDKLMDYKDDDDKDYKDDDDKLMDYKDDDDK\"\n     terminator      266..453\n                     /gene=\"S. cerevisiae ADH1\"\n                     /label=\"ADH1 terminator\"\n                     /note=\"transcription terminator for the S. cerevisiae\n                     alcohol dehydrogenase 1 (ADH1) gene\"\n     primer_bind     complement(321..345)\n                     /label=\"pHybLex-R\"\n                     /note=\"ADH terminator, reverse primer\"\n     gene            528..2103\n                     /label=\"hphMX6\"\n                     /note=\"yeast selectable marker conferring hygromycin\n                     resistance\"\n     promoter        528..871\n                     /label=\"TEF promoter\"\n                     /note=\"Ashbya gossypii TEF promoter\"\n     CDS             872..1900\n                     /codon_start=1\n                     /gene=\"aph(4)-Ia\"\n                     /product=\"aminoglycoside phosphotransferase from E. coli\"\n                     /label=\"HygR\"\n                     /note=\"confers resistance to hygromycin\"\n                     /translation=\"MGKKPELTATSVEKFLIEKFDSVSDLMQLSEGEESRAFSFDVGGR\n                     GYVLRVNSCADGFYKDRYVYRHFASAALPIPEVLDIGEFSESLTYCISRRAQGVTLQDL\n                     PETELPAVLQPVAEAMDAIAAADLSQTSGFGPFGPQGIGQYTTWRDFICAIADPHVYHW\n                     QTVMDDTVSASVAQALDELMLWAEDCPEVRHLVHADFGSNNVLTDNGRITAVIDWSEAM\n                     FGDSQYEVANIFFWRPWLACMEQQTRYFERRHPELAGSPRLRAYMLRIGLDQLYQSLVD\n                     GNFDDAAWAQGRCDAIVRSGAGTVGRTQIARRSAAVWTDGCVEVLADSGNRRPSTRPRA\n                     KE\"\n     terminator      1906..2103\n                     /label=\"TEF terminator\"\n                     /note=\"Ashbya gossypii TEF terminator\"\nORIGIN\n        1 agttttcata tcttccttta tattctatta attgaatttc aaacatcgtt ttattgagct\n       61 catttacatc aaccggttca cggatccccg ggttaattaa tcatatggac tacaaggacg\n      121 acgatgacaa ggattacaaa gatgacgacg ataagcttat ggactacaag gacgacgatg\n      181 acaaggatta caaagatgac gacgataagc ttatggacta caaggacgac gatgacaagc\n      241 atatgggcgc gccacttcta aataagcgaa tttcttatga tttatgattt ttattattaa\n      301 ataagttata aaaaaaataa gtgtatacaa attttaaagt gactcttagg ttttaaaacg\n      361 aaaattctta ttcttgagta actctttcct gtaggtcagg ttgctttctc aggtatagta\n      421 tgaggtcgct cttattgacc acacctctac cggcagatcc gctagggata acagggtaat\n      481 atagatctgt ttagcttgcc tcgtccccgc cgggtcaccc ggccagcgac atggaggccc\n      541 agaataccct ccttgacagt cttgacgtgc gcagctcagg ggcatgatgt gactgtcgcc\n      601 cgtacattta gcccatacat ccccatgtat aatcatttgc atccatacat tttgatggcc\n      661 gcacggcgcg aagcaaaaat tacggctcct cgctgcagac ctgcgagcag ggaaacgctc\n      721 ccctcacaga cgcgttgaat tgtccccacg ccgcgcccct gtagagaaat ataaaaggtt\n      781 aggatttgcc actgaggttc ttctttcata tacttccttt taaaatcttg ctaggataca\n      841 gttctcacat cacatccgaa cataaacaac catgggtaaa aagcctgaac tcaccgcgac\n      901 gtctgtcgag aagtttctga tcgaaaagtt cgacagcgtc tccgacctga tgcagctctc\n      961 ggagggcgaa gaatctcgtg ctttcagctt cgatgtagga gggcgtggat atgtcctgcg\n     1021 ggtaaatagc tgcgccgatg gtttctacaa agatcgttat gtttatcggc actttgcatc\n     1081 ggccgcgctc ccgattccgg aagtgcttga cattggggaa ttcagcgaga gcctgaccta\n     1141 ttgcatctcc cgccgtgcac agggtgtcac gttgcaagac ctgcctgaaa ccgaactgcc\n     1201 cgctgttctg cagccggtcg cggaggccat ggatgcgatc gctgcggccg atcttagcca\n     1261 gacgagcggg ttcggcccat tcggaccgca aggaatcggt caatacacta catggcgtga\n     1321 tttcatatgc gcgattgctg atccccatgt gtatcactgg caaactgtga tggacgacac\n     1381 cgtcagtgcg tccgtcgcgc aggctctcga tgagctgatg ctttgggccg aggactgccc\n     1441 cgaagtccgg cacctcgtgc acgcggattt cggctccaac aatgtcctga cggacaatgg\n     1501 ccgcataaca gcggtcattg actggagcga ggcgatgttc ggggattccc aatacgaggt\n     1561 cgccaacatc ttcttctgga ggccgtggtt ggcttgtatg gagcagcaga cgcgctactt\n     1621 cgagcggagg catccggagc ttgcaggatc gccgcggctc cgggcgtata tgctccgcat\n     1681 tggtcttgac caactctatc agagcttggt tgacggcaat ttcgatgatg cagcttgggc\n     1741 gcagggtcga tgcgacgcaa tcgtccgatc cggagccggg actgtcgggc gtacacaaat\n     1801 cgcccgcaga agcgcggccg tctggaccga tggctgtgta gaagtactcg ccgatagtgg\n     1861 aaaccgacgc cccagcactc gtccgagggc aaaggaataa tcagtactga caataaaaag\n     1921 attcttgttt tcaagaactt gtcatttgta tagttttttt atattgtagt tgttctattt\n     1981 taatcaaatg ttagcgtgat ttatattttt tttcgcctcg acatcatctg cccagatgcg\n     2041 aagttaagtg cgcagaaagt aatatcatgc gtcaatcgta tgtgaatgct ggtcgctata\n     2101 ctgctgtcga ttcgatacta acgccgccat ccagtttaaa cgagctcgaa ttcgcttctt\n     2161 atttacctaa tcgatcaaat ttaaatatac atatttttgc atatgaatac agcatataga\n     2221 taattcataa aag\n//"
+    },
+    {
+      "id": 10,
       "type": "TextFileSequence",
       "sequence_file_format": "genbank",
       "overhang_crick_3prime": 0,
@@ -45,47 +45,6 @@
       "addgene_sequence_type": "depositor-full"
     },
     {
-      "id": 3,
-      "input": [
-        2
-      ],
-      "output": 4,
-      "type": "PCRSource",
-      "assembly": [
-        {
-          "left_fragment": 1,
-          "right_fragment": 2,
-          "left_location": {
-            "start": 79,
-            "end": 100,
-            "strand": null
-          },
-          "right_location": {
-            "start": 40,
-            "end": 61,
-            "strand": null
-          }
-        },
-        {
-          "left_fragment": 2,
-          "right_fragment": -3,
-          "left_location": {
-            "start": 2094,
-            "end": 2114,
-            "strand": null
-          },
-          "right_location": {
-            "start": 0,
-            "end": 20,
-            "strand": null
-          }
-        }
-      ],
-      "circular": false,
-      "forward_primer": 1,
-      "reverse_primer": 2
-    },
-    {
       "id": 5,
       "input": [],
       "output": 6,
@@ -101,45 +60,110 @@
     {
       "id": 7,
       "input": [
-        6,
-        4
+        2
       ],
       "output": 8,
-      "type": "HomologousRecombinationSource",
+      "type": "PCRSource",
       "assembly": [
         {
-          "left_fragment": 1,
-          "right_fragment": 2,
-          "left_location": {
-            "start": 1093,
-            "end": 1173,
-            "strand": null
+          "left": {
+            "sequence": 1,
+            "location": {
+              "start": 79,
+              "end": 100,
+              "strand": null
+            },
+            "reverse_complemented": false
           },
-          "right_location": {
-            "start": 0,
-            "end": 80,
-            "strand": null
+          "right": {
+            "sequence": 2,
+            "location": {
+              "start": 40,
+              "end": 61,
+              "strand": null
+            },
+            "reverse_complemented": false
           }
         },
         {
-          "left_fragment": 2,
-          "right_fragment": 1,
-          "left_location": {
-            "start": 2153,
-            "end": 2233,
-            "strand": null
+          "left": {
+            "sequence": 2,
+            "location": {
+              "start": 2094,
+              "end": 2114,
+              "strand": null
+            },
+            "reverse_complemented": false
           },
-          "right_location": {
-            "start": 3416,
-            "end": 3496,
-            "strand": null
+          "right": {
+            "sequence": 3,
+            "location": {
+              "start": 0,
+              "end": 20,
+              "strand": null
+            },
+            "reverse_complemented": true
+          }
+        }
+      ],
+      "circular": false,
+      "forward_primer": 1,
+      "reverse_primer": 2
+    },
+    {
+      "id": 9,
+      "input": [
+        6,
+        8
+      ],
+      "output": 10,
+      "type": "HomologousRecombinationSource",
+      "assembly": [
+        {
+          "left": {
+            "sequence": 1,
+            "location": {
+              "start": 1093,
+              "end": 1173,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 2,
+            "location": {
+              "start": 0,
+              "end": 80,
+              "strand": null
+            },
+            "reverse_complemented": false
+          }
+        },
+        {
+          "left": {
+            "sequence": 2,
+            "location": {
+              "start": 2153,
+              "end": 2233,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 1,
+            "location": {
+              "start": 3416,
+              "end": 3496,
+              "strand": null
+            },
+            "reverse_complemented": false
           }
         }
       ],
       "circular": false
     }
   ],
-  "description": "",
+  "description": "Deletion of the ORF of ase1 by homologous recombination in S.pombe",
   "primers": [
     {
       "id": 1,

@@ -4,7 +4,7 @@ describe('Test upload history from file', () => {
   });
   it('Can upload a correct json file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/restriction_then_ligation.json', { force: true });
-    cy.get('div.cloning-tab-pannel').contains('4718 bps');
+    cy.get('div.cloning-tab-pannel').contains('PCR with primers fwd and rvs');
     cy.get('div.cloning-tab-pannel').should('be.visible');
     cy.get('div.description-tab-pannel').should('not.be.visible');
   });

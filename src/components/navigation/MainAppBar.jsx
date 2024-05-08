@@ -7,6 +7,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { Alert, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
 import { exportStateThunk, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
@@ -20,9 +21,19 @@ function MainAppBar() {
   const exportData = () => {
     dispatch(exportStateThunk());
   };
-  const loadData = (newState) => {
+  const loadData = async (newState) => {
+    // Validate using the API
+    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    // TODO: for validation, the sequences could be sent empty to reduce size
+    try {
+      await axios.post(url, newState);
+    } catch (e) {
+      setLoadedFileError('JSON file in wrong format');
+      // return;
+    }
+
     dispatch(loadStateThunk(newState)).catch((e) => {
-      // TODO: this should be handled by the store
+      // TODO: I don't think this is needed anymore
       dispatch(resetStateThunk());
       setLoadedFileError('JSON file in wrong format');
     });
@@ -36,7 +47,7 @@ function MainAppBar() {
     { display: 'Save to file', onClick: exportData },
     { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     // elab-demo
-    { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
+    // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
 
   const handleCloseDialog = (fileName) => {
@@ -96,9 +107,9 @@ function MainAppBar() {
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
       {/* elab-demo */}
-      (
+      {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
-      )
+      ) */}
 
     </AppBar>
   );

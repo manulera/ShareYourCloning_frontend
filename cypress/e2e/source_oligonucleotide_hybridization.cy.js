@@ -53,7 +53,7 @@ describe('Tests oligo hybridization source', () => {
 
     setInputValue('Minimal annealing length (in bp)', '8', 'li#source-1');
     cy.get('button').contains('Perform hybridization').click();
-    cy.get('li#source-1', { timeout: 20000 }).contains('50 bps');
+    cy.get('li#source-1').contains('50 bps', { timeout: 20000 });
     clickSequenceOutputArrow('li#source-1');
     cy.get('li#source-1').contains('68 bps');
     clickSequenceOutputArrow('li#source-1');

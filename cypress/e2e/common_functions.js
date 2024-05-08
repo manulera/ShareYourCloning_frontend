@@ -86,3 +86,7 @@ export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
       cy.get(`.sequence-node #${sourceId}`, { timeout: 20000 }).should('exist');
     });
 }
+
+export function waitForEnzymes(parentSelector = '') {
+  cy.get(`${parentSelector} .enzyme-multi-select`, { timeout: 20000 }).should('exist');
+}

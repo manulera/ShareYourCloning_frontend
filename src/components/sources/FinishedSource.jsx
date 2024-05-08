@@ -28,6 +28,7 @@ function RepositoryIdMessage({ source }) {
 
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
+  const primers = useSelector((state) => state.primers.primers, shallowEqual);
   let message = '';
   switch (source.type) {
     case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;
@@ -45,19 +46,14 @@ function FinishedSource({ sourceId }) {
       message = `Restriction with ${uniqueEnzymes.join(' and ')}, then ligation`;
     }
       break;
-    case 'PCRSource': {
-      const primers = useSelector((state) => state.primers.primers);
+    case 'PCRSource':
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
-    }
       break;
-    case 'OligoHybridizationSource': {
-      const primers = useSelector((state) => state.primers.primers);
+    case 'OligoHybridizationSource':
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;
-    }
       break;
     case 'HomologousRecombinationSource': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
     case 'CRISPRSource': {
-      const primers = useSelector((state) => state.primers.primers);
       const guidesString = source.guides.map((id) => primers.find((p) => id === p.id).name).join(', ');
       message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${guidesString} as a guide${source.guides.length > 1 ? 's' : ''}`;
     }
@@ -66,7 +62,7 @@ function FinishedSource({ sourceId }) {
       break;
     case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
       break;
-    case 'GenomeCoordinatesSource': {
+    case 'GenomeCoordinatesSource':
       message = (
         <>
           <div>
@@ -100,9 +96,8 @@ function FinishedSource({ sourceId }) {
         </>
       );
       break;
-    }
     case 'PolymeraseExtensionSource': message = 'Polymerase extension'; break;
-    case 'ELabFTWFileSource': {
+    case 'ELabFTWFileSource':
       message = (
         <>
           Read from file
@@ -113,7 +108,6 @@ function FinishedSource({ sourceId }) {
         </>
       );
       break;
-    }
     default: message = '';
   }
   return (
