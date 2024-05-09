@@ -13,21 +13,21 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 function getGeneCoordsInfo(gene) {
   const { range: geneRange, accession_version: accessionVersion } = gene.annotation.genomic_regions[0].gene_range;
-  const { begin: start, end: stop, orientation } = geneRange[0];
+  const { begin: start, end, orientation } = geneRange[0];
   const strand = orientation === 'plus' ? 1 : -1;
-  return { accessionVersion, start: Number(start), stop: Number(stop), strand };
+  return { accessionVersion, start: Number(start), end: Number(end), strand };
 }
 
 function formatGeneCoords(gene) {
-  const { accessionVersion, start, stop, strand } = getGeneCoordsInfo(gene);
-  return `${accessionVersion} (${start}..${stop}${strand === -1 ? ', complement' : ''})`;
+  const { accessionVersion, start, end, strand } = getGeneCoordsInfo(gene);
+  return `${accessionVersion} (${start}..${end}${strand === -1 ? ', complement' : ''})`;
 }
 
 function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDownstream) {
-  const { accessionVersion, start, stop, strand } = getGeneCoordsInfo(gene);
+  const { accessionVersion, start, end, strand } = getGeneCoordsInfo(gene);
 
   const shiftedStart = start - (strand === 1 ? shiftUpstream : shiftDownstream);
-  const shiftedStop = stop + (strand === 1 ? shiftDownstream : shiftUpstream);
+  const shiftedEnd = end + (strand === 1 ? shiftDownstream : shiftUpstream);
 
   return {
     sequence_accession: accessionVersion,
@@ -35,7 +35,7 @@ function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDown
     locus_tag: gene.annotation.locus_tag ? gene.annotation.locus_tag : null,
     gene_id: gene.annotation.gene_id ? gene.annotation.gene_id : null,
     start: shiftedStart,
-    stop: shiftedStop,
+    end: shiftedEnd,
     strand,
   };
 }
@@ -72,6 +72,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    payload.id = sourceId;
     sendPostRequest('genome_coordinates', payload);
   };
 
@@ -131,6 +132,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    payload.id = sourceId;
     sendPostRequest('genome_coordinates', payload);
   };
 
@@ -196,10 +198,11 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
     setFormError({ ...noError });
 
     sendPostRequest('genome_coordinates', {
+      id: sourceId,
       sequence_accession: sequenceAccession,
       assembly_accession: assemblyId,
       start: coordsStartRef.current.value,
-      stop: coordsEndRef.current.value,
+      end: coordsEndRef.current.value,
       strand: coordsStrand === 'plus' ? 1 : -1,
     });
   };

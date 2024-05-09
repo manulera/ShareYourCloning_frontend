@@ -4,9 +4,6 @@ const initialState = {
   primers: [
     { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
     { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
-    { id: 5, name: 'ase1_sgRNA', sequence: 'CATTACTGTTTGCATTGAAC'},
-    { id: 6, name: 'ase1_Fw', sequence: 'TTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAAACATCGTTTTATTGAGCTCATTTACATCAACCGGTTCAATGtacccatacgatgttcctga'},
-    { id: 7, name: 'ase1_Rv', sequence: 'AAGTTAGATTCATTATTAGAGTGATTATCTTTTTCAGCAATAGAATCAGTGCTTTGAATGTCATCCATCATTACTGTTTGagcgtaatctggaacgtcat'},
   ],
 };
 

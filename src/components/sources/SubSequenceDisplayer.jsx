@@ -9,7 +9,7 @@ function getCutParameters(seq, cut, isLeft) {
   if (cut === null) {
     return isLeft ? [0, 0, 0] : [seq.size, seq.size, 0];
   }
-  const [watson, ovhg] = cut;
+  const { cut_watson: watson, overhang: ovhg } = cut;
   const crick = (watson - ovhg) % seq.size;
   return [watson, crick, ovhg];
 }
@@ -17,7 +17,7 @@ function getCutParameters(seq, cut, isLeft) {
 function SubSequenceDisplayer({
   source, sourceId,
 }) {
-  if (!['PCR', 'restriction'].includes(source.type)) {
+  if (!['PCRSource', 'RestrictionEnzymeDigestionSource'].includes(source.type)) {
     return null;
   }
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
@@ -26,7 +26,7 @@ function SubSequenceDisplayer({
   const editorName = `subsequence_editor_${sourceId}`;
   let selectionLayer = null;
 
-  if (['PCR'].includes(source.type)) {
+  if (['PCRSource'].includes(source.type)) {
     if (source.assembly[0][1] > 0) {
       selectionLayer = {
         start: parseFeatureLocation(source.assembly[0][3])[0].start,
@@ -39,7 +39,7 @@ function SubSequenceDisplayer({
       };
     }
   }
-  if (['restriction'].includes(source.type)) {
+  if (['RestrictionEnzymeDigestionSource'].includes(source.type)) {
     // The edges have the form (watson_pos, ovhg)
 
     const [leftWatson, leftCrick, leftOvhg] = getCutParameters(seq, source.left_edge, true);

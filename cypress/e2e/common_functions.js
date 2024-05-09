@@ -7,18 +7,26 @@ export function addSource(sourceType, isFirst = false) {
   cy.get(`li[data-value="${sourceType}"]`).click();
 }
 
+export function addLane() {
+  cy.get('svg[data-testid="AddCircleIcon"]').last().click();
+}
+
 export function clearPrimers() {
   // click on [data-testid="DeleteIcon"] until there are no more
+  cy.get('button.MuiTab-root').contains('Primers').click();
   cy.get('.primer-table-container [data-testid="DeleteIcon"]').each((el) => {
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
   });
+  cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
-export function addPrimer(seq, name) {
+export function addPrimer(name, seq) {
+  cy.get('button.MuiTab-root').contains('Primers').click();
   cy.get('.primer-form-container').contains('Add Primer').click();
-  cy.get('form.primer-row input#name').type(name);
-  cy.get('form.primer-row input#sequence').type(seq);
+  cy.get('form.primer-row input#name').type(name, { delay: 0 });
+  cy.get('form.primer-row input#sequence').type(seq, { delay: 0 });
   cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
+  cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
 export function clickMultiSelectOption(label, option, parentSelector = '') {
@@ -62,7 +70,7 @@ export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
       cy.get('#tab-panel-0 .select-source h2').last().contains('Define a sequence source').siblings('div')
         .children('.MuiInputBase-root')
         .click();
-      cy.get('li[data-value="manually_typed"]').click();
+      cy.get('li[data-value="ManuallyTypedSource"]').click();
       cy.get('#tab-panel-0 #sequence').clear('');
       cy.get('#tab-panel-0 #sequence').type(seq);
       if (circular) {
@@ -77,4 +85,8 @@ export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
 
       cy.get(`.sequence-node #${sourceId}`, { timeout: 20000 }).should('exist');
     });
+}
+
+export function waitForEnzymes(parentSelector = '') {
+  cy.get(`${parentSelector} .enzyme-multi-select`, { timeout: 20000 }).should('exist');
 }

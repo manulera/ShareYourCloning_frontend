@@ -2,7 +2,8 @@
     "sequences": [
         {
             "id": 10,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -13,7 +14,8 @@
         },
         {
             "id": 34,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -24,7 +26,8 @@
         },
         {
             "id": 36,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -37,12 +40,11 @@
     "sources": [
         {
             "id": 9,
-            "kind": "source",
             "input": [],
             "output": 10,
-            "type": "file",
+            "type": "UploadedFileSource",
             "file_name": "addgene-plasmid-39296-sequence-49545.dna",
-            "file_format": "snapgene",
+            "sequence_file_format": "snapgene",
             "index_in_file": 0
         },
         {
@@ -51,9 +53,7 @@
                 10
             ],
             "output": 34,
-            "type": "restriction",
-            "kind": "source",
-            "info": {},
+            "type": "RestrictionEnzymeDigestionSource",
             "left_edge": [
                 63,
                 -4
@@ -73,9 +73,7 @@
                 34
             ],
             "output": 36,
-            "type": "ligation",
-            "kind": "source",
-            "info": {},
+            "type": "LigationSource",
             "assembly": [
                 [
                     1,

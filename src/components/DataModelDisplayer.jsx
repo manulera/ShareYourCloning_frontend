@@ -7,7 +7,7 @@ function DataModelDisplayer() {
   const primers = useSelector((state) => state.primers.primers, shallowEqual);
   const trimmedSequences = sequences.map((s) => {
     const seqOut = { ...s };
-    seqOut.sequence = '';
+    seqOut.file_content = '[...]';
     return seqOut;
   });
   // TODO: proper json syntax highlighting here

@@ -13,25 +13,25 @@ function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const options = [];
   if (inputEntities.length === 0) {
-    options.push(<MenuItem key="file" value="file">Submit file</MenuItem>);
-    options.push(<MenuItem key="repository_id" value="repository_id">Repository ID</MenuItem>);
-    options.push(<MenuItem key="genome_region" value="genome_region">Genome region</MenuItem>);
-    options.push(<MenuItem key="manually_typed" value="manually_typed">Enter manually</MenuItem>);
-    options.push(<MenuItem key="oligonucleotide_hybridization" value="oligonucleotide_hybridization">Oligonucleotide hybridization</MenuItem>);
+    options.push(<MenuItem key="UploadedFileSource" value="UploadedFileSource">Submit file</MenuItem>);
+    options.push(<MenuItem key="RepositoryIdSource" value="RepositoryIdSource">Repository ID</MenuItem>);
+    options.push(<MenuItem key="GenomeCoordinatesSource" value="GenomeCoordinatesSource">Genome region</MenuItem>);
+    options.push(<MenuItem key="ManuallyTypedSource" value="ManuallyTypedSource">Enter manually</MenuItem>);
+    options.push(<MenuItem key="OligoHybridizationSource" value="OligoHybridizationSource">Oligonucleotide hybridization</MenuItem>);
     // elab-demo
     // options.push(<MenuItem key="elabftw" value="elabftw">Import from eLabFTW</MenuItem>);
   } else {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
     if (inputEntities.length < 2) {
-      options.push(<MenuItem key="restriction" value="restriction">Restriction</MenuItem>);
-      options.push(<MenuItem key="PCR" value="PCR">PCR</MenuItem>);
-      options.push(<MenuItem key="polymerase_extension" value="polymerase_extension">Polymerase extension</MenuItem>);
+      options.push(<MenuItem key="RestrictionEnzymeDigestionSource" value="RestrictionEnzymeDigestionSource">Restriction</MenuItem>);
+      options.push(<MenuItem key="PCRSource" value="PCRSource">PCR</MenuItem>);
+      options.push(<MenuItem key="PolymeraseExtensionSource" value="PolymeraseExtensionSource">Polymerase extension</MenuItem>);
     }
-    options.push(<MenuItem key="ligation" value="ligation">Ligation (sticky / blunt)</MenuItem>);
-    options.push(<MenuItem key="gibson_assembly" value="gibson_assembly">Gibson assembly</MenuItem>);
-    options.push(<MenuItem key="homologous_recombination" value="homologous_recombination">Homologous recombination</MenuItem>);
-    options.push(<MenuItem key="crispr" value="crispr">CRISPR</MenuItem>);
-    options.push(<MenuItem key="restriction_and_ligation" value="restriction_and_ligation">Restriction + ligation / Golden Gate</MenuItem>);
+    options.push(<MenuItem key="LigationSource" value="LigationSource">Ligation (sticky / blunt)</MenuItem>);
+    options.push(<MenuItem key="GibsonAssemblySource" value="GibsonAssemblySource">Gibson assembly</MenuItem>);
+    options.push(<MenuItem key="HomologousRecombinationSource" value="HomologousRecombinationSource">Homologous recombination</MenuItem>);
+    options.push(<MenuItem key="CRISPRSource" value="CRISPRSource">CRISPR</MenuItem>);
+    options.push(<MenuItem key="RestrictionAndLigationSource" value="RestrictionAndLigationSource">Restriction + ligation / Golden Gate</MenuItem>);
   }
 
   return (

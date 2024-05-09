@@ -40,6 +40,7 @@ function SourceManuallyTyped({ sourceId }) {
     setSubmissionAttempted(true);
     if (submissionAllowed) {
       sendPostRequest('manually_typed', {
+        id: sourceId,
         user_input: userInput,
         circular: isCircular,
         overhang_crick_3prime: overhangCrick3prime,

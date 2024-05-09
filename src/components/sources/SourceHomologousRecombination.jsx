@@ -25,7 +25,7 @@ function SourceHomologousRecombination({ sourceId, isCrispr = false }) {
   const onSubmit = (event) => {
     event.preventDefault();
     const requestData = {
-      source: { input: inputEntityIds },
+      source: { id: sourceId, input: inputEntityIds },
       sequences: inputEntities,
     };
     const config = { params: { minimal_homology: minimalHomologyRef.current.value } };

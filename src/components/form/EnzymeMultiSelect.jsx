@@ -9,6 +9,7 @@ export default function EnzymeMultiSelect({ setEnzymes }) {
   const onChange = (value) => setEnzymes(value);
   return (
     <GetRequestMultiSelect
+      className="enzyme-multi-select"
       getOptionsFromResponse={getOptionsFromResponse}
       url={url}
       label={label}

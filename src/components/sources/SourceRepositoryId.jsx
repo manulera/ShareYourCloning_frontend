@@ -21,7 +21,7 @@ function SourceRepositoryId({ sourceId }) {
       setError(true);
     } else {
       setError(false);
-      sendPostRequest('repository_id', { repository_id: repositoryIdRef.current.value, repository: selectedRepository });
+      sendPostRequest(`repository_id/${selectedRepository}`, { id: sourceId, repository_id: repositoryIdRef.current.value, repository_name: selectedRepository });
     }
   };
   const helperText = error ? 'Field cannot be empty' : `Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`;

@@ -7,6 +7,7 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import { Alert, Button, Tooltip, useMediaQuery, useTheme } from '@mui/material';
 import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
 import { exportStateThunk, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
@@ -20,9 +21,19 @@ function MainAppBar() {
   const exportData = () => {
     dispatch(exportStateThunk());
   };
-  const loadData = (newState) => {
+  const loadData = async (newState) => {
+    // Validate using the API
+    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    // TODO: for validation, the sequences could be sent empty to reduce size
+    try {
+      await axios.post(url, newState);
+    } catch (e) {
+      setLoadedFileError('JSON file in wrong format');
+      // return;
+    }
+
     dispatch(loadStateThunk(newState)).catch((e) => {
-      // TODO: this should be handled by the store
+      // TODO: I don't think this is needed anymore
       dispatch(resetStateThunk());
       setLoadedFileError('JSON file in wrong format');
     });
@@ -61,7 +72,6 @@ function MainAppBar() {
       try {
         jsonObject = JSON.parse(eventFileRead.target.result);
       } catch (e) {
-        console.log(eventFileRead.target.result);
         setLoadedFileError('Input file should be a JSON file with the history');
         return;
       }
@@ -97,7 +107,10 @@ function MainAppBar() {
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
       {/* elab-demo */}
-      {/* <DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} /> */}
+      {/* (
+      {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
+      ) */}
+
     </AppBar>
   );
 }

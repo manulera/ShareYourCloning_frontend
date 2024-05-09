@@ -4,7 +4,7 @@ describe('ManuallyTyped Source', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
-    cy.get('li[data-value="manually_typed"]').click();
+    cy.get('li[data-value="ManuallyTypedSource"]').click();
   });
   it('works on default linear case', () => {
     cy.get('#tab-panel-0 #sequence').clear('a');

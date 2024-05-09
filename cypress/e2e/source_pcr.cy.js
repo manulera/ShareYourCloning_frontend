@@ -5,12 +5,10 @@ describe('Tests PCR functionality', () => {
     cy.visit('/');
   });
   it('works in the normal case', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('ACGTACGT', 'fwd_test');
-    addPrimer('GCGCGCGC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'ACGTACGT');
+    addPrimer('rvs_test', 'GCGCGCGC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
 
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
@@ -23,12 +21,10 @@ describe('Tests PCR functionality', () => {
     cy.get('li#sequence-4').contains('22 bps');
   });
   it('can use the same primer twice', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('ACGTACGT', 'fwd_test');
-    addPrimer('GCGCGCGC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'ACGTACGT');
+    addPrimer('rvs_test', 'GCGCGCGC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAACGTACGTTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
     clickMultiSelectOption('Reverse primer', 'fwd_test', 'li#source-3');
     // Change minimal annealing
@@ -39,38 +35,34 @@ describe('Tests PCR functionality', () => {
     cy.get('li#sequence-4').contains('22 bps');
   });
   it('gives the right error for minimal annealing', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('ACGTACGT', 'fwd_test');
-    addPrimer('GCGCGCGC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'ACGTACGT');
+    addPrimer('rvs_test', 'GCGCGCGC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
 
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
     cy.get('button').contains('Perform PCR').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.MuiAlert-message').contains('No pair of annealing primers was found.');
   });
   it('gives the right error for no annealing', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('CCCCCCCC', 'fwd_test');
-    addPrimer('CCCCCCCC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'CCCCCCCC');
+    addPrimer('rvs_test', 'CCCCCCCC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
 
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
     cy.get('button').contains('Perform PCR').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.MuiAlert-message').contains('No pair of annealing primers was found.');
   });
   it('shows the submission button only after the primers are selected', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('ACGTACGT', 'fwd_test');
-    addPrimer('GCGCGCGC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'ACGTACGT');
+    addPrimer('rvs_test', 'GCGCGCGC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
     // Submission not available until primers are both selected
     cy.get('button').contains('Perform PCR').should('not.exist');
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
@@ -80,12 +72,10 @@ describe('Tests PCR functionality', () => {
   });
 
   it('works with mismatches', () => {
-    cy.get('button.MuiTab-root').contains('Primers').click();
-    addPrimer('ACGAACGT', 'fwd_test');
-    addPrimer('GCGAGCGC', 'rvs_test');
-    cy.get('button.MuiTab-root').contains('Cloning').click();
+    addPrimer('fwd_test', 'ACGAACGT');
+    addPrimer('rvs_test', 'GCGAGCGC');
     manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
-    addSource('PCR');
+    addSource('PCRSource');
 
     clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
     clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
@@ -93,6 +83,7 @@ describe('Tests PCR functionality', () => {
     // Change minimal annealing
     setInputValue('Minimal annealing', '8', 'li#source-3');
     cy.get('button').contains('Perform PCR').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
 
     // Error, because mismatches are not set
     cy.get('.MuiAlert-message');

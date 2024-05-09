@@ -157,6 +157,12 @@ div.description-container {
     max-width: 600px;
 }
 
+div.description-container p {
+    /* Show line breaks */
+    white-space: pre-line;
+    text-align: left;
+}
+
 code {
     background-color: lightgrey;
     padding: 15px;

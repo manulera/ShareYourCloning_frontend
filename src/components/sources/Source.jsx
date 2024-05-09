@@ -21,31 +21,31 @@ function Source({ sourceId }) {
   let specificSource = null;
   switch (sourceType) {
     /* eslint-disable */
-    case 'file':
+    case 'UploadedFileSource':
       specificSource = <SourceFile {...{ sourceId }} />; break;
-    case 'restriction':
+    case 'RestrictionEnzymeDigestionSource':
       specificSource = <SourceRestriction {...{ sourceId }} />; break;
-    case 'repository_id':
+    case 'RepositoryIdSource':
       specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
-    case 'ligation':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'ligation' }} />; break;
-    case 'gibson_assembly':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'gibson_assembly' }} />; break;
-    case 'homologous_recombination':
+    case 'LigationSource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'LigationSource' }} />; break;
+    case 'GibsonAssemblySource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'GibsonAssemblySource' }} />; break;
+    case 'HomologousRecombinationSource':
       specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
-    case 'PCR':
+    case 'PCRSource':
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
-    case 'restriction_and_ligation':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'restriction_and_ligation' }} />; break;
-    case 'genome_region':
+    case 'RestrictionAndLigationSource':
+      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'RestrictionAndLigationSource' }} />; break;
+    case 'GenomeCoordinatesSource':
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
-    case 'manually_typed':
+    case 'ManuallyTypedSource':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
-    case 'crispr':
+    case 'CRISPRSource':
       specificSource = <SourceHomologousRecombination {...{ sourceId, isCrispr: true }} />; break;
-    case 'oligonucleotide_hybridization':
+    case 'OligoHybridizationSource':
       specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
-    case 'polymerase_extension':
+    case 'PolymeraseExtensionSource':
       specificSource = <SourcePolymeraseExtension {...{ sourceId }} />; break;
     case 'elabftw':
       specificSource = <ELabFTWSource {...{ sourceId }} />; break;

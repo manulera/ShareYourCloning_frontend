@@ -23,7 +23,7 @@ function PrimerList() {
   const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
   // We don't allow used primers to be deleted
   const primerIdsInUse = useSelector(
-    (state) => state.cloning.sources.filter((s) => s.type === 'PCR').map((s) => [s.forward_primer, s.reverse_primer]).flat(),
+    (state) => state.cloning.sources.filter((s) => s.type === 'PCRSource').map((s) => [s.forward_primer, s.reverse_primer]).flat(),
     shallowEqual,
   );
 

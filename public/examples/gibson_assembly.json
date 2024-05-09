@@ -1,32 +1,151 @@
 {
   "sequences": [
-    { "id": 3, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       first                     21 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  first.\nACCESSION   first\nVERSION     first\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc c\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
-    { "id": 5, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       second                    12 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  second.\nACCESSION   second\nVERSION     second\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg gg\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
-    { "id": 7, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       third                     13 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  third.\nACCESSION   third\nVERSION     third\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ggggatatat ttt\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } },
-    { "id": 12, "kind": "entity", "sequence": { "type": "file", "file_extension": "gb", "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc ctcatgggga tata\n//", "overhang_crick_3prime": 0, "overhang_watson_3prime": 0 } }
+    {
+      "id": 3,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       first                     21 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  first.\nACCESSION   first\nVERSION     first\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc c\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
+    },
+    {
+      "id": 5,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       second                    12 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  second.\nACCESSION   second\nVERSION     second\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg gg\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
+    },
+    {
+      "id": 7,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "file_content": "LOCUS       third                     13 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  third.\nACCESSION   third\nVERSION     third\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ggggatatat ttt\n//",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0
+    },
+    {
+      "id": 9,
+      "type": "TextFileSequence",
+      "sequence_file_format": "genbank",
+      "overhang_crick_3prime": 0,
+      "overhang_watson_3prime": 0,
+      "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg ggatatattt tacgataatg ctcc\n//"
+    }
   ],
   "sources": [
-    { "id": 1, "input": [], "output": 3, "type": "file", "kind": "source", "info": {}, "file_name": "gibson_assembly_fragments.fasta", "file_format": "fasta", "index_in_file": 0 },
-    { "id": 4, "input": [], "output": 5, "type": "file", "kind": "source", "info": {}, "file_name": "gibson_assembly_fragments.fasta", "file_format": "fasta", "index_in_file": 1 },
-    { "id": 6, "input": [], "output": 7, "type": "file", "kind": "source", "info": {}, "file_name": "gibson_assembly_fragments.fasta", "file_format": "fasta", "index_in_file": 2 },
     {
-      "id": 11,
-      "input": [3, 5, 7],
-      "output": 12,
-      "type": "gibson_assembly",
-      "kind": "source",
-      "info": {},
+      "id": 1,
+      "input": [],
+      "output": 3,
+      "type": "UploadedFileSource",
+      "file_name": "gibson_assembly_fragments.fasta",
+      "sequence_file_format": "fasta",
+      "index_in_file": 0
+    },
+    {
+      "id": 4,
+      "input": [],
+      "output": 5,
+      "type": "UploadedFileSource",
+      "file_name": "gibson_assembly_fragments.fasta",
+      "sequence_file_format": "fasta",
+      "index_in_file": 1
+    },
+    {
+      "id": 6,
+      "input": [],
+      "output": 7,
+      "type": "UploadedFileSource",
+      "file_name": "gibson_assembly_fragments.fasta",
+      "sequence_file_format": "fasta",
+      "index_in_file": 2
+    },
+    {
+      "id": 8,
+      "input": [
+        5,
+        3,
+        7
+      ],
+      "output": 9,
+      "type": "GibsonAssemblySource",
       "assembly": [
-        [1, 2, "18..21", "1..4"],
-        [2, 3, "9..12", "1..4"],
-        [3, 1, "10..13", "1..4"]
+        {
+          "left": {
+            "sequence": 1,
+            "location": {
+              "start": 8,
+              "end": 12,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 3,
+            "location": {
+              "start": 0,
+              "end": 4,
+              "strand": null
+            },
+            "reverse_complemented": false
+          }
+        },
+        {
+          "left": {
+            "sequence": 3,
+            "location": {
+              "start": 9,
+              "end": 13,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 2,
+            "location": {
+              "start": 0,
+              "end": 4,
+              "strand": null
+            },
+            "reverse_complemented": false
+          }
+        },
+        {
+          "left": {
+            "sequence": 2,
+            "location": {
+              "start": 17,
+              "end": 21,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 1,
+            "location": {
+              "start": 0,
+              "end": 4,
+              "strand": null
+            },
+            "reverse_complemented": false
+          }
+        }
       ],
       "circular": true
     }
   ],
-  "description": "",
+  "description": "Dummy gibson assembly example with 4 bps of overlap between fragments.",
   "primers": [
-    { "id": 1, "name": "fwd", "sequence": "gatctcgccataaaagacag" },
-    { "id": 2, "name": "rvs", "sequence": "ttaacaaagcgactataagt" }
+    {
+      "id": 1,
+      "name": "fwd",
+      "sequence": "gatctcgccataaaagacag"
+    },
+    {
+      "id": 2,
+      "name": "rvs",
+      "sequence": "ttaacaaagcgactataagt"
+    }
   ]
 }

@@ -2,7 +2,8 @@
     "sequences": [
         {
             "id": 3,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -13,7 +14,8 @@
         },
         {
             "id": 5,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -24,7 +26,8 @@
         },
         {
             "id": 7,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -35,7 +38,8 @@
         },
         {
             "id": 15,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",
@@ -46,7 +50,8 @@
         },
         {
             "id": 19,
-            "kind": "entity",
+            "type": "TextFileSequence",
+            "sequence_file_format": "genbank",
             "sequence": {
                 "type": "file",
                 "file_extension": "gb",

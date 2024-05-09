@@ -6,22 +6,22 @@ import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 function SourcePolymeraseExtension({ sourceId }) {
-  const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { overhang_crick_3prime, overhang_watson_3prime } = inputEntities[0].sequence;
+  const inputSequences = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const { overhang_crick_3prime, overhang_watson_3prime } = inputSequences[0];
   const invalidInput = (overhang_crick_3prime >= 0) && (overhang_watson_3prime >= 0);
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
   const onSubmit = (event) => {
     event.preventDefault();
 
     const requestData = {
-      sequences: inputEntities,
-      source: { input: inputEntities.map((e) => e.id) },
+      sequences: inputSequences,
+      source: { id: sourceId, input: inputSequences.map((e) => e.id) },
     };
     sendPostRequest('polymerase_extension', requestData);
   };
   // No need for MultipleOutputsSelector, since there is only one output
   return (
-    <div className="polymerase_extension">
+    <div className="PolymeraseExtensionSource">
       <form onSubmit={onSubmit}>
         {invalidInput ? (
           <Alert severity="error">

@@ -1,7 +1,7 @@
 import { clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
 
-const allOptions = ['restriction', 'PCR', 'ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'polymerase_extension', 'crispr'];
-const multiInputOptions = ['ligation', 'gibson_assembly', 'homologous_recombination', 'restriction_and_ligation', 'crispr'];
+const allOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'PolymeraseExtensionSource', 'CRISPRSource'];
+const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
   allOptions.forEach((value) => {
@@ -23,11 +23,11 @@ describe('Test Source input constrains', () => {
   it('Empty source displays the right options', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('ul[aria-labelledby="select-source-1-label"] li').should('have.length', 5);
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="repository_id"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="manually_typed"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="genome_region"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="file"]').should('exist');
-    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="oligonucleotide_hybridization"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="RepositoryIdSource"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="ManuallyTypedSource"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="GenomeCoordinatesSource"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="UploadedFileSource"]').should('exist');
+    cy.get('ul[aria-labelledby="select-source-1-label"] li[data-value="OligoHybridizationSource"]').should('exist');
   });
   it('All experimental sources are available as children of a sequence', () => {
     manuallyTypeSequence('atata');
@@ -50,7 +50,7 @@ describe('Test Source input constrains', () => {
     cy.get('body').click(0, 0);
     // Change to multi-input
     multiInputOptions.forEach((value) => {
-      if (value !== 'homologous_recombination' && value !== 'crispr') {
+      if (value !== 'HomologousRecombinationSource' && value !== 'CRISPRSource') {
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
         cy.get(`li[data-value="${value}"]`).click();
         cy.get('li#source-5 .MuiInputBase-root').eq(0).click();
@@ -59,8 +59,8 @@ describe('Test Source input constrains', () => {
         cy.get(`li[data-value="${value}"]`).click();
         // Add another input
         cy.get('li#source-5 .MuiInputBase-root').eq(1).click();
-        // Two inputs listed
-        cy.get('ul[role="listbox"] li').should('have.length', 2);
+        // Two inputs listed + select all
+        cy.get('ul[role="listbox"] li').should('have.length', 3);
         // Select the second input and click outside to close select element
         cy.get('li[data-value="4"]').click();
         cy.get('body').click(0, 0);

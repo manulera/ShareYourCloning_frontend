@@ -1,82 +1,68 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import SourceBox from './SourceBox';
+import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFunctions';
 
 // TODO refactor this to use common part
 
+function RepositoryIdMessage({ source }) {
+  const { repository_name: repositoryName } = source;
+  let url = '';
+  if (repositoryName === 'genbank') {
+    url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
+  } else if (repositoryName === 'addgene') {
+    url = `https://www.addgene.org/${source.repository_id}/sequences/`;
+  }
+  return (
+    <>
+      {`Request to ${repositoryName} with ID `}
+      <strong>
+        <a href={url} target="_blank" rel="noopener noreferrer">
+          {source.repository_id}
+          {' '}
+        </a>
+      </strong>
+    </>
+  );
+}
+
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
+  const primers = useSelector((state) => state.primers.primers, shallowEqual);
   let message = '';
   switch (source.type) {
-    case 'file':
-      if (source.info && source.info.file_from === 'eLabFTW') {
-        message = (
-          <>
-            Read from file
-            {' '}
-            <a target="_blank" rel="noopener noreferrer" href={`https://elab.local:3148/database.php?mode=view&id=${source.info.item_id}`}>{source.file_name}</a>
-            {' '}
-            from eLabFTW
-          </>
-        );
-      } else {
-        message = `Read from uploaded file ${source.file_name}`; break;
-      }
-      break;
-    case 'manually_typed': message = 'Manually typed sequence'; break;
-    case 'ligation': message = 'Ligation of fragments'; break;
-    case 'gibson_assembly': message = 'Gibson assembly of fragments'; break;
-    case 'restriction': {
-      const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
-      uniqueEnzymes.sort();
+    case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;
+    case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
+    case 'LigationSource': message = 'Ligation of fragments'; break;
+    case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
+    case 'RestrictionEnzymeDigestionSource': {
+      const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
       message = `Restriction with ${uniqueEnzymes.join(' and ')}`;
     }
       break;
-    case 'restriction_and_ligation': {
+    case 'RestrictionAndLigationSource': {
       const uniqueEnzymes = [...new Set(source.restriction_enzymes)];
       uniqueEnzymes.sort();
       message = `Restriction with ${uniqueEnzymes.join(' and ')}, then ligation`;
     }
       break;
-    case 'PCR': {
-      const primers = useSelector((state) => state.primers.primers);
+    case 'PCRSource':
       message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
-    }
       break;
-    case 'oligonucleotide_hybridization': {
-      const primers = useSelector((state) => state.primers.primers);
+    case 'OligoHybridizationSource':
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;
-    }
       break;
-    case 'homologous_recombination': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
-    case 'crispr': {
-      const primers = useSelector((state) => state.primers.primers);
+    case 'HomologousRecombinationSource': message = `Homologous recombination with ${source.input[0]} as template and ${source.input[1]} as insert.`; break;
+    case 'CRISPRSource': {
       const guidesString = source.guides.map((id) => primers.find((p) => id === p.id).name).join(', ');
       message = `CRISPR HDR with ${source.input[0]} as template, ${source.input[1]} as insert and ${guidesString} as a guide${source.guides.length > 1 ? 's' : ''}`;
     }
       break;
-    case 'repository_id': {
-      const { repository } = source;
-      let url = '';
-      if (repository === 'genbank') {
-        url = `https://www.ncbi.nlm.nih.gov/nuccore/${source.repository_id}`;
-      } else if (repository === 'addgene') {
-        url = `https://www.addgene.org/${source.repository_id}/sequences/`;
-      }
-      message = (
-        <>
-          {`Request to ${repository} with ID `}
-          <strong>
-            <a href={url} target="_blank" rel="noopener noreferrer">
-              {source.repository_id}
-              {' '}
-            </a>
-          </strong>
-        </>
-      );
-    }
+    case 'RepositoryIdSource': message = <RepositoryIdMessage source={source} />;
       break;
-    case 'genome_coordinates': {
+    case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
+      break;
+    case 'GenomeCoordinatesSource':
       message = (
         <>
           <div>
@@ -88,7 +74,7 @@ function FinishedSource({ sourceId }) {
             <strong>Coords:</strong>
             {' '}
             <a href={`https://www.ncbi.nlm.nih.gov/nuccore/${source.sequence_accession}`} target="_blank" rel="noopener noreferrer">{source.sequence_accession}</a>
-            {`(${source.start}-${source.stop})`}
+            {`(${source.start}-${source.end})`}
           </div>
           {source.locus_tag && (
           <div>
@@ -110,14 +96,23 @@ function FinishedSource({ sourceId }) {
         </>
       );
       break;
-    }
-    case 'elabftw': message = 'Request to eLabFTW'; break;
-    case 'polymerase_extension': message = 'Polymerase extension'; break;
+    case 'PolymeraseExtensionSource': message = 'Polymerase extension'; break;
+    case 'ELabFTWFileSource':
+      message = (
+        <>
+          Read from file
+          {' '}
+          <a target="_blank" rel="noopener noreferrer" href={`https://elab.local:3148/database.php?mode=view&id=${source.item_id}`}>{source.file_name}</a>
+          {' '}
+          from eLabFTW
+        </>
+      );
+      break;
     default: message = '';
   }
   return (
     <SourceBox {...{ sourceId: source.id }}>
-      <div>{message}</div>
+      <div className="finished-source">{message}</div>
     </SourceBox>
   );
 }

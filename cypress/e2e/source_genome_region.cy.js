@@ -2,7 +2,7 @@ describe('GenomeRegion Source', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
-    cy.get('li[data-value="genome_region"]').click();
+    cy.get('li[data-value="GenomeCoordinatesSource"]').click();
   });
   it('works for reference genome', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
@@ -93,6 +93,7 @@ describe('GenomeRegion Source', () => {
     cy.get('label').contains('Upstream bases').siblings('div').children('input')
       .type('187800900');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.MuiAlert-message').should('be.visible');
   });
   it('works for sequence accession', () => {
@@ -123,6 +124,7 @@ describe('GenomeRegion Source', () => {
     cy.get('li#sequence-2 .veLinearView').contains('20 bps');
   });
   it('gives the right errors and warnings for sequence accesion', () => {
+    // TODO: move some of this to component tests (e.g. coordinates constraints)
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
     cy.get('li[data-value="custom_coordinates"]').click();
     // Shows species and assembly ID if sequence accession belongs to assembly

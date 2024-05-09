@@ -37,7 +37,7 @@ function SourcePCRorHybridization({ sourceId }) {
     const requestData = {
       sequences: inputEntities,
       primers: [forwardPrimerId, reversePrimerId].map((id) => primers.find((p) => p.id === id)),
-      source: { input: inputEntities.map((e) => e.id) },
+      source: { id: sourceId, input: inputEntities.map((e) => e.id) },
     };
 
     if (inputEntities.length === 0) {

@@ -56,4 +56,4 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   );
 }
 
-export default MultipleOutputsSelector;
+export default React.memo(MultipleOutputsSelector);

@@ -33,13 +33,13 @@ function ELabFTWSource({ sourceId }) {
     const file = new File([resp.data], fileInfo.real_name);
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('info_str', JSON.stringify({ file_from: 'eLabFTW', item_id: resource.id, upload_id: fileInfo.id }));
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     };
-    sendPostRequest('read_from_file', formData, config);
+    const modifySource = (s) => ({ ...s, item_id: resource.id, upload_id: fileInfo.id, type: 'ELabFTWFileSource' });
+    sendPostRequest('read_from_file', formData, config, modifySource);
   };
 
   const apiKey = import.meta.env.VITE_ELABFTW_API_KEY;
