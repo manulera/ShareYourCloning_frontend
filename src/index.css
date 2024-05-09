@@ -170,4 +170,12 @@ code {
     min-width: 40%;
     box-shadow: inset 0px 0px 0px 3px gray;
     margin-bottom: 30px;
+    white-space: pre-wrap;
+    display: inline-block;
+    text-align: left;
+    max-width: 50%;
+}
+
+.data-model-displayer p {
+    font-size: large;
 }

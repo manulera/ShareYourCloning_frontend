@@ -12,9 +12,18 @@ function DataModelDisplayer() {
   });
   // TODO: proper json syntax highlighting here
   return (
-    <code style={{ whiteSpace: 'pre-wrap', textAlign: 'left', display: 'inline-block' }}>
-      {JSON.stringify({ sources, sequences: trimmedSequences, primers }, null, 4)}
-    </code>
+    <div className="data-model-displayer">
+      <p>
+        Visit the
+        {' '}
+        <a href="https://genestorian.github.io/ShareYourCloning_LinkML" target="_blank" rel="noopener noreferrer">data model documentation</a>
+        .
+      </p>
+
+      <code>
+        {JSON.stringify({ sources, sequences: trimmedSequences, primers }, null, 4)}
+      </code>
+    </div>
   );
 }
 
