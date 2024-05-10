@@ -2,8 +2,9 @@ import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
 import { reversePositionInRange } from '@teselagen/range-utils';
+import { parseFeatureLocation } from '@teselagen/bio-parsers';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
-import { convertToTeselaJson, parseFeatureLocation } from '../../utils/sequenceParsers';
+import { convertToTeselaJson } from '../../utils/sequenceParsers';
 
 function getCutParameters(seq, cut, isLeft) {
   if (cut === null) {

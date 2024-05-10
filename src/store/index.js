@@ -16,6 +16,17 @@ import primerReducer from './primers';
 //     })) ||
 //   compose;
 
+// Equivalent to the above
+const actionDenylist = ['HOVEREDANNOTATIONUPDATE', 'HOVEREDANNOTATIONCLEAR'];
+
+const ignoreActionMiddleware = (store) => (next) => (action) => {
+  if (actionDenylist.includes(action.type)) {
+    // Don't dispatch blacklisted actions
+    return;
+  }
+
+  return next(action);
+};
 
 // Create a store using configureStore
 const store = configureStore({
@@ -26,8 +37,7 @@ const store = configureStore({
     cloning: cloningReducer,
     primers: primerReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(thunk, vectorEditorMiddleware),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk, vectorEditorMiddleware, ignoreActionMiddleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 
