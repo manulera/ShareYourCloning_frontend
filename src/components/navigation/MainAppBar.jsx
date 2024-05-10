@@ -28,7 +28,9 @@ function MainAppBar() {
     try {
       await axios.post(url, newState);
     } catch (e) {
-      setLoadedFileError('JSON file in wrong format');
+      if (e.code === 'ERR_NETWORK') {
+        setLoadedFileError('Cannot connect to backend server to validate the JSON file');
+      } else { setLoadedFileError('JSON file in wrong format'); }
       // return;
     }
 
