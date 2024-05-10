@@ -30,10 +30,8 @@ describe('GenomeRegion Source', () => {
     cy.get('#source-1 a').contains('CU329670.1').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/CU329670.1');
     // TODO: Test link to gene id
     // cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
-    cy.get('[style="text-align: center;"]').click();
-    cy.get('[style="text-align: center;"] > :nth-child(3)').should('have.text', '5538 bps');
-    cy.get('[style="text-align: center;"] > :nth-child(1)').should('have.text', 'CU329670 ');
-    cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('5538 bps');
+    cy.get('li#sequence-2').contains('CU329670');
+    cy.get('li#sequence-2').contains('5538 bps');
   });
   it('works for other assembly', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
@@ -59,11 +57,8 @@ describe('GenomeRegion Source', () => {
     cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
     cy.get('#source-1 a').contains('2543372').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/gene/2543372');
     cy.get('#source-1 div').contains('SPAPB1A10.09');
-    cy.get('[style="text-align: center;"]').click();
-    cy.get('[style="text-align: center;"] > :nth-child(3)').should('have.text', '4718 bps');
-    cy.get('[style="text-align: center;"] > :nth-child(1)').click();
-    cy.get('[style="text-align: center;"] > :nth-child(1)').should('have.text', 'NC_003424 ');
-    cy.get(':nth-child(1) > :nth-child(1) > :nth-child(1)').contains('4718 bps');
+    cy.get('li#sequence-2').contains('NC_003424');
+    cy.get('li#sequence-2').contains('4718 bps');
   });
   it('gives the right warnings and errors for other assembly', () => {
     cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
