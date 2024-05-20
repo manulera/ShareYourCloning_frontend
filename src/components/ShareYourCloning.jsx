@@ -4,12 +4,11 @@ import Tabs from '@mui/material/Tabs';
 import MainSequenceEditor from './MainSequenceEditor';
 import DescriptionEditor from './DescriptionEditor';
 import PrimerList from './primers/PrimerList';
-import NetWorkNode from './NetworkNode';
-import NewSourceBox from './sources/NewSourceBox';
 import { cloningActions } from '../store/cloning';
 import TabPannel from './navigation/TabPannel';
 import CustomTab from './navigation/CustomTab';
 import DataModelDisplayer from './DataModelDisplayer';
+import CloningHistory from './CloningHistory';
 
 function ShareYourCloning() {
   const dispatch = useDispatch();
@@ -43,15 +42,7 @@ function ShareYourCloning() {
       </TabPannel>
       <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
         <div className="tf-tree tf-ancestor-tree">
-          <ul>
-            {network.map((node) => (
-              <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
-            ))}
-            {/* There is always a box on the right side to add a source */}
-            <li key="new_source_box">
-              <span className="tf-nc"><span className="node-text"><NewSourceBox /></span></span>
-            </li>
-          </ul>
+          <CloningHistory network={network} />
         </div>
       </TabPannel>
       <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">

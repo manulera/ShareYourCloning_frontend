@@ -5,7 +5,8 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import ValidatedTextField from '../form/ValidatedTextField';
 import { stringIsNotDNA } from '../primers/validators';
 
-function SourceManuallyTyped({ sourceId }) {
+function SourceManuallyTyped({ source }) {
+  const { id: sourceId } = source;
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const [userInput, setUserInput] = React.useState('');

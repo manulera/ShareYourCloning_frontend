@@ -62,6 +62,30 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  updateEntityAndItsSource(state, action) {
+    const { newEntity, newSource } = action.payload;
+    const { entities, sources } = state;
+
+    const source = sources.find((s) => s.id === newSource.id);
+    if (source === undefined) {
+      throw new Error('source not found');
+    }
+    Object.assign(source, newSource);
+    // if source.is_template, remove that property
+    if (source.is_template) {
+      delete source.is_template;
+    }
+
+    newEntity.id = source.output;
+    const entity = entities.find((e) => e.id === newEntity.id);
+    if (entity === undefined) {
+      throw new Error('Entity not found');
+    }
+    Object.assign(entity, newEntity);
+
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   updateSource(state, action) {
     const newSource = action.payload;
     const { sources } = state;

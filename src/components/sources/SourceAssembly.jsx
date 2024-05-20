@@ -11,9 +11,9 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 
 // A component representing the ligation or gibson assembly of several fragments
-function SourceAssembly({ sourceId, assemblyType }) {
+function SourceAssembly({ source, assemblyType }) {
+  const { id: sourceId, input: inputEntityIds, output } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const inputEntityIds = inputEntities.map((e) => e.id);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
   const [minimalHomology, setMinimalHomology] = React.useState(20);
   const [allowPartialOverlaps, setAllowPartialOverlaps] = React.useState(false);
@@ -48,7 +48,7 @@ function SourceAssembly({ sourceId, assemblyType }) {
         minimal_homology: minimalHomology,
         circular_only: circularOnly,
       } };
-      sendPostRequest('gibson_assembly', requestData, config);
+      sendPostRequest('gibson_assembly', requestData, config, output);
     } else if (assemblyType === 'RestrictionAndLigationSource') {
       if (enzymes.length === 0) { return; }
       requestData.source.restriction_enzymes = enzymes;
@@ -56,14 +56,14 @@ function SourceAssembly({ sourceId, assemblyType }) {
         allow_partial_overlaps: allowPartialOverlaps,
         circular_only: circularOnly,
       } };
-      sendPostRequest('restriction_and_ligation', requestData, config);
+      sendPostRequest('restriction_and_ligation', requestData, config, output);
     } else {
       const config = { params: {
         allow_partial_overlaps: allowPartialOverlaps,
         circular_only: circularOnly,
         blunt: bluntLigation,
       } };
-      sendPostRequest(classNameToEndPointMap[assemblyType], requestData, config);
+      sendPostRequest(classNameToEndPointMap[assemblyType], requestData, config, output);
     }
   };
 

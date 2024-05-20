@@ -24,10 +24,10 @@ function NetWorkNode({
   );
 
   const sourceId = node.source.id;
-  const sourceComponent = node.source.output !== null ? (
+  const sourceComponent = (node.source.output !== null && !node.source.is_template) ? (
     <FinishedSource {...{ sourceId: node.source.id }} />
   ) : (
-    <Source {...{ sourceId: node.source.id }} />
+    <Source {...{ source: node.source }} />
   );
   const sourceSection = (
     <li key={sourceId} id={`source-${sourceId}`} className="source-node">
@@ -52,11 +52,20 @@ function NetWorkNode({
     <li key={entity.id} id={`sequence-${entity.id}`} className="sequence-node">
       <span className="tf-nc">
         <span className="node-text">
-          <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
-          <div className="corner-id">
-            {entity.id}
-          </div>
-          <MainSequenceCheckBox {...{ id: entity.id }} />
+          {
+            entity.type === 'TemplateSequence' ? (
+              <div className="template-sequence">Hello</div>
+            ) : (
+              <>
+                <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
+                <div className="corner-id">
+                  {entity.id}
+                </div>
+                <MainSequenceCheckBox {...{ id: entity.id }} />
+              </>
+            )
+          }
+
         </span>
       </span>
       <ul>
