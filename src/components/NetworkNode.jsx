@@ -4,6 +4,7 @@ import './NetworkTree.css';
 import SequenceEditor from './SequenceEditor';
 import FinishedSource from './sources/FinishedSource';
 import MainSequenceCheckBox from './MainSequenceCheckBox';
+import TemplateSequence from './TemplateSequence';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
@@ -54,18 +55,15 @@ function NetWorkNode({
         <span className="node-text">
           {
             entity.type === 'TemplateSequence' ? (
-              <div className="template-sequence">Hello</div>
+              <TemplateSequence entity={entity} />
             ) : (
               <>
                 <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
-                <div className="corner-id">
-                  {entity.id}
-                </div>
                 <MainSequenceCheckBox {...{ id: entity.id }} />
               </>
             )
           }
-
+          <div className="corner-id">{entity.id}</div>
         </span>
       </span>
       <ul>

@@ -111,6 +111,7 @@ div.collapsed button {
 /* Prevents scollbar from showing on small editors,
    that was caused by overflowing numbers at the edges
    of the x axis */
+
 span.node-text svg.veAxis {
     width: 100%;
 }
