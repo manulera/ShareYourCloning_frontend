@@ -58,7 +58,7 @@ function SourceHomologousRecombination({ source, isCrispr = false }) {
   };
 
   return (
-    <div className="ligation">
+    <div className="homologous-recombination">
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
           <SingleInputSelector

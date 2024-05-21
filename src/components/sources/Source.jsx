@@ -12,6 +12,7 @@ import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
+import CollectionSource from './CollectionSource';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -19,6 +20,11 @@ function Source({ source }) {
   const { id: sourceId } = source;
   const [sourceType, setSourceType] = React.useState(source.type);
   let specificSource = null;
+
+  React.useEffect(() => {
+    setSourceType(source.type);
+  }, [source.type]);
+
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
@@ -51,6 +57,8 @@ function Source({ source }) {
       specificSource = <SourcePolymeraseExtension {...{ source }} />; break;
     case 'elabftw':
       specificSource = <ELabFTWSource {...{ source }} />; break;
+    case 'CollectionSource':
+      specificSource = <CollectionSource {...{ source }} />; break;
     default:
       break;
     /* eslint-enable */

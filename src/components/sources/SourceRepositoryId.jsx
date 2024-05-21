@@ -12,6 +12,9 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 function SourceRepositoryId({ source }) {
   const { id: sourceId, output } = source;
   const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || '');
+  React.useEffect(() => {
+    setSelectedRepository(source.repository_name);
+  }, [source.repository_name]);
   const repositoryIdRef = React.useRef(null);
   const [error, setError] = React.useState(false);
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
