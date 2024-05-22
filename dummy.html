@@ -39,7 +39,7 @@
             const table = document.createElement('table')
             table.classList.add('table')
             const headerRow = document.createElement('tr')
-            const tableHeaders = ['well', 'name', 'addgene_id', 'resistance']
+            const tableHeaders = ['well', 'plasmid_name', 'addgene_id', 'resistance']
             tableHeaders.forEach(header => {
                 const th = document.createElement('th')
                 th.innerText = header
@@ -111,8 +111,11 @@
                 downloadButton.innerText = 'Download as tsv'
                 downloadButton.classList.add('btn', 'btn-primary', 'm-2')
                 downloadButton.onclick = () => {
-                    let tsv = 'well\tname\taddgene_id\tresistance\n'
-                    tsv += plasmids.map(plasmid => `${plasmid.well}\t${plasmid.name}\t${plasmid.addgene_id}\t${plasmid.resistance}`).join('\n')
+                    let tsv = 'plasmid_name\taddgene_id\tcategory\tresistance\twell\tdescription\n'
+                    tsv += plasmids.map(plasmid => {
+                        const { well, name, addgene_id, resistance } = plasmid
+                        return [name, addgene_id, '', resistance, well, ''].join('\t')
+                    }).join('\n')
                     const blob = new Blob([tsv], {
                         type: 'text/tsv'
                     })
