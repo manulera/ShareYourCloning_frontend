@@ -27,7 +27,7 @@ function CollectionSource({ source }) {
     setSelectedOption(event.target.value);
   };
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
-  const imagePath = `public/images/PMID25871405/${image}`;
+  const imagePath = `images/PMID25871405/${image}`;
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}
