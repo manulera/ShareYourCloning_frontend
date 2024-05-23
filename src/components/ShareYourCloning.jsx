@@ -41,7 +41,7 @@ function ShareYourCloning() {
         </div>
       </TabPannel>
       <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="tf-tree tf-ancestor-tree">
+        <div className="cloning-history">
           <CloningHistory network={network} />
         </div>
       </TabPannel>
