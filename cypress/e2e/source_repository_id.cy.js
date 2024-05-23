@@ -18,11 +18,8 @@ describe('RepositoryId Source', () => {
     cy.get('li#source-1 a[href="https://www.addgene.org/39282/sequences/"]').should('be.visible');
   });
   it('works with genbank', () => {
-    cy.get('body').click();
-    cy.get('div[aria-labelledby="select-repository-1-label"]').click();
-    cy.get('li[data-value="genbank"]').click();
-    cy.get('#repository-id-1').clear('');
-    cy.get('#repository-id-1').type('NM_001018957.2');
+    clickMultiSelectOption('Select repository', 'GenBank', 'li#source-1');
+    setInputValue('ID in repository', 'NM_001018957.2', 'li#source-1');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#sequence-2 .corner-id', { timeout: 20000 }).first().should('have.text', '2');
     cy.get('li#sequence-2 li#source-1').should('exist');
@@ -34,9 +31,7 @@ describe('RepositoryId Source', () => {
     cy.get('li#source-1 a[href="https://www.ncbi.nlm.nih.gov/nuccore/NM_001018957.2"]').should('be.visible');
   });
   it('handles empty submissions and wrong IDs', () => {
-    cy.get('body').click();
-    cy.get('[aria-labelledby="select-repository-1-label"]').click();
-    cy.get('li[data-value="addgene"]').click();
+    clickMultiSelectOption('Select repository', 'AddGene', 'li#source-1');
     cy.get('#repository-id-1').clear('');
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('#repository-id-1-helper-text').should('have.text', 'Field cannot be empty');
