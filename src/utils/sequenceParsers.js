@@ -1,4 +1,5 @@
 import { genbankToJson } from '@teselagen/bio-parsers';
+import { tidyUpSequenceData } from '@teselagen/sequence-utils';
 
 export function convertToTeselaJson(sequence) {
   // TODO: This might have been fixed in more recent versions of the library
@@ -8,5 +9,5 @@ export function convertToTeselaJson(sequence) {
   if (sequence.file_content.split('\n')[0].includes('linear')) {
     parsedSequence.circular = false;
   }
-  return parsedSequence;
+  return tidyUpSequenceData(parsedSequence);
 }
