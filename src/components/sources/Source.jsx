@@ -10,6 +10,7 @@ import SourcePCR from './SourcePCR';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
+import SourceGoogleDrive from './SourceGoogleDrive';
 
 // TODO
 // You should be able to chose based on the input. No input -> only file or request
@@ -43,6 +44,9 @@ function Source({ sourceId }) {
       specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
     case 'manually_typed':
       specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
+
+    case 'google_drive':
+      specificSource = <SourceGoogleDrive {...{ sourceId }} />; break;
     default:
       break;
     /* eslint-enable */

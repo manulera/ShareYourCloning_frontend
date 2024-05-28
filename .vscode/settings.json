@@ -1,28 +1,28 @@
 {
-    "files.exclude": {
-        "**/.git": true,
-        "**/.svn": true,
-        "**/.hg": true,
-        "**/CVS": true,
-        "**/.DS_Store": true,
-        "**/*.pyc": true,
-        "**/__pycache__": true
-    },
-    "emmet.includeLanguages": {
-        "javascript": "javascriptreact"
-    },
-    "eslint.nodePath": "../node_modules",
-    "eslint.options": {
-        "overrideConfigFile": "../.eslintrc.json"
-    },
-    "eslint.format.enable": true,
-    "[javascript]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-    },
-    "search.exclude": {
-        "**/ShareYourCloning_backend": true,
-    }
+  "files.exclude": {
+    "**/.git": true,
+    "**/.svn": true,
+    "**/.hg": true,
+    "**/CVS": true,
+    "**/.DS_Store": true,
+    "**/*.pyc": true,
+    "**/__pycache__": true
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "eslint.nodePath": "../node_modules",
+  "eslint.options": {
+    "overrideConfigFile": "../.eslintrc.json"
+  },
+  "eslint.format.enable": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "search.exclude": {
+    "**/ShareYourCloning_backend": true
+  }
 }

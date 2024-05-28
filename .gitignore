@@ -35,3 +35,6 @@ yarn-error.log*
 cypress/downloads
 cypress/videos
 cypress/screenshots
+
+# keys
+public/keys.json
