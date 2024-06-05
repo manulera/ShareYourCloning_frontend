@@ -1535,9 +1535,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/ove@npm:^0.5.11":
-  version: 0.5.11
-  resolution: "@teselagen/ove@npm:0.5.11"
+"@teselagen/ove@npm:^0.5.14":
+  version: 0.5.14
+  resolution: "@teselagen/ove@npm:0.5.14"
   dependencies:
     "@blueprintjs/core": 3.52.0
     "@blueprintjs/datetime": 3.23.19
@@ -1552,7 +1552,7 @@ __metadata:
     "@teselagen/react-list": 0.8.18
     "@teselagen/react-table": 6.10.16
     "@teselagen/sequence-utils": 0.3.24
-    "@teselagen/ui": 0.4.7
+    "@teselagen/ui": 0.4.11
     "@use-gesture/react": ^10.2.23
     bluebird: 3.7.2
     bson-objectid: 2.0.4
@@ -1620,7 +1620,7 @@ __metadata:
     use-deep-compare-effect: ^1.6.1
     validate.io-nonnegative-integer-array: ^1.0.1
     write-excel-file: ^1.4.25
-  checksum: 8e0ca1faca8335e896cef67ece2076761978fa091bf4827f7b3a44d8c8d193d15b5f7705744cb5f79b235423cacf883f0b889c605e2632a1e6de07ff74ef7b79
+  checksum: 9711aeda8f55546bcd861338f5fb7d01af97df4b6c2716a5734f319e8bb0ae3ac3d62fc5a594837561e2e101da66499561ba9b9605204cb60df4f0db3b250e0c
   languageName: node
   linkType: hard
 
@@ -1680,9 +1680,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/ui@npm:0.4.7":
-  version: 0.4.7
-  resolution: "@teselagen/ui@npm:0.4.7"
+"@teselagen/ui@npm:0.4.11":
+  version: 0.4.11
+  resolution: "@teselagen/ui@npm:0.4.11"
   dependencies:
     "@blueprintjs/core": 3.52.0
     "@blueprintjs/datetime": 3.23.19
@@ -1712,7 +1712,6 @@ __metadata:
     mock-fs: 5.2.0
     nanoid: ^4.0.0
     papaparse: ^5.3.2
-    prop-types: ^15.6.2
     qs: ^6.9.6
     react-color: ^2.19.3
     react-dropzone: ^11.4.2
@@ -1731,7 +1730,7 @@ __metadata:
     url-join: ^4.0.1
     use-deep-compare-effect: ^1.6.1
     write-excel-file: ^1.4.25
-  checksum: f66c1053171db959ab1431891d68975005ab077f193c069be1d7b3f9b8cfc81b51aa26089bdb76eaa53bc37488a3363899151783f87889770dd8c149e750bf5a
+  checksum: 59c16a92b3ec076fd4352c1cb1f8c2e9e90f3b5bae85a9fb381d42f5d7547d71c1b5832b37c75079c0fdcbe5a6f4b0501570bc9b4a3a88baf2ad99dc9ad62edb
   languageName: node
   linkType: hard
 
@@ -8370,7 +8369,7 @@ __metadata:
     "@mui/material": ^5.15.17
     "@reduxjs/toolkit": ^1.9.7
     "@teselagen/bio-parsers": ^0.4.18
-    "@teselagen/ove": ^0.5.11
+    "@teselagen/ove": ^0.5.14
     "@teselagen/range-utils": ^0.3.8
     "@teselagen/sequence-utils": ^0.3.24
     "@testing-library/jest-dom": ^6.1.4
