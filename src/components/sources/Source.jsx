@@ -13,6 +13,7 @@ import SourceManuallyTyped from './SourceManuallyTyped';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 import CollectionSource from './CollectionSource';
+import SourceDroppedFile from './SourceDroppedFile';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -29,6 +30,8 @@ function Source({ source }) {
     /* eslint-disable */
     case 'UploadedFileSource':
       specificSource = <SourceFile {...{ source }} />; break;
+    case 'SourceDroppedFile':
+      specificSource = <SourceDroppedFile {...{ source }} />; break;
     case 'RestrictionEnzymeDigestionSource':
       specificSource = <SourceRestriction {...{ source }} />; break;
     case 'RepositoryIdSource':

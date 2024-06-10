@@ -49,6 +49,21 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  addSourceDroppedFile(state, action) {
+    const { fileContent, file_name } = action.payload;
+    const { sources } = state;
+    const nextUniqueId = getNextUniqueId(state);
+    sources.push({
+      id: nextUniqueId,
+      input: [],
+      output: null,
+      type: 'SourceDroppedFile',
+      fileContent,
+      file_name,
+    });
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   addEntityAndItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
