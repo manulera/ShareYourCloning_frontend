@@ -24,7 +24,7 @@ function Source({ source }) {
   React.useEffect(() => {
     setSourceType(source.type);
   }, [source.type]);
-  console.log(source.id, 'sourceType', sourceType);
+
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':

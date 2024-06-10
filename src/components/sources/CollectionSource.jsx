@@ -27,7 +27,6 @@ function CollectionSource({ source }) {
     setSelectedOption(event.target.value);
   };
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
-  console.log('>>>>>>', image);
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}

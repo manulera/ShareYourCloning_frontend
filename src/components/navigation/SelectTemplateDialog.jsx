@@ -16,7 +16,7 @@ function SelectTemplateDialog({ onClose, open }) {
     fetchData();
   }, []);
   return (
-    <Dialog open={open} onClose={onClose} className="load-example-dialog">
+    <Dialog open={open} onClose={onClose} className="load-template-dialog">
       <DialogTitle>Load a template</DialogTitle>
       <List>
         {
