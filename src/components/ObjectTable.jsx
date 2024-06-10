@@ -2,7 +2,7 @@
 // where each row contains a key-value pair of an object
 // it uses mui
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Table, TableCell, TableRow } from '@mui/material';
 import React from 'react';
 
 function ObjectTable({ object }) {

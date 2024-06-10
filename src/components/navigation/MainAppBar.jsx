@@ -16,7 +16,7 @@ import SelectTemplateDialog from './SelectTemplateDialog';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
-  const [openTemplateDialog, setOpenTemplateDialog] = React.useState(true);
+  const [openTemplateDialog, setOpenTemplateDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const dispatch = useDispatch();
@@ -56,8 +56,16 @@ function MainAppBar() {
     if (url) {
       setOpenExampleDialog(false);
       setOpenTemplateDialog(false);
-      const resp = await axios.get(url);
-      loadData(resp.data, isTemplate);
+      const { data } = await axios.get(url);
+      if (isTemplate) {
+        const segments = url.split('/');
+        const kitUrl = segments[segments.length - 3];
+        const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/main/submissions';
+        data.sources = data.sources.map((s) => {
+          if (s.image) { return { ...s, image: `${rootGithubUrl}/${kitUrl}/${s.image}` }; } return s;
+        });
+        loadData(data, isTemplate);
+      }
     }
   };
 

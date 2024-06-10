@@ -27,12 +27,12 @@ function CollectionSource({ source }) {
     setSelectedOption(event.target.value);
   };
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
-  const imagePath = `images/PMID25871405/${image}`;
+  console.log('>>>>>>', image);
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}
       {description && <p>{description}</p>}
-      {image && <img src={imagePath} width="50%" alt="Collection source icon" />}
+      {image && <img src={image} width="50%" alt="Collection source icon" />}
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
           <InputLabel id="select-collection-source">Select a sequence</InputLabel>

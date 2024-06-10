@@ -196,3 +196,8 @@ code {
 width: 110%; /* Set a width that exceeds the container */
 height: 1px; /* Just for occupying space */
 }
+
+a.button-hyperlink {
+    text-decoration: none;
+    color: white;
+}
