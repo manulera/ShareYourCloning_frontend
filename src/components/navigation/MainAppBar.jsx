@@ -64,8 +64,8 @@ function MainAppBar() {
         data.sources = data.sources.map((s) => {
           if (s.image) { return { ...s, image: `${rootGithubUrl}/${kitUrl}/${s.image}` }; } return s;
         });
-        loadData(data, isTemplate);
       }
+      loadData(data, isTemplate);
     }
   };
 
