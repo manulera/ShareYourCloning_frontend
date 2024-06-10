@@ -10,9 +10,9 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import MultiplePrimerSelector from '../primers/MultiplePrimerSelector';
 
 // A component representing the ligation of several fragments
-function SourceHomologousRecombination({ sourceId, isCrispr = false }) {
+function SourceHomologousRecombination({ source, isCrispr = false }) {
+  const { id: sourceId, input: inputEntityIds, output } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const inputEntityIds = inputEntities.map((e) => e.id);
   const [template, setTemplate] = React.useState(inputEntityIds.length > 0 ? inputEntityIds[0] : null);
   const [insert, setInsert] = React.useState(inputEntityIds.length > 1 ? inputEntityIds[1] : null);
   const [selectedPrimers, setSelectedPrimers] = React.useState([]);
@@ -32,9 +32,9 @@ function SourceHomologousRecombination({ sourceId, isCrispr = false }) {
     if (isCrispr) {
       requestData.guides = selectedPrimers;
       requestData.source.guides = selectedPrimers.map((p) => p.id);
-      sendPostRequest('crispr', requestData, config);
+      sendPostRequest('crispr', requestData, config, output);
     } else {
-      sendPostRequest('homologous_recombination', requestData, config);
+      sendPostRequest('homologous_recombination', requestData, config, output);
     }
   };
 
@@ -58,7 +58,7 @@ function SourceHomologousRecombination({ sourceId, isCrispr = false }) {
   };
 
   return (
-    <div className="ligation">
+    <div className="homologous-recombination">
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
           <SingleInputSelector

@@ -17,9 +17,9 @@ const MenuProps = {
   },
 };
 
-function SourcePCRorHybridization({ sourceId }) {
+function SourcePCRorHybridization({ source }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
-
+  const { id: sourceId, output } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
@@ -45,14 +45,14 @@ function SourcePCRorHybridization({ sourceId }) {
       requestData.source.reverse_oligo = reversePrimerId;
       sendPostRequest('oligonucleotide_hybridization', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
-      } });
+      } }, output);
     } else {
       requestData.source.forward_primer = forwardPrimerId;
       requestData.source.reverse_primer = reversePrimerId;
       sendPostRequest('pcr', requestData, { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
-      } });
+      } }, output);
     }
   };
 

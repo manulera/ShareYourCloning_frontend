@@ -40,7 +40,7 @@ function SelectExampleDialog({ onClose, open }) {
         {
         examples.map((example) => (
           <ListItem key={example.link} className="load-example-item">
-            <ListItemButton onClick={() => onClose(example.link)}><ListItemText>{example.title}</ListItemText></ListItemButton>
+            <ListItemButton onClick={() => onClose(`examples/${example.link}`)}><ListItemText>{example.title}</ListItemText></ListItemButton>
           </ListItem>
         ))
         }

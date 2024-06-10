@@ -1,5 +1,5 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { FormControl, TextField } from '@mui/material';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -12,43 +12,53 @@ import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
+import CollectionSource from './CollectionSource';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
-function Source({ sourceId }) {
-  const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
+function Source({ source }) {
+  const { id: sourceId } = source;
   const [sourceType, setSourceType] = React.useState(source.type);
   let specificSource = null;
+
+  React.useEffect(() => {
+    setSourceType(source.type);
+  }, [source.type]);
+
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
-      specificSource = <SourceFile {...{ sourceId }} />; break;
+      specificSource = <SourceFile {...{ source }} />; break;
     case 'RestrictionEnzymeDigestionSource':
-      specificSource = <SourceRestriction {...{ sourceId }} />; break;
+      specificSource = <SourceRestriction {...{ source }} />; break;
     case 'RepositoryIdSource':
-      specificSource = <SourceRepositoryId {...{ sourceId }} />; break;
+      specificSource = <SourceRepositoryId {...{ source }} />; break;
+    case 'AddGeneIdSource':
+      specificSource = <SourceRepositoryId {...{ source, initialSelectedRepository: 'addgene' }} />; break;
     case 'LigationSource':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'LigationSource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, assemblyType: 'LigationSource' }} />; break;
     case 'GibsonAssemblySource':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'GibsonAssemblySource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, assemblyType: 'GibsonAssemblySource' }} />; break;
     case 'HomologousRecombinationSource':
-      specificSource = <SourceHomologousRecombination {...{ sourceId }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ source }} />; break;
     case 'PCRSource':
-      specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
+      specificSource = <SourcePCRorHybridization {...{ source }} />; break;
     case 'RestrictionAndLigationSource':
-      specificSource = <SourceAssembly {...{ sourceId, assemblyType: 'RestrictionAndLigationSource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, assemblyType: 'RestrictionAndLigationSource' }} />; break;
     case 'GenomeCoordinatesSource':
-      specificSource = <SourceGenomeRegion {...{ sourceId }} />; break;
+      specificSource = <SourceGenomeRegion {...{ source }} />; break;
     case 'ManuallyTypedSource':
-      specificSource = <SourceManuallyTyped {...{ sourceId }} />; break;
+      specificSource = <SourceManuallyTyped {...{ source }} />; break;
     case 'CRISPRSource':
-      specificSource = <SourceHomologousRecombination {...{ sourceId, isCrispr: true }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ source, isCrispr: true }} />; break;
     case 'OligoHybridizationSource':
-      specificSource = <SourcePCRorHybridization {...{ sourceId }} />; break;
+      specificSource = <SourcePCRorHybridization {...{ source }} />; break;
     case 'PolymeraseExtensionSource':
-      specificSource = <SourcePolymeraseExtension {...{ sourceId }} />; break;
+      specificSource = <SourcePolymeraseExtension {...{ source }} />; break;
     case 'elabftw':
-      specificSource = <ELabFTWSource {...{ sourceId }} />; break;
+      specificSource = <ELabFTWSource {...{ source }} />; break;
+    case 'CollectionSource':
+      specificSource = <CollectionSource {...{ source }} />; break;
     default:
       break;
     /* eslint-enable */
@@ -56,7 +66,15 @@ function Source({ sourceId }) {
 
   return (
     <SourceBox {...{ sourceId }}>
-      <SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />
+      {(source.is_template && sourceType) ? (
+        <FormControl fullWidth>
+          <TextField
+            label="Source type"
+            value={source.type}
+            disabled
+          />
+        </FormControl>
+      ) : (<SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />)}
       {specificSource}
     </SourceBox>
   );

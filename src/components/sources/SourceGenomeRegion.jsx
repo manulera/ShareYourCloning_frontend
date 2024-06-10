@@ -61,7 +61,7 @@ function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnReference({ sourceId }) {
+function SourceGenomeRegionLocusOnReference({ sourceId, output }) {
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
@@ -73,7 +73,7 @@ function SourceGenomeRegionLocusOnReference({ sourceId }) {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
     payload.id = sourceId;
-    sendPostRequest('genome_coordinates', payload);
+    sendPostRequest('genome_coordinates', payload, {}, output);
   };
 
   return (
@@ -120,7 +120,7 @@ function KnownAssemblyField({ assemblyId }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnOther({ sourceId }) {
+function SourceGenomeRegionLocusOnOther({ sourceId, output }) {
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
@@ -133,7 +133,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
     event.preventDefault();
     const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
     payload.id = sourceId;
-    sendPostRequest('genome_coordinates', payload);
+    sendPostRequest('genome_coordinates', payload, {}, output);
   };
 
   const onAssemblyIdChange = (userInput, resp) => {
@@ -159,7 +159,7 @@ function SourceGenomeRegionLocusOnOther({ sourceId }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionCustomCoordinates({ sourceId }) {
+function SourceGenomeRegionCustomCoordinates({ sourceId, output }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState(null);
@@ -170,7 +170,7 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
   const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
   const [coordsStrand, setCoordsStrand] = React.useState('');
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId, {}, output);
   const onSubmit = (event) => {
     event.preventDefault();
     if (coordsStartRef.current.value === '') {
@@ -204,7 +204,7 @@ function SourceGenomeRegionCustomCoordinates({ sourceId }) {
       start: coordsStartRef.current.value,
       end: coordsEndRef.current.value,
       strand: coordsStrand === 'plus' ? 1 : -1,
-    });
+    }, {}, output);
   };
 
   const onAccessionChange = async (userInput, resp) => {
@@ -338,7 +338,8 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
   );
 }
 
-function SourceGenomeRegion({ sourceId }) {
+function SourceGenomeRegion({ source }) {
+  const { id: sourceId } = source;
   const [selectionMode, setSelectionMode] = React.useState('');
   const changeSelectionMode = (event) => { setSelectionMode(event.target.value); };
 

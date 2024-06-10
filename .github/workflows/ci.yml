@@ -20,14 +20,14 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-      - name: Load cached venv
-        id: cached-poetry-dependencies
-        uses: actions/cache@v2
-        with:
-          path: .venv
-          key: venv-${{ runner.os }}-${{ hashFiles('ShareYourCloning_backend/poetry.lock') }}
+      # - name: Load cached venv
+      #   id: cached-poetry-dependencies
+      #   uses: actions/cache@v2
+      #   with:
+      #     path: .venv
+      #     key: venv-${{ runner.os }}-${{ hashFiles('ShareYourCloning_backend/poetry.lock') }}
       - name: Install python dependencies
-        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        # if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
           cd ShareYourCloning_backend
           poetry install --no-dev

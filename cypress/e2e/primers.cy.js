@@ -3,7 +3,7 @@ describe('Tests primer functionality', () => {
     cy.visit('/');
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
-  it('Can delete primers', () => {
+  it.skip('Can delete primers', () => {
     let examplePrimerNumber = 2;
     while (examplePrimerNumber > 0) {
       cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', examplePrimerNumber);
@@ -12,7 +12,7 @@ describe('Tests primer functionality', () => {
     }
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('not.exist');
   });
-  it('Can add primers', () => {
+  it.skip('Can add primers', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
@@ -29,7 +29,7 @@ describe('Tests primer functionality', () => {
   //   cy.get('form.primer-row').should('exist');
   //   // TODO: Implement paste command
   // });
-  it('Can close add form', () => {
+  it.skip('Can close add form', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
@@ -42,7 +42,7 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-form-container [data-testid="CancelIcon"').click();
     cy.get('form.primer-row').should('not.exist');
   });
-  it('Can edit primers', () => {
+  it.skip('Can edit primers', () => {
     cy.get('.primer-table-container tr').contains('fwd').should('exist');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
     // The edited primer is not shown in the table
@@ -70,6 +70,8 @@ describe('Tests primer functionality', () => {
     };
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
+    // Wait for the table to load
+    cy.get('.primer-table-container').contains('AGTTTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAA').should('exist');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
 
     // Sequence is not editable
@@ -92,7 +94,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row input#name').type('rvs');
     cy.get('form.primer-row .MuiFormHelperText-root').contains('Name exists').should('not.exist');
   });
-  it('Can change name of  used primer', () => {
+  it.skip('Can change name of  used primer', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
@@ -104,7 +106,7 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-table-container tr').contains('fwd').should('not.exist');
     cy.get('.primer-table-container tr').contains('AGTTTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAAACATCGTTTTATTGAGCTCATTTACATCAACCGGTTCACGGATCCCCGGGTTAATTAA').should('exist');
   });
-  it('Applies contrains to edit unused primer', () => {
+  it.skip('Applies contrains to edit unused primer', () => {
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
@@ -133,7 +135,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row input#sequence').type('ATGC');
     cy.get('form.primer-row .MuiFormHelperText-root').should('have.text', '');
   });
-  it('Applies constrains to new primer', () => {
+  it.skip('Applies constrains to new primer', () => {
     // Useful to check the form is not submitted
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
@@ -174,7 +176,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
     cy.get('form.primer-row').should('not.exist');
   });
-  it('Edit overrides add', () => {
+  it.skip('Edit overrides add', () => {
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
     // Type something

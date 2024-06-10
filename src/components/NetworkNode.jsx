@@ -4,6 +4,7 @@ import './NetworkTree.css';
 import SequenceEditor from './SequenceEditor';
 import FinishedSource from './sources/FinishedSource';
 import MainSequenceCheckBox from './MainSequenceCheckBox';
+import TemplateSequence from './TemplateSequence';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
@@ -24,10 +25,10 @@ function NetWorkNode({
   );
 
   const sourceId = node.source.id;
-  const sourceComponent = node.source.output !== null ? (
+  const sourceComponent = (node.source.output !== null && !node.source.is_template) ? (
     <FinishedSource {...{ sourceId: node.source.id }} />
   ) : (
-    <Source {...{ sourceId: node.source.id }} />
+    <Source {...{ source: node.source }} />
   );
   const sourceSection = (
     <li key={sourceId} id={`source-${sourceId}`} className="source-node">
@@ -52,11 +53,17 @@ function NetWorkNode({
     <li key={entity.id} id={`sequence-${entity.id}`} className="sequence-node">
       <span className="tf-nc">
         <span className="node-text">
-          <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
-          <div className="corner-id">
-            {entity.id}
-          </div>
-          <MainSequenceCheckBox {...{ id: entity.id }} />
+          {
+            entity.type === 'TemplateSequence' ? (
+              <TemplateSequence entity={entity} />
+            ) : (
+              <>
+                <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
+                <MainSequenceCheckBox {...{ id: entity.id }} />
+              </>
+            )
+          }
+          <div className="corner-id">{entity.id}</div>
         </span>
       </span>
       <ul>

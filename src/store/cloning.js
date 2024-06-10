@@ -55,10 +55,38 @@ const reducer = {
     const nextUniqueId = getNextUniqueId(state);
     newEntity.id = nextUniqueId;
     newSource.output = nextUniqueId;
+
+    const sourceIndex = sources.findIndex((s) => s.id === newSource.id);
+    if (sourceIndex === -1) {
+      throw new Error('Source not found');
+    }
+    sources.splice(sourceIndex, 1, newSource);
     entities.push(newEntity);
-    // Replace the source with the new one
-    const source = sources.find((s) => s.id === newSource.id);
-    Object.assign(source, newSource);
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  updateEntityAndItsSource(state, action) {
+    const { newEntity, newSource } = action.payload;
+    const { entities, sources } = state;
+
+    // if newSource.is_template, remove that property
+    if (newSource.is_template) {
+      delete newSource.is_template;
+    }
+
+    const sourceIndex = sources.findIndex((s) => s.id === newSource.id);
+    if (sourceIndex === -1) {
+      throw new Error('Source not found');
+    }
+    sources.splice(sourceIndex, 1, newSource);
+
+    newEntity.id = newSource.output;
+    const entityIndex = entities.findIndex((e) => e.id === newEntity.id);
+    if (entityIndex === -1) {
+      throw new Error('Entity not found');
+    }
+    entities.splice(entityIndex, 1, newEntity);
+
     state.network = constructNetwork(state.entities, state.sources);
   },
 

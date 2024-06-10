@@ -7,21 +7,24 @@ import Select from '@mui/material/Select';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
-// A component providing an interface for the user to type a Genbank ID
+// A component providing an interface for the user to type a repository ID
 // and get a sequence
-function SourceRepositoryId({ sourceId }) {
-  const [selectedRepository, setSelectedRepository] = React.useState('');
+function SourceRepositoryId({ source }) {
+  const { id: sourceId, output } = source;
+  const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || '');
+  React.useEffect(() => {
+    setSelectedRepository(source.repository_name);
+  }, [source.repository_name]);
   const repositoryIdRef = React.useRef(null);
   const [error, setError] = React.useState(false);
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
-
   const onSubmit = (event) => {
     event.preventDefault();
     if (repositoryIdRef.current.value === '') {
       setError(true);
     } else {
       setError(false);
-      sendPostRequest(`repository_id/${selectedRepository}`, { id: sourceId, repository_id: repositoryIdRef.current.value, repository_name: selectedRepository });
+      sendPostRequest(`repository_id/${selectedRepository}`, { id: sourceId, repository_id: repositoryIdRef.current.value, repository_name: selectedRepository }, {}, output);
     }
   };
   const helperText = error ? 'Field cannot be empty' : `Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`;
