@@ -7,23 +7,17 @@ import React from 'react';
 
 function ObjectTable({ object }) {
   return (
-    <TableContainer sx={{ my: 2 }}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell colSpan={2} sx={{ textAlign: 'center', fontSize: 'large' }}>Info</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {Object.keys(object).map((key) => (
-            <TableRow key={key}>
-              <TableCell>{key}</TableCell>
-              <TableCell>{object[key]}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+
+    <Table sx={{ my: 2 }}>
+
+      {Object.keys(object).map((key) => (
+        <TableRow key={key}>
+          <TableCell sx={{ py: 0.5 }}><strong>{key}</strong></TableCell>
+          <TableCell sx={{ py: 0.5 }}>{object[key]}</TableCell>
+        </TableRow>
+      ))}
+    </Table>
+
   );
 }
 
