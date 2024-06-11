@@ -35,9 +35,9 @@ function MainAppBar() {
   ];
 
   const handleCloseDialog = async (url, isTemplate) => {
+    setOpenExampleDialog(false);
+    setOpenTemplateDialog(false);
     if (url) {
-      setOpenExampleDialog(false);
-      setOpenTemplateDialog(false);
       const { data } = await axios.get(url);
       if (isTemplate) {
         const segments = url.split('/');

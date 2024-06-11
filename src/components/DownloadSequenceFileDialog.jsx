@@ -24,7 +24,7 @@ function DownloadSequenceFileDialog({ dialogOpen, setDialogOpen, downloadSequenc
             autoFocus
             required
             id="file_name"
-            label="File Name"
+            label="File name"
             variant="standard"
             value={fileName}
             onChange={(e) => setFileName(e.target.value)}

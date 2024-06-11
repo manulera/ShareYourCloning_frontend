@@ -1,4 +1,4 @@
-describe('Test download history from file', () => {
+describe('Test download history file', () => {
   beforeEach(() => {
     cy.visit('/');
   });

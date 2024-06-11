@@ -7,6 +7,7 @@ import MainSequenceCheckBox from './MainSequenceCheckBox';
 import TemplateSequence from './TemplateSequence';
 import { downloadTextFile } from '../utils/readNwrite';
 import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
+import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
@@ -53,7 +54,11 @@ function NetWorkNode({
   }
 
   const downloadSequence = (fileName) => {
-    downloadTextFile(entity.file_content, fileName);
+    if (fileName.endsWith('.gb')) {
+      downloadTextFile(entity.file_content, fileName);
+    } else if (fileName.endsWith('.fasta')) {
+      downloadTextFile(jsonToFasta(genbankToJson(entity.file_content)[0].parsedSequence), fileName);
+    }
   };
 
   return (
