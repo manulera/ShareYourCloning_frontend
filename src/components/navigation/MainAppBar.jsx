@@ -28,8 +28,8 @@ function MainAppBar() {
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
   const fileMenu = [
-    { display: 'Save to file', onClick: exportData },
-    { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
+    { display: 'Save cloning history to file', onClick: exportData },
+    { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     // elab-demo
     // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];

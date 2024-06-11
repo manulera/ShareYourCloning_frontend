@@ -6,6 +6,17 @@ import { primersActions } from '../store/primers';
 const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState: resetCloning } = cloningActions;
 const { setPrimers, revertToInitialState: resetPrimers } = primersActions;
 
+export const downloadTextFile = (text, fileName) => {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = href;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const downloadStateAsJson = async (entities, sources, description, primers) => {
   // from https://stackoverflow.com/a/55613750/5622322
   const output = {

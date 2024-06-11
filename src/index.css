@@ -25,6 +25,7 @@ button {
     position: absolute;
     right: -1px;
     top: 1px;
+    display: flex;
 }
 
 .overhang-representation {

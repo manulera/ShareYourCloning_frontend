@@ -37,7 +37,7 @@ describe('Makes all examples', () => {
     clickMultiSelectOption('Insert sequence', '4', 'li#source-7');
     cy.get('li#source-7 button.submit-backend-api').click();
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
-    cy.get('[role="menuitem"]').contains('Save to file').click();
+    cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
   });
   it('Restriction-ligation single step', () => {
     // Load Ase1 sequence with some extra sequences on the sides
@@ -78,6 +78,6 @@ describe('Makes all examples', () => {
     cy.get('li#sequence-8', { timeout: 20000 }).contains('ase1').should('exist');
     cy.get('li#sequence-8').contains('kanMX').should('exist');
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
-    cy.get('[role="menuitem"]').contains('Save to file').click();
+    cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
   });
 });
