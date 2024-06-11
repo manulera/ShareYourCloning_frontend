@@ -10,10 +10,10 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 // with one or more restriction enzymes, move between output fragments, and eventually
 // select one as an output.
 function SourceRestriction({ source }) {
-  const { id: sourceId, output } = source;
+  const { id: sourceId } = source;
   const [enzymes, setEnzymes] = React.useState([]);
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -22,7 +22,7 @@ function SourceRestriction({ source }) {
       source: { id: sourceId, input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    sendPostRequest('restriction', requestData, { params: { restriction_enzymes: enzymes } }, output);
+    sendPostRequest({ endpoint: 'restriction', requestData, source, config: { params: { restriction_enzymes: enzymes } } });
   };
 
   return (

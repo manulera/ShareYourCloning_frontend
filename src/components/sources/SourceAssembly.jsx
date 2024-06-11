@@ -12,9 +12,9 @@ import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ source, assemblyType }) {
-  const { id: sourceId, input: inputEntityIds, output } = source;
+  const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const [minimalHomology, setMinimalHomology] = React.useState(20);
   const [allowPartialOverlaps, setAllowPartialOverlaps] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
@@ -48,7 +48,7 @@ function SourceAssembly({ source, assemblyType }) {
         minimal_homology: minimalHomology,
         circular_only: circularOnly,
       } };
-      sendPostRequest('gibson_assembly', requestData, config, output);
+      sendPostRequest({ endpoint: 'gibson_assembly', requestData, config, source });
     } else if (assemblyType === 'RestrictionAndLigationSource') {
       if (enzymes.length === 0) { return; }
       requestData.source.restriction_enzymes = enzymes;
@@ -56,14 +56,14 @@ function SourceAssembly({ source, assemblyType }) {
         allow_partial_overlaps: allowPartialOverlaps,
         circular_only: circularOnly,
       } };
-      sendPostRequest('restriction_and_ligation', requestData, config, output);
+      sendPostRequest({ endpoint: 'restriction_and_ligation', requestData, config, source });
     } else {
       const config = { params: {
         allow_partial_overlaps: allowPartialOverlaps,
         circular_only: circularOnly,
         blunt: bluntLigation,
       } };
-      sendPostRequest(classNameToEndPointMap[assemblyType], requestData, config, output);
+      sendPostRequest({ endpoint: classNameToEndPointMap[assemblyType], requestData, config, source });
     }
   };
 

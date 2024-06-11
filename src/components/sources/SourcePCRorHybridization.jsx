@@ -19,10 +19,10 @@ const MenuProps = {
 
 function SourcePCRorHybridization({ source }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
-  const { id: sourceId, output } = source;
+  const { id: sourceId } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
@@ -43,16 +43,16 @@ function SourcePCRorHybridization({ source }) {
     if (inputEntities.length === 0) {
       requestData.source.forward_oligo = forwardPrimerId;
       requestData.source.reverse_oligo = reversePrimerId;
-      sendPostRequest('oligonucleotide_hybridization', requestData, { params: {
-        minimal_annealing: minimalAnnealingRef.current.value,
-      } }, output);
+      const config = { params: { minimal_annealing: minimalAnnealingRef.current.value } };
+      sendPostRequest({ endpoint: 'oligonucleotide_hybridization', requestData, config, source });
     } else {
       requestData.source.forward_primer = forwardPrimerId;
       requestData.source.reverse_primer = reversePrimerId;
-      sendPostRequest('pcr', requestData, { params: {
+      const config = { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
-      } }, output);
+      } };
+      sendPostRequest({ endpoint: 'pcr', requestData, config, source });
     }
   };
 

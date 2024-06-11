@@ -4,14 +4,15 @@ import { useDispatch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
 
-export default function useBackendAPI(sourceId) {
+export default function useBackendAPI() {
   const [requestStatus, setRequestStatus] = useState({ status: null, message: '' });
   const [sources, setSources] = useState('');
   const [entities, setEntities] = useState('');
   const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
   const dispatch = useDispatch();
 
-  const sendPostRequest = useCallback(async (endpoint, requestData, config = {}, outputId = null, modifySource = (s) => s) => {
+  const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { id: sourceId, output }, modifySource = (s) => s }) => {
+    console.log(endpoint, requestData, config, sourceId, output, modifySource);
     setRequestStatus({ status: 'loading', message: 'loading' });
 
     // Url built like this in case trailing slash
@@ -24,12 +25,12 @@ export default function useBackendAPI(sourceId) {
       setRequestStatus({ status: null, message: '' });
 
       const receivedSources = resp.data.sources.map(modifySource);
-      if (outputId !== null) {
-        receivedSources.forEach((s) => { s.output = outputId; });
+      if (output !== null) {
+        receivedSources.forEach((s) => { s.output = output; });
       }
       // If there is only a single product, commit the result, else allow choosing
       if (receivedSources.length === 1) {
-        const dispatchedAction = outputId === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
+        const dispatchedAction = output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
         dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
       } else {
         setSources(receivedSources); setEntities(resp.data.sequences);
