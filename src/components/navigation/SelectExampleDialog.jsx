@@ -34,7 +34,7 @@ const examples = [
 
 function SelectExampleDialog({ onClose, open }) {
   return (
-    <Dialog open={open} onClose={onClose} className="load-example-dialog">
+    <Dialog open={open} onClose={() => onClose('')} className="load-example-dialog">
       <DialogTitle>Load an example</DialogTitle>
       <List>
         {
