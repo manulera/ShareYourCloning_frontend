@@ -12,25 +12,32 @@ export default function useBackendAPI(sourceId) {
   const dispatch = useDispatch();
 
   const sendPostRequest = useCallback(async (endpoint, requestData, config = {}, outputId = null, modifySource = (s) => s) => {
-    const dispatchedAction = outputId === null ? addEntityAndItsSource : updateEntityAndItsSource;
     setRequestStatus({ status: 'loading', message: 'loading' });
-    // Built like this in case trailing slash
+
+    // Url built like this in case trailing slash
     const url = new URL(endpoint, import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     // paramsSerializer: { indexes: null } is to correctly serialize arrays in the URL
     const fullConfig = { ...config, paramsSerializer: { indexes: null } };
-    axios
-      .post(url, requestData, fullConfig)
-      .then((resp) => {
-        setRequestStatus({ status: null, message: '' });
-        const receivedSources = resp.data.sources.map(modifySource);
-        if (outputId !== null) {
-          receivedSources.forEach((s) => { s.output = outputId; });
-        }
-        // If there is only a single product, commit the result, else allow choosing
-        if (receivedSources.length === 1) {
-          dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
-        } else { setSources(receivedSources); setEntities(resp.data.sequences); }
-      }).catch((error) => { setRequestStatus({ status: 'error', message: error2String(error) }); setSources([]); setEntities([]); });
+    const resp = await axios.post(url, requestData, fullConfig);
+    setRequestStatus({ status: null, message: '' });
+
+    const receivedSources = resp.data.sources.map(modifySource);
+    if (outputId !== null) {
+      receivedSources.forEach((s) => { s.output = outputId; });
+    }
+    try {
+    // If there is only a single product, commit the result, else allow choosing
+      if (receivedSources.length === 1) {
+        const dispatchedAction = outputId === null ? addEntityAndItsSource : updateEntityAndItsSource;
+        dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
+      } else {
+        setSources(receivedSources); setEntities(resp.data.sequences);
+      }
+    } catch (error) {
+      setRequestStatus({ status: 'error', message: error2String(error) });
+      setSources([]);
+      setEntities([]);
+    }
   }, []);
 
   return { requestStatus, sources, entities, sendPostRequest };
