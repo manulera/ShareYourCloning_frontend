@@ -131,7 +131,7 @@ describe('GenomeRegion Source', () => {
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
       .type('NC_003424.3');
     // Clears form if sequence accession changes
-    cy.get('label').contains('Start').siblings('div').children('input')
+    cy.get('li#source-1 label').contains('Start').siblings('div').children('input')
       .type('1');
     cy.get('label').contains('End').siblings('div').children('input')
       .type('20');

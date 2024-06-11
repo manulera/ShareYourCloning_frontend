@@ -18,15 +18,16 @@ export default function useBackendAPI(sourceId) {
     const url = new URL(endpoint, import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     // paramsSerializer: { indexes: null } is to correctly serialize arrays in the URL
     const fullConfig = { ...config, paramsSerializer: { indexes: null } };
-    const resp = await axios.post(url, requestData, fullConfig);
-    setRequestStatus({ status: null, message: '' });
-
-    const receivedSources = resp.data.sources.map(modifySource);
-    if (outputId !== null) {
-      receivedSources.forEach((s) => { s.output = outputId; });
-    }
     try {
-    // If there is only a single product, commit the result, else allow choosing
+      const resp = await axios.post(url, requestData, fullConfig);
+
+      setRequestStatus({ status: null, message: '' });
+
+      const receivedSources = resp.data.sources.map(modifySource);
+      if (outputId !== null) {
+        receivedSources.forEach((s) => { s.output = outputId; });
+      }
+      // If there is only a single product, commit the result, else allow choosing
       if (receivedSources.length === 1) {
         const dispatchedAction = outputId === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
         dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));

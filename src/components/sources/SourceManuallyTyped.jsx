@@ -6,7 +6,7 @@ import ValidatedTextField from '../form/ValidatedTextField';
 import { stringIsNotDNA } from '../primers/validators';
 
 function SourceManuallyTyped({ source }) {
-  const { id: sourceId } = source;
+  const { id: sourceId, output } = source;
   const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
 
   const [userInput, setUserInput] = React.useState('');
@@ -46,7 +46,7 @@ function SourceManuallyTyped({ source }) {
         circular: isCircular,
         overhang_crick_3prime: overhangCrick3prime,
         overhang_watson_3prime: overhangWatson3prime,
-      });
+      }, {}, output);
     }
   };
 

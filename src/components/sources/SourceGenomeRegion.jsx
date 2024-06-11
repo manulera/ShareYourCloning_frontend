@@ -339,7 +339,7 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
 }
 
 function SourceGenomeRegion({ source }) {
-  const { id: sourceId } = source;
+  const { id: sourceId, output } = source;
   const [selectionMode, setSelectionMode] = React.useState('');
   const changeSelectionMode = (event) => { setSelectionMode(event.target.value); };
 
@@ -360,9 +360,9 @@ function SourceGenomeRegion({ source }) {
           </Select>
         </FormControl>
       </form>
-      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference sourceId={sourceId} />)}
-      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther sourceId={sourceId} />)}
-      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates sourceId={sourceId} />)}
+      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference sourceId={sourceId} output={output} />)}
+      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther sourceId={sourceId} output={output} />)}
+      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates sourceId={sourceId} output={output} />)}
 
     </>
   );

@@ -8,7 +8,7 @@ import MultipleOutputsSelector from './MultipleOutputsSelector';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 function ELabFTWSource({ source }) {
-  const { id: sourceId } = source;
+  const { id: sourceId, output } = source;
   const [category, setCategory] = React.useState(null);
   const [resource, setResource] = React.useState(null);
   const [fileInfo, setFileInfo] = React.useState(null);
@@ -40,7 +40,7 @@ function ELabFTWSource({ source }) {
       },
     };
     const modifySource = (s) => ({ ...s, item_id: resource.id, upload_id: fileInfo.id, type: 'ELabFTWFileSource' });
-    sendPostRequest('read_from_file', formData, config, false, modifySource);
+    sendPostRequest('read_from_file', formData, config, output, modifySource);
   };
 
   const apiKey = import.meta.env.VITE_ELABFTW_API_KEY;
