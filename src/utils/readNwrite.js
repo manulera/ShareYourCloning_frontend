@@ -135,3 +135,23 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
     { headers: { Authorization: apiKey, 'content-type': 'multipart/form-data' } },
   );
 };
+
+export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError) => {
+  if (isTemplate !== true) {
+    // Validate using the API
+    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    // TODO: for validation, the sequences could be sent empty to reduce size
+    try {
+      await axios.post(url, newState);
+    } catch (e) {
+      if (e.code === 'ERR_NETWORK') {
+        setLoadedFileError('Cannot connect to backend server to validate the JSON file');
+      } else { setLoadedFileError('JSON file in wrong format'); }
+    }
+  }
+  dispatch(loadStateThunk(newState)).catch((e) => {
+    // TODO: I don't think this is needed anymore
+    dispatch(resetStateThunk());
+    setLoadedFileError('JSON file in wrong format');
+  });
+};

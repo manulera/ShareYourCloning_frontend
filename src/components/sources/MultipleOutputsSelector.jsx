@@ -16,7 +16,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   // selectedOutput is a local property, until you commit the step by clicking
   const [selectedOutput, setSelectedOutput] = React.useState(0);
   const dispatch = useDispatch();
-  const { addEntityAndItsSource } = cloningActions;
+  const { addEntityAndUpdateItsSource } = cloningActions;
 
   // Functions called to move between outputs of a restriction reaction
   const incrementSelectedOutput = () => setSelectedOutput(
@@ -27,7 +27,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   // The function to pick the fragment as the output, and execute the step
   const chooseFragment = (e) => {
     e.preventDefault();
-    dispatch(addEntityAndItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
+    dispatch(addEntityAndUpdateItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
   };
 
   const editorName = `source_editor_${sourceId}`;

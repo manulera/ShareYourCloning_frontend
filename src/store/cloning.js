@@ -49,22 +49,27 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
-  addSourceDroppedFile(state, action) {
-    const { fileContent, file_name } = action.payload;
-    const { sources } = state;
-    const nextUniqueId = getNextUniqueId(state);
+  addSourceAndItsOutputEntity(state, action) {
+    const { source, entity, replaceEmptySource } = action.payload;
+    const { sources, entities } = state;
+    if (replaceEmptySource && sources.length === 1 && sources[0].type === null) {
+      sources.pop();
+    }
+    const sourceId = getNextUniqueId(state);
+    const entityId = sourceId + 1;
     sources.push({
-      id: nextUniqueId,
-      input: [],
-      output: null,
-      type: 'SourceDroppedFile',
-      fileContent,
-      file_name,
+      ...source,
+      id: sourceId,
+      output: entityId,
+    });
+    entities.push({
+      ...entity,
+      id: entityId,
     });
     state.network = constructNetwork(state.entities, state.sources);
   },
 
-  addEntityAndItsSource(state, action) {
+  addEntityAndUpdateItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
     const nextUniqueId = getNextUniqueId(state);

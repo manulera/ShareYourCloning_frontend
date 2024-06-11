@@ -1,10 +1,9 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
-import { useDispatch } from 'react-redux';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
-import { cloningActions } from '../store/cloning';
+import useDragAndDropFile from '../hooks/useDragAndDropFile';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -16,41 +15,11 @@ function CloningHistory({ network }) {
   const topDivRef = React.useRef(null);
   const innerDivRef = React.useRef(null);
   const bottomDivRef = React.useRef(null);
-  const [isDragging, setIsDragging] = React.useState(false);
-  const dispatch = useDispatch();
-  const { addSourceDroppedFile } = cloningActions;
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage } = useDragAndDropFile();
 
   const scrollSync = () => {
     // Set the scroll of the bottom div to the scroll of the top ul
     topDivRef.current.scrollLeft = bottomDivRef.current.scrollLeft;
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-  };
-
-  const handleDrop = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragging(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file_name = e.dataTransfer.files[0].name;
-      const fileContent = await e.dataTransfer.files[0].text();
-      dispatch(addSourceDroppedFile({
-        file_name,
-        fileContent,
-      }));
-      e.dataTransfer.clearData();
-    }
   };
 
   // This ensures that the inner div is always as wide as the top div
@@ -66,11 +35,12 @@ function CloningHistory({ network }) {
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
-      className={isDragging ? 'dragging-file' : ''}
+      className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
+      {errorMessage && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }} onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
       {isDragging ? (
         <Box className="drag-file">
-          <h1>Drop a sequence or history file</h1>
+          <h2>Drop multiple sequence files or a single history file</h2>
           <UploadFile color="primary" sx={{ fontSize: 300 }} />
         </Box>
       ) : (
