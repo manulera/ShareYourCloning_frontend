@@ -1,6 +1,7 @@
 import React from 'react';
-import { Alert, Box } from '@mui/material';
+import { Alert, Tooltip } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
 import useDragAndDropFile from '../hooks/useDragAndDropFile';
@@ -39,10 +40,17 @@ function CloningHistory({ network }) {
     >
       {errorMessage && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }} onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
       {isDragging ? (
-        <Box className="drag-file">
-          <h2>Drop multiple sequence files or a single history file</h2>
-          <UploadFile color="primary" sx={{ fontSize: 300 }} />
-        </Box>
+        <div className="drag-file-wrapper">
+          <div className="drag-file-container">
+            <div className="drag-file-close">
+              <Tooltip arrow title="Close (back to cloning)" placement="top">
+                <CancelIcon type="button" onClick={handleDragLeave} className="cancel-icon" />
+              </Tooltip>
+            </div>
+            <h2>Drop multiple sequence files or a single history file</h2>
+            <UploadFile color="primary" sx={{ fontSize: 200 }} />
+          </div>
+        </div>
       ) : (
         <div
           ref={topDivRef}

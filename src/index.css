@@ -207,7 +207,7 @@ div.dragging-file {
     text-align: center;
 }
 
-.drag-file {
+.drag-file-wrapper {
     border: 5px dashed;
     border-color: darkgray;
     width: 40%;
@@ -216,4 +216,23 @@ div.dragging-file {
     margin: auto;
     text-align: center;
     border-radius: 40px;
+}
+
+.drag-file-container {
+    padding: 10px;
+}
+
+.drag-file-container .drag-file-close {
+    text-align: right;
+    color: red;
+    cursor: pointer;
+}
+
+.drag-file-container .drag-file-close svg {
+    font-size: 40px;
+}
+
+.drag-file-container .drag-file-close:hover {
+    /* 70% brightness */
+    filter: brightness(70%);
 }

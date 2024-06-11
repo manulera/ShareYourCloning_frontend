@@ -8,6 +8,13 @@ describe('Test drag and drop functionality', () => {
     cy.get('div.cloning-history').contains('Drop multiple sequence').should('exist');
     cy.get('div.cloning-history').trigger('dragleave');
     cy.get('div.cloning-history').should('not.have.class', 'dragging-file');
+
+    // Also can be closed
+    cy.get('div.cloning-history').trigger('dragover');
+    cy.get('div.cloning-history').should('have.class', 'dragging-file');
+    cy.get('div.cloning-history').contains('Drop multiple sequence').should('exist');
+    cy.get('div.cloning-history .cancel-icon').click();
+    cy.get('div.cloning-history').should('not.have.class', 'dragging-file');
   });
   it('Can load single sequence file', () => {
     cy.get('div.cloning-history').selectFile('public/examples/ase1.gb', { action: 'drag-drop' });
