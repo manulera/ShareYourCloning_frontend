@@ -46,7 +46,7 @@ async function processSequenceFiles(files) {
 export default function useDragAndDropFile() {
   const dispatch = useDispatch();
 
-  const [isDragging, setIsDragging] = React.useState(true);
+  const [isDragging, setIsDragging] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const { addSourceAndItsOutputEntity } = cloningActions;
 
