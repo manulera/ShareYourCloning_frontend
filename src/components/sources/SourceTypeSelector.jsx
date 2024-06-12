@@ -1,15 +1,20 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
+import { cloningActions } from '../../store/cloning';
 
-function SourceTypeSelector({ sourceId, sourceType, setSourceType }) {
-  function onChange(event) {
-    setSourceType(event.target.value);
-  }
+function SourceTypeSelector({ source }) {
+  const { id: sourceId, type: sourceType } = source;
+  const dispatch = useDispatch();
+  const { updateSource } = cloningActions;
+
+  const onChange = (event) => {
+    dispatch(updateSource({ id: sourceId, type: event.target.value }));
+  };
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const options = [];
   if (inputEntities.length === 0) {

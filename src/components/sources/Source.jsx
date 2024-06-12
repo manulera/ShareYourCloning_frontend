@@ -17,13 +17,8 @@ import CollectionSource from './CollectionSource';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({ source }) {
-  const { id: sourceId } = source;
-  const [sourceType, setSourceType] = React.useState(source.type);
+  const { id: sourceId, type: sourceType } = source;
   let specificSource = null;
-
-  React.useEffect(() => {
-    setSourceType(source.type);
-  }, [source.type]);
 
   switch (sourceType) {
     /* eslint-disable */
@@ -74,7 +69,7 @@ function Source({ source }) {
             disabled
           />
         </FormControl>
-      ) : (<SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />)}
+      ) : (<SourceTypeSelector {...{ source }} />)}
       {specificSource}
     </SourceBox>
   );
