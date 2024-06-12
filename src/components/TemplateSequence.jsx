@@ -30,7 +30,7 @@ function TemplateSequence({ entity }) {
         </svg>
       </Tooltip>
       {entity.primer_design && (
-      <Alert severity="info">
+      <Alert severity="info" icon={false}>
         Use me as input to
         <br />
         {' '}

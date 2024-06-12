@@ -236,3 +236,8 @@ div.dragging-file {
     /* 70% brightness */
     filter: brightness(70%);
 }
+
+div.primer-designer {
+    margin: auto;
+    width: 60%;
+}
