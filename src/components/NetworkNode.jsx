@@ -8,6 +8,8 @@ import TemplateSequence from './TemplateSequence';
 import { downloadTextFile } from '../utils/readNwrite';
 import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
 import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
+import { shallowEqual, useSelector } from 'react-redux';
+import { isSourceATemplate } from '../store/cloning_utils';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
@@ -29,7 +31,8 @@ function NetWorkNode({
   );
 
   const sourceId = node.source.id;
-  const sourceComponent = (node.source.output !== null && !node.source.is_template) ? (
+  const sourceIsTemplate = useSelector((state) => isSourceATemplate(state.cloning, sourceId), shallowEqual);
+  const sourceComponent = (node.source.output !== null && !sourceIsTemplate) ? (
     <FinishedSource {...{ sourceId: node.source.id }} />
   ) : (
     <Source {...{ source: node.source }} />

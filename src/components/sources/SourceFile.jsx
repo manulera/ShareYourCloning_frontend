@@ -1,5 +1,6 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
+import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
@@ -8,6 +9,7 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 function SourceFile({ source }) {
   const { id: sourceId } = source;
   const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
+  const [circularize, setCircularize] = React.useState(false);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
     const requestData = new FormData();
@@ -16,13 +18,17 @@ function SourceFile({ source }) {
       headers: {
         'content-type': 'multipart/form-data',
       },
+      params: { circularize },
     };
     sendPostRequest({ endpoint: 'read_from_file', requestData, config, source });
   };
 
   return (
     <>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form className="submit-sequence-file" onSubmit={(e) => e.preventDefault()}>
+        <FormControl fullWidth style={{ textAlign: 'left' }}>
+          <FormControlLabel fullWidth control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
+        </FormControl>
         <SubmitButtonBackendAPI
           component="label"
           requestStatus={requestStatus}
@@ -34,7 +40,7 @@ function SourceFile({ source }) {
             onChange={onChange}
           />
         </SubmitButtonBackendAPI>
-        <FormHelperText>Supports .gb, .dna and fasta</FormHelperText>
+        <FormHelperText>Supports .gb, .dna, .embl and fasta</FormHelperText>
       </form>
       <MultipleOutputsSelector {...{
         sources, entities, sourceId,

@@ -20,3 +20,13 @@ export function getInputEntitiesFromSourceId(state, sourceId) {
   // Entities must be returned in the same order as in the source input
   return thisSource.input.map((id) => state.cloning.entities.find((e) => e.id === id));
 }
+
+export function isSourceATemplate({ sources, entities }, sourceId) {
+  // Get the output sequence
+  const source = sources.find((s) => s.id === sourceId);
+  const sequence = entities.find((e) => e.id === source.output);
+  if (sequence !== undefined && sequence.type === 'TemplateSequence') {
+    return true;
+  }
+  return false;
+}

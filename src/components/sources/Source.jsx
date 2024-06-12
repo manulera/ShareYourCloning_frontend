@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormControl, TextField } from '@mui/material';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -17,14 +16,9 @@ import CollectionSource from './CollectionSource';
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
 function Source({ source }) {
-  const { id: sourceId } = source;
-  const [sourceType, setSourceType] = React.useState(source.type);
+  const { id: sourceId, type: sourceType } = source;
   let specificSource = null;
-
-  React.useEffect(() => {
-    setSourceType(source.type);
-  }, [source.type]);
-
+  const templateOnlySources = ['CollectionSource'];
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
@@ -66,15 +60,7 @@ function Source({ source }) {
 
   return (
     <SourceBox {...{ sourceId }}>
-      {(source.is_template && sourceType) ? (
-        <FormControl fullWidth>
-          <TextField
-            label="Source type"
-            value={source.type}
-            disabled
-          />
-        </FormControl>
-      ) : (<SourceTypeSelector {...{ sourceId, sourceType, setSourceType }} />)}
+      {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {specificSource}
     </SourceBox>
   );

@@ -89,11 +89,6 @@ const reducer = {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
 
-    // if newSource.is_template, remove that property
-    if (newSource.is_template) {
-      delete newSource.is_template;
-    }
-
     const sourceIndex = sources.findIndex((s) => s.id === newSource.id);
     if (sourceIndex === -1) {
       throw new Error('Source not found');
@@ -115,6 +110,17 @@ const reducer = {
     const { sources } = state;
     const source = sources.find((s) => s.id === newSource.id);
     Object.assign(source, newSource);
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  replaceSource(state, action) {
+    const newSource = action.payload;
+    const { sources } = state;
+    const sourceIndex = sources.findIndex((s) => s.id === newSource.id);
+    if (sourceIndex === -1) {
+      throw new Error('Source not found');
+    }
+    sources.splice(sourceIndex, 1, newSource);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
