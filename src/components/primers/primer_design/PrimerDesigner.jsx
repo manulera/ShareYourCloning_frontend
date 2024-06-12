@@ -5,26 +5,32 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { createVectorEditor } from '@teselagen/ove';
 import { getPrimerDesignObject } from '../../../store/cloning_utils';
 import defaultMainEditorProps from '../../../config/defaultMainEditorProps';
+import { convertToTeselaJson } from '../../../utils/sequenceParsers';
 
 function PrimerDesigner() {
   const dispatch = useDispatch();
   const primerDesignObject = useSelector((state) => getPrimerDesignObject(state.cloning), shallowEqual);
-  const displayPrimerDesignObject = (typeof primerDesignObject === 'string');
+  const displayPrimerDesignObject = (typeof primerDesignObject !== 'string');
   // For now we just handle the Homologous Recombination case
   const { finalSource, templateSequences, otherInputs } = primerDesignObject;
   const pcrTemplate = displayPrimerDesignObject && templateSequences[0];
   const homologousRecombinationTemplate = displayPrimerDesignObject && otherInputs[0];
   const nodeRef = React.useRef(null);
+  console.log(pcrTemplate);
   React.useEffect(() => {
+    if (!displayPrimerDesignObject) {
+      return;
+    }
+    const sequenceData = convertToTeselaJson(pcrTemplate);
     const editorProps = {
-      sequenceData: pcrTemplate.seq,
+      sequenceData,
       ...defaultMainEditorProps,
     };
     const editorName = `primer-design-template-${pcrTemplate.id}`;
     const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
     editor.updateEditor(editorProps);
-  }, [pcrTemplate.seq]);
-
+  }, [pcrTemplate.file_content]);
+  console.log('re-render');
   if (typeof primerDesignObject === 'string') {
     return (
       <div>{primerDesignObject}</div>
