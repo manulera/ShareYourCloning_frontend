@@ -1,5 +1,4 @@
 import React from 'react';
-import { FormControl, TextField } from '@mui/material';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -19,7 +18,7 @@ import CollectionSource from './CollectionSource';
 function Source({ source }) {
   const { id: sourceId, type: sourceType } = source;
   let specificSource = null;
-
+  const templateOnlySources = ['CollectionSource'];
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
@@ -61,15 +60,7 @@ function Source({ source }) {
 
   return (
     <SourceBox {...{ sourceId }}>
-      {(source.is_template && sourceType) ? (
-        <FormControl fullWidth>
-          <TextField
-            label="Source type"
-            value={source.type}
-            disabled
-          />
-        </FormControl>
-      ) : (<SourceTypeSelector {...{ source }} />)}
+      {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {specificSource}
     </SourceBox>
   );

@@ -24,7 +24,6 @@
       "id": 1,
       "input": [],
       "output": 2,
-      "is_template": true,
       "type": "AddGeneIdSource",
       "repository_name": "addgene"
     },
@@ -32,7 +31,6 @@
       "id": 5,
       "input": [],
       "output": 6,
-      "is_template": true,
       "type": "GenomeCoordinatesSource"
     },
     {
@@ -41,7 +39,6 @@
         2
       ],
       "output": 8,
-      "is_template": true,
       "type": "PCRSource"
     },
     {
@@ -51,7 +48,6 @@
         8
       ],
       "output": 10,
-      "is_template": true,
       "type": "HomologousRecombinationSource"
     }
   ],

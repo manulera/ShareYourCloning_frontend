@@ -10,10 +10,16 @@ import { cloningActions } from '../../store/cloning';
 function SourceTypeSelector({ source }) {
   const { id: sourceId, type: sourceType } = source;
   const dispatch = useDispatch();
-  const { updateSource } = cloningActions;
+  const { replaceSource } = cloningActions;
 
   const onChange = (event) => {
-    dispatch(updateSource({ id: sourceId, type: event.target.value }));
+    // Clear the source other than these fields
+    dispatch(replaceSource({
+      id: sourceId,
+      type: event.target.value,
+      input: source.input,
+      output: source.output,
+    }));
   };
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const options = [];
