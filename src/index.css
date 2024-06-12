@@ -241,3 +241,7 @@ div.primer-designer {
     margin: auto;
     width: 60%;
 }
+
+body.bp3-overlay-open {
+    overflow-y:scroll;
+  }
