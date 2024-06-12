@@ -6,21 +6,22 @@ import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 import ObjectTable from '../ObjectTable';
 
 function CollectionSource({ source }) {
-  const { id: sourceId, output, options, image, title, description } = source;
+  const { id: sourceId, options, image, title, description } = source;
   const [selectedOption, setSelectedOption] = React.useState(null);
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (event) => {
     event.preventDefault();
     const { source: selectedSource } = options.find((option) => option.name === selectedOption);
     // Delete options field
-    const postProcessSource = (s) => {
+    const modifySource = (s) => {
       const sourceOut = { ...s };
       delete sourceOut.options;
       return sourceOut;
     };
     const endpoint = classNameToEndPointMap[selectedSource.type];
-    sendPostRequest(endpoint, { id: sourceId, ...selectedSource }, {}, output, postProcessSource);
+    const requestData = { id: sourceId, ...selectedSource };
+    sendPostRequest({ endpoint, requestData, source, modifySource });
   };
 
   const onChange = (event) => {

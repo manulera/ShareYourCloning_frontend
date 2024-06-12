@@ -41,7 +41,7 @@ function ShareYourCloning() {
         </div>
       </TabPannel>
       <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="cloning-history">
+        <div className="share-your-cloning">
           <CloningHistory network={network} />
         </div>
       </TabPannel>

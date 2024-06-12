@@ -5,11 +5,15 @@ import SequenceEditor from './SequenceEditor';
 import FinishedSource from './sources/FinishedSource';
 import MainSequenceCheckBox from './MainSequenceCheckBox';
 import TemplateSequence from './TemplateSequence';
+import { downloadTextFile } from '../utils/readNwrite';
+import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
+import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 
 // A component that renders the ancestry tree
 function NetWorkNode({
   node, isRootNode,
 }) {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
   const parentsContent = node.parentNodes.length === 0 ? null : (
     <ul>
       {node.parentNodes.map((parentNode) => (
@@ -49,8 +53,17 @@ function NetWorkNode({
     return sourceSection;
   }
 
+  const downloadSequence = (fileName) => {
+    if (fileName.endsWith('.gb')) {
+      downloadTextFile(entity.file_content, fileName);
+    } else if (fileName.endsWith('.fasta')) {
+      downloadTextFile(jsonToFasta(genbankToJson(entity.file_content)[0].parsedSequence), fileName);
+    }
+  };
+
   return (
     <li key={entity.id} id={`sequence-${entity.id}`} className="sequence-node">
+      <DownloadSequenceFileDialog {...{ downloadSequence, dialogOpen, setDialogOpen }} />
       <span className="tf-nc">
         <span className="node-text">
           {
@@ -59,7 +72,7 @@ function NetWorkNode({
             ) : (
               <>
                 <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
-                <MainSequenceCheckBox {...{ id: entity.id }} />
+                <MainSequenceCheckBox {...{ id: entity.id, onDownloadClick: () => setDialogOpen(true) }} />
               </>
             )
           }

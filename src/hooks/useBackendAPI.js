@@ -4,33 +4,42 @@ import { useDispatch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
 
-export default function useBackendAPI(sourceId) {
+export default function useBackendAPI() {
   const [requestStatus, setRequestStatus] = useState({ status: null, message: '' });
   const [sources, setSources] = useState('');
   const [entities, setEntities] = useState('');
-  const { addEntityAndItsSource, updateEntityAndItsSource } = cloningActions;
+  const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
   const dispatch = useDispatch();
 
-  const sendPostRequest = useCallback(async (endpoint, requestData, config = {}, outputId = null, modifySource = (s) => s) => {
-    const dispatchedAction = outputId === null ? addEntityAndItsSource : updateEntityAndItsSource;
+  const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { id: sourceId, output }, modifySource = (s) => s }) => {
+    console.log(endpoint, requestData, config, sourceId, output, modifySource);
     setRequestStatus({ status: 'loading', message: 'loading' });
-    // Built like this in case trailing slash
+
+    // Url built like this in case trailing slash
     const url = new URL(endpoint, import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     // paramsSerializer: { indexes: null } is to correctly serialize arrays in the URL
     const fullConfig = { ...config, paramsSerializer: { indexes: null } };
-    axios
-      .post(url, requestData, fullConfig)
-      .then((resp) => {
-        setRequestStatus({ status: null, message: '' });
-        const receivedSources = resp.data.sources.map(modifySource);
-        if (outputId !== null) {
-          receivedSources.forEach((s) => { s.output = outputId; });
-        }
-        // If there is only a single product, commit the result, else allow choosing
-        if (receivedSources.length === 1) {
-          dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
-        } else { setSources(receivedSources); setEntities(resp.data.sequences); }
-      }).catch((error) => { setRequestStatus({ status: 'error', message: error2String(error) }); setSources([]); setEntities([]); });
+    try {
+      const resp = await axios.post(url, requestData, fullConfig);
+
+      setRequestStatus({ status: null, message: '' });
+
+      const receivedSources = resp.data.sources.map(modifySource);
+      if (output !== null) {
+        receivedSources.forEach((s) => { s.output = output; });
+      }
+      // If there is only a single product, commit the result, else allow choosing
+      if (receivedSources.length === 1) {
+        const dispatchedAction = output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
+        dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
+      } else {
+        setSources(receivedSources); setEntities(resp.data.sequences);
+      }
+    } catch (error) {
+      setRequestStatus({ status: 'error', message: error2String(error) });
+      setSources([]);
+      setEntities([]);
+    }
   }, []);
 
   return { requestStatus, sources, entities, sendPostRequest };

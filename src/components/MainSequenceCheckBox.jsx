@@ -1,11 +1,11 @@
 import React from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DownloadIcon from '@mui/icons-material/Download';
 import Tooltip from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloningActions } from '../store/cloning';
-import './MainSequenceCheckBox.module.css';
 
-function MainSequenceCheckBox({ id }) {
+function MainSequenceCheckBox({ id, onDownloadClick }) {
   const dispatch = useDispatch();
   const { setMainSequenceId, setCurrentTab } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
@@ -22,14 +22,14 @@ function MainSequenceCheckBox({ id }) {
   const tooltipText = <div className="tooltip-text">See sequence in main editor</div>;
   return (
     <div className="node-corner">
-      <form action="">
-        <label htmlFor={`checkbox-main${id}`}>
-          <input hidden id={`checkbox-main${id}`} type="checkbox" onChange={toggleMain} checked={id === mainSequenceId} />
-          <Tooltip title={tooltipText} arrow placement="top">
-            <VisibilityIcon className="node-corner-icon" sx={{ cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
-          </Tooltip>
-        </label>
-      </form>
+
+      <Tooltip title={tooltipText} arrow placement="top">
+        <VisibilityIcon onClick={toggleMain} type="button" className="node-corner-icon" sx={{ cursor: 'pointer', color: (id === mainSequenceId) ? '#2e7d32' : 'gray', '&:hover': { filter: 'brightness(70%)' } }} />
+      </Tooltip>
+      <Tooltip title="Download sequence" arrow placement="top">
+        <DownloadIcon onClick={onDownloadClick} type="button" className="node-corner-icon" sx={{ color: 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
+      </Tooltip>
+
     </div>
   );
 }

@@ -7,7 +7,7 @@ import { stringIsNotDNA } from '../primers/validators';
 
 function SourceManuallyTyped({ source }) {
   const { id: sourceId } = source;
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const [userInput, setUserInput] = React.useState('');
   const [isCircular, setIsCircular] = React.useState(false);
@@ -40,13 +40,14 @@ function SourceManuallyTyped({ source }) {
     event.preventDefault();
     setSubmissionAttempted(true);
     if (submissionAllowed) {
-      sendPostRequest('manually_typed', {
+      const requestData = {
         id: sourceId,
         user_input: userInput,
         circular: isCircular,
         overhang_crick_3prime: overhangCrick3prime,
         overhang_watson_3prime: overhangWatson3prime,
-      });
+      };
+      sendPostRequest({ endpoint: 'manually_typed', requestData, source });
     }
   };
 

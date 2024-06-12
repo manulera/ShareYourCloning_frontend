@@ -49,7 +49,27 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
-  addEntityAndItsSource(state, action) {
+  addSourceAndItsOutputEntity(state, action) {
+    const { source, entity, replaceEmptySource } = action.payload;
+    const { sources, entities } = state;
+    if (replaceEmptySource && sources.length === 1 && sources[0].type === null) {
+      sources.pop();
+    }
+    const sourceId = getNextUniqueId(state);
+    const entityId = sourceId + 1;
+    sources.push({
+      ...source,
+      id: sourceId,
+      output: entityId,
+    });
+    entities.push({
+      ...entity,
+      id: entityId,
+    });
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  addEntityAndUpdateItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
     const nextUniqueId = getNextUniqueId(state);

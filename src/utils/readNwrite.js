@@ -6,6 +6,17 @@ import { primersActions } from '../store/primers';
 const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState: resetCloning } = cloningActions;
 const { setPrimers, revertToInitialState: resetPrimers } = primersActions;
 
+export const downloadTextFile = (text, fileName) => {
+  const blob = new Blob([text], { type: 'text/plain' });
+  const href = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = href;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
 export const downloadStateAsJson = async (entities, sources, description, primers) => {
   // from https://stackoverflow.com/a/55613750/5622322
   const output = {
@@ -134,4 +145,24 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
     historyFormData,
     { headers: { Authorization: apiKey, 'content-type': 'multipart/form-data' } },
   );
+};
+
+export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError) => {
+  if (isTemplate !== true) {
+    // Validate using the API
+    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    // TODO: for validation, the sequences could be sent empty to reduce size
+    try {
+      await axios.post(url, newState);
+    } catch (e) {
+      if (e.code === 'ERR_NETWORK') {
+        setLoadedFileError('Cannot connect to backend server to validate the JSON file');
+      } else { setLoadedFileError('JSON file in wrong format'); }
+    }
+  }
+  dispatch(loadStateThunk(newState)).catch((e) => {
+    // TODO: I don't think this is needed anymore
+    dispatch(resetStateThunk());
+    setLoadedFileError('JSON file in wrong format');
+  });
 };

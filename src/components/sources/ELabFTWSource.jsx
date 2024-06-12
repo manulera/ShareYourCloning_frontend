@@ -12,7 +12,7 @@ function ELabFTWSource({ source }) {
   const [category, setCategory] = React.useState(null);
   const [resource, setResource] = React.useState(null);
   const [fileInfo, setFileInfo] = React.useState(null);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
 
   // Reset if category changes
   React.useEffect(() => {
@@ -32,15 +32,15 @@ function ELabFTWSource({ source }) {
     const resp = await axios.get(url, { headers: { Authorization: import.meta.env.VITE_ELABFTW_API_KEY }, responseType: 'blob' });
     // Convert blob to file
     const file = new File([resp.data], fileInfo.real_name);
-    const formData = new FormData();
-    formData.append('file', file);
+    const requestData = new FormData();
+    requestData.append('file', file);
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     };
     const modifySource = (s) => ({ ...s, item_id: resource.id, upload_id: fileInfo.id, type: 'ELabFTWFileSource' });
-    sendPostRequest('read_from_file', formData, config, false, modifySource);
+    sendPostRequest({ endpoint: 'read_from_file', requestData, config, source, modifySource });
   };
 
   const apiKey = import.meta.env.VITE_ELABFTW_API_KEY;

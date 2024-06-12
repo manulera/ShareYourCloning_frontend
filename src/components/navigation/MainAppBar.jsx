@@ -9,7 +9,7 @@ import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { exportStateThunk, loadStateThunk, resetStateThunk } from '../../utils/readNwrite';
+import { exportStateThunk, loadData } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
@@ -23,39 +23,21 @@ function MainAppBar() {
   const exportData = () => {
     dispatch(exportStateThunk());
   };
-  const loadData = async (newState, isTemplate) => {
-    if (isTemplate !== true) {
-      // Validate using the API
-      const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
-      // TODO: for validation, the sequences could be sent empty to reduce size
-      try {
-        await axios.post(url, newState);
-      } catch (e) {
-        if (e.code === 'ERR_NETWORK') {
-          setLoadedFileError('Cannot connect to backend server to validate the JSON file');
-        } else { setLoadedFileError('JSON file in wrong format'); }
-      }
-    }
-    dispatch(loadStateThunk(newState)).catch((e) => {
-      // TODO: I don't think this is needed anymore
-      dispatch(resetStateThunk());
-      setLoadedFileError('JSON file in wrong format');
-    });
-  };
+
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
   const fileMenu = [
-    { display: 'Save to file', onClick: exportData },
-    { display: 'Load from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
+    { display: 'Save cloning history to file', onClick: exportData },
+    { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     // elab-demo
     // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
 
   const handleCloseDialog = async (url, isTemplate) => {
+    setOpenExampleDialog(false);
+    setOpenTemplateDialog(false);
     if (url) {
-      setOpenExampleDialog(false);
-      setOpenTemplateDialog(false);
       const { data } = await axios.get(url);
       if (isTemplate) {
         const segments = url.split('/');
@@ -65,7 +47,7 @@ function MainAppBar() {
           if (s.image) { return { ...s, image: `${rootGithubUrl}/${kitUrl}/${s.image}` }; } return s;
         });
       }
-      loadData(data, isTemplate);
+      loadData(data, isTemplate, dispatch, setLoadedFileError);
     }
   };
 
@@ -87,7 +69,7 @@ function MainAppBar() {
         setLoadedFileError('Input file should be a JSON file with the history');
         return;
       }
-      loadData(jsonObject);
+      loadData(jsonObject, false, dispatch, setLoadedFileError);
     };
   };
 

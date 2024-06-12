@@ -11,12 +11,12 @@ import MultiplePrimerSelector from '../primers/MultiplePrimerSelector';
 
 // A component representing the ligation of several fragments
 function SourceHomologousRecombination({ source, isCrispr = false }) {
-  const { id: sourceId, input: inputEntityIds, output } = source;
+  const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const [template, setTemplate] = React.useState(inputEntityIds.length > 0 ? inputEntityIds[0] : null);
   const [insert, setInsert] = React.useState(inputEntityIds.length > 1 ? inputEntityIds[1] : null);
   const [selectedPrimers, setSelectedPrimers] = React.useState([]);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
 
@@ -32,9 +32,9 @@ function SourceHomologousRecombination({ source, isCrispr = false }) {
     if (isCrispr) {
       requestData.guides = selectedPrimers;
       requestData.source.guides = selectedPrimers.map((p) => p.id);
-      sendPostRequest('crispr', requestData, config, output);
+      sendPostRequest({ endpoint: 'crispr', requestData, config, source });
     } else {
-      sendPostRequest('homologous_recombination', requestData, config, output);
+      sendPostRequest({ endpoint: 'homologous_recombination', requestData, config, source });
     }
   };
 

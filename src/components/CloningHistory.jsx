@@ -1,6 +1,10 @@
 import React from 'react';
+import { Alert, Tooltip } from '@mui/material';
+import { UploadFile } from '@mui/icons-material';
+import CancelIcon from '@mui/icons-material/Cancel';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
+import useDragAndDropFile from '../hooks/useDragAndDropFile';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -12,6 +16,8 @@ function CloningHistory({ network }) {
   const topDivRef = React.useRef(null);
   const innerDivRef = React.useRef(null);
   const bottomDivRef = React.useRef(null);
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage } = useDragAndDropFile();
+
   const scrollSync = () => {
     // Set the scroll of the bottom div to the scroll of the top ul
     topDivRef.current.scrollLeft = bottomDivRef.current.scrollLeft;
@@ -26,24 +32,50 @@ function CloningHistory({ network }) {
   }, [network, topDivRef.current]);
 
   return (
-    <div ref={topDivRef} className="tf-tree tf-ancestor-tree">
-      <ul>
-        {network.map((node) => (
-          <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
-        ))}
-        {/* There is always a box on the right side to add a source */}
-        <li key="new_source_box">
-          <span className="tf-nc"><span className="node-text"><NewSourceBox /></span></span>
-        </li>
-      </ul>
-      <div
-        className="horizontal-scrollbar"
-        ref={bottomDivRef}
-        onScroll={scrollSync}
-      >
-        <div ref={innerDivRef} />
-      </div>
+    <div
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
+    >
+      {errorMessage && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }} onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
+      {isDragging ? (
+        <div className="drag-file-wrapper">
+          <div className="drag-file-container">
+            <div className="drag-file-close">
+              <Tooltip arrow title="Close (back to cloning)" placement="top">
+                <CancelIcon type="button" onClick={handleDragLeave} className="cancel-icon" />
+              </Tooltip>
+            </div>
+            <h2>Drop multiple sequence files or a single history file</h2>
+            <UploadFile color="primary" sx={{ fontSize: 200 }} />
+          </div>
+        </div>
+      ) : (
+        <div
+          ref={topDivRef}
+          className="tf-tree tf-ancestor-tree"
+        >
+          <ul>
+            {network.map((node) => (
+              <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
+            ))}
+            {/* There is always a box on the right side to add a source */}
+            <li key="new_source_box">
+              <span className="tf-nc"><span className="node-text"><NewSourceBox /></span></span>
+            </li>
+          </ul>
+          <div
+            className="horizontal-scrollbar"
+            ref={bottomDivRef}
+            onScroll={scrollSync}
+          >
+            <div ref={innerDivRef} />
+          </div>
+        </div>
+      )}
     </div>
+
   );
 }
 

@@ -61,19 +61,20 @@ function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnReference({ sourceId, output }) {
+function SourceGenomeRegionLocusOnReference({ source }) {
+  const { id: sourceId } = source;
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
-    payload.id = sourceId;
-    sendPostRequest('genome_coordinates', payload, {}, output);
+    const requestData = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    requestData.id = sourceId;
+    sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
   return (
@@ -120,20 +121,21 @@ function KnownAssemblyField({ assemblyId }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnOther({ sourceId, output }) {
+function SourceGenomeRegionLocusOnOther({ source }) {
+  const { id: sourceId } = source;
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
   const [noAnnotationError, setNoAnnotationError] = React.useState(false);
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId);
+  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (event) => {
     event.preventDefault();
-    const payload = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
-    payload.id = sourceId;
-    sendPostRequest('genome_coordinates', payload, {}, output);
+    const requestData = formatBackendPayloadWithGene(assemblyId, gene, Number(upstreamBasesRef.current.value), Number(downstreamBasesRef.current.value));
+    requestData.id = sourceId;
+    sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
   const onAssemblyIdChange = (userInput, resp) => {
@@ -159,8 +161,9 @@ function SourceGenomeRegionLocusOnOther({ sourceId, output }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionCustomCoordinates({ sourceId, output }) {
+function SourceGenomeRegionCustomCoordinates({ source }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
+  const { id: sourceId } = source;
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState(null);
   const [sequenceAccession, setSequenceAccession] = React.useState('');
@@ -170,7 +173,7 @@ function SourceGenomeRegionCustomCoordinates({ sourceId, output }) {
   const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
   const [coordsStrand, setCoordsStrand] = React.useState('');
-  const { requestStatus, sendPostRequest } = useBackendAPI(sourceId, {}, output);
+  const { requestStatus, sendPostRequest } = useBackendAPI();
   const onSubmit = (event) => {
     event.preventDefault();
     if (coordsStartRef.current.value === '') {
@@ -196,15 +199,15 @@ function SourceGenomeRegionCustomCoordinates({ sourceId, output }) {
     }
 
     setFormError({ ...noError });
-
-    sendPostRequest('genome_coordinates', {
+    const requestData = {
       id: sourceId,
       sequence_accession: sequenceAccession,
       assembly_accession: assemblyId,
       start: coordsStartRef.current.value,
       end: coordsEndRef.current.value,
       strand: coordsStrand === 'plus' ? 1 : -1,
-    }, {}, output);
+    };
+    sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
   const onAccessionChange = async (userInput, resp) => {
@@ -360,9 +363,9 @@ function SourceGenomeRegion({ source }) {
           </Select>
         </FormControl>
       </form>
-      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference sourceId={sourceId} />)}
-      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther sourceId={sourceId} />)}
-      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates sourceId={sourceId} />)}
+      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference source={source} />)}
+      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther source={source} />)}
+      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates source={source} />)}
 
     </>
   );

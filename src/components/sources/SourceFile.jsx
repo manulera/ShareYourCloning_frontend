@@ -6,18 +6,18 @@ import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component providing an interface to import a file
 function SourceFile({ source }) {
-  const { id: sourceId, output } = source;
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI(sourceId);
+  const { id: sourceId } = source;
+  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const onChange = (event) => {
     const files = Array.from(event.target.files);
-    const formData = new FormData();
-    formData.append('file', files[0]);
+    const requestData = new FormData();
+    requestData.append('file', files[0]);
     const config = {
       headers: {
         'content-type': 'multipart/form-data',
       },
     };
-    sendPostRequest('read_from_file', formData, config, output);
+    sendPostRequest({ endpoint: 'read_from_file', requestData, config, source });
   };
 
   return (

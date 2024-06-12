@@ -25,6 +25,7 @@ button {
     position: absolute;
     right: -1px;
     top: 1px;
+    display: flex;
 }
 
 .overhang-representation {
@@ -200,4 +201,38 @@ height: 1px; /* Just for occupying space */
 a.button-hyperlink {
     text-decoration: none;
     color: white;
+}
+
+div.dragging-file {
+    text-align: center;
+}
+
+.drag-file-wrapper {
+    border: 5px dashed;
+    border-color: darkgray;
+    width: 40%;
+    height: 400px;
+    padding: 10px;
+    margin: auto;
+    text-align: center;
+    border-radius: 40px;
+}
+
+.drag-file-container {
+    padding: 10px;
+}
+
+.drag-file-container .drag-file-close {
+    text-align: right;
+    color: red;
+    cursor: pointer;
+}
+
+.drag-file-container .drag-file-close svg {
+    font-size: 40px;
+}
+
+.drag-file-container .drag-file-close:hover {
+    /* 70% brightness */
+    filter: brightness(70%);
 }
