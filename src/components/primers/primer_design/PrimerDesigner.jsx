@@ -1,111 +1,24 @@
 import React from 'react';
-import { useDispatch, shallowEqual, useSelector } from 'react-redux';
-import { Accordion, AccordionDetails, AccordionSummary } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { createVectorEditor } from '@teselagen/ove';
+import { useSelector } from 'react-redux';
+import { isEqual } from 'lodash-es';
 import { getPrimerDesignObject } from '../../../store/cloning_utils';
-import defaultMainEditorProps from '../../../config/defaultMainEditorProps';
-import { convertToTeselaJson } from '../../../utils/sequenceParsers';
+import PrimerDesignForm from './PrimerDesignForm';
 
-function PrimerDesigner() {
-  const dispatch = useDispatch();
-  const primerDesignObject = useSelector((state) => getPrimerDesignObject(state.cloning), shallowEqual);
-  const displayPrimerDesignObject = (typeof primerDesignObject !== 'string');
-  // For now we just handle the Homologous Recombination case
-  const { finalSource, templateSequences, otherInputs } = primerDesignObject;
-  const pcrTemplate = displayPrimerDesignObject && templateSequences[0];
-  const homologousRecombinationTemplate = displayPrimerDesignObject && otherInputs[0];
-  const nodeRef = React.useRef(null);
-  console.log(pcrTemplate);
-  React.useEffect(() => {
-    if (!displayPrimerDesignObject) {
-      return;
-    }
-    const sequenceData = convertToTeselaJson(pcrTemplate);
-    const editorProps = {
-      sequenceData,
-      ...defaultMainEditorProps,
-    };
-    const editorName = `primer-design-template-${pcrTemplate.id}`;
-    const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
-    editor.updateEditor(editorProps);
-  }, [pcrTemplate.file_content]);
-  console.log('re-render');
-  if (typeof primerDesignObject === 'string') {
-    return (
-      <div>{primerDesignObject}</div>
-    );
+function PrimerDesigner({ selectedRegion }) {
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
+  const primerDesignObject = useSelector((state) => getPrimerDesignObject(state.cloning), isEqual);
+  const { finalSource, templateSequencesIds, otherInputIds } = primerDesignObject;
+  if (templateSequencesIds.length === 0 || otherInputIds.length === 0) {
+    return null;
   }
-
-  if (finalSource.type !== 'HomologousRecombinationSource') {
-    return (
-      <div>
-        Not implemented yet for
-        {' '}
-        {finalSource.type}
-      </div>
-    );
-  }
-
-  if (templateSequences.length !== 1 || otherInputs.length !== 1) {
-    return (
-      <div>
-        Only one PCRed sequence and a homologous recombination input should be provided
-      </div>
-    );
-  }
-
   return (
-    <div className="primer-designer">
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="amplify-sequence-content"
-          id="amplify-sequence-header"
-          sx={{ backgroundColor: 'lightgray' }}
-        >
-          Region from sequence
-          {' '}
-          {pcrTemplate.id}
-          {' '}
-          to be amplified
-        </AccordionSummary>
-        <AccordionDetails>
-          <div ref={nodeRef} />
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="homologous-recombination-content"
-          id="homologous-recombination-header"
-          sx={{ backgroundColor: 'lightgray' }}
-        >
-          Region from sequence
-          {' '}
-          {homologousRecombinationTemplate.id}
-          {' '}
-          to be replaced via integration of PCR product
-        </AccordionSummary>
-        <AccordionDetails>
-          huehue
-        </AccordionDetails>
-      </Accordion>
-      <Accordion>
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="other-details-content"
-          id="other-details-header"
-          sx={{ backgroundColor: 'lightgray' }}
-        >
-          Further settings
-        </AccordionSummary>
-        <AccordionDetails>
-          huehue
-        </AccordionDetails>
-      </Accordion>
-    </div>
+    <PrimerDesignForm
+      selectedRegion={selectedRegion}
+      pcrTemplateId={templateSequencesIds && templateSequencesIds[0]}
+      homologousRecombinationTargetId={otherInputIds && otherInputIds[0]}
+      mainSequenceId={mainSequenceId}
+    />
   );
 }
 
-export default PrimerDesigner;
+export default React.memo(PrimerDesigner);

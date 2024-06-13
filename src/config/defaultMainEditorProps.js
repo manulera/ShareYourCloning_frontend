@@ -7,8 +7,6 @@ export default {
       'downloadTool',
       'cutsiteTool',
       'featureTool',
-      'alignmentTool',
-      'orfTool',
       'findTool',
       'visibilityTool',
     ],

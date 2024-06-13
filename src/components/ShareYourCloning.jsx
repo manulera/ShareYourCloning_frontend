@@ -1,7 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
-import MainSequenceEditor from './MainSequenceEditor';
 import DescriptionEditor from './DescriptionEditor';
 import PrimerList from './primers/PrimerList';
 import { cloningActions } from '../store/cloning';
@@ -9,7 +8,8 @@ import TabPannel from './navigation/TabPannel';
 import CustomTab from './navigation/CustomTab';
 import DataModelDisplayer from './DataModelDisplayer';
 import CloningHistory from './CloningHistory';
-import PrimerDesigner from './primers/primer_design/PrimerDesigner';
+import SequenceTab from './SequenceTab';
+// import PrimerDesigner from './primers/primer_design/PrimerDesigner';
 
 function ShareYourCloning() {
   const dispatch = useDispatch();
@@ -30,7 +30,6 @@ function ShareYourCloning() {
         <CustomTab label="Description" index={2} />
         <CustomTab label="Sequence" index={3} />
         <CustomTab label="Data model" index={4} />
-        <CustomTab label="Primer design" index={5} />
       </Tabs>
       <TabPannel index={1} value={currentTab} className="primer-tab-pannel">
         <div className="primer-list-container">
@@ -49,14 +48,11 @@ function ShareYourCloning() {
       </TabPannel>
       <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">
         <div className="main-sequence-editor">
-          <MainSequenceEditor />
+          <SequenceTab />
         </div>
       </TabPannel>
       <TabPannel index={4} value={currentTab} className="data-model-tab-pannel">
         <DataModelDisplayer />
-      </TabPannel>
-      <TabPannel index={5} value={currentTab} className="primer-designer-tab-pannel">
-        <PrimerDesigner />
       </TabPannel>
     </div>
   );
