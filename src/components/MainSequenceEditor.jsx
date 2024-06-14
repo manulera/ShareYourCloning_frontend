@@ -6,7 +6,6 @@ import defaultMainEditorProps from '../config/defaultMainEditorProps';
 
 function MainSequenceEditor({ setSelectedRegion }) {
   const editorName = 'mainEditor';
-  console.log('MainSequenceEditor rendered');
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId), shallowEqual);
   const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
