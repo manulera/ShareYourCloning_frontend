@@ -100,7 +100,7 @@ function SourcePCRorHybridization({ source }) {
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
-        {inputEntities.length !== 0 && (
+        {inputEntities.length !== 0 && !source.output && (
           <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign} type="submit">Design primers</Button>
         )}
         <FormControl fullWidth>

@@ -3,9 +3,13 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Alert, Button, FormControl, TextField } from '@mui/material';
-import { useDispatch, useStore } from 'react-redux';
+import { Alert, Button, FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material';
+import { batch, shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
+import axios from 'axios';
 import { cloningActions } from '../../../store/cloning';
+import error2String from '../../../utils/error2String';
+import PrimerResultForm from './PrimerResultForm';
+import { primersActions } from '../../../store/primers';
 
 function selectedRegion2String(selectedRegion) {
   if (!selectedRegion) {
@@ -21,11 +25,11 @@ function selectedRegion2String(selectedRegion) {
   return `insertion at ${caretPosition}`;
 }
 
-function selectedRegion2PythonRange({ selectionLayer, caretPosition }) {
+function selectedRegion2SequenceLocation({ selectionLayer, caretPosition }) {
   if (caretPosition === -1) {
-    return [selectionLayer.start, selectionLayer.end + 1];
+    return { start: selectionLayer.start, end: selectionLayer.end + 1 };
   }
-  return [caretPosition, caretPosition];
+  return { start: caretPosition, end: caretPosition };
 }
 
 function TabPanel(props) {
@@ -50,38 +54,74 @@ function TabPanel(props) {
 
 export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homologousRecombinationTargetId, mainSequenceId }) {
   // TODO: extra constrains -> amplify should have length > 0, replace does not matter
+  // TODO: shrinking horizontally removes tabs
   const dispatch = useDispatch();
   const { setMainSequenceId } = cloningActions;
+  const { addPrimer } = primersActions;
   const store = useStore();
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const [HomologyLength, setHomologyLength] = React.useState(80);
+  const [homologyLength, setHomologyLength] = React.useState(80);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
   const [amplifyRegion, setAmplifyRegion] = React.useState(null);
   const [amplifyError, setAmplifyError] = React.useState('');
   const [replaceRegion, setReplaceRegion] = React.useState(null);
+  const [insertionOrientation, setInsertionOrientation] = React.useState('');
+  const [targetTm, setTargetTm] = React.useState(55);
+  const [error, setError] = React.useState('');
+  const [fwdPrimer, setFwdPrimer] = React.useState(null);
+  const [revPrimer, setRevPrimer] = React.useState(null);
 
+  const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
+
+  const primersAreValid = fwdPrimer?.name && revPrimer?.name && !existingPrimerNames.includes(fwdPrimer.name) && !existingPrimerNames.includes(revPrimer.name);
+
+  const updateForwardPrimerName = (name) => {
+    setFwdPrimer((prev) => ({ ...prev, name }));
+  };
+
+  const updateReversePrimerName = (name) => {
+    setRevPrimer((prev) => ({ ...prev, name }));
+  };
+
+  // TODO: make this a hook
   const designPrimers = async () => {
-    console.log('Designing primers', amplifyRegion, replaceRegion, HomologyLength, hybridizationLength, pcrTemplateId, homologousRecombinationTargetId);
     // Access the state
     const { cloning: { entities } } = store.getState();
     const pcrTemplate = entities.find((e) => e.id === pcrTemplateId);
     const homologousRecombinationTarget = entities.find((e) => e.id === homologousRecombinationTargetId);
     // Make post request
-    const replaceRange = selectedRegion2PythonRange(replaceRegion);
-    const amplifyRange = selectedRegion2PythonRange(amplifyRegion);
+    const replaceLocation = selectedRegion2SequenceLocation(replaceRegion);
+    const amplifyLocation = selectedRegion2SequenceLocation(amplifyRegion);
 
     const requestData = {
       pcr_template: {
         sequence: pcrTemplate,
-        range: amplifyRange,
+        location: amplifyLocation,
       },
       homologous_recombination_target: {
         sequence: homologousRecombinationTarget,
-        range: replaceRange,
+        location: replaceLocation,
       },
     };
+    const config = {
+      params: {
+        homology_length: homologyLength,
+        minimal_hybridization_length: hybridizationLength,
+        insert_forward: !insertionOrientation ? null : insertionOrientation === 'forward',
+        target_tm: targetTm,
+      },
+    };
+    const url = new URL('/primer_design/homologous_recombination', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    try {
+      const resp = await axios.post(url, requestData, config);
+      setError('');
+      setFwdPrimer(resp.data.forward_primer);
+      setRevPrimer(resp.data.reverse_primer);
+      setSelectedTab(3);
+    } catch (thrownError) {
+      setError(error2String(thrownError));
+    }
   };
-
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue === 0) {
@@ -111,18 +151,29 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
     setReplaceRegion(selectedRegion);
   };
 
+  const addPrimers = () => {
+    batch(() => {
+      dispatch(addPrimer({ ...fwdPrimer }));
+      dispatch(addPrimer({ ...revPrimer }));
+    });
+    setAmplifyRegion(null);
+    setReplaceRegion(null);
+    setFwdPrimer(null);
+    setRevPrimer(null);
+  };
+
   if (![pcrTemplateId, homologousRecombinationTargetId].includes(mainSequenceId)) {
     return (
       <div>
-        <Button variant="contained" color="primary" onClick={openPrimerDesigner}>Open primer designer</Button>
+        <Button sx={{ mb: 4 }} variant="contained" color="success" onClick={openPrimerDesigner}>Open primer designer</Button>
       </div>
     );
   }
 
   return (
-    <Box sx={{ width: '60%', margin: 'auto', border: 2, borderRadius: 4, overflow: 'hidden', borderColor: 'gray', marginBottom: 5 }}>
-      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main' }}>
-        <Box component="h2" sx={{ margin: 'auto', color: 'primary.main', py: 1 }}>Primer design</Box>
+    <Box className="primer-design" sx={{ width: '60%', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
+      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
+        <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
       </Box>
       <Box>
         <Tabs
@@ -130,10 +181,13 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
           onChange={onTabChange}
           aria-label="Vertical tabs example"
           sx={{ borderRight: 1, borderColor: 'divider' }}
+          centered
+          scrollButtons="auto"
         >
           <Tab label="Amplified region" />
           <Tab label="Replaced region" />
           <Tab label="Other settings" />
+          {fwdPrimer && revPrimer && (<Tab label="Results" />)}
 
         </Tabs>
 
@@ -165,7 +219,7 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
         </TabPanel>
         <TabPanel value={selectedTab} index={1}>
           <div>
-            <Alert severity="info">Select a single position for insertion, region for replacement</Alert>
+            <Alert severity="info">Select either a single position (insertion) or a region (replacement)</Alert>
             <div>
               <FormControl sx={{ py: 2 }}>
                 <TextField
@@ -193,31 +247,94 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
             <div>
               <FormControl sx={{ py: 2 }}>
                 <TextField
-                  label="Homology length (in bp)"
-                  value={HomologyLength}
+                  label="Homology length"
+                  value={homologyLength}
                   onChange={(e) => { setHomologyLength(Number(e.target.value)); }}
                   type="number"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">bp</InputAdornment>,
+                    sx: { width: '10em' },
+                  }}
+
                 />
               </FormControl>
             </div>
             <div>
-              <FormControl sx={{ py: 2 }}>
+              <FormControl sx={{ py: 1, mr: 2 }}>
                 <TextField
-                  label="Hybridization length (in bp)"
+                  label="Target hybridization Tm"
+                  value={targetTm}
+                  onChange={(e) => { setTargetTm(Number(e.target.value)); }}
+                  type="number"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">°C</InputAdornment>,
+                    sx: { width: '10em' },
+                  }}
+                />
+              </FormControl>
+
+              <FormControl sx={{ py: 1 }}>
+                <TextField
+                  sx={{ minWidth: 'max-content' }}
+                  label="Min. hybridization length"
                   value={hybridizationLength}
                   onChange={(e) => { setHybridizationLength(Number(e.target.value)); }}
                   type="number"
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">bp</InputAdornment>,
+                    sx: { width: '10em' },
+                  }}
                 />
               </FormControl>
             </div>
-            {amplifyRegion && replaceRegion && (
+            <div>
+              <FormControl sx={{ marginBottom: 2 }}>
+                <FormLabel id="insertion-orientation-label">Orientation of insert</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="insertion-orientation-label"
+                  name="radio-buttons-group"
+                  onChange={(e) => setInsertionOrientation(e.target.value)}
+                  value={insertionOrientation}
+                >
+                  <FormControlLabel value="forward" control={<Radio />} label="Forward" />
+                  <FormControlLabel value="reverse" control={<Radio />} label="Reverse" />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            { (amplifyRegion && replaceRegion && insertionOrientation && targetTm && hybridizationLength && homologyLength) && (
               <FormControl>
-                <Button variant="contained" onClick={designPrimers} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
+                <Button variant="contained" onClick={designPrimers} sx={{ marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
               </FormControl>
             )}
 
           </div>
         </TabPanel>
+        {fwdPrimer && revPrimer && (
+        <TabPanel value={selectedTab} index={3}>
+          <PrimerResultForm
+            updatePrimerName={updateForwardPrimerName}
+            primer={fwdPrimer}
+            existingPrimerNames={existingPrimerNames}
+          />
+          <PrimerResultForm
+            updatePrimerName={updateReversePrimerName}
+            primer={revPrimer}
+            existingPrimerNames={existingPrimerNames}
+          />
+            {primersAreValid && (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={addPrimers}
+              sx={{ mb: 2 }}
+            >
+              Save primers
+            </Button>
+            )}
+        </TabPanel>
+        )}
+        {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
       </Box>
     </Box>
