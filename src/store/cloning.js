@@ -16,6 +16,7 @@ const initialState = {
   network: null,
   currentTab: 0,
   description: '',
+  selectedRegions: [],
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -170,6 +171,10 @@ const reducer = {
   revertToInitialState(state) {
     Object.assign(state, initialState);
     state.network = constructNetwork(initialState.entities, initialState.sources);
+  },
+
+  setSelectedRegions(state, action) {
+    state.selectedRegions = [...action.payload];
   },
 };
 /* eslint-enable no-param-reassign */

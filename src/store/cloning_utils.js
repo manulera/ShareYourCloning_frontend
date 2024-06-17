@@ -21,6 +21,10 @@ export function getInputEntitiesFromSourceId(state, sourceId) {
   return thisSource.input.map((id) => state.cloning.entities.find((e) => e.id === id));
 }
 
+export function getParentEntityIdsFromEntityId(sources, entityId) {
+  return sources.find((source) => source.output === entityId).input;
+}
+
 export function isSourceATemplate({ sources, entities }, sourceId) {
   // Get the output sequence
   const source = sources.find((s) => s.id === sourceId);
