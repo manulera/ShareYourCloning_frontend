@@ -3,6 +3,7 @@ import { constructNetwork } from '../utils/network';
 
 const initialState = {
   mainSequenceId: null,
+  mainSequenceSelection: {},
   sources: [
     {
       id: 1,
@@ -34,6 +35,11 @@ const reducer = {
 
   setMainSequenceId(state, action) {
     state.mainSequenceId = action.payload;
+    state.mainSequenceSelection = {};
+  },
+
+  setMainSequenceSelection(state, action) {
+    state.mainSequenceSelection = action.payload;
   },
 
   addEmptySource(state, action) {

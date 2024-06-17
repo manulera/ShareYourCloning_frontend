@@ -242,6 +242,6 @@ div.primer-designer {
     width: 60%;
 }
 
-body.bp3-overlay-open {
-    overflow-y:scroll;
-  }
+body {
+    overflow-y: scroll;
+}

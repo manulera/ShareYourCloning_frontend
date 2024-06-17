@@ -4,17 +4,21 @@ import DownloadIcon from '@mui/icons-material/Download';
 import Tooltip from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloningActions } from '../store/cloning';
+import useMainEditor from '../hooks/useUpdateMainEditor';
 
 function MainSequenceCheckBox({ id, onDownloadClick }) {
   const dispatch = useDispatch();
+  const { updateMainEditor } = useMainEditor();
   const { setMainSequenceId, setCurrentTab } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const toggleMain = () => {
     if (mainSequenceId === id) {
       dispatch(setMainSequenceId(null));
+      updateMainEditor(null);
     } else {
       dispatch(setMainSequenceId(id));
       dispatch(setCurrentTab(3));
+      updateMainEditor(id);
       // TODO: ideally this should be done with a ref
       document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
     }

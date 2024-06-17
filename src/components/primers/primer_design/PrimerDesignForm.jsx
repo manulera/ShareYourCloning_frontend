@@ -6,10 +6,12 @@ import Box from '@mui/material/Box';
 import { Alert, Button, FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, TextField } from '@mui/material';
 import { batch, shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
 import axios from 'axios';
+import { isEqual } from 'lodash-es';
 import { cloningActions } from '../../../store/cloning';
 import error2String from '../../../utils/error2String';
 import PrimerResultForm from './PrimerResultForm';
 import { primersActions } from '../../../store/primers';
+import useMainEditor from '../../../hooks/useUpdateMainEditor';
 
 function selectedRegion2String(selectedRegion) {
   if (!selectedRegion) {
@@ -52,13 +54,10 @@ function TabPanel(props) {
   );
 }
 
-export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homologousRecombinationTargetId, mainSequenceId }) {
+export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinationTargetId }) {
   // TODO: extra constrains -> amplify should have length > 0, replace does not matter
   // TODO: shrinking horizontally removes tabs
-  const dispatch = useDispatch();
-  const { setMainSequenceId } = cloningActions;
-  const { addPrimer } = primersActions;
-  const store = useStore();
+
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [homologyLength, setHomologyLength] = React.useState(80);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
@@ -71,7 +70,17 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
   const [fwdPrimer, setFwdPrimer] = React.useState(null);
   const [revPrimer, setRevPrimer] = React.useState(null);
 
+  const dispatch = useDispatch();
+  const store = useStore();
+  const { updateMainEditor } = useMainEditor();
+
+  const { setMainSequenceId } = cloningActions;
+  const { addPrimer } = primersActions;
+
+  // TODO? selectedRegion could be accessed from the store when the user selects a region
   const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
+  const selectedRegion = useSelector((state) => state.cloning.mainSequenceSelection, isEqual);
 
   const primersAreValid = fwdPrimer?.name && revPrimer?.name && !existingPrimerNames.includes(fwdPrimer.name) && !existingPrimerNames.includes(revPrimer.name);
 
@@ -125,13 +134,16 @@ export default function PrimerDesignForm({ selectedRegion, pcrTemplateId, homolo
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue === 0) {
+      updateMainEditor(pcrTemplateId);
       dispatch(setMainSequenceId(pcrTemplateId));
     } else if (newValue === 1) {
+      updateMainEditor(homologousRecombinationTargetId);
       dispatch(setMainSequenceId(homologousRecombinationTargetId));
     }
   };
 
   const openPrimerDesigner = () => {
+    updateMainEditor(pcrTemplateId);
     dispatch(setMainSequenceId(pcrTemplateId));
     setSelectedTab(0);
   };
