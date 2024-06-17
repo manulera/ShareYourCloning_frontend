@@ -47,7 +47,7 @@ function TabPanel(props) {
     >
       {value === index && (
 
-      <Typography>{children}</Typography>
+      <Typography component="div">{children}</Typography>
 
       )}
     </div>
@@ -167,11 +167,14 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
     batch(() => {
       dispatch(addPrimer({ ...fwdPrimer }));
       dispatch(addPrimer({ ...revPrimer }));
+      dispatch(setMainSequenceId(null));
     });
     setAmplifyRegion(null);
     setReplaceRegion(null);
     setFwdPrimer(null);
     setRevPrimer(null);
+    setSelectedTab(0);
+    updateMainEditor(null);
   };
 
   if (![pcrTemplateId, homologousRecombinationTargetId].includes(mainSequenceId)) {
@@ -183,7 +186,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   }
 
   return (
-    <Box className="primer-design" sx={{ width: '60%', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
+    <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
       <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
         <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
       </Box>

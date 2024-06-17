@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextField } from '@mui/material';
+import { FormControl, TextField } from '@mui/material';
 import '../PrimerForm.css';
 import '../PrimerList.css';
 import CustomFormHelperText from '../../form/CustomFormHelperText';
@@ -16,22 +16,26 @@ function PrimerResultForm({
   }
   return (
     <form className="primer-result-form" onSubmit={(e) => e.preventDefault()}>
-      <TextField
-        label="Name"
-        value={name}
-        sx={{ m: 1, pb: 2, display: { width: '20%' } }}
-        onChange={(e) => updatePrimerName(e.target.value)}
-        error={nameError !== ''}
-        helperText={<CustomFormHelperText>{nameError}</CustomFormHelperText>}
-      />
-      <TextField
-        label="Sequence"
-        value={sequence}
-        inputProps={{ id: 'sequence' }}
-        sx={{ m: 1, pb: 2, display: { width: '70%' } }}
-        disabled
-        helperText={<CustomFormHelperText>Cannot edit, change parameters to design new primers</CustomFormHelperText>}
-      />
+      <FormControl sx={{ m: 1, pb: 2, display: { width: '20%' } }}>
+        <TextField
+          label="Name"
+          value={name}
+          onChange={(e) => updatePrimerName(e.target.value)}
+          error={nameError !== ''}
+          FormHelperTextProps={{ component: 'div' }}
+          helperText={<CustomFormHelperText>{nameError}</CustomFormHelperText>}
+        />
+      </FormControl>
+      <FormControl sx={{ m: 1, pb: 2, display: { width: '70%' } }}>
+        <TextField
+          label="Sequence"
+          value={sequence}
+          inputProps={{ id: 'sequence' }}
+          FormHelperTextProps={{ component: 'div' }}
+          disabled
+          helperText={<CustomFormHelperText>Cannot edit, change parameters to design new primers</CustomFormHelperText>}
+        />
+      </FormControl>
     </form>
   );
 }

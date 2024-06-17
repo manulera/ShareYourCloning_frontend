@@ -8,7 +8,7 @@ export default function useMainEditor() {
   const updateMainEditor = (id) => {
     if (id === null) {
       // if id is null, clear the sequenceData
-      updateEditor(store, 'mainEditor', { sequenceData: null, selectionLayer: {} });
+      updateEditor(store, 'mainEditor', { sequenceData: {}, selectionLayer: {} });
     } else {
       // otherwise, update the sequenceData with the new id
       const { cloning: { entities } } = store.getState();
