@@ -11,7 +11,7 @@ import { cloningActions } from '../../../store/cloning';
 import error2String from '../../../utils/error2String';
 import PrimerResultForm from './PrimerResultForm';
 import { primersActions } from '../../../store/primers';
-import useMainEditor from '../../../hooks/useUpdateMainEditor';
+import useStoreEditor from '../../../hooks/useStoreEditor';
 
 function selectedRegion2String(selectedRegion) {
   if (!selectedRegion) {
@@ -72,7 +72,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
 
   const dispatch = useDispatch();
   const store = useStore();
-  const { updateMainEditor } = useMainEditor();
+  const { updateStoreEditor } = useStoreEditor();
 
   const { setMainSequenceId } = cloningActions;
   const { addPrimer } = primersActions;
@@ -134,16 +134,16 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue === 0) {
-      updateMainEditor(pcrTemplateId);
+      updateStoreEditor('mainEditor', pcrTemplateId);
       dispatch(setMainSequenceId(pcrTemplateId));
     } else if (newValue === 1) {
-      updateMainEditor(homologousRecombinationTargetId);
+      updateStoreEditor('mainEditor', homologousRecombinationTargetId);
       dispatch(setMainSequenceId(homologousRecombinationTargetId));
     }
   };
 
   const openPrimerDesigner = () => {
-    updateMainEditor(pcrTemplateId);
+    updateStoreEditor('mainEditor', pcrTemplateId);
     dispatch(setMainSequenceId(pcrTemplateId));
     setSelectedTab(0);
   };
@@ -174,7 +174,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
     setFwdPrimer(null);
     setRevPrimer(null);
     setSelectedTab(0);
-    updateMainEditor(null);
+    updateStoreEditor('mainEditor', null);
   };
 
   if (![pcrTemplateId, homologousRecombinationTargetId].includes(mainSequenceId)) {
