@@ -43,6 +43,12 @@ function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDown
 function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
   const speciesPostRequestSettings = React.useMemo(() => ({
     setValue: (v) => {
+      if (v === null) {
+        setSpecies(null);
+        setAssemblyId('');
+        setGene(null);
+        return;
+      }
       getReferenceAssemblyId(v.tax_id).then((response) => {
         // Set the species
         setSpecies(v);
@@ -302,7 +308,7 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
     getOptionLabel: ({ annotation }) => (annotation ? `${annotation.symbol} ${annotation.locus_tag === undefined ? '' : annotation.locus_tag} ${annotation.name}` : ''),
     isOptionEqualToValue: (option, value) => option.locus_tag === value.locus_tag,
     textLabel: 'Gene',
-  }), [setGene]);
+  }), [setGene, assemblyId]);
 
   return (
     <>

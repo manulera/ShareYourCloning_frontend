@@ -29,10 +29,10 @@ export function addPrimer(name, seq) {
   cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
-export function clickMultiSelectOption(label, option, parentSelector = '') {
+export function clickMultiSelectOption(label, option, parentSelector = '', constainsSettings = {}) {
   cy.get(parentSelector).contains(label).siblings('div').first()
     .click();
-  cy.get('div[role="presentation"]').contains(option).click();
+  cy.get('div[role="presentation"]').contains(option, constainsSettings).click();
   // Click outside
   cy.get('body').click(0, 0);
 }
@@ -44,6 +44,12 @@ export function setInputValue(label, value, parentSelector = '') {
   cy.get(parentSelector).contains(label).siblings('div').first()
     .children('input')
     .type(value);
+}
+
+export function clearInputValue(label, parentSelector = '') {
+  cy.get(parentSelector).contains(label).siblings('div').first()
+    .children('input')
+    .clear('');
 }
 
 export function checkInputValue(label, value, parentSelector = '') {
