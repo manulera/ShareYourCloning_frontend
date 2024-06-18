@@ -1,24 +1,25 @@
 import React from 'react';
-import { createVectorEditor } from '@teselagen/ove';
-import { shallowEqual, useSelector } from 'react-redux';
-import { convertToTeselaJson } from '../utils/sequenceParsers';
+import { Editor, updateEditor } from '@teselagen/ove';
+import { useDispatch, useStore } from 'react-redux';
 import defaultMainEditorProps from '../config/defaultMainEditorProps';
+import { cloningActions } from '../store/cloning';
 
 function MainSequenceEditor() {
-  const editorName = 'mainEditor';
-  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
-  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId), shallowEqual);
-  const seq = entity === undefined ? undefined : convertToTeselaJson(entity);
-  const nodeRef = React.useRef(null);
-  React.useEffect(() => {
-    const editorProps = {
-      sequenceData: seq,
-      ...defaultMainEditorProps,
-    };
-    const editor = createVectorEditor(nodeRef.current, { editorName, height: '800' });
-    editor.updateEditor(editorProps);
-  }, [mainSequenceId, seq]);
+  const dispatch = useDispatch();
+  const store = useStore();
+  const { setMainSequenceSelection } = cloningActions;
 
-  return (<div ref={nodeRef} />);
+  const editorName = 'mainEditor';
+  const extraProp = {
+    onSelectionOrCaretChanged: (a) => dispatch(setMainSequenceSelection(a)),
+    selectionLayer: {},
+    sequenceData: {},
+  };
+
+  React.useEffect(() => {
+    updateEditor(store, editorName, { ...defaultMainEditorProps, ...extraProp });
+  }, []);
+
+  return (<Editor {...{ editorName, ...defaultMainEditorProps, ...extraProp, height: '800' }} />);
 }
 export default React.memo(MainSequenceEditor);

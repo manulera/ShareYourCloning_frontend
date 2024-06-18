@@ -1,10 +1,11 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
+import { cloningActions } from '../../store/cloning';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -27,6 +28,8 @@ function SourcePCRorHybridization({ source }) {
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
+  const { addEntityAndUpdateItsSource } = cloningActions;
+  const dispatch = useDispatch();
 
   const onChangeForward = (event) => setForwardPrimerId(event.target.value);
   const onChangeReverse = (event) => setReversePrimerId(event.target.value);
@@ -54,6 +57,17 @@ function SourcePCRorHybridization({ source }) {
       } };
       sendPostRequest({ endpoint: 'pcr', requestData, config, source });
     }
+  };
+
+  const onPrimerDesign = () => {
+    const newEntity = {
+      type: 'TemplateSequence',
+      primer_design: true,
+      circular: false,
+    };
+    dispatch(addEntityAndUpdateItsSource({
+      newEntity, newSource: { ...source },
+    }));
   };
 
   return (
@@ -86,6 +100,9 @@ function SourcePCRorHybridization({ source }) {
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
+        {inputEntities.length !== 0 && !source.output && !forwardPrimerId && !reversePrimerId && (
+          <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign} type="submit">Design primers</Button>
+        )}
         <FormControl fullWidth>
           <TextField
             label="Minimal annealing length (in bp)"

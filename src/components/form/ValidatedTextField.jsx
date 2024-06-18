@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material';
 import React from 'react';
-import FormHelperText from '@mui/material/FormHelperText';
+import CustomFormHelperText from './CustomFormHelperText';
 
 function ValidatedTextField({ id, value, onInputChange, errorChecker, updateValidationStatus, required, submissionAttempted, floatingHelperText, initialHelperText = '', ...rest }) {
   const defaultPars = { inputProps: { style: { fontSize: 14 } }, FormHelperTextProps: { component: 'div' } };
@@ -12,11 +12,6 @@ function ValidatedTextField({ id, value, onInputChange, errorChecker, updateVali
     onInputChange(event);
     setTouched(true);
   };
-
-  const formHelperFormatted = (str) => (
-    // component: 'div' because of https://github.com/mui/material-ui/issues/32289
-    <FormHelperText component="div" style={{ fontSize: 'x-small', marginLeft: 0, marginRight: 0, position: 'absolute', botom: '0px' }}>{str}</FormHelperText>
-  );
 
   React.useEffect(() => {
     if (!submissionAttempted && !touched) return;
@@ -31,7 +26,7 @@ function ValidatedTextField({ id, value, onInputChange, errorChecker, updateVali
     setHelperText(newHelperText);
     updateValidationStatus(id, newError);
   }, [value, touched, submissionAttempted]);
-  const renderedHelperText = floatingHelperText ? formHelperFormatted(helperText) : helperText;
+  const renderedHelperText = floatingHelperText ? (<CustomFormHelperText>{helperText}</CustomFormHelperText>) : helperText;
   return (<TextField id={id} value={value} {...defaultPars} {...rest} onChange={handleChange} error={error} helperText={renderedHelperText} />);
 }
 

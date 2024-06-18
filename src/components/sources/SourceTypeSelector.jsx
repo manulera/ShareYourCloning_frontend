@@ -51,7 +51,7 @@ function SourceTypeSelector({ source }) {
       <FormControl fullWidth>
         <InputLabel id={`select-source-${sourceId}-label`}>Source type</InputLabel>
         <Select
-          value={sourceType !== null ? sourceType : ''}
+          value={sourceType || ''}
           onChange={onChange}
           labelId={`select-source-${sourceId}-label`}
           // Note how you have to set the label in two places

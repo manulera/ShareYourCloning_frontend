@@ -7,7 +7,7 @@ describe('Test download sequence file', () => {
   it('Can download the file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
-    cy.get('li#sequence-2 svg[data-testid="DownloadIcon"]').click();
+    cy.get('li#sequence-2 svg[data-testid="DownloadIcon"]', { timeOut: 20000 }).click();
     setInputValue('File name', 'example', '.MuiDialogContent-root');
     // Download file as gb
     cy.get('.MuiDialogActions-root button').contains('Save file').click();

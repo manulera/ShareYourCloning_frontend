@@ -42,6 +42,19 @@ export async function taxonSuggest(userInput) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy/taxon_suggest/${userInput}`;
   const resp = await axios.get(url);
   const taxons = resp.data.sci_name_and_ids;
+
+  // Hack for E. Coli not being displayed
+  const eColi = {
+    sci_name: 'Escherichia coli',
+    tax_id: '562',
+    matched_term: 'E. coli',
+    rank: 'SPECIES',
+  };
+  // Compare with regex
+  const regex = new RegExp(`${userInput}`, 'i');
+  if (regex.test(eColi.sci_name)) {
+    taxons.push(eColi);
+  }
   // This might change if the API endpoint changes
   return taxons === undefined ? [] : taxons.filter((e) => e.rank === 'SPECIES');
 }

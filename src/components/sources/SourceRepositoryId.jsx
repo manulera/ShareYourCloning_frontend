@@ -13,7 +13,7 @@ function SourceRepositoryId({ source }) {
   const { id: sourceId } = source;
   const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || '');
   React.useEffect(() => {
-    setSelectedRepository(source.repository_name);
+    setSelectedRepository(source.repository_name || '');
   }, [source.repository_name]);
   const repositoryIdRef = React.useRef(null);
   const [error, setError] = React.useState(false);
@@ -28,7 +28,7 @@ function SourceRepositoryId({ source }) {
       sendPostRequest({ endpoint: `repository_id/${selectedRepository}`, requestData, source });
     }
   };
-  const helperText = error ? 'Field cannot be empty' : `Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39282'}`;
+  const helperText = error ? 'Field cannot be empty' : `Example ID: ${(selectedRepository === 'genbank') ? 'NM_001018957.2' : '39296'}`;
   return (
     <>
       <FormControl fullWidth>

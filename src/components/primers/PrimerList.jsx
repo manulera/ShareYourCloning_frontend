@@ -58,7 +58,7 @@ function PrimerList() {
           submitPrimer={editPrimer}
           cancelForm={() => setEditingPrimerId(null)}
           existingNames={primers.filter((p) => p.name !== editingPrimer.name).map((p) => p.name)}
-          disabledSequenceField={primerIdsInUse.includes(editingPrimerId)}
+          disabledSequenceText={primerIdsInUse.includes(editingPrimerId) && 'Cannot edit sequence in use'}
           primer={editingPrimer}
         />
         )) || (addingPrimer && (

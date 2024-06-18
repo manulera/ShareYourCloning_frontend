@@ -3,10 +3,10 @@
     align-items: center;
 }
 
-.primer-row div.primer-sequence{
-    font-family: monospace;
-    text-align: left;
-    padding-left: 10px;
+.primer-result-form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .primer-row svg[data-testid] {

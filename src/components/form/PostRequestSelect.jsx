@@ -23,6 +23,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
           setError(false);
           if (receivedOptions.length === 0) { setNoOptionsText('No results found'); }
         } catch (e) {
+          console.error(e);
           setErrorMessage('Could not retrieve data');
           setError(true);
         }
@@ -51,7 +52,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
   return (
     <FormControl fullWidth>
       <Autocomplete
-        onChange={(event, value) => { setValue(value); }}
+        onChange={(event, value) => setValue(value)}
         // Change options only when input changes (not when an option is picked)
         onInputChange={(event, newInputValue, reason) => (reason === 'input') && setUserInput(newInputValue)}
         id="tags-standard"

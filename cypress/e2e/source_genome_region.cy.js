@@ -1,3 +1,5 @@
+import { clearInputValue, clickMultiSelectOption, setInputValue } from './common_functions';
+
 describe('GenomeRegion Source', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -185,5 +187,23 @@ describe('GenomeRegion Source', () => {
       .type('5579135');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
     cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
+  });
+  it('searchs in the new assembly after changing species', () => {
+    clickMultiSelectOption('Type of region', 'Locus in reference', 'li#source-1');
+    setInputValue('Species', 'pombe', 'li#source-1');
+    clickMultiSelectOption('Species', 'Schizosaccharomyces pombe', 'li#source-1', { timeout: 20000 });
+    // Ase1 should be there
+    setInputValue('Gene', 'ase1', 'li#source-1');
+    clickMultiSelectOption('Gene', 'ase1', 'li#source-1', { timeout: 20000 });
+
+    // Change to coli
+    clearInputValue('Species', 'li#source-1');
+    // There should not be Assembly ID field
+    cy.get('li#source-1 label').contains('Assembly ID').should('not.exist');
+    setInputValue('Species', 'coli', 'li#source-1');
+    clickMultiSelectOption('Species', 'Escherichia coli', 'li#source-1', { timeout: 20000 });
+    // Ase1 should not be there
+    setInputValue('Gene', 'ase1', 'li#source-1');
+    cy.get('div[role="presentation"]').contains('No results found', { timeout: 20000 }).should('exist');
   });
 });

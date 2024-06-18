@@ -13,10 +13,12 @@ import { exportStateThunk, loadData } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
+import FeedbackDialog from './FeedbackDialog';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const [openTemplateDialog, setOpenTemplateDialog] = React.useState(false);
+  const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const dispatch = useDispatch();
@@ -91,6 +93,7 @@ function MainAppBar() {
             <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>
+            <Button onClick={() => setOpenFeedbackDialog(true)}>Feedback</Button>
             <Tooltip title={tooltipText} arrow placement="right">
               <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
                 <GitHubIcon />
@@ -101,6 +104,7 @@ function MainAppBar() {
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
       <SelectTemplateDialog onClose={handleCloseDialog} open={openTemplateDialog} />
+      <FeedbackDialog open={openFeedbackDialog} setOpen={setOpenFeedbackDialog} />
       {/* elab-demo */}
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}

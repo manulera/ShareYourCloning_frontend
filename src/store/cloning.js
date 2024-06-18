@@ -3,6 +3,7 @@ import { constructNetwork } from '../utils/network';
 
 const initialState = {
   mainSequenceId: null,
+  mainSequenceSelection: {},
   sources: [
     {
       id: 1,
@@ -15,6 +16,7 @@ const initialState = {
   network: null,
   currentTab: 0,
   description: '',
+  selectedRegions: [],
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -34,6 +36,11 @@ const reducer = {
 
   setMainSequenceId(state, action) {
     state.mainSequenceId = action.payload;
+    state.mainSequenceSelection = {};
+  },
+
+  setMainSequenceSelection(state, action) {
+    state.mainSequenceSelection = action.payload;
   },
 
   addEmptySource(state, action) {
@@ -164,6 +171,10 @@ const reducer = {
   revertToInitialState(state) {
     Object.assign(state, initialState);
     state.network = constructNetwork(initialState.entities, initialState.sources);
+  },
+
+  setSelectedRegions(state, action) {
+    state.selectedRegions = [...action.payload];
   },
 };
 /* eslint-enable no-param-reassign */

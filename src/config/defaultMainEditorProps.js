@@ -7,8 +7,6 @@ export default {
       'downloadTool',
       'cutsiteTool',
       'featureTool',
-      'alignmentTool',
-      'orfTool',
       'findTool',
       'visibilityTool',
     ],
@@ -18,9 +16,9 @@ export default {
     {
       id: 'rail',
       name: 'Linear Map',
+      active: true,
     },
     {
-      active: true,
       id: 'sequence',
       name: 'Sequence Map',
     },
