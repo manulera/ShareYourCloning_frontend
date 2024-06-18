@@ -74,7 +74,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const store = useStore();
   const { updateStoreEditor } = useStoreEditor();
 
-  const { setMainSequenceId } = cloningActions;
+  const { setMainSequenceId, setCurrentTab } = cloningActions;
   const { addPrimer } = primersActions;
 
   // TODO? selectedRegion could be accessed from the store when the user selects a region
@@ -168,6 +168,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
       dispatch(addPrimer({ ...fwdPrimer }));
       dispatch(addPrimer({ ...revPrimer }));
       dispatch(setMainSequenceId(null));
+      dispatch(setCurrentTab(0));
     });
     setAmplifyRegion(null);
     setReplaceRegion(null);

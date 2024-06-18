@@ -94,17 +94,17 @@ function SourceAssembly({ source, assemblyType }) {
         )}
         { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
-            <FormControlLabel fullWidth control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
+            <FormControlLabel control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
         )}
         { ['RestrictionAndLigationSource', 'LigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
-            <FormControlLabel fullWidth control={<Checkbox checked={allowPartialOverlaps} onChange={flipAllowPartialOverlaps} />} label="Allow partial overlaps" />
+            <FormControlLabel control={<Checkbox checked={allowPartialOverlaps} onChange={flipAllowPartialOverlaps} />} label="Allow partial overlaps" />
           </FormControl>
         )}
         { (assemblyType === 'LigationSource') && (
         <FormControl fullWidth style={{ textAlign: 'left' }}>
-          <FormControlLabel fullWidth control={<Checkbox checked={bluntLigation} onChange={flipBluntLigation} />} label="Blunt ligation" />
+          <FormControlLabel control={<Checkbox checked={bluntLigation} onChange={flipBluntLigation} />} label="Blunt ligation" />
         </FormControl>
         )}
         {!preventSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}

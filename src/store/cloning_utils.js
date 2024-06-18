@@ -21,10 +21,6 @@ export function getInputEntitiesFromSourceId(state, sourceId) {
   return thisSource.input.map((id) => state.cloning.entities.find((e) => e.id === id));
 }
 
-export function getParentEntityIdsFromEntityId(sources, entityId) {
-  return sources.find((source) => source.output === entityId).input;
-}
-
 export function isSourceATemplate({ sources, entities }, sourceId) {
   // Get the output sequence
   const source = sources.find((s) => s.id === sourceId);
@@ -64,9 +60,14 @@ export function getPrimerDesignObject({ sources, entities }) {
   // Find the template sequences form those PCRs
   const templateSequences = entities.filter((e) => pcrSources.some((ps) => ps.input.includes(e.id)));
   const templateSequencesIds = templateSequences.map((s) => s.id);
-  // Inputs to the finalSource that are not mock sequences
+  // Inputs to the finalSource that are not mock sequences with primer_design
   const otherInputIds = finalSource.input.filter((i) => !mockSequenceIds.includes(i));
-  // const otherInputs = entities.filter((e) => otherInputIds.includes(e.id));
+  const otherInputs = entities.filter((e) => otherInputIds.includes(e.id));
+  // There should be no TemplateSequence as an input that does not have primer_design set to true
+  if (otherInputs.some((i) => i.type === 'TemplateSequence' && i.primer_design !== true)) {
+    // return 'TemplateSequence input to final source does not have primer_design set to true';
+    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+  }
 
   return { finalSource, templateSequencesIds, otherInputIds };
 }

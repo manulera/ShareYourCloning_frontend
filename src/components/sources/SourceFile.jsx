@@ -26,8 +26,8 @@ function SourceFile({ source }) {
   return (
     <>
       <form className="submit-sequence-file" onSubmit={(e) => e.preventDefault()}>
-        <FormControl fullWidth style={{ textAlign: 'left' }}>
-          <FormControlLabel fullWidth control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
+        <FormControl fullWidth>
+          <FormControlLabel control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
         </FormControl>
         <SubmitButtonBackendAPI
           component="label"

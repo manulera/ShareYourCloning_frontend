@@ -5,7 +5,6 @@ import { isEqual } from 'lodash-es';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
-import { getParentEntityIdsFromEntityId } from '../store/cloning_utils';
 import { cloningActions } from '../store/cloning';
 
 const transformToRegion = (eventOutput) => {
@@ -21,7 +20,7 @@ function SequenceEditor({ entityId, isRootNode }) {
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const seq = convertToTeselaJson(entity);
-  const parentEntityIds = useSelector((state) => getParentEntityIdsFromEntityId(state.cloning.sources, entityId), shallowEqual);
+  const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
 
   const { setSelectedRegions } = cloningActions;
@@ -45,6 +44,7 @@ function SequenceEditor({ entityId, isRootNode }) {
     } else {
       const newRegion = transformToRegion(eventOutput);
       const newTimeOutId = setTimeout(() => {
+        const parentEntityIds = parentSource.input;
         const selectedRegions = parentEntityIds.map((id) => ({ id, selectedRegion: newRegion }));
         selectedRegions.push({ id: entityId, selectedRegion: newRegion });
         dispatch(setSelectedRegions(selectedRegions));
