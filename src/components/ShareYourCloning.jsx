@@ -9,6 +9,8 @@ import CustomTab from './navigation/CustomTab';
 import DataModelDisplayer from './DataModelDisplayer';
 import CloningHistory from './CloningHistory';
 import SequenceTab from './SequenceTab';
+import ExternalServicesStatusCheck from './ExternalServicesStatusCheck';
+
 // import PrimerDesigner from './primers/primer_design/PrimerDesigner';
 
 function ShareYourCloning() {
@@ -24,7 +26,8 @@ function ShareYourCloning() {
 
   return (
     <div className="app-container">
-      <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3 }} id="shareyourcloning-app-tabs">
+      <ExternalServicesStatusCheck />
+      <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3, pt: 1 }} id="shareyourcloning-app-tabs">
         <CustomTab label="Cloning" index={0} />
         <CustomTab label="Primers" index={1} />
         <CustomTab label="Description" index={2} />
