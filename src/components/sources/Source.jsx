@@ -1,4 +1,6 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { isEqual } from 'lodash-es';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
@@ -12,6 +14,7 @@ import SourceManuallyTyped from './SourceManuallyTyped';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 import CollectionSource from './CollectionSource';
+import KnownSourceErrors from './KnownSourceErrors';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -19,6 +22,8 @@ function Source({ source }) {
   const { id: sourceId, type: sourceType } = source;
   let specificSource = null;
   const templateOnlySources = ['CollectionSource'];
+  const knownErrors = useSelector((state) => state.cloning.knownErrors, isEqual);
+  console.log('knownErrors', knownErrors);
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
@@ -61,6 +66,7 @@ function Source({ source }) {
   return (
     <SourceBox {...{ sourceId }}>
       {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
+      {sourceType && knownErrors[sourceType] && <KnownSourceErrors errors={knownErrors[sourceType]} />}
       {specificSource}
     </SourceBox>
   );

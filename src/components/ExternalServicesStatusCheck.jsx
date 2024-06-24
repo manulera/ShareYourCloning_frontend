@@ -19,7 +19,7 @@ function ExternalServicesStatusCheck() {
         {
           message: 'NCBI server is down',
           url: new URL('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', import.meta.env.VITE_REACT_APP_BACKEND_URL).href,
-          check: (resp) => (resp.status === 200) && (resp.data.result['22258761'].assemblyaccession === 'GCF_000002945.1'),
+          check: (resp) => (resp.status === 200) && (resp.data.result['22258761']),
         },
       ];
       const downServices = [];
