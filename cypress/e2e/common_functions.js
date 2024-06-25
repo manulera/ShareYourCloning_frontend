@@ -2,7 +2,7 @@ export function addSource(sourceType, isFirst = false) {
   if (!isFirst) {
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
   }
-  cy.get('#tab-panel-0 .select-source h2').contains('Define a sequence source').siblings('div').children('.MuiInputBase-root')
+  cy.get('#tab-panel-0 .select-source h2.empty-source-title').siblings('div').children('.MuiInputBase-root')
     .click();
   cy.get(`li[data-value="${sourceType}"]`).click();
 }
@@ -73,7 +73,7 @@ export function deleteSource(id) {
 export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
   cy.get('#tab-panel-0 .select-source h2').last().closest('.source-node').invoke('attr', 'id')
     .then((sourceId) => {
-      cy.get('#tab-panel-0 .select-source h2').last().contains('Define a sequence source').siblings('div')
+      cy.get('#tab-panel-0 .select-source h2.empty-source-title').last().siblings('div')
         .children('.MuiInputBase-root')
         .click();
       cy.get('li[data-value="ManuallyTypedSource"]').click();

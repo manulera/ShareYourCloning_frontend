@@ -148,7 +148,7 @@ function SourceGenomeRegionLocusOnOther({ source }) {
     setGene(null);
     setSpecies(resp === null ? null : resp.species);
     setAssemblyId(resp === null ? null : userInput);
-    setNoAnnotationError(resp !== null && resp.annotationInfo === null);
+    setNoAnnotationError(resp !== null && !resp.hasAnnotation);
   };
 
   return (

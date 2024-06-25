@@ -12,7 +12,7 @@ function KnownSourceErrors({ errors }) {
             See how
           </Button>
       )}
-        sx={{ alignItems: 'center' }}
+        sx={{ alignItems: 'center', mb: 1 }}
       >
         Affected by external errors
       </Alert>

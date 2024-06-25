@@ -84,9 +84,24 @@ export async function getInfoFromAssemblyId(assemblyId) {
     return null;
   }
   const { reports } = resp.data;
+  if (reports === undefined) {
+    return null;
+  }
+
   const species = reports[0].organism;
-  const annotationInfo = reports[0].annotation_info || null;
-  return reports === undefined ? null : { species, annotationInfo };
+
+  const url2 = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/annotation_report/download_summary`;
+  try {
+    const resp2 = await axios.get(url2);
+    const hasAnnotation = resp2.data.record_count !== undefined;
+    return { species, hasAnnotation };
+  } catch (error) {
+    return { species, hasAnnotation: false };
+  }
+
+  // I used to check like this, but no longer works (see https://github.com/ncbi/datasets/issues/380)
+  // const annotationInfo = reports[0].annotation_info || null;
+  // return reports === undefined ? null : { species, annotationInfo };
 }
 
 export async function getInfoFromSequenceAccession(sequenceAccession) {

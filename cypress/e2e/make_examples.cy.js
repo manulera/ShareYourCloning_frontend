@@ -23,10 +23,10 @@ describe('Makes all examples', () => {
     // Load Ase1 sequence with some extra sequences on the sides
     addLane();
     addSource('GenomeCoordinatesSource', true);
-    clickMultiSelectOption('Type of region', 'Locus in reference genome', 'li#source-5');
-    cy.get('li#source-5 label', { timeout: 20000 }).contains('Species');
-    setInputValue('Species', 'pombe', 'li#source-5');
-    cy.get('#tags-standard-option-0', { timeout: 20000 }).click();
+    clickMultiSelectOption('Type of region', 'Locus in other assembly', 'li#source-5');
+    cy.get('li#source-5 label', { timeout: 20000 }).contains('Assembly ID');
+    setInputValue('Assembly ID', 'GCA_000002945.3', 'li#source-5');
+    cy.get('li#source-5 label').contains('Species', { timeout: 20000 });
     setInputValue('Gene', 'ase1', 'li#source-5');
     cy.get('#tags-standard-option-0', { timeout: 20000 }).click();
     cy.get('li#source-5').contains('Submit').click();
@@ -42,10 +42,10 @@ describe('Makes all examples', () => {
   it('Restriction-ligation single step', () => {
     // Load Ase1 sequence with some extra sequences on the sides
     addSource('GenomeCoordinatesSource', true);
-    clickMultiSelectOption('Type of region', 'Locus in reference genome', 'li#source-1');
-    cy.get('li#source-1 label', { timeout: 20000 }).contains('Species');
-    setInputValue('Species', 'pombe', 'li#source-1');
-    cy.get('#tags-standard-option-0', { timeout: 20000 }).click();
+    clickMultiSelectOption('Type of region', 'Locus in other assembly', 'li#source-1');
+    cy.get('li#source-1 label', { timeout: 20000 }).contains('Assembly ID');
+    setInputValue('Assembly ID', 'GCA_000002945.3', 'li#source-1');
+    cy.get('li#source-1 label').contains('Species', { timeout: 20000 });
     setInputValue('Gene', 'ase1', 'li#source-1');
     cy.get('#tags-standard-option-0', { timeout: 20000 }).click();
     cy.get('li#source-1').contains('Submit').click();
