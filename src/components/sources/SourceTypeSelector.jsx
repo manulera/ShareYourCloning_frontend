@@ -47,7 +47,7 @@ function SourceTypeSelector({ source }) {
 
   return (
     <>
-      <h2>Define a sequence source</h2>
+      {!sourceType && (<h2 className="empty-source-title">{inputEntities.length === 0 ? 'Import a sequence' : 'Use this sequence'}</h2>)}
       <FormControl fullWidth>
         <InputLabel id={`select-source-${sourceId}-label`}>Source type</InputLabel>
         <Select

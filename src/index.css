@@ -13,6 +13,7 @@ button {
     width: 100%;
     margin: 0px;
     padding: 0px;
+    position: relative;
 }
 
 .main-sequence-editor {
@@ -244,4 +245,14 @@ div.primer-designer {
 
 body {
     overflow-y: scroll;
+}
+
+.service-status-check-alert {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

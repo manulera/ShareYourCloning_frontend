@@ -1,6 +1,6 @@
 import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
@@ -20,6 +20,7 @@ function SequenceEditor({ entityId, isRootNode }) {
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
   const seq = convertToTeselaJson(entity);
+  const store = useStore();
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
 
@@ -45,6 +46,7 @@ function SequenceEditor({ entityId, isRootNode }) {
       const newRegion = transformToRegion(eventOutput);
       const newTimeOutId = setTimeout(() => {
         const parentEntityIds = parentSource.input;
+        const { entities } = store.getState().cloning;
         const selectedRegions = parentEntityIds.map((id) => ({ id, selectedRegion: newRegion }));
         selectedRegions.push({ id: entityId, selectedRegion: newRegion });
         dispatch(setSelectedRegions(selectedRegions));

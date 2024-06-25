@@ -17,6 +17,7 @@ const initialState = {
   currentTab: 0,
   description: '',
   selectedRegions: [],
+  knownErrors: {},
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -175,6 +176,10 @@ const reducer = {
 
   setSelectedRegions(state, action) {
     state.selectedRegions = [...action.payload];
+  },
+
+  setKnownErrors(state, action) {
+    state.knownErrors = action.payload;
   },
 };
 /* eslint-enable no-param-reassign */
