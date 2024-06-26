@@ -247,6 +247,11 @@ body {
     overflow-y: scroll;
 }
 
+body.bp3-overlay-open {
+    /* Prevents snapping when right-clicking the main editor */
+    overflow-y: scroll;
+}
+
 .service-status-check-alert {
     position: absolute;
     top: 1em;
