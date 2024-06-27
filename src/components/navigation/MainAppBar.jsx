@@ -75,6 +75,15 @@ function MainAppBar() {
     };
   };
 
+  // If you want to load a particular example on page load, you can do it here.
+  React.useEffect(() => {
+    const fetchExample = async () => {
+      const { data } = await axios.get('examples/golden_gate.json');
+      loadData(data, false, dispatch, setLoadedFileError);
+    };
+    fetchExample();
+  }, []);
+
   return (
     <AppBar position="static" className="app-bar">
       {loadedFileError && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', zIndex: 999 }} onClose={() => { setLoadedFileError(''); }}>{loadedFileError}</Alert>)}
