@@ -102,11 +102,11 @@ describe('GenomeRegion Source', () => {
     cy.get('li[data-value="custom_coordinates"]').click();
     // Shows species and assembly ID if sequence accession belongs to assembly
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('NC_003424.3');
+      .type('NC_001147.6');
     cy.get('label').contains('Species', { timeout: 20000 }).siblings('div').children('input')
-      .should('have.value', 'Schizosaccharomyces pombe - 4896');
+      .should('have.value', 'Saccharomyces cerevisiae S288C - 559292');
     cy.get('label').contains('Assembly ID').siblings('div').children('input')
-      .should('have.value', 'GCF_000002945.1');
+      .should('have.value', 'GCF_000146045.2');
     // Shows warning otherwise. This in an important check, before
     // the previously set assembly and species were not being cleared.
     cy.get('label').contains('Sequence accession').siblings('div').children('input')
