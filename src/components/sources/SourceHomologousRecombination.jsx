@@ -3,22 +3,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FormControl, TextField } from '@mui/material';
 import { isEqual } from 'lodash-es';
 import SingleInputSelector from './SingleInputSelector';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import { cloningActions } from '../../store/cloning';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import MultiplePrimerSelector from '../primers/MultiplePrimerSelector';
 
 // A component representing the ligation of several fragments
-function SourceHomologousRecombination({ source, isCrispr = false }) {
+function SourceHomologousRecombination({ source, requestStatus, sendPostRequest }) {
+  const isCrispr = source.type === 'CRISPRSource';
   const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), isEqual);
   const inputsAreNotTemplates = inputEntities.every((entity) => entity.type !== 'TemplateSequence');
   const [template, setTemplate] = React.useState(inputEntityIds.length > 0 ? inputEntityIds[0] : null);
   const [insert, setInsert] = React.useState(inputEntityIds.length > 1 ? inputEntityIds[1] : null);
   const [selectedPrimers, setSelectedPrimers] = React.useState([]);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const { updateSource } = cloningActions;
   const dispatch = useDispatch();
 
@@ -98,10 +96,6 @@ function SourceHomologousRecombination({ source, isCrispr = false }) {
         </SubmitButtonBackendAPI>
         )}
       </form>
-      <MultipleOutputsSelector {...{
-        sources, entities, sourceId,
-      }}
-      />
     </div>
   );
 }

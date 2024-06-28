@@ -3,16 +3,13 @@ import axios from 'axios';
 import ElabFTWCategorySelect from '../form/eLabFTW/ElabFTWCategorySelect';
 import ElabFTWResourceSelect from '../form/eLabFTW/ElabFTWResourceSelect';
 import ElabFTWFileSelect from '../form/eLabFTW/ElabFTWFileSelect';
-import useBackendAPI from '../../hooks/useBackendAPI';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
-function ELabFTWSource({ source }) {
+function ELabFTWSource({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [category, setCategory] = React.useState(null);
   const [resource, setResource] = React.useState(null);
   const [fileInfo, setFileInfo] = React.useState(null);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
 
   // Reset if category changes
   React.useEffect(() => {
@@ -51,11 +48,6 @@ function ELabFTWSource({ source }) {
       {category && <ElabFTWResourceSelect setResource={setResource} categoryId={category.id} apiKey={apiKey} />}
       {resource && <ElabFTWFileSelect setFileInfo={setFileInfo} itemId={resource.id} apiKey={apiKey} />}
       {fileInfo && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit </SubmitButtonBackendAPI>}
-
-      <MultipleOutputsSelector {...{
-        sources, entities, sourceId,
-      }}
-      />
     </form>
   );
 }

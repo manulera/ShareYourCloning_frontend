@@ -5,7 +5,6 @@ import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Alert, Box, FormHelperText, FormLabel } from '@mui/material';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import PostRequestSelect from '../form/PostRequestSelect';
 import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
 import TextFieldValidate from '../form/TextFieldValidate';
@@ -67,14 +66,13 @@ function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnReference({ source }) {
+function SourceGenomeRegionLocusOnReference({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -127,7 +125,7 @@ function KnownAssemblyField({ assemblyId }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionLocusOnOther({ source }) {
+function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [gene, setGene] = React.useState(null);
   const [species, setSpecies] = React.useState(null);
@@ -135,7 +133,6 @@ function SourceGenomeRegionLocusOnOther({ source }) {
   const [noAnnotationError, setNoAnnotationError] = React.useState(false);
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
-  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -167,7 +164,7 @@ function SourceGenomeRegionLocusOnOther({ source }) {
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionCustomCoordinates({ source }) {
+function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRequest }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
   const { id: sourceId } = source;
   const [species, setSpecies] = React.useState(null);
@@ -179,7 +176,6 @@ function SourceGenomeRegionCustomCoordinates({ source }) {
   const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
   const [coordsStrand, setCoordsStrand] = React.useState('');
-  const { requestStatus, sendPostRequest } = useBackendAPI();
   const onSubmit = (event) => {
     event.preventDefault();
     if (coordsStartRef.current.value === '') {
@@ -347,7 +343,7 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
   );
 }
 
-function SourceGenomeRegion({ source }) {
+function SourceGenomeRegion({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [selectionMode, setSelectionMode] = React.useState('');
   const changeSelectionMode = (event) => { setSelectionMode(event.target.value); };
@@ -369,9 +365,9 @@ function SourceGenomeRegion({ source }) {
           </Select>
         </FormControl>
       </form>
-      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference source={source} />)}
-      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther source={source} />)}
-      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates source={source} />)}
+      {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference {...{ source, requestStatus, sendPostRequest }} />)}
+      {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther {...{ source, requestStatus, sendPostRequest }} />)}
+      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates {...{ source, requestStatus, sendPostRequest }} />)}
 
     </>
   );

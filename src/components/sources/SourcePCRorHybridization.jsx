@@ -1,8 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { cloningActions } from '../../store/cloning';
@@ -18,12 +16,11 @@ const MenuProps = {
   },
 };
 
-function SourcePCRorHybridization({ source }) {
+function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
   const { id: sourceId } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
@@ -127,10 +124,6 @@ function SourcePCRorHybridization({ source }) {
           </SubmitButtonBackendAPI>
         )}
       </form>
-      <MultipleOutputsSelector {...{
-        sources, entities, sourceId, inputEntities,
-      }}
-      />
     </div>
   );
 }

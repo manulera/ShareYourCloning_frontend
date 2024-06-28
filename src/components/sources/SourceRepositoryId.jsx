@@ -4,12 +4,11 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component providing an interface for the user to type a repository ID
 // and get a sequence
-function SourceRepositoryId({ source }) {
+function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || '');
   React.useEffect(() => {
@@ -17,7 +16,6 @@ function SourceRepositoryId({ source }) {
   }, [source.repository_name]);
   const repositoryIdRef = React.useRef(null);
   const [error, setError] = React.useState(false);
-  const { requestStatus, sendPostRequest } = useBackendAPI();
   const onSubmit = (event) => {
     event.preventDefault();
     if (repositoryIdRef.current.value === '') {
