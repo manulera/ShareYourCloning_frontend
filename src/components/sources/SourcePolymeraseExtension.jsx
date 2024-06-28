@@ -1,16 +1,14 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import { Alert } from '@mui/material';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
-function SourcePolymeraseExtension({ source }) {
+function SourcePolymeraseExtension({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const inputSequences = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const { overhang_crick_3prime, overhang_watson_3prime } = inputSequences[0];
   const invalidInput = (overhang_crick_3prime >= 0) && (overhang_watson_3prime >= 0);
-  const { requestStatus, sendPostRequest } = useBackendAPI();
   const onSubmit = (event) => {
     event.preventDefault();
 

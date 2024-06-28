@@ -1,13 +1,11 @@
 import React from 'react';
 import { Checkbox, FormControl, FormControlLabel, TextField } from '@mui/material';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import ValidatedTextField from '../form/ValidatedTextField';
 import { stringIsNotDNA } from '../primers/validators';
 
-function SourceManuallyTyped({ source }) {
+function SourceManuallyTyped({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
-  const { requestStatus, sendPostRequest } = useBackendAPI();
 
   const [userInput, setUserInput] = React.useState('');
   const [isCircular, setIsCircular] = React.useState(false);

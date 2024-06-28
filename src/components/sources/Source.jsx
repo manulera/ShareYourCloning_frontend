@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
@@ -15,6 +15,9 @@ import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 import CollectionSource from './CollectionSource';
 import KnownSourceErrors from './KnownSourceErrors';
+import useBackendAPI from '../../hooks/useBackendAPI';
+import MultipleOutputsSelector from './MultipleOutputsSelector';
+import { cloningActions } from '../../store/cloning';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -23,41 +26,52 @@ function Source({ source }) {
   let specificSource = null;
   const templateOnlySources = ['CollectionSource'];
   const knownErrors = useSelector((state) => state.cloning.knownErrors, isEqual);
-  console.log('knownErrors', knownErrors);
+  const { requestStatus, sendPostRequest, sources, entities } = useBackendAPI();
+  const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    // If there is only a single product, commit the result, else allow choosing via MultipleOutputsSelector
+    if (sources.length === 1) {
+      const dispatchedAction = source.output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
+      dispatch(dispatchedAction({ newSource: { ...sources[0], id: sourceId }, newEntity: entities[0] }));
+    }
+  }, [sources, entities]);
+
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
-      specificSource = <SourceFile {...{ source }} />; break;
+      specificSource = <SourceFile {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'RestrictionEnzymeDigestionSource':
-      specificSource = <SourceRestriction {...{ source }} />; break;
+      specificSource = <SourceRestriction {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'RepositoryIdSource':
-      specificSource = <SourceRepositoryId {...{ source }} />; break;
+      specificSource = <SourceRepositoryId {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'AddGeneIdSource':
-      specificSource = <SourceRepositoryId {...{ source, initialSelectedRepository: 'addgene' }} />; break;
+      specificSource = <SourceRepositoryId {...{ source, requestStatus, sendPostRequest, initialSelectedRepository: 'addgene' }} />; break;
     case 'LigationSource':
-      specificSource = <SourceAssembly {...{ source, assemblyType: 'LigationSource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'GibsonAssemblySource':
-      specificSource = <SourceAssembly {...{ source, assemblyType: 'GibsonAssemblySource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'HomologousRecombinationSource':
-      specificSource = <SourceHomologousRecombination {...{ source }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'PCRSource':
-      specificSource = <SourcePCRorHybridization {...{ source }} />; break;
+      specificSource = <SourcePCRorHybridization {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'RestrictionAndLigationSource':
-      specificSource = <SourceAssembly {...{ source, assemblyType: 'RestrictionAndLigationSource' }} />; break;
+      specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'GenomeCoordinatesSource':
-      specificSource = <SourceGenomeRegion {...{ source }} />; break;
+      specificSource = <SourceGenomeRegion {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'ManuallyTypedSource':
-      specificSource = <SourceManuallyTyped {...{ source }} />; break;
+      specificSource = <SourceManuallyTyped {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'CRISPRSource':
-      specificSource = <SourceHomologousRecombination {...{ source, isCrispr: true }} />; break;
+      specificSource = <SourceHomologousRecombination {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'OligoHybridizationSource':
-      specificSource = <SourcePCRorHybridization {...{ source }} />; break;
+      specificSource = <SourcePCRorHybridization {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'PolymeraseExtensionSource':
-      specificSource = <SourcePolymeraseExtension {...{ source }} />; break;
+      specificSource = <SourcePolymeraseExtension {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'elabftw':
-      specificSource = <ELabFTWSource {...{ source }} />; break;
+      specificSource = <ELabFTWSource {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'CollectionSource':
-      specificSource = <CollectionSource {...{ source }} />; break;
+      specificSource = <CollectionSource {...{ source, requestStatus, sendPostRequest }} />; break;
     default:
       break;
     /* eslint-enable */
@@ -68,6 +82,7 @@ function Source({ source }) {
       {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {sourceType && knownErrors[sourceType] && <KnownSourceErrors errors={knownErrors[sourceType]} />}
       {specificSource}
+      {sources.length > 1 && (<MultipleOutputsSelector {...{ sources, entities, sourceId }} />)}
     </SourceBox>
   );
 }

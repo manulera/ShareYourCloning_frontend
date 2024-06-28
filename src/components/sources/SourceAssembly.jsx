@@ -3,18 +3,16 @@ import { useSelector, shallowEqual } from 'react-redux';
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { FormControl } from '@mui/base';
 import MultipleInputsSelector from './MultipleInputsSelector';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
-import useBackendAPI from '../../hooks/useBackendAPI';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 
 // A component representing the ligation or gibson assembly of several fragments
-function SourceAssembly({ source, assemblyType }) {
+function SourceAssembly({ source, requestStatus, sendPostRequest }) {
+  const assemblyType = source.type;
   const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const { requestStatus, sources, entities, sendPostRequest } = useBackendAPI();
   const [minimalHomology, setMinimalHomology] = React.useState(20);
   const [allowPartialOverlaps, setAllowPartialOverlaps] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
@@ -109,10 +107,6 @@ function SourceAssembly({ source, assemblyType }) {
         )}
         {!preventSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
       </form>
-      <MultipleOutputsSelector {...{
-        sources, entities, sourceId, inputEntities,
-      }}
-      />
     </div>
   );
 }
