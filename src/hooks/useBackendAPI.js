@@ -1,18 +1,13 @@
 import axios from 'axios';
 import { useState, useCallback } from 'react';
-import { useDispatch } from 'react-redux';
-import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
 
 export default function useBackendAPI() {
   const [requestStatus, setRequestStatus] = useState({ status: null, message: '' });
   const [sources, setSources] = useState('');
   const [entities, setEntities] = useState('');
-  const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
-  const dispatch = useDispatch();
 
-  const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { id: sourceId, output }, modifySource = (s) => s }) => {
-    console.log(endpoint, requestData, config, sourceId, output, modifySource);
+  const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { output }, modifySource = (s) => s }) => {
     setRequestStatus({ status: 'loading', message: 'loading' });
 
     // Url built like this in case trailing slash
@@ -28,13 +23,7 @@ export default function useBackendAPI() {
       if (output !== null) {
         receivedSources.forEach((s) => { s.output = output; });
       }
-      // If there is only a single product, commit the result, else allow choosing
-      if (receivedSources.length === 1) {
-        const dispatchedAction = output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
-        dispatch(dispatchedAction({ newSource: { ...receivedSources[0], id: sourceId }, newEntity: resp.data.sequences[0] }));
-      } else {
-        setSources(receivedSources); setEntities(resp.data.sequences);
-      }
+      setSources(receivedSources); setEntities(resp.data.sequences);
     } catch (error) {
       setRequestStatus({ status: 'error', message: error2String(error) });
       setSources([]);

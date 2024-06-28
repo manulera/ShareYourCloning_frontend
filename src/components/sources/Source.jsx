@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import SourceFile from './SourceFile';
 import SourceRepositoryId from './SourceRepositoryId';
@@ -17,6 +17,7 @@ import CollectionSource from './CollectionSource';
 import KnownSourceErrors from './KnownSourceErrors';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
+import { cloningActions } from '../../store/cloning';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -26,6 +27,17 @@ function Source({ source }) {
   const templateOnlySources = ['CollectionSource'];
   const knownErrors = useSelector((state) => state.cloning.knownErrors, isEqual);
   const { requestStatus, sendPostRequest, sources, entities } = useBackendAPI();
+  const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    // If there is only a single product, commit the result, else allow choosing via MultipleOutputsSelector
+    if (sources.length === 1) {
+      const dispatchedAction = source.output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
+      dispatch(dispatchedAction({ newSource: { ...sources[0], id: sourceId }, newEntity: entities[0] }));
+    }
+  }, [sources, entities]);
+
   switch (sourceType) {
     /* eslint-disable */
     case 'UploadedFileSource':
@@ -70,10 +82,7 @@ function Source({ source }) {
       {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {sourceType && knownErrors[sourceType] && <KnownSourceErrors errors={knownErrors[sourceType]} />}
       {specificSource}
-      <MultipleOutputsSelector {...{
-        sources, entities, sourceId,
-      }}
-      />
+      {sources.length > 1 && (<MultipleOutputsSelector {...{ sources, entities, sourceId }} />)}
     </SourceBox>
   );
 }

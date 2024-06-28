@@ -1,12 +1,10 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
 import { Checkbox, FormControl, FormControlLabel } from '@mui/material';
-import MultipleOutputsSelector from './MultipleOutputsSelector';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
 // A component providing an interface to import a file
 function SourceFile({ source, requestStatus, sendPostRequest }) {
-  const { id: sourceId } = source;
   const [circularize, setCircularize] = React.useState(false);
   const onChange = (event) => {
     const files = Array.from(event.target.files);
