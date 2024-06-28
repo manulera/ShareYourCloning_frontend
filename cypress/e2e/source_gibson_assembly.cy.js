@@ -6,7 +6,7 @@ describe('Tests Gibson assembly functionality', () => {
   });
   it('works in the normal case', () => {
     loadHistory('cypress/test_starting_point/source_gibson_assembly.json');
-    deleteSource(7);
+    cy.get('li#sequence-4', { timeOut: 20000 });
     addSource('GibsonAssemblySource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-7');
     clickMultiSelectOption('Input sequences', '6', 'li#source-7');
@@ -25,7 +25,7 @@ describe('Tests Gibson assembly functionality', () => {
   });
   it('correctly applies circular constrain and shows the right errors', () => {
     loadHistory('cypress/test_starting_point/source_gibson_assembly.json');
-    deleteSource(7);
+    cy.get('li#sequence-4', { timeOut: 20000 });
     // Remove sequence that allows circularisation
     deleteSource(1);
     addSource('GibsonAssemblySource');
