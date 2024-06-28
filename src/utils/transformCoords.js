@@ -51,8 +51,10 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
     };
     fragments = [{ id: input[0], left, right, reverseComplemented: false }];
   }
-
   let count = 0;
+  if (sourceType === 'PCRSource') {
+    count = assembly[0].left.location.start;
+  }
   fragments.forEach((f) => {
     const entity = inputEntities.find((e) => e.id === f.id);
     const sequence = convertToTeselaJson(entity);
@@ -68,15 +70,15 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
 
     count += (rightStart - (left?.start || 0));
   });
-  console.log(fragments[0].left, fragments[0].right, fragments[0].rangeInAssembly);
   const rangeInParent = (selection, id) => {
     if (selection.start === -1) {
       return null;
     }
     const fragment = fragments.find((f) => f.id === id);
     const { rangeInAssembly, left: { start: startInParent }, reverseComplemented, size } = fragment;
+
     if (isRangeWithinRange(selection, rangeInAssembly, productLength)) {
-      const outRange = translateRange(selection, -rangeInAssembly.start + startInParent, productLength);
+      const outRange = translateRange(selection, -rangeInAssembly.start + startInParent, size);
       if (reverseComplemented) {
         return flipContainedRange(outRange, { start: 0, end: size - 1 }, size);
       }
