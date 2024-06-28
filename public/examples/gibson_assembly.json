@@ -30,7 +30,7 @@
       "sequence_file_format": "genbank",
       "overhang_crick_3prime": 0,
       "overhang_watson_3prime": 0,
-      "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 cccctcatgg ggatatattt tacgataatg ctcc\n//"
+      "file_content": "LOCUS       name                      34 bp    DNA     circular UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\nORIGIN\n        1 ttttacgata atgctccccc ctcatgggga tata\n//"
     }
   ],
   "sources": [
@@ -62,18 +62,30 @@
       "index_in_file": 2
     },
     {
-      "id": 8,
-      "input": [
-        5,
-        3,
-        7
-      ],
-      "output": 9,
-      "type": "GibsonAssemblySource",
       "assembly": [
         {
           "left": {
             "sequence": 1,
+            "location": {
+              "start": 17,
+              "end": 21,
+              "strand": null
+            },
+            "reverse_complemented": false
+          },
+          "right": {
+            "sequence": 2,
+            "location": {
+              "start": 0,
+              "end": 4,
+              "strand": null
+            },
+            "reverse_complemented": false
+          }
+        },
+        {
+          "left": {
+            "sequence": 2,
             "location": {
               "start": 8,
               "end": 12,
@@ -102,26 +114,6 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
-            "location": {
-              "start": 0,
-              "end": 4,
-              "strand": null
-            },
-            "reverse_complemented": false
-          }
-        },
-        {
-          "left": {
-            "sequence": 2,
-            "location": {
-              "start": 17,
-              "end": 21,
-              "strand": null
-            },
-            "reverse_complemented": false
-          },
-          "right": {
             "sequence": 1,
             "location": {
               "start": 0,
@@ -132,6 +124,14 @@
           }
         }
       ],
+      "id": 8,
+      "input": [
+        3,
+        5,
+        7
+      ],
+      "output": 9,
+      "type": "GibsonAssemblySource",
       "circular": true
     }
   ],
