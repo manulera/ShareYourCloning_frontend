@@ -1,9 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import React from 'react';
 
-function DownloadSequenceFileDialog({ dialogOpen, setDialogOpen, downloadSequence }) {
-  const [fileName, setFileName] = React.useState('');
+function DownloadSequenceFileDialog({ dialogOpen, setDialogOpen, defaultName = '', downloadSequence }) {
+  const [fileName, setFileName] = React.useState(defaultName);
   const [extension, setExtension] = React.useState('.gb');
+
+  React.useEffect(() => {
+    setFileName(defaultName);
+  }, [defaultName]);
+
   return (
     <Dialog
       open={dialogOpen}
