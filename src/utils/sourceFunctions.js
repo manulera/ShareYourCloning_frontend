@@ -22,7 +22,7 @@ export const classNameToEndPointMap = {
   AddGeneIdSource: 'repository_id',
   GenomeCoordinatesSource: 'genome_coordinates',
   ManuallyTypedSource: 'manually_typed',
-  OligoHybridizationSource: 'oligo_hybridization',
+  OligoHybridizationSource: 'oligonucleotide_hybridization',
   RestrictionEnzymeDigestionSource: 'restriction_enzyme_digestion',
   PCRSource: 'pcr',
   PolymeraseExtensionSource: 'polymerase_extension',
