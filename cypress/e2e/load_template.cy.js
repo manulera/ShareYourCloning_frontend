@@ -12,7 +12,7 @@ describe('Test load template functionality', () => {
 
     // Load first template
     cy.get('.MuiAccordionSummary-root').contains('MoClo YTK').click();
-    cy.get('.MuiAccordionDetails-root .MuiListItemText-secondary').contains('N-term').first().click();
+    cy.get('.MuiAccordionDetails-root').contains('CDS self-replicating').first().click();
 
     // The dialog should be closed
     cy.get('.load-template-dialog').should('not.exist');
