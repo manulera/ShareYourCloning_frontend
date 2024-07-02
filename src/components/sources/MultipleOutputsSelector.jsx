@@ -1,22 +1,18 @@
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import React from 'react';
-import { useDispatch } from 'react-redux';
 import ForwardIcon from '@mui/icons-material/Forward';
 import { Button, IconButton } from '@mui/material';
 import { convertToTeselaJson } from '../../utils/sequenceParsers';
 import OverhangsDisplay from '../OverhangsDisplay';
 import SubSequenceDisplayer from './SubSequenceDisplayer';
-import { cloningActions } from '../../store/cloning';
 import AssemblyPlanDisplayer from './AssemblyPlanDisplayer';
 
-function MultipleOutputsSelector({ sources, entities, sourceId }) {
+function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen }) {
   // If the output is already set or the list of outputs is empty, do not show this element
   if (sources.length === 0) { return null; }
 
   // selectedOutput is a local property, until you commit the step by clicking
   const [selectedOutput, setSelectedOutput] = React.useState(0);
-  const dispatch = useDispatch();
-  const { addEntityAndUpdateItsSource } = cloningActions;
 
   // Functions called to move between outputs of a restriction reaction
   const incrementSelectedOutput = () => setSelectedOutput(
@@ -27,7 +23,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId }) {
   // The function to pick the fragment as the output, and execute the step
   const chooseFragment = (e) => {
     e.preventDefault();
-    dispatch(addEntityAndUpdateItsSource({ newSource: { ...sources[selectedOutput], id: sourceId }, newEntity: entities[selectedOutput] }));
+    onFragmentChosen(selectedOutput);
   };
 
   const editorName = `source_editor_${sourceId}`;

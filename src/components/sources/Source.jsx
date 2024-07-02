@@ -28,15 +28,18 @@ function Source({ source }) {
   const knownErrors = useSelector((state) => state.cloning.knownErrors, isEqual);
   const { requestStatus, sendPostRequest, sources, entities } = useBackendAPI();
   const { addEntityAndUpdateItsSource, updateEntityAndItsSource } = cloningActions;
+  const [chosenFragment, setChosenFragment] = React.useState(null);
   const dispatch = useDispatch();
 
   React.useEffect(() => {
     // If there is only a single product, commit the result, else allow choosing via MultipleOutputsSelector
+    const dispatchedAction = source.output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
     if (sources.length === 1) {
-      const dispatchedAction = source.output === null ? addEntityAndUpdateItsSource : updateEntityAndItsSource;
       dispatch(dispatchedAction({ newSource: { ...sources[0], id: sourceId }, newEntity: entities[0] }));
+    } else if (chosenFragment !== null) {
+      dispatch(dispatchedAction({ newSource: { ...sources[chosenFragment], id: sourceId }, newEntity: entities[chosenFragment] }));
     }
-  }, [sources, entities]);
+  }, [sources, entities, chosenFragment]);
 
   switch (sourceType) {
     /* eslint-disable */
@@ -82,7 +85,7 @@ function Source({ source }) {
       {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {sourceType && knownErrors[sourceType] && <KnownSourceErrors errors={knownErrors[sourceType]} />}
       {specificSource}
-      {sources.length > 1 && (<MultipleOutputsSelector {...{ sources, entities, sourceId }} />)}
+      {sources.length > 1 && (<MultipleOutputsSelector {...{ sources, entities, sourceId, onFragmentChosen: setChosenFragment }} />)}
     </SourceBox>
   );
 }
