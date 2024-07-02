@@ -48,7 +48,7 @@ function MainAppBar() {
         const kitUrl = segments[segments.length - 3];
         const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/main/submissions';
         data.sources = data.sources.map((s) => {
-          if (s.image) { return { ...s, image: `${rootGithubUrl}/${kitUrl}/${s.image}` }; } return s;
+          if (s.image) { return { ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]] }; } return s;
         });
       }
       loadData(data, isTemplate, dispatch, setLoadedFileError);

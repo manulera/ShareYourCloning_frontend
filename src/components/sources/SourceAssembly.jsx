@@ -14,16 +14,16 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const [minimalHomology, setMinimalHomology] = React.useState(20);
-  const [allowPartialOverlaps, setAllowPartialOverlaps] = React.useState(false);
+  const [allowPartialOverlap, setAllowPartialOverlap] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
   const [bluntLigation, setBluntLigation] = React.useState(false);
   const [enzymes, setEnzymes] = React.useState([]);
 
   const preventSubmit = (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0);
 
-  const flipAllowPartialOverlaps = () => {
-    setAllowPartialOverlaps(!allowPartialOverlaps);
-    if (!allowPartialOverlaps) {
+  const flipAllowPartialOverlap = () => {
+    setAllowPartialOverlap(!allowPartialOverlap);
+    if (!allowPartialOverlap) {
       setBluntLigation(false);
     }
   };
@@ -31,7 +31,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const flipBluntLigation = () => {
     setBluntLigation(!bluntLigation);
     if (!bluntLigation) {
-      setAllowPartialOverlaps(false);
+      setAllowPartialOverlap(false);
     }
   };
 
@@ -51,13 +51,13 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
       if (enzymes.length === 0) { return; }
       requestData.source.restriction_enzymes = enzymes;
       const config = { params: {
-        allow_partial_overlaps: allowPartialOverlaps,
+        allow_partial_overlap: allowPartialOverlap,
         circular_only: circularOnly,
       } };
       sendPostRequest({ endpoint: 'restriction_and_ligation', requestData, config, source });
     } else {
       const config = { params: {
-        allow_partial_overlaps: allowPartialOverlaps,
+        allow_partial_overlap: allowPartialOverlap,
         circular_only: circularOnly,
         blunt: bluntLigation,
       } };
@@ -97,7 +97,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
         )}
         { ['RestrictionAndLigationSource', 'LigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
-            <FormControlLabel control={<Checkbox checked={allowPartialOverlaps} onChange={flipAllowPartialOverlaps} />} label="Allow partial overlaps" />
+            <FormControlLabel control={<Checkbox checked={allowPartialOverlap} onChange={flipAllowPartialOverlap} />} label="Allow partial overlaps" />
           </FormControl>
         )}
         { (assemblyType === 'LigationSource') && (

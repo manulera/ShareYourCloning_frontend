@@ -1,16 +1,18 @@
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import React from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 import ObjectTable from '../ObjectTable';
 import { cloningActions } from '../../store/cloning';
 
 function CollectionSource({ source, requestStatus, sendPostRequest }) {
-  const { id: sourceId, options, image, title, description } = source;
+  const { id: sourceId, options, image: imageInfo, title, description } = source;
+  const [image, imageWidth] = imageInfo || [null, null];
   const [selectedOption, setSelectedOption] = React.useState(null);
   const dispatch = useDispatch();
+  const store = useStore();
   const { replaceSource } = cloningActions;
 
   const onSubmit = (event) => {
@@ -23,7 +25,15 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
       return sourceOut;
     };
     const endpoint = classNameToEndPointMap[selectedSource.type];
-    const requestData = { id: sourceId, ...selectedSource };
+    let requestData;
+    if (selectedSource.type === 'AddGeneIdSource') {
+      requestData = { id: sourceId, ...selectedSource };
+    } else if (selectedSource.type === 'OligoHybridizationSource') {
+      const { primers } = store.getState().primers;
+      const forwardOligo = primers.find((primer) => primer.id === selectedSource.forward_oligo);
+      const reverseOligo = primers.find((primer) => primer.id === selectedSource.reverse_oligo);
+      requestData = { source: { id: sourceId, ...selectedSource }, primers: [forwardOligo, reverseOligo] };
+    }
     sendPostRequest({ endpoint, requestData, source, modifySource });
   };
 
@@ -42,11 +52,12 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
   };
 
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
+  console.log(image);
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}
       {description && <p>{description}</p>}
-      {image && <img src={image} width="50%" alt="Collection source icon" />}
+      {image && <img src={image} width={imageWidth} alt="Collection source icon" />}
       <form onSubmit={onSubmit}>
         <FormControl fullWidth>
           <InputLabel id="select-collection-source">Select a sequence</InputLabel>
