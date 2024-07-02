@@ -44,7 +44,7 @@ describe('Tests ligation assembly functionality', () => {
   it('works with overhangs and multiple results', () => {
     manuallyTypeSequence('AAAcaa', false, [0, -3]);
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
-    manuallyTypeSequence('caaGGGgtt', false, [-3, -3]);
+    manuallyTypeSequence('caaGGGttg', false, [-3, -3]);
     addSource('LigationSource');
     clickMultiSelectOption('Input sequences', '4', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
@@ -55,7 +55,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('exist');
     cy.get('li#source-5 button').contains('Choose fragment').click();
     cy.get('li#sequence-6 li#source-5');
-    cy.get('li#sequence-6').contains('13 bps');
+    cy.get('li#sequence-6').contains('12 bps');
   });
   it('works with partial overlaps', () => {
     manuallyTypeSequence('AAAcaa', false, [0, -3]);
