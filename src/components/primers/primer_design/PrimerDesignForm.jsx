@@ -81,7 +81,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const selectedRegion = useSelector((state) => state.cloning.mainSequenceSelection, isEqual);
-  console.log('mainSequenceId', mainSequenceId);
+
   const primersAreValid = fwdPrimer?.name && revPrimer?.name && !existingPrimerNames.includes(fwdPrimer.name) && !existingPrimerNames.includes(revPrimer.name);
 
   const updateForwardPrimerName = (name) => {
@@ -91,6 +91,15 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const updateReversePrimerName = (name) => {
     setRevPrimer((prev) => ({ ...prev, name }));
   };
+
+  React.useEffect(() => {
+    // Focus on the correct sequence
+    if (pcrTemplateId && pcrTemplateId === mainSequenceId) {
+      setSelectedTab(0);
+    } else if (homologousRecombinationTargetId && homologousRecombinationTargetId === mainSequenceId) {
+      setSelectedTab(1);
+    }
+  }, [pcrTemplateId, homologousRecombinationTargetId, mainSequenceId]);
 
   // TODO: make this a hook
   const designPrimers = async () => {
@@ -209,6 +218,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
 
         <TabPanel value={selectedTab} index={0}>
           <div>
+            <Alert severity="info">Select the region to be amplified by PCR</Alert>
             {amplifyError && (<Alert severity="error">{amplifyError}</Alert>)}
             <div>
               <FormControl sx={{ py: 2 }}>
@@ -235,7 +245,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
         </TabPanel>
         <TabPanel value={selectedTab} index={1}>
           <div>
-            <Alert severity="info">Select either a single position (insertion) or a region (replacement)</Alert>
+            <Alert severity="info">Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment</Alert>
             <div>
               <FormControl sx={{ py: 2 }}>
                 <TextField
