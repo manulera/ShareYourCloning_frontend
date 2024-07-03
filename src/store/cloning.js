@@ -18,10 +18,21 @@ const initialState = {
   description: '',
   selectedRegions: [],
   knownErrors: {},
+  primers: [
+    { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
+    { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
+  ],
 };
 
 function getNextUniqueId({ sources, entities }) {
   const allIds = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
+}
+function getNextPrimerId(primers) {
+  const allIds = primers.map((p) => p.id);
   if (allIds.length === 0) {
     return 1;
   }
@@ -214,6 +225,42 @@ const reducer = {
   setKnownErrors(state, action) {
     state.knownErrors = action.payload;
   },
+
+  addPrimer(state, action) {
+    const newPrimer = action.payload;
+    const { primers } = state;
+    newPrimer.id = getNextPrimerId(primers);
+    primers.push(newPrimer);
+  },
+
+  setPrimers(state, action) {
+    const primers = action.payload;
+    // Ids are unique and all are positive integers
+    const ids = primers.map((p) => p.id);
+    if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
+      throw new Error('Some ids are not positive integers');
+    }
+    // None should be repeated
+    if (new Set(ids).size !== ids.length) {
+      throw new Error('Repeated ids in the primers');
+    }
+    state.primers = primers;
+  },
+
+  deletePrimer(state, action) {
+    const primerId = action.payload;
+    state.primers = state.primers.filter((p) => p.id !== primerId);
+  },
+
+  editPrimer(state, action) {
+    const editedPrimer = action.payload;
+    const targetPrimer = state.primers.find((p) => p.id === editedPrimer.id);
+    if (!targetPrimer) {
+      throw new Error('Primer not found');
+    }
+    Object.assign(targetPrimer, editedPrimer);
+  },
+
 };
 /* eslint-enable no-param-reassign */
 

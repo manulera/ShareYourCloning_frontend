@@ -29,7 +29,7 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
     if (selectedSource.type === 'AddGeneIdSource') {
       requestData = { id: sourceId, ...selectedSource };
     } else if (selectedSource.type === 'OligoHybridizationSource') {
-      const { primers } = store.getState().primers;
+      const { primers } = store.getState().cloning;
       const forwardOligo = primers.find((primer) => primer.id === selectedSource.forward_oligo);
       const reverseOligo = primers.find((primer) => primer.id === selectedSource.reverse_oligo);
       requestData = { source: { id: sourceId, ...selectedSource }, primers: [forwardOligo, reverseOligo] };

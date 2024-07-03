@@ -1,10 +1,7 @@
-import { batch } from 'react-redux';
 import axios from 'axios';
 import { cloningActions } from '../store/cloning';
-import { primersActions } from '../store/primers';
 
-const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState: resetCloning } = cloningActions;
-const { setPrimers, revertToInitialState: resetPrimers } = primersActions;
+const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers } = cloningActions;
 
 export const downloadTextFile = (text, fileName) => {
   const blob = new Blob([text], { type: 'text/plain' });
@@ -39,8 +36,7 @@ export const downloadStateAsJson = async (entities, sources, description, primer
 export const exportStateThunk = () => async (dispatch, getState) => {
   const state = getState();
   const { entities } = state.cloning;
-  const { sources } = state.cloning;
-  const { primers } = state.primers;
+  const { sources, primers } = state.cloning;
   const { description } = state.cloning;
 
   // Use the utility function to download the state as JSON
@@ -59,10 +55,7 @@ export const loadStateThunk = (newState) => async (dispatch, getState) => {
 };
 
 export const resetStateThunk = () => async (dispatch) => {
-  batch(() => {
-    dispatch(resetCloning());
-    dispatch(resetPrimers());
-  });
+  dispatch(revertToInitialState());
 };
 
 export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispatch, getState) => {

@@ -4,7 +4,7 @@ import { shallowEqual, useSelector } from 'react-redux';
 function DataModelDisplayer() {
   const sources = useSelector((state) => state.cloning.sources, shallowEqual);
   const sequences = useSelector((state) => state.cloning.entities, shallowEqual);
-  const primers = useSelector((state) => state.primers.primers, shallowEqual);
+  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
   const trimmedSequences = sequences.map((s) => {
     const seqOut = { ...s };
     seqOut.file_content = '[...]';

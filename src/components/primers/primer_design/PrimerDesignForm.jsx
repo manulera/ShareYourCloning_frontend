@@ -10,7 +10,6 @@ import { isEqual } from 'lodash-es';
 import { cloningActions } from '../../../store/cloning';
 import error2String from '../../../utils/error2String';
 import PrimerResultForm from './PrimerResultForm';
-import { primersActions } from '../../../store/primers';
 import useStoreEditor from '../../../hooks/useStoreEditor';
 
 function selectedRegion2String(selectedRegion) {
@@ -75,10 +74,10 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const { updateStoreEditor } = useStoreEditor();
 
   const { setMainSequenceId, setCurrentTab } = cloningActions;
-  const { addPrimer } = primersActions;
+  const { addPrimer } = cloningActions;
 
   // TODO? selectedRegion could be accessed from the store when the user selects a region
-  const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
+  const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const selectedRegion = useSelector((state) => state.cloning.mainSequenceSelection, isEqual);
 

@@ -22,7 +22,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
   const { id: sourceId } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const primers = useSelector((state) => state.primers.primers);
+  const primers = useSelector((state) => state.cloning.primers);
   const isPcr = inputEntities.length !== 0;
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');

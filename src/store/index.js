@@ -8,7 +8,6 @@ import {
 import thunk from 'redux-thunk';
 import { reducer as form } from 'redux-form';
 import cloningReducer from './cloning';
-import primerReducer from './primers';
 
 const composeEnhancer = (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
@@ -25,7 +24,6 @@ const store = createStore(
     tg_modalState,
     VectorEditor: VectorEditor(),
     cloning: cloningReducer,
-    primers: primerReducer,
   }),
   undefined,
   composeEnhancer(
