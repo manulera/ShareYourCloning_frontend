@@ -3,7 +3,7 @@ import React from 'react';
 function AssemblyPlanDisplayer({
   source,
 }) {
-  if (!['LigationSource', 'GibsonAssemblySource'].includes(source.type)) {
+  if (!source.assembly) {
     return null;
   }
   const mappedAssembly = source.assembly.map((a) => {
