@@ -5,6 +5,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { cloningActions } from '../../store/cloning';
+import PrimerDesignSourceForm from '../primers/primer_design/PrimerDesignSourceForm';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -22,8 +23,10 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.primers.primers);
+  const isPcr = inputEntities.length !== 0;
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
+  const [designingPrimers, setDesigningPrimers] = React.useState(false);
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
   const { addEntityAndUpdateItsSource, setCurrentTab } = cloningActions;
@@ -41,7 +44,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
       source: { id: sourceId, input: inputEntities.map((e) => e.id) },
     };
 
-    if (inputEntities.length === 0) {
+    if (!isPcr) {
       requestData.source.forward_oligo = forwardPrimerId;
       requestData.source.reverse_oligo = reversePrimerId;
       const config = { params: { minimal_annealing: minimalAnnealingRef.current.value } };
@@ -58,19 +61,24 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   };
 
   const onPrimerDesign = () => {
-    const newEntity = {
-      type: 'TemplateSequence',
-      primer_design: true,
-      circular: false,
-    };
-    dispatch(addEntityAndUpdateItsSource({
-      newEntity, newSource: { ...source },
-    }));
+    // const newEntity = {
+    //   type: 'TemplateSequence',
+    //   primer_design: true,
+    //   circular: false,
+    // };
+    // dispatch(addEntityAndUpdateItsSource({
+    //   newEntity, newSource: { ...source },
+    // }));
+    setDesigningPrimers(true);
   };
 
   const goToPrimerTab = () => {
     dispatch(setCurrentTab(1));
   };
+
+  if (designingPrimers && !source.output) {
+    return <PrimerDesignSourceForm source={source} />;
+  }
 
   return (
     <div className="pcr_or_hybridization">
@@ -110,8 +118,8 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
-        {inputEntities.length !== 0 && !source.output && !forwardPrimerId && !reversePrimerId && (
-          <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign} type="submit">Design primers</Button>
+        {isPcr && !source.output && !forwardPrimerId && !reversePrimerId && (
+          <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign}>Design primers</Button>
         )}
         <FormControl fullWidth>
           <TextField
@@ -121,7 +129,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             defaultValue={20}
           />
         </FormControl>
-        {inputEntities.length !== 0 && (
+        {isPcr && (
           <FormControl fullWidth>
             <TextField
               label="Mismatches allowed"
@@ -133,7 +141,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
         )}
         {reversePrimerId && forwardPrimerId && (
           <SubmitButtonBackendAPI requestStatus={requestStatus}>
-            {inputEntities.length === 0 ? 'Perform hybridization' : 'Perform PCR'}
+            {!isPcr ? 'Perform hybridization' : 'Perform PCR'}
           </SubmitButtonBackendAPI>
         )}
       </form>

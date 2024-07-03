@@ -57,6 +57,39 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  addTemplateChildAndSubsequentSource(state, action) {
+    // This is used by the Hom. Rec. primer design. You pass a
+    // sourceId for which you want to add a template sequence as
+    // an output, and then a source that will take that template
+    // sequence as input. The source can also have existing sequences
+    // as input.
+    const { sourceId, newEntity, newSource } = action.payload;
+    const { sources, entities } = state;
+    const source2update = sources.find((s) => s.id === sourceId);
+    if (source2update === undefined) {
+      throw new Error('Source not found');
+    }
+    const newEntityId = getNextUniqueId(state);
+
+    // Update the source that will output the template sequence
+    source2update.output = newEntityId;
+
+    // Add the template sequence
+    entities.push({
+      id: newEntityId,
+      ...newEntity,
+    });
+
+    // Add the source that will take the template sequence as input
+    sources.push({
+      id: newEntityId + 1,
+      ...newSource,
+      input: [newEntityId, ...newSource.input || []],
+    });
+
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   addSourceAndItsOutputEntity(state, action) {
     const { source, entity, replaceEmptySource } = action.payload;
     const { sources, entities } = state;

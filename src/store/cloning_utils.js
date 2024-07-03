@@ -59,6 +59,13 @@ export function getPrimerDesignObject({ sources, entities }) {
 
   // Find the template sequences form those PCRs
   const templateSequences = entities.filter((e) => pcrSources.some((ps) => ps.input.includes(e.id)));
+
+  // They should not be mock sequences
+  if (templateSequences.some((ts) => ts.type === 'TemplateSequence')) {
+    // return 'TemplateSequence input to final source is a TemplateSequence';
+    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+  }
+
   const templateSequencesIds = templateSequences.map((s) => s.id);
   // Inputs to the finalSource that are not mock sequences with primer_design
   const otherInputIds = finalSource.input.filter((i) => !mockSequenceIds.includes(i));

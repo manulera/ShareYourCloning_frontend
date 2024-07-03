@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { InputLabel, MenuItem, Select } from '@mui/material';
+import { FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-function SingleInputSelector({ selectedId, onChange, label, inputEntityIds, allowUnset = false }) {
+function SingleInputSelector({ selectedId, onChange, label, inputEntityIds, allowUnset = false, helperText = '' }) {
   const idsWithoutChild = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
   const options = [...idsWithoutChild, ...inputEntityIds];
   const renderedOptions = options.sort().map((id) => <MenuItem key={id} value={id}>{id}</MenuItem>);
@@ -21,6 +21,7 @@ function SingleInputSelector({ selectedId, onChange, label, inputEntityIds, allo
       >
         {renderedOptions}
       </Select>
+      <FormHelperText>{helperText}</FormHelperText>
     </>
   );
 }

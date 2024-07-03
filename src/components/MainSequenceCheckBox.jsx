@@ -19,7 +19,6 @@ function MainSequenceCheckBox({ id, onDownloadClick }) {
       dispatch(setMainSequenceId(id));
       dispatch(setCurrentTab(3));
       updateStoreEditor('mainEditor', id);
-      console.log(id);
       // TODO: ideally this should be done with a ref
       document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
     }

@@ -1,4 +1,4 @@
-import { Alert, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import React from 'react';
 
 function TemplateSequence({ entity }) {
@@ -29,14 +29,6 @@ function TemplateSequence({ entity }) {
           {svgContent}
         </svg>
       </Tooltip>
-      {entity.primer_design && (
-      <Alert severity="info" icon={false}>
-        Use me as input to
-        <br />
-        {' '}
-        activate the primer designer!
-      </Alert>
-      )}
     </div>
   );
 }

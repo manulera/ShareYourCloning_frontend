@@ -81,7 +81,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const selectedRegion = useSelector((state) => state.cloning.mainSequenceSelection, isEqual);
-
+  console.log('mainSequenceId', mainSequenceId);
   const primersAreValid = fwdPrimer?.name && revPrimer?.name && !existingPrimerNames.includes(fwdPrimer.name) && !existingPrimerNames.includes(revPrimer.name);
 
   const updateForwardPrimerName = (name) => {
