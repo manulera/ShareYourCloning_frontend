@@ -15,8 +15,8 @@ function PrimerResultForm({
     nameError = 'Name is required';
   }
   return (
-    <form className="primer-result-form" onSubmit={(e) => e.preventDefault()}>
-      <FormControl sx={{ m: 1, pb: 2, display: { width: '20%' } }}>
+    <div className="primer-result-form">
+      <FormControl sx={{ m: 1, pb: 2, display: { width: '30%' } }}>
         <TextField
           label="Name"
           value={name}
@@ -26,7 +26,7 @@ function PrimerResultForm({
           helperText={<CustomFormHelperText>{nameError}</CustomFormHelperText>}
         />
       </FormControl>
-      <FormControl sx={{ m: 1, pb: 2, display: { width: '70%' } }}>
+      <FormControl sx={{ m: 1, pb: 2, display: { width: '60%' } }}>
         <TextField
           label="Sequence"
           value={sequence}
@@ -36,7 +36,7 @@ function PrimerResultForm({
           helperText={<CustomFormHelperText>Cannot edit, change parameters to design new primers</CustomFormHelperText>}
         />
       </FormControl>
-    </form>
+    </div>
   );
 }
 
