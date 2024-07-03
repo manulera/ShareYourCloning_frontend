@@ -35,6 +35,13 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   const onChangeForward = (event) => setForwardPrimerId(event.target.value);
   const onChangeReverse = (event) => setReversePrimerId(event.target.value);
 
+  React.useEffect(() => {
+    if (source.forward_primer) { setForwardPrimerId(source.forward_primer); }
+    if (source.reverse_primer) { setReversePrimerId(source.reverse_primer); }
+    if (source.forward_oligo) { setForwardPrimerId(source.forward_oligo); }
+    if (source.reverse_oligo) { setReversePrimerId(source.reverse_oligo); }
+  }, [source.forward_primer, source.reverse_primer, source.forward_oligo, source.reverse_oligo]);
+
   const onSubmit = (event) => {
     event.preventDefault();
 

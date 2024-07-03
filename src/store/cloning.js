@@ -261,6 +261,27 @@ const reducer = {
     Object.assign(targetPrimer, editedPrimer);
   },
 
+  addPrimersToPCRSource(state, action) {
+    const { sourceId, fwdPrimer, revPrimer } = action.payload;
+    const { sources, primers } = state;
+    const nextId = getNextPrimerId(primers);
+    // For now, primers were coming with id=0 from the backend
+    const copyFwdPrimer = { ...fwdPrimer };
+    const copyRevPrimer = { ...revPrimer };
+    copyFwdPrimer.id = nextId;
+    copyRevPrimer.id = nextId + 1;
+    primers.push(copyFwdPrimer);
+    primers.push(copyRevPrimer);
+
+    const source = sources.find((s) => s.id === sourceId);
+    if (!source) {
+      throw new Error('Source not found');
+    }
+    source.forward_primer = nextId;
+    source.reverse_primer = nextId + 1;
+
+    state.network = constructNetwork(state.entities, state.sources);
+  },
 };
 /* eslint-enable no-param-reassign */
 

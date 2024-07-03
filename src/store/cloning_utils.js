@@ -76,5 +76,5 @@ export function getPrimerDesignObject({ sources, entities }) {
     return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
   }
 
-  return { finalSource, templateSequencesIds, otherInputIds };
+  return { finalSource, templateSequencesIds, otherInputIds, pcrSources };
 }
