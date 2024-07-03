@@ -1,10 +1,11 @@
-import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow } from './common_functions';
+import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, clearPrimers } from './common_functions';
 
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {
     cy.visit('/');
   });
   it('works in the normal case', () => {
+    clearPrimers();
     addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
     addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
@@ -16,6 +17,10 @@ describe('Tests oligo hybridization source', () => {
     // The result is shown
     cy.get('li#sequence-2', { timeout: 20000 }).contains('50 bps');
     cy.get('li#sequence-2 li#source-1').contains('Hybridization of primers fwd-hyb and rvs-hyb');
+    // Cannot delete the primers
+    cy.get('button.MuiTab-root').contains('Primers').click();
+    cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
+    cy.get('div.primer-table-container tbody tr').should('have.length', 2);
   });
   it('shows the submission button only after the primers are selected', () => {
     addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');

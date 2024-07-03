@@ -6,6 +6,17 @@ import PrimerForm from './PrimerForm';
 import PrimerTableRow from './PrimerTableRow';
 import './PrimerList.css';
 
+function getUsedPrimerIds(sources) {
+  const forPcr = sources
+    .filter((s) => s.type === 'PCRSource')
+    .map((s) => [s.forward_primer, s.reverse_primer]).flat();
+  const forHybridization = sources
+    .filter((s) => s.type === 'OligoHybridizationSource')
+    .flatMap((s) => [s.forward_oligo, s.reverse_oligo]);
+
+  return forPcr.concat(forHybridization);
+}
+
 function PrimerList() {
   const primers = useSelector((state) => state.primers.primers, shallowEqual);
   const { deletePrimer: deleteAction, addPrimer: addAction, editPrimer: editAction } = primersActions;
@@ -23,7 +34,7 @@ function PrimerList() {
   const switchAddingPrimer = () => setAddingPrimer(!addingPrimer);
   // We don't allow used primers to be deleted
   const primerIdsInUse = useSelector(
-    (state) => state.cloning.sources.filter((s) => s.type === 'PCRSource').map((s) => [s.forward_primer, s.reverse_primer]).flat(),
+    (state) => getUsedPrimerIds(state.cloning.sources),
     shallowEqual,
   );
 

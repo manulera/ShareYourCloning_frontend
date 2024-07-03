@@ -115,7 +115,8 @@ function MainAppBar() {
         </Toolbar>
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
-      <SelectTemplateDialog onClose={handleCloseDialog} open={openTemplateDialog} />
+      {/* Conditional, since we only want to make request to github if templates want to be used */}
+      {openTemplateDialog && <SelectTemplateDialog onClose={handleCloseDialog} open={openTemplateDialog} />}
       <FeedbackDialog open={openFeedbackDialog} setOpen={setOpenFeedbackDialog} />
       {/* This one conditionally rendered since it uses hooks etc. */}
       {openMiscDialog && <MiscDialog open={openMiscDialog} setOpen={setOpenMiscDialog} />}
