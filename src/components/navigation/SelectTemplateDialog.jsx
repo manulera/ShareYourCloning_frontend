@@ -1,26 +1,57 @@
-import { Accordion, AccordionDetails, AccordionSummary, Button, Dialog, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Alert, Button, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 function SelectTemplateDialog({ onClose, open }) {
-  const [templates, setTemplates] = React.useState({});
+  const [templates, setTemplates] = React.useState(null);
+  const [connectAttempt, setConnectAttemp] = React.useState(0);
+  const [error, setError] = React.useState(null);
   const baseUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/main';
 
   // const baseUrl = '';
   React.useEffect(() => {
     const fetchData = async () => {
-      const resp = await axios.get(`${baseUrl}/index.json`);
-      setTemplates(resp.data);
+      try {
+        const resp = await axios.get(`${baseUrl}/index.json`);
+        setTemplates(resp.data);
+        setError('');
+      } catch {
+        setTemplates(null);
+        setError('Failed to load templates from GitHub');
+      }
     };
     fetchData();
-  }, []);
+  }, [connectAttempt]);
   return (
     <Dialog open={open} onClose={() => onClose('')} className="load-template-dialog">
       <DialogTitle>Load a template</DialogTitle>
+      {!templates
+      && (
+      <DialogContent>
+        {error ? (
+          <Alert
+            severity="error"
+            action={(
+              <Button color="inherit" size="small" onClick={() => { setError(''); setConnectAttemp((p) => p + 1); }}>
+                Retry
+              </Button>
+          )}
+          >
+            {error}
+          </Alert>
+        ) : (
+          <>
+            Loading templates...
+            {' '}
+            <CircularProgress className="loading-progress" color="inherit" size="2em" />
+          </>
+        )}
+      </DialogContent>
+      )}
       <List>
         {
-        Object.keys(templates).map((key) => {
+        templates && Object.keys(templates).map((key) => {
           const { kit, assemblies } = templates[key];
           return (
             <Accordion key={key} className="load-template-item">
