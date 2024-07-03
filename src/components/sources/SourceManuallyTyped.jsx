@@ -84,7 +84,6 @@ function SourceManuallyTyped({ source, requestStatus, sendPostRequest }) {
                 label="Overhang crick 3'"
                 value={overhangCrick3prime}
                 type="number"
-                defaultValue={0}
                 onChange={(event) => setOverhangCrick3prime(event.target.value)}
               />
             </FormControl>
@@ -93,7 +92,6 @@ function SourceManuallyTyped({ source, requestStatus, sendPostRequest }) {
                 label="Overhang watson 3'"
                 value={overhangWatson3prime}
                 type="number"
-                defaultValue={0}
                 onChange={(event) => setOverhangWatson3prime(event.target.value)}
               />
             </FormControl>

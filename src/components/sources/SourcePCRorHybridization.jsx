@@ -1,6 +1,7 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { cloningActions } from '../../store/cloning';
@@ -25,7 +26,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
-  const { addEntityAndUpdateItsSource } = cloningActions;
+  const { addEntityAndUpdateItsSource, setCurrentTab } = cloningActions;
   const dispatch = useDispatch();
 
   const onChangeForward = (event) => setForwardPrimerId(event.target.value);
@@ -67,6 +68,10 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
     }));
   };
 
+  const goToPrimerTab = () => {
+    dispatch(setCurrentTab(1));
+  };
+
   return (
     <div className="pcr_or_hybridization">
       <form onSubmit={onSubmit}>
@@ -81,6 +86,10 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             label="Forward primer"
             MenuProps={MenuProps}
           >
+            <MenuItem onClick={goToPrimerTab} value="">
+              <AddCircleIcon color="success" />
+              <em style={{ marginLeft: 8 }}>Create primer</em>
+            </MenuItem>
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
@@ -94,6 +103,10 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             label="Reverse primer"
             MenuProps={MenuProps}
           >
+            <MenuItem onClick={goToPrimerTab} value="">
+              <AddCircleIcon color="success" />
+              <em style={{ marginLeft: 8 }}>Create primer</em>
+            </MenuItem>
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>

@@ -52,7 +52,6 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
   };
 
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
-  console.log(image);
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}
