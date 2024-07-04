@@ -95,7 +95,7 @@ const reducer = {
     sources.push({
       id: newEntityId + 1,
       ...newSource,
-      input: [newEntityId, ...newSource.input || []],
+      input: [...newSource.input || [], newEntityId],
     });
 
     state.network = constructNetwork(state.entities, state.sources);

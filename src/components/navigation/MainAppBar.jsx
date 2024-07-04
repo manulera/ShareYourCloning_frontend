@@ -57,7 +57,8 @@ function MainAppBar() {
 
   // TODO: turn these into <a> elements.
   const helpMenu = [
-    { display: 'About', onClick: () => window.open('https://www.genestorian.org/') },
+    { display: 'Newsletter', onClick: () => window.open('https://eepurl.com/h9-n71') },
+    { display: 'About the project', onClick: () => window.open('https://www.genestorian.org/') },
     { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') },
   ];
 
@@ -101,7 +102,7 @@ function MainAppBar() {
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
             <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} />
-            <ButtonWithMenu menuItems={helpMenu}> Help </ButtonWithMenu>
+            <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>
             <Button onClick={() => setOpenFeedbackDialog(true)}>Feedback</Button>
