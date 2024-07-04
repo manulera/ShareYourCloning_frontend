@@ -20,24 +20,19 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
       const lastId = input[Math.abs(assembly[assembly.length - 1].right.sequence) - 1];
       fragments.push({ id: lastId, left: null, right: null, reverseComplemented: null });
     }
+    console.log(fragments);
     assembly.forEach(({ left, right }) => {
       const leftId = input[Math.abs(left.sequence) - 1];
       const rightId = input[Math.abs(right.sequence) - 1];
       if (leftId) {
         const leftFragment = fragments.find((f) => f.id === leftId);
-        // Skipped in primers
-        if (leftFragment) {
-          leftFragment.right = { start: left.location.start, end: left.location.end };
-          leftFragment.reverseComplemented = left.reverse_complemented;
-        }
+        leftFragment.right = { start: left.location.start, end: left.location.end };
+        leftFragment.reverseComplemented = left.reverse_complemented;
       }
       if (rightId) {
         const rightFragment = fragments.find((f) => f.id === rightId);
-        // Skipped in primers
-        if (rightFragment) {
-          rightFragment.left = { start: right.location.start, end: right.location.end };
-          rightFragment.reverseComplemented = right.reverse_complemented;
-        }
+        rightFragment.left = { start: right.location.start, end: right.location.end };
+        rightFragment.reverseComplemented = right.reverse_complemented;
       }
     });
   } else {
@@ -55,6 +50,13 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
   if (sourceType === 'PCRSource') {
     count = assembly[0].left.location.start;
   }
+  // Special case for insertion assemblies
+  if (assembly[0].left.sequence === assembly[assembly.length - 1].right.sequence && !circular) {
+    const concernedFragments = fragments.filter((f) => f.id === input[Math.abs(assembly[0].left.sequence) - 1]);
+    concernedFragments[1].left = concernedFragments[0].left;
+    concernedFragments[0].left = null;
+    concernedFragments[1].reverseComplemented = concernedFragments[0].reverseComplemented;
+  }
   fragments.forEach((f) => {
     const entity = inputEntities.find((e) => e.id === f.id);
     const sequence = convertToTeselaJson(entity);
@@ -66,6 +68,7 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
     const rightEdge = count + rightEnd - (left?.start || 0);
     // Ranges are 0-based, but [0:0] is not empty, it's the equivalent to python's [0:1]
     f.rangeInAssembly = translateRange({ start: leftEdge, end: rightEdge - 1 }, 0, productLength);
+    console.log(f);
     f.size = size;
 
     count += (rightStart - (left?.start || 0));
@@ -74,17 +77,21 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
     if (selection.start === -1) {
       return null;
     }
-    const fragment = fragments.find((f) => f.id === id);
-    const { rangeInAssembly, left: { start: startInParent }, reverseComplemented, size } = fragment;
-
-    if (isRangeWithinRange(selection, rangeInAssembly, productLength)) {
-      const outRange = translateRange(selection, -rangeInAssembly.start + startInParent, size);
-      if (reverseComplemented) {
-        return flipContainedRange(outRange, { start: 0, end: size - 1 }, size);
+    // In insertion assemblies, more than one fragment has the same id,
+    // so we filter instead of find
+    const possibleOut = fragments.filter((f) => f.id === id).map((fragment) => {
+      const { rangeInAssembly, left, reverseComplemented, size } = fragment;
+      const startInParent = left?.start || 0;
+      if (isRangeWithinRange(selection, rangeInAssembly, productLength)) {
+        const outRange = translateRange(selection, -rangeInAssembly.start + startInParent, size);
+        if (reverseComplemented) {
+          return flipContainedRange(outRange, { start: 0, end: size - 1 }, size);
+        }
+        return outRange;
       }
-      return outRange;
-    }
-    return null;
+      return null;
+    });
+    return possibleOut.find((out) => out !== null) || null;
   };
   return rangeInParent;
 }
