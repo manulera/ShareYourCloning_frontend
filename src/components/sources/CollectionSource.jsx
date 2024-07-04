@@ -29,7 +29,7 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
     if (selectedSource.type === 'AddGeneIdSource') {
       requestData = { id: sourceId, ...selectedSource };
     } else if (selectedSource.type === 'OligoHybridizationSource') {
-      const { primers } = store.getState().primers;
+      const { primers } = store.getState().cloning;
       const forwardOligo = primers.find((primer) => primer.id === selectedSource.forward_oligo);
       const reverseOligo = primers.find((primer) => primer.id === selectedSource.reverse_oligo);
       requestData = { source: { id: sourceId, ...selectedSource }, primers: [forwardOligo, reverseOligo] };
@@ -52,7 +52,6 @@ function CollectionSource({ source, requestStatus, sendPostRequest }) {
   };
 
   const selectedOptionObject = options.find((option) => option.name === selectedOption);
-  console.log(image);
   return (
     <div className="collection-source">
       {title && <h2>{title}</h2>}

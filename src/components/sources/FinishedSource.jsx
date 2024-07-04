@@ -28,7 +28,7 @@ function RepositoryIdMessage({ source }) {
 
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
-  const primers = useSelector((state) => state.primers.primers, shallowEqual);
+  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
   let message = '';
   switch (source.type) {
     case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;

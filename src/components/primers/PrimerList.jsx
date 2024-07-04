@@ -1,10 +1,10 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
-import { primersActions } from '../../store/primers';
 import PrimerForm from './PrimerForm';
 import PrimerTableRow from './PrimerTableRow';
 import './PrimerList.css';
+import { cloningActions } from '../../store/cloning';
 
 function getUsedPrimerIds(sources) {
   const forPcr = sources
@@ -18,8 +18,8 @@ function getUsedPrimerIds(sources) {
 }
 
 function PrimerList() {
-  const primers = useSelector((state) => state.primers.primers, shallowEqual);
-  const { deletePrimer: deleteAction, addPrimer: addAction, editPrimer: editAction } = primersActions;
+  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
+  const { deletePrimer: deleteAction, addPrimer: addAction, editPrimer: editAction } = cloningActions;
   const dispatch = useDispatch();
   const deletePrimer = (id) => dispatch(deleteAction(id));
   const addPrimer = (newPrimer) => dispatch(addAction(newPrimer));
@@ -69,7 +69,7 @@ function PrimerList() {
           submitPrimer={editPrimer}
           cancelForm={() => setEditingPrimerId(null)}
           existingNames={primers.filter((p) => p.name !== editingPrimer.name).map((p) => p.name)}
-          disabledSequenceText={primerIdsInUse.includes(editingPrimerId) && 'Cannot edit sequence in use'}
+          disabledSequenceText={primerIdsInUse.includes(editingPrimerId) ? 'Cannot edit sequence in use' : ''}
           primer={editingPrimer}
         />
         )) || (addingPrimer && (

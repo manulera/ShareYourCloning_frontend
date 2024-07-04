@@ -1,5 +1,4 @@
 export function getParentNodes(node, entities, sources) {
-  console.log(node);
   const parentEntities = entities.filter((entity) => node.source.input.includes(entity.id));
 
   return parentEntities.map((parentEntity) => {

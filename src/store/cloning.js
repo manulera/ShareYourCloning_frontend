@@ -18,10 +18,21 @@ const initialState = {
   description: '',
   selectedRegions: [],
   knownErrors: {},
+  primers: [
+    { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
+    { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
+  ],
 };
 
 function getNextUniqueId({ sources, entities }) {
   const allIds = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
+}
+function getNextPrimerId(primers) {
+  const allIds = primers.map((p) => p.id);
   if (allIds.length === 0) {
     return 1;
   }
@@ -54,6 +65,39 @@ const reducer = {
       output: null,
       type: null,
     });
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  addTemplateChildAndSubsequentSource(state, action) {
+    // This is used by the Hom. Rec. primer design. You pass a
+    // sourceId for which you want to add a template sequence as
+    // an output, and then a source that will take that template
+    // sequence as input. The source can also have existing sequences
+    // as input.
+    const { sourceId, newEntity, newSource } = action.payload;
+    const { sources, entities } = state;
+    const source2update = sources.find((s) => s.id === sourceId);
+    if (source2update === undefined) {
+      throw new Error('Source not found');
+    }
+    const newEntityId = getNextUniqueId(state);
+
+    // Update the source that will output the template sequence
+    source2update.output = newEntityId;
+
+    // Add the template sequence
+    entities.push({
+      id: newEntityId,
+      ...newEntity,
+    });
+
+    // Add the source that will take the template sequence as input
+    sources.push({
+      id: newEntityId + 1,
+      ...newSource,
+      input: [...newSource.input || [], newEntityId],
+    });
+
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -180,6 +224,63 @@ const reducer = {
 
   setKnownErrors(state, action) {
     state.knownErrors = action.payload;
+  },
+
+  addPrimer(state, action) {
+    const newPrimer = action.payload;
+    const { primers } = state;
+    newPrimer.id = getNextPrimerId(primers);
+    primers.push(newPrimer);
+  },
+
+  setPrimers(state, action) {
+    const primers = action.payload;
+    // Ids are unique and all are positive integers
+    const ids = primers.map((p) => p.id);
+    if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
+      throw new Error('Some ids are not positive integers');
+    }
+    // None should be repeated
+    if (new Set(ids).size !== ids.length) {
+      throw new Error('Repeated ids in the primers');
+    }
+    state.primers = primers;
+  },
+
+  deletePrimer(state, action) {
+    const primerId = action.payload;
+    state.primers = state.primers.filter((p) => p.id !== primerId);
+  },
+
+  editPrimer(state, action) {
+    const editedPrimer = action.payload;
+    const targetPrimer = state.primers.find((p) => p.id === editedPrimer.id);
+    if (!targetPrimer) {
+      throw new Error('Primer not found');
+    }
+    Object.assign(targetPrimer, editedPrimer);
+  },
+
+  addPrimersToPCRSource(state, action) {
+    const { sourceId, fwdPrimer, revPrimer } = action.payload;
+    const { sources, primers } = state;
+    const nextId = getNextPrimerId(primers);
+    // For now, primers were coming with id=0 from the backend
+    const copyFwdPrimer = { ...fwdPrimer };
+    const copyRevPrimer = { ...revPrimer };
+    copyFwdPrimer.id = nextId;
+    copyRevPrimer.id = nextId + 1;
+    primers.push(copyFwdPrimer);
+    primers.push(copyRevPrimer);
+
+    const source = sources.find((s) => s.id === sourceId);
+    if (!source) {
+      throw new Error('Source not found');
+    }
+    source.forward_primer = nextId;
+    source.reverse_primer = nextId + 1;
+
+    state.network = constructNetwork(state.entities, state.sources);
   },
 };
 /* eslint-enable no-param-reassign */

@@ -10,7 +10,6 @@ import { isEqual } from 'lodash-es';
 import { cloningActions } from '../../../store/cloning';
 import error2String from '../../../utils/error2String';
 import PrimerResultForm from './PrimerResultForm';
-import { primersActions } from '../../../store/primers';
 import useStoreEditor from '../../../hooks/useStoreEditor';
 
 function selectedRegion2String(selectedRegion) {
@@ -54,7 +53,7 @@ function TabPanel(props) {
   );
 }
 
-export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinationTargetId }) {
+export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinationTargetId, pcrSource }) {
   // TODO: extra constrains -> amplify should have length > 0, replace does not matter
   // TODO: shrinking horizontally removes tabs
 
@@ -64,6 +63,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const [amplifyRegion, setAmplifyRegion] = React.useState(null);
   const [amplifyError, setAmplifyError] = React.useState('');
   const [replaceRegion, setReplaceRegion] = React.useState(null);
+  const [replaceError, setReplaceError] = React.useState('');
   const [insertionOrientation, setInsertionOrientation] = React.useState('');
   const [targetTm, setTargetTm] = React.useState(55);
   const [error, setError] = React.useState('');
@@ -75,10 +75,10 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const { updateStoreEditor } = useStoreEditor();
 
   const { setMainSequenceId, setCurrentTab } = cloningActions;
-  const { addPrimer } = primersActions;
+  const { addPrimersToPCRSource } = cloningActions;
 
   // TODO? selectedRegion could be accessed from the store when the user selects a region
-  const existingPrimerNames = useSelector((state) => state.primers.primers.map((p) => p.name), shallowEqual);
+  const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const selectedRegion = useSelector((state) => state.cloning.mainSequenceSelection, isEqual);
 
@@ -91,6 +91,15 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const updateReversePrimerName = (name) => {
     setRevPrimer((prev) => ({ ...prev, name }));
   };
+
+  React.useEffect(() => {
+    // Focus on the correct sequence
+    if (pcrTemplateId && pcrTemplateId === mainSequenceId) {
+      setSelectedTab(0);
+    } else if (homologousRecombinationTargetId && homologousRecombinationTargetId === mainSequenceId) {
+      setSelectedTab(1);
+    }
+  }, [pcrTemplateId, homologousRecombinationTargetId, mainSequenceId]);
 
   // TODO: make this a hook
   const designPrimers = async () => {
@@ -150,7 +159,10 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
 
   const onAmplifyRegionChange = () => {
     const { caretPosition } = selectedRegion;
-    if (caretPosition === -1) {
+    if (caretPosition === undefined) {
+      setAmplifyError('You have to select a region in the sequence editor!');
+      setAmplifyRegion(null);
+    } else if (caretPosition === -1) {
       setAmplifyError('');
       setAmplifyRegion(selectedRegion);
     } else {
@@ -160,21 +172,27 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   };
 
   const onReplaceRegionChange = () => {
-    setReplaceRegion(selectedRegion);
+    if (selectedRegion.caretPosition === undefined) {
+      setReplaceError('You have to select a region in the sequence editor!');
+      setReplaceRegion(null);
+    } else {
+      setReplaceError('');
+      setReplaceRegion(selectedRegion);
+    }
   };
 
   const addPrimers = () => {
     batch(() => {
-      dispatch(addPrimer({ ...fwdPrimer }));
-      dispatch(addPrimer({ ...revPrimer }));
+      dispatch(addPrimersToPCRSource({ fwdPrimer, revPrimer, sourceId: pcrSource.id }));
       dispatch(setMainSequenceId(null));
       dispatch(setCurrentTab(0));
     });
-    setAmplifyRegion(null);
-    setReplaceRegion(null);
+    // setAmplifyRegion(null);
+    // setReplaceRegion(null);
     setFwdPrimer(null);
     setRevPrimer(null);
     setSelectedTab(0);
+    document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
   };
 
@@ -209,6 +227,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
 
         <TabPanel value={selectedTab} index={0}>
           <div>
+            <Alert severity="info">Select the region to be amplified by PCR</Alert>
             {amplifyError && (<Alert severity="error">{amplifyError}</Alert>)}
             <div>
               <FormControl sx={{ py: 2 }}>
@@ -235,7 +254,8 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
         </TabPanel>
         <TabPanel value={selectedTab} index={1}>
           <div>
-            <Alert severity="info">Select either a single position (insertion) or a region (replacement)</Alert>
+            <Alert severity="info">Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment</Alert>
+            {replaceError && (<Alert severity="error">{replaceError}</Alert>)}
             <div>
               <FormControl sx={{ py: 2 }}>
                 <TextField

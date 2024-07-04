@@ -1,9 +1,11 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { cloningActions } from '../../store/cloning';
+import PrimerDesignSourceForm from '../primers/primer_design/PrimerDesignSourceForm';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,16 +22,25 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
   const { id: sourceId } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
-  const primers = useSelector((state) => state.primers.primers);
+  const primers = useSelector((state) => state.cloning.primers);
+  const isPcr = inputEntities.length !== 0;
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
+  const [designingPrimers, setDesigningPrimers] = React.useState(false);
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
-  const { addEntityAndUpdateItsSource } = cloningActions;
+  const { addEntityAndUpdateItsSource, setCurrentTab } = cloningActions;
   const dispatch = useDispatch();
 
   const onChangeForward = (event) => setForwardPrimerId(event.target.value);
   const onChangeReverse = (event) => setReversePrimerId(event.target.value);
+
+  React.useEffect(() => {
+    if (source.forward_primer) { setForwardPrimerId(source.forward_primer); }
+    if (source.reverse_primer) { setReversePrimerId(source.reverse_primer); }
+    if (source.forward_oligo) { setForwardPrimerId(source.forward_oligo); }
+    if (source.reverse_oligo) { setReversePrimerId(source.reverse_oligo); }
+  }, [source.forward_primer, source.reverse_primer, source.forward_oligo, source.reverse_oligo]);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -40,7 +51,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
       source: { id: sourceId, input: inputEntities.map((e) => e.id) },
     };
 
-    if (inputEntities.length === 0) {
+    if (!isPcr) {
       requestData.source.forward_oligo = forwardPrimerId;
       requestData.source.reverse_oligo = reversePrimerId;
       const config = { params: { minimal_annealing: minimalAnnealingRef.current.value } };
@@ -57,15 +68,24 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   };
 
   const onPrimerDesign = () => {
-    const newEntity = {
-      type: 'TemplateSequence',
-      primer_design: true,
-      circular: false,
-    };
-    dispatch(addEntityAndUpdateItsSource({
-      newEntity, newSource: { ...source },
-    }));
+    // const newEntity = {
+    //   type: 'TemplateSequence',
+    //   primer_design: true,
+    //   circular: false,
+    // };
+    // dispatch(addEntityAndUpdateItsSource({
+    //   newEntity, newSource: { ...source },
+    // }));
+    setDesigningPrimers(true);
   };
+
+  const goToPrimerTab = () => {
+    dispatch(setCurrentTab(1));
+  };
+
+  if (designingPrimers && !source.output) {
+    return <PrimerDesignSourceForm source={source} />;
+  }
 
   return (
     <div className="pcr_or_hybridization">
@@ -81,6 +101,10 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             label="Forward primer"
             MenuProps={MenuProps}
           >
+            <MenuItem onClick={goToPrimerTab} value="">
+              <AddCircleIcon color="success" />
+              <em style={{ marginLeft: 8 }}>Create primer</em>
+            </MenuItem>
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
@@ -94,11 +118,15 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             label="Reverse primer"
             MenuProps={MenuProps}
           >
+            <MenuItem onClick={goToPrimerTab} value="">
+              <AddCircleIcon color="success" />
+              <em style={{ marginLeft: 8 }}>Create primer</em>
+            </MenuItem>
             {primers.map(({ name, id }) => (<MenuItem key={id} value={id}>{name}</MenuItem>))}
           </Select>
         </FormControl>
-        {inputEntities.length !== 0 && !source.output && !forwardPrimerId && !reversePrimerId && (
-          <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign} type="submit">Design primers</Button>
+        {isPcr && !source.output && !forwardPrimerId && !reversePrimerId && (
+          <Button variant="contained" color="success" sx={{ my: 2 }} onClick={onPrimerDesign}>Design primers</Button>
         )}
         <FormControl fullWidth>
           <TextField
@@ -108,7 +136,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
             defaultValue={20}
           />
         </FormControl>
-        {inputEntities.length !== 0 && (
+        {isPcr && (
           <FormControl fullWidth>
             <TextField
               label="Mismatches allowed"
@@ -120,7 +148,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
         )}
         {reversePrimerId && forwardPrimerId && (
           <SubmitButtonBackendAPI requestStatus={requestStatus}>
-            {inputEntities.length === 0 ? 'Perform hybridization' : 'Perform PCR'}
+            {!isPcr ? 'Perform hybridization' : 'Perform PCR'}
           </SubmitButtonBackendAPI>
         )}
       </form>

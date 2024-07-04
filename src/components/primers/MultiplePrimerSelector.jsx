@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 function MultiplePrimerSelector({ onChange, label }) {
   const [picked, setPicked] = React.useState([]);
-  const primers = useSelector((state) => state.primers.primers);
+  const primers = useSelector((state) => state.cloning.primers);
 
   const handleChange = (event) => {
     const input = event.target.value;
