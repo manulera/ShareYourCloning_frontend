@@ -59,7 +59,7 @@ function MainAppBar() {
   const helpMenu = [
     { display: 'Newsletter', onClick: () => window.open('https://eepurl.com/h9-n71') },
     { display: 'About the project', onClick: () => window.open('https://www.genestorian.org/') },
-    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=HRQb6s8m8_s') },
+    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=n0hedzvpW88') },
   ];
 
   const onFileChange = (event) => {
