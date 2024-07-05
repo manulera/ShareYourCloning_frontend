@@ -222,9 +222,15 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
       return;
     }
     if (resp.assemblyAccession !== null) {
-      const { species: assemblySpecies } = await getInfoFromAssemblyId(resp.assemblyAccession);
-      setAssemblyId(resp.assemblyAccession);
-      setSpecies(assemblySpecies);
+      try {
+        const { species: assemblySpecies } = await getInfoFromAssemblyId(resp.assemblyAccession);
+        setAssemblyId(resp.assemblyAccession);
+        setSpecies(assemblySpecies);
+      } catch (e) {
+        // TODO: Hotfix, handle properly
+        setAssemblyId(null);
+        setSpecies(null);
+      }
     } else {
       // The sequence accession is not linked to an assembly
       setAssemblyId(null);
