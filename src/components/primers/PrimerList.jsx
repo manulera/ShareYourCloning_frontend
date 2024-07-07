@@ -19,6 +19,7 @@ function getUsedPrimerIds(sources) {
 
   return forPcr.concat(forHybridization).concat(forCRISPR);
 }
+import ImportPrimersButton from './ImportPrimers';
 
 function PrimerList() {
   const primers = useSelector((state) => state.cloning.primers, shallowEqual);
@@ -83,13 +84,16 @@ function PrimerList() {
           existingNames={primers.map((p) => p.name)}
         />
         )) || (
-        <Button
-          variant="contained"
-          onClick={switchAddingPrimer}
-          size="small"
-        >
-          Add Primer
-        </Button>
+          <div>
+          <Button
+            variant="contained"
+            onClick={switchAddingPrimer}
+            size="small"
+          >
+            Add Primer
+          </Button>
+          <ImportPrimersButton/>
+          </div>
         )}
       </div>
 
