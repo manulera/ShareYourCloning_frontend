@@ -173,30 +173,28 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
   const [sequenceAccession, setSequenceAccession] = React.useState('');
   const noError = { start: null, end: null, strand: null };
   const [formError, setFormError] = React.useState({ ...noError });
-  const coordsStartRef = React.useRef(null);
-  const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
-  const [coordsStrand, setCoordsStrand] = React.useState('');
+  const [coords, setCoords] = React.useState({ start: '', end: '', strand: '' });
   const onSubmit = (event) => {
     event.preventDefault();
-    if (coordsStartRef.current.value === '') {
+    if (coords.start === '') {
       setFormError({ ...noError, start: 'Field required' });
       return;
     }
-    if (coordsEndRef.current.value === '') {
+    if (coords.end === '') {
       setFormError({ ...noError, end: 'Field required' });
       return;
     }
-    if (coordsStrand === '') {
+    if (coords.strand === '') {
       setFormError({ ...noError, strand: 'Field required' });
       return;
     }
     // Start must be greater than zero
-    if (Number(coordsStartRef.current.value) < 1) {
+    if (Number(coords.start) < 1) {
       setFormError({ ...noError, start: 'Start must be greater than zero' });
       return;
     }
-    if (Number(coordsStartRef.current.value) >= Number(coordsEndRef.current.value)) {
+    if (Number(coords.start) >= Number(coords.end)) {
       setFormError({ ...noError, end: 'End must be greater than start' });
       return;
     }
@@ -205,24 +203,23 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     const requestData = {
       id: sourceId,
       sequence_accession: sequenceAccession,
-      start: coordsStartRef.current.value,
-      end: coordsEndRef.current.value,
-      strand: coordsStrand === 'plus' ? 1 : -1,
+      start: coords.start,
+      end: coords.end,
+      strand: coords.strand === 'plus' ? 1 : -1,
     };
     sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
   const onSequenceAccessionChange = async (userInput, resp) => {
     setFormError({ ...noError });
+    setCoords({ start: '', end: '', strand: '' });
     if (resp === null) {
       setSpecies(null);
       setSequenceAccession('');
-      setCoordsStrand('');
       return;
     }
     setSpecies(resp.species || null);
     setSequenceAccession(resp.sequenceAccessionStandard);
-    setCoordsStrand('');
   };
 
   return (
@@ -237,7 +234,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <TextField
                 fullWidth
                 label="Start"
-                inputRef={coordsStartRef}
+                value={coords.start}
+                onChange={(event) => setCoords((prev) => ({ ...prev, start: event.target.value }))}
                 type="number"
                 error={formError.start !== null}
                 helperText={formError.start}
@@ -247,7 +245,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <TextField
                 fullWidth
                 label="End"
-                inputRef={coordsEndRef}
+                value={coords.end}
+                onChange={(event) => setCoords((prev) => ({ ...prev, end: event.target.value }))}
                 type="number"
                 error={formError.end !== null}
                 helperText={formError.end}
@@ -258,8 +257,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <Select
                 labelId={`selection-mode-${sourceId}-strand-label`}
                 label="Strand"
-                value={coordsStrand}
-                onChange={(event) => setCoordsStrand(event.target.value)}
+                value={coords.strand}
+                onChange={(event) => setCoords((prev) => ({ ...prev, strand: event.target.value }))}
                 error={formError.strand !== null}
               >
                 <MenuItem value="plus">plus</MenuItem>
