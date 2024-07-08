@@ -49,10 +49,17 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
       </Alert>
     );
   }
+
+  React.useEffect(() => {
+    // Reset the value when the component is re-rendered at the same position
+    // with different functions
+    setUserInput('');
+  }, [setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel]);
+
   return (
     <FormControl fullWidth>
       <Autocomplete
-        onChange={(event, value) => setValue(value)}
+        onChange={(event, value) => { setValue(value); setUserInput(getOptionLabel(value)); }}
         // Change options only when input changes (not when an option is picked)
         onInputChange={(event, newInputValue, reason) => (reason === 'input') && setUserInput(newInputValue)}
         id="tags-standard"
@@ -60,6 +67,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
         noOptionsText={noOptionsText || 'Type at least 3 characters to search'}
         getOptionLabel={getOptionLabel}
         isOptionEqualToValue={isOptionEqualToValue}
+        inputValue={userInput}
         renderInput={(params) => (
           <TextField
             {...params}

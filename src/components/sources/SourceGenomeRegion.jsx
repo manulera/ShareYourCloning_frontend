@@ -39,20 +39,17 @@ function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDown
   };
 }
 
-function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
+function SpeciesPicker({ setSpecies, setAssemblyId }) {
   const speciesPostRequestSettings = React.useMemo(() => ({
     setValue: (v) => {
       if (v === null) {
         setSpecies(null);
         setAssemblyId('');
-        setGene(null);
         return;
       }
       getReferenceAssemblyId(v.tax_id).then((response) => {
         // Set the species
         setSpecies(v);
-        // Unset gene
-        setGene(null);
         // Set the assemblyId
         setAssemblyId(response === null ? '' : response);
       });
@@ -61,7 +58,7 @@ function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
     getOptionLabel: (option) => (option ? `${option.sci_name} - ${option.tax_id}` : ''),
     isOptionEqualToValue: (option, value) => option.tax_id === value.tax_id,
     textLabel: 'Species',
-  }));
+  }), []);
   return (<PostRequestSelect {...speciesPostRequestSettings} />);
 }
 
@@ -81,9 +78,14 @@ function SourceGenomeRegionLocusOnReference({ source, requestStatus, sendPostReq
     sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
+  // Reset gene when species changes
+  React.useEffect(() => {
+    setGene(null);
+  }, [species]);
+
   return (
     <form onSubmit={onSubmit}>
-      <SpeciesPicker {...{ setSpecies, setAssemblyId, setGene }} />
+      <SpeciesPicker {...{ setSpecies, setAssemblyId }} />
       {assemblyId && (
         <>
           <KnownAssemblyField assemblyId={assemblyId} />
@@ -164,11 +166,10 @@ function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRequest }) {
+function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRequest, selectionMode }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
   const { id: sourceId } = source;
   const [species, setSpecies] = React.useState(null);
-  const [assemblyId, setAssemblyId] = React.useState(null);
   const [sequenceAccession, setSequenceAccession] = React.useState('');
   const noError = { start: null, end: null, strand: null };
   const [formError, setFormError] = React.useState({ ...noError });
@@ -204,7 +205,6 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     const requestData = {
       id: sourceId,
       sequence_accession: sequenceAccession,
-      assembly_accession: assemblyId,
       start: coordsStartRef.current.value,
       end: coordsEndRef.current.value,
       strand: coordsStrand === 'plus' ? 1 : -1,
@@ -212,41 +212,23 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
-  const onAccessionChange = async (userInput, resp) => {
+  const onSequenceAccessionChange = async (userInput, resp) => {
+    setFormError({ ...noError });
     if (resp === null) {
       setSpecies(null);
-      setAssemblyId(null);
       setSequenceAccession('');
-      setFormError({ ...noError });
       setCoordsStrand('');
       return;
     }
-    if (resp.assemblyAccession !== null) {
-      try {
-        const { species: assemblySpecies } = await getInfoFromAssemblyId(resp.assemblyAccession);
-        setAssemblyId(resp.assemblyAccession);
-        setSpecies(assemblySpecies);
-      } catch (e) {
-        // TODO: Hotfix, handle properly
-        setAssemblyId(null);
-        setSpecies(null);
-      }
-    } else {
-      // The sequence accession is not linked to an assembly
-      setAssemblyId(null);
-      setSpecies(null);
-    }
+    setSpecies(resp.species || null);
     setSequenceAccession(resp.sequenceAccessionStandard);
-    setFormError({ ...noError });
     setCoordsStrand('');
   };
 
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
+      <TextFieldValidate onChange={onSequenceAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
       {species && (<KnownSpeciesField species={species} />)}
-      {assemblyId && (<KnownAssemblyField assemblyId={assemblyId} />)}
-      {sequenceAccession && !assemblyId && (<Alert severity="warning">The sequence accession is not linked to an assembly</Alert>)}
       {sequenceAccession && (
         <>
           <Box component="fieldset" sx={{ p: 1, mb: 1 }} style={{ borderRadius: '.5em', boxShadow: null }}>
@@ -367,13 +349,15 @@ function SourceGenomeRegion({ source, requestStatus, sendPostRequest }) {
           >
             <MenuItem value="reference_genome">Locus in reference genome</MenuItem>
             <MenuItem value="other_assembly">Locus in other assembly</MenuItem>
-            <MenuItem value="custom_coordinates">Custom coordinates</MenuItem>
+            <MenuItem value="custom_reference">Custom coordinates in reference genome</MenuItem>
+            <MenuItem value="custom_other">Custom coordinates in other assembly</MenuItem>
+            <MenuItem value="custom_sequence_accession">Custom coordinates in sequence accession</MenuItem>
           </Select>
         </FormControl>
       </form>
       {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference {...{ source, requestStatus, sendPostRequest }} />)}
       {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther {...{ source, requestStatus, sendPostRequest }} />)}
-      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates {...{ source, requestStatus, sendPostRequest }} />)}
+      {selectionMode.startsWith('custom') && (<SourceGenomeRegionCustomCoordinates {...{ source, requestStatus, sendPostRequest, selectionMode }} />)}
 
     </>
   );
