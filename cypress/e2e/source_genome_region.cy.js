@@ -98,60 +98,37 @@ describe('GenomeRegion Source', () => {
     cy.get('.MuiAlert-message').should('be.visible');
   });
   it('works for sequence accession', () => {
-    cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
-    cy.get('li[data-value="custom_coordinates"]').click();
+    clickMultiSelectOption('Type of region', 'sequence accession', 'li#source-1');
     // Shows species and assembly ID if sequence accession belongs to assembly
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('NC_001147.6');
+    setInputValue('Sequence accession', 'NC_001147.6', 'li#source-1');
     cy.get('label').contains('Species', { timeout: 20000 }).siblings('div').children('input')
       .should('have.value', 'Saccharomyces cerevisiae S288C - 559292');
-    cy.get('label').contains('Assembly ID').siblings('div').children('input')
-      .should('have.value', 'GCF_000146045.2');
-    // Shows warning otherwise. This in an important check, before
-    // the previously set assembly and species were not being cleared.
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .clear('');
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('DQ208311.2');
-    cy.get('.MuiAlert-message', { timeout: 20000 }).contains('not linked to an assembly');
-    cy.get('label').contains('Start').siblings('div').children('input')
-      .type('1');
-    cy.get('label').contains('End').siblings('div').children('input')
-      .type('20');
-    cy.get('label').contains('Strand').siblings('div.MuiInputBase-root ').click();
-    cy.get('li[data-value="plus"]').click();
+    // Works with accessions not linked to an assembly
+    clearInputValue('Sequence accession', 'li#source-1');
+    setInputValue('Sequence accession', 'DQ208311.2', 'li#source-1');
+    setInputValue('Start', '1', 'li#source-1');
+    setInputValue('End', '20', 'li#source-1');
+    clickMultiSelectOption('Strand', 'plus', 'li#source-1');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
     cy.get('li#sequence-2 .veLinearView', { timeout: 20000 }).contains('DQ208311');
     cy.get('li#sequence-2 .veLinearView').contains('20 bps');
   });
   it('gives the right errors and warnings for sequence accesion', () => {
-    // TODO: move some of this to component tests (e.g. coordinates constraints)
-    cy.get('#tab-panel-0 .MuiInputBase-root').eq(1).click();
-    cy.get('li[data-value="custom_coordinates"]').click();
-    // Shows species and assembly ID if sequence accession belongs to assembly
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('blah');
+    clickMultiSelectOption('Type of region', 'sequence accession', 'li#source-1');
+    setInputValue('Sequence accession', 'blah', 'li#source-1');
     cy.get('li#source-1').contains('Sequence accession does not exist', { timeout: 20000 });
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .clear();
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('NC_001147.6');
+    clearInputValue('Sequence accession', 'li#source-1');
+    setInputValue('Sequence accession', 'NC_001147.6', 'li#source-1');
     // Clears form if sequence accession changes
-    cy.get('li#source-1 label').contains('Start', { timeOut: 2000 }).siblings('div').children('input')
-      .type('1');
-    cy.get('label').contains('End').siblings('div').children('input')
-      .type('20');
-    cy.get('label').contains('Strand').siblings('div.MuiInputBase-root ').click();
-    cy.get('li[data-value="plus"]').click();
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .clear('');
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('blah');
+    cy.get('li#source-1 label').contains('Start', { timeOut: 2000 }).should('exist');
+    setInputValue('Start', '1', 'li#source-1');
+    setInputValue('End', '20', 'li#source-1');
+    clickMultiSelectOption('Strand', 'plus', 'li#source-1');
+    clearInputValue('Sequence accession', 'li#source-1');
+    setInputValue('Sequence accession', 'blah', 'li#source-1');
     cy.contains('Sequence accession does not exist', { timeout: 20000 });
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .clear('');
-    cy.get('label').contains('Sequence accession').siblings('div').children('input')
-      .type('NC_001147.6');
+    clearInputValue('Sequence accession', 'li#source-1');
+    setInputValue('Sequence accession', 'NC_001147.6', 'li#source-1');
     cy.get('label').contains('Start', { timeout: 20000 }).siblings('div').children('input')
       .should('have.value', '');
     cy.get('label').contains('End').siblings('div').children('input')
@@ -209,5 +186,56 @@ describe('GenomeRegion Source', () => {
     // Ase1 should not be there
     setInputValue('Gene', 'ase1', 'li#source-1');
     cy.get('div[role="presentation"]').contains('No results found', { timeout: 20000 }).should('exist');
+  });
+  it('works for custom coordinates in reference genome', () => {
+    clickMultiSelectOption('Type of region', 'coordinates in reference', 'li#source-1');
+    setInputValue('Species', 'pombe', 'li#source-1');
+    clickMultiSelectOption('Species', 'pombe', 'li#source-1', { timeout: 20000 });
+    cy.get('label').contains('Assembly ID', { timeout: 20000 }).siblings('div').children('input')
+      .should('have.value', 'GCF_000002945.2');
+    cy.get('label').contains('Species').siblings('div').children('input')
+      .should('have.value', 'Schizosaccharomyces pombe - 4896');
+    cy.get('label').contains('Chromosome').should('exist');
+    cy.get('label').contains('Chromosome').siblings('div.MuiInputBase-root ').click();
+    // Should contain the 4 pombe chromosomes
+    cy.get('li[data-value="NC_003424.3"]').should('exist');
+    cy.get('li[data-value="NC_003423.3"]').should('exist');
+    cy.get('li[data-value="NC_003421.2"]').should('exist');
+    cy.get('li[data-value="NC_088682.1"]').should('exist');
+    // Click outside
+    cy.get('body').click(0, 0);
+    // Select chromosome 1
+    clickMultiSelectOption('Chromosome', 'NC_003424.3', 'li#source-1');
+    setInputValue('Start', '1', 'li#source-1');
+    setInputValue('End', '20', 'li#source-1');
+    clickMultiSelectOption('Strand', 'plus', 'li#source-1');
+
+    cy.get('button.MuiButtonBase-root').contains('Submit').click();
+    cy.get('#source-1 a', { timeout: 20000 }).contains('GCF_000002945.2').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.2');
+    cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
+  });
+  it('works for custom coordinates in another assembly', () => {
+    clickMultiSelectOption('Type of region', 'coordinates in other assembly', 'li#source-1');
+    setInputValue('Assembly ID', 'GCF_000002945.2', 'li#source-1');
+    cy.get('label').contains('Species', { timeout: 20000 }).siblings('div').children('input')
+      .should('have.value', 'Schizosaccharomyces pombe - 4896');
+    cy.get('label').contains('Chromosome').should('exist');
+    cy.get('label').contains('Chromosome').siblings('div.MuiInputBase-root ').click();
+    // Should contain the 4 pombe chromosomes
+    cy.get('li[data-value="NC_003424.3"]').should('exist');
+    cy.get('li[data-value="NC_003423.3"]').should('exist');
+    cy.get('li[data-value="NC_003421.2"]').should('exist');
+    cy.get('li[data-value="NC_088682.1"]').should('exist');
+    // Click outside
+    cy.get('body').click(0, 0);
+    // Select chromosome 1
+    clickMultiSelectOption('Chromosome', 'NC_003424.3', 'li#source-1');
+    setInputValue('Start', '1', 'li#source-1');
+    setInputValue('End', '20', 'li#source-1');
+    clickMultiSelectOption('Strand', 'plus', 'li#source-1');
+
+    cy.get('button.MuiButtonBase-root').contains('Submit').click();
+    cy.get('#source-1 a', { timeout: 20000 }).contains('GCF_000002945.2').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/datasets/genome/GCF_000002945.2');
+    cy.get('#source-1 a').contains('NC_003424.3').should('have.attr', 'href', 'https://www.ncbi.nlm.nih.gov/nuccore/NC_003424.3');
   });
 });

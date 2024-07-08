@@ -4,9 +4,11 @@ import { FormControl, TextField } from '@mui/material';
 export default function TextFieldValidate({ getterFunction, onChange, label, defaultHelperText = '' }) {
   const [helperText, setHelperText] = React.useState('');
   const [userInput, setUserInput] = React.useState('');
-  const [assemblyExists, setAssemblyExists] = React.useState(null);
+  const [error, setError] = React.useState(false);
 
   React.useEffect(() => {
+    // Send an empty response to clear the form
+    onChange('', null);
     // Validate assemblyId with a 500ms delay
     if ((userInput !== '')) {
       setHelperText(`Validating ${label}...`);
@@ -14,10 +16,10 @@ export default function TextFieldValidate({ getterFunction, onChange, label, def
         const resp = await getterFunction(userInput);
         if (resp === null) {
           setHelperText(`${label} does not exist`);
-          setAssemblyExists(false);
+          setError(true);
         } else {
           setHelperText('');
-          setAssemblyExists(true);
+          setError(false);
         }
         onChange(userInput, resp);
       }, 500);
@@ -25,7 +27,7 @@ export default function TextFieldValidate({ getterFunction, onChange, label, def
     }
     // Also set to null if assemblyId is empty
     setHelperText(defaultHelperText);
-    setAssemblyExists(null);
+    setError(false);
     return () => {};
   }, [userInput]);
 
@@ -34,9 +36,9 @@ export default function TextFieldValidate({ getterFunction, onChange, label, def
       <TextField
         label={label}
         value={userInput}
-        error={assemblyExists === false}
+        error={error}
         helperText={helperText}
-        onChange={(event) => setUserInput(event.target.value)}
+        onChange={(event) => { setUserInput(event.target.value); }}
       />
     </FormControl>
 

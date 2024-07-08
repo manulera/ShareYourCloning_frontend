@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Alert, Box, FormHelperText, FormLabel } from '@mui/material';
 import PostRequestSelect from '../form/PostRequestSelect';
-import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
+import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession, getSequenceAccessionsFromAssemblyAccession } from '../../utils/ncbiRequests';
 import TextFieldValidate from '../form/TextFieldValidate';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
@@ -60,6 +60,33 @@ function SpeciesPicker({ setSpecies, setAssemblyId }) {
     textLabel: 'Species',
   }), []);
   return (<PostRequestSelect {...speciesPostRequestSettings} />);
+}
+
+function SequenceAccessionPicker({ assemblyAccesion, sequenceAccession, setSequenceAccession }) {
+  const [options, setOptions] = React.useState([]);
+  React.useEffect(() => {
+    getSequenceAccessionsFromAssemblyAccession(assemblyAccesion).then((opts) => {
+      setOptions(opts);
+    }).catch((e) => { setOptions([]); console.error(e); });
+  }, [assemblyAccesion]);
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="select-sequence-accession">Chromosome</InputLabel>
+      <Select
+        labelId="select-sequence-accession"
+        label="Chromosome"
+        value={sequenceAccession}
+        onChange={(event) => setSequenceAccession(event.target.value)}
+      >
+        {options.map(({ chr_name, refseq_accession }) => (
+          <MenuItem key={refseq_accession} value={refseq_accession}>
+            {`${chr_name} - ${refseq_accession}`}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }
 
 // Extra component to be used in SourceGenomeRegion
@@ -171,10 +198,20 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
   const { id: sourceId } = source;
   const [species, setSpecies] = React.useState(null);
   const [sequenceAccession, setSequenceAccession] = React.useState('');
+  const [assemblyId, setAssemblyId] = React.useState('');
   const noError = { start: null, end: null, strand: null };
   const [formError, setFormError] = React.useState({ ...noError });
   // I don't manage to use refs for the Select component
   const [coords, setCoords] = React.useState({ start: '', end: '', strand: '' });
+
+  React.useEffect(() => {
+    // Clear the form when the selection mode changes
+    setSpecies(null);
+    setSequenceAccession('');
+    setAssemblyId('');
+    setCoords({ start: '', end: '', strand: '' });
+  }, [selectionMode]);
+
   const onSubmit = (event) => {
     event.preventDefault();
     if (coords.start === '') {
@@ -203,6 +240,7 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     const requestData = {
       id: sourceId,
       sequence_accession: sequenceAccession,
+      assembly_accession: assemblyId || null,
       start: coords.start,
       end: coords.end,
       strand: coords.strand === 'plus' ? 1 : -1,
@@ -222,10 +260,43 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     setSequenceAccession(resp.sequenceAccessionStandard);
   };
 
+  const onAssemblyAccessionChange = (userInput, resp) => {
+    setFormError({ ...noError });
+    if (resp === null) {
+      setSpecies(null);
+      setSequenceAccession('');
+      setAssemblyId('');
+      return;
+    }
+    setSpecies(resp.species);
+    setAssemblyId(userInput);
+  };
+
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onSequenceAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
-      {species && (<KnownSpeciesField species={species} />)}
+      {(selectionMode === 'custom_sequence_accession') && (
+        (
+          <>
+            <TextFieldValidate onChange={onSequenceAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
+            {species && <KnownSpeciesField species={species} />}
+          </>
+        )
+      )}
+      {(selectionMode === 'custom_reference') && (
+        <>
+          {assemblyId && <KnownAssemblyField assemblyId={assemblyId} />}
+          <SpeciesPicker {...{ setSpecies, setAssemblyId }} />
+        </>
+      )}
+      {(selectionMode === 'custom_other') && (
+        <>
+          <TextFieldValidate onChange={onAssemblyAccessionChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCA_000002945.3" />
+          {species && <KnownSpeciesField species={species} />}
+        </>
+      )}
+      {assemblyId && ['custom_reference', 'custom_other'].includes(selectionMode) && (
+      <SequenceAccessionPicker {...{ assemblyAccesion: assemblyId, sequenceAccession, setSequenceAccession }} />
+      )}
       {sequenceAccession && (
         <>
           <Box component="fieldset" sx={{ p: 1, mb: 1 }} style={{ borderRadius: '.5em', boxShadow: null }}>

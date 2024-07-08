@@ -125,3 +125,14 @@ export async function getInfoFromSequenceAccession(sequenceAccession) {
   const { scientificname: organismName } = resp2.data.result[resp2.data.result.uids[0]];
   return { species: { tax_id: taxId, organism_name: organismName }, sequenceAccessionStandard };
 }
+
+export async function getSequenceAccessionsFromAssemblyAccession(assemblyAccession) {
+  const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyAccession}/sequence_reports`;
+  // For example: https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCF_000005845.2/sequence_reports
+  try {
+    const resp = await axios.get(url);
+    return resp.data.reports;
+  } catch (error) {
+    return [];
+  }
+}
