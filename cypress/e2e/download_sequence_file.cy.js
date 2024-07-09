@@ -16,6 +16,7 @@ describe('Test download sequence file', () => {
     });
     // Download file as fasta
     cy.get('li#sequence-2 svg[data-testid="DownloadIcon"]').click();
+    setInputValue('File name', 'example', '.MuiDialogContent-root');
     cy.get('.MuiDialogContent-root span').contains('fasta').click();
     cy.get('.MuiDialogActions-root button').contains('Save file').click();
     cy.task('readFileMaybe', 'cypress/downloads/example.fasta').then((fileContent) => {

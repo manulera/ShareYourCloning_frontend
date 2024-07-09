@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 import { cloningActions } from '../store/cloning';
 
 const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers } = cloningActions;
@@ -158,4 +159,15 @@ export const loadData = async (newState, isTemplate, dispatch, setLoadedFileErro
     dispatch(resetStateThunk());
     setLoadedFileError('JSON file in wrong format');
   });
+};
+
+export const downloadSequence = (fileName, entity) => {
+  if (entity === undefined) {
+    return;
+  }
+  if (fileName.endsWith('.gb')) {
+    downloadTextFile(entity.file_content, fileName);
+  } else if (fileName.endsWith('.fasta')) {
+    downloadTextFile(jsonToFasta(genbankToJson(entity.file_content)[0].parsedSequence), fileName);
+  }
 };
