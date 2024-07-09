@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
 import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 import { cloningActions } from '../store/cloning';
 
@@ -21,7 +22,7 @@ export const downloadStateAsJson = async (entities, sources, description, primer
     sequences: entities, sources, description, primers,
   };
   // json
-  const fileName = 'file';
+  const fileName = 'history';
   // Pretty print json and add a newline at the end
   const json = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([json], { type: 'application/json' });
@@ -170,4 +171,23 @@ export const downloadSequence = (fileName, entity) => {
   } else if (fileName.endsWith('.fasta')) {
     downloadTextFile(jsonToFasta(genbankToJson(entity.file_content)[0].parsedSequence), fileName);
   }
+};
+
+export const downloadCloningStrategyAsSvg = async (fileName) => {
+  const container = document.querySelector('div.share-your-cloning');
+  const content = document.querySelector('div.tf-tree.tf-ancestor-tree div');
+  // // Get the widths
+  // const containerWidth = container.clientWidth;
+  // const contentWidth = content.scrollWidth;
+
+  // // Calculate the scale factor
+  // const scaleFactor = containerWidth / contentWidth;
+
+  // content.style.transform = `scale(${scaleFactor})`;
+  // content.style.fontsize = '8px';
+  const svgDocument = elementToSVG(container);
+  // const svgDocument = documentToSVG(document);
+  await inlineResources(svgDocument.documentElement);
+  const svgString = new XMLSerializer().serializeToString(svgDocument);
+  downloadTextFile(svgString, fileName);
 };

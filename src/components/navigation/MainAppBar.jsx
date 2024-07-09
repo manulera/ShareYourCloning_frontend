@@ -9,7 +9,7 @@ import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { exportStateThunk, loadData } from '../../utils/readNwrite';
+import { downloadCloningStrategyAsSvg, exportStateThunk, loadData } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
@@ -34,6 +34,7 @@ function MainAppBar() {
   const fileMenu = [
     { display: 'Save cloning history to file', onClick: exportData },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
+    { display: 'Print cloning history to svg', onClick: () => downloadCloningStrategyAsSvg('history.svg') },
     // elab-demo
     // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
