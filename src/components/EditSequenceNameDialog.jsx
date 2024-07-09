@@ -20,13 +20,13 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
   const dispatch = useDispatch();
 
   const changeName = async (newName) => {
-    setDialogOpen(false);
     setError('');
     const url = new URL('rename_sequence', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     try {
       const { data: newEntity } = await axios.post(url, entity, { params: { name } });
       const newSource = { ...source, output_name: newName };
       dispatch(updateEntityAndItsSource({ newEntity, newSource }));
+      setDialogOpen(false);
     } catch (e) {
       setError(error2String(e));
     }
