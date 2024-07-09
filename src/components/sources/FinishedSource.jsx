@@ -33,7 +33,7 @@ function FinishedSource({ sourceId }) {
   switch (source.type) {
     case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
-    case 'LigationSource': message = 'Ligation of fragments'; break;
+    case 'LigationSource': message = (source.input.length === 1) ? 'Circularization of fragment' : 'Ligation of fragments'; break;
     case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
     case 'RestrictionEnzymeDigestionSource': {
       const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
@@ -65,16 +65,19 @@ function FinishedSource({ sourceId }) {
     case 'GenomeCoordinatesSource':
       message = (
         <>
+          <h4 style={{ marginBottom: '5px' }}>Genome region</h4>
+          {source.assembly_accession && (
           <div>
             <strong>Assembly:</strong>
             {' '}
             <a href={`https://www.ncbi.nlm.nih.gov/datasets/genome/${source.assembly_accession}`} target="_blank" rel="noopener noreferrer">{source.assembly_accession}</a>
           </div>
+          )}
           <div>
             <strong>Coords:</strong>
             {' '}
             <a href={`https://www.ncbi.nlm.nih.gov/nuccore/${source.sequence_accession}`} target="_blank" rel="noopener noreferrer">{source.sequence_accession}</a>
-            {`(${source.start}-${source.end})`}
+            {`(${source.start}:${source.end}, ${source.strand})`}
           </div>
           {source.locus_tag && (
           <div>

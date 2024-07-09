@@ -105,32 +105,34 @@ export async function getInfoFromAssemblyId(assemblyId) {
 }
 
 export async function getInfoFromSequenceAccession(sequenceAccession) {
-  const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=${sequenceAccession}&idtype=acc&retmode=json`;
-  // For example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CP046095.1&idtype=acc&retmode=json
+  const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?id=${sequenceAccession}&db=nuccore&retmode=json`;
+  // For example: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?id=CP046095.1&db=nuccore&retmode=json
 
   const resp = await axios.get(url);
   // I don't think this ever happens, but just in case
-  if (resp.status === 404) {
+  if (resp.status === 404 || resp.data.result.uids.length === 0) {
     return null;
   }
-  // This is what you get with wrong ids (it's not json, it's plain text)
-  // https:// eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=aaaaaa&idtype=acc&retmode=json
-  if (resp.data.linksets === undefined || resp.data.linksets.length === 0) {
-    return null;
-  }
-  // We want the acc id, not the gi, which will also work in the request
-  const sequenceAccessionStandard = resp.data.linksets[0].ids[0];
 
-  // Maybe the acc id is not linked to a genome assembly, for instance:
-  // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=DQ208311.2&retmode=json&idtype=acc
-  const linksetDbs = resp.data.linksets[0].linksetdbs;
-  const assemblyGI = linksetDbs === undefined ? null : linksetDbs[0].links[0];
-  // We want the assembly accession if it exists
-  let assemblyAccession = null;
-  if (assemblyGI !== null) {
-    const url2 = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=${assemblyGI}`;
-    const resp2 = await axios.get(url2);
-    assemblyAccession = resp2.data.result[assemblyGI].assemblyaccession;
+  const { taxid: taxId, accessionversion: sequenceAccessionStandard } = resp.data.result[resp.data.result.uids[0]];
+
+  if (!taxId) {
+    return { species: null, sequenceAccessionStandard };
   }
-  return { assemblyAccession, sequenceAccessionStandard };
+
+  const url2 = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?id=${taxId}&db=taxonomy&retmode=json`;
+  const resp2 = await axios.get(url2);
+  const { scientificname: organismName } = resp2.data.result[resp2.data.result.uids[0]];
+  return { species: { tax_id: taxId, organism_name: organismName }, sequenceAccessionStandard };
+}
+
+export async function getSequenceAccessionsFromAssemblyAccession(assemblyAccession) {
+  const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyAccession}/sequence_reports`;
+  // For example: https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/GCF_000005845.2/sequence_reports
+  try {
+    const resp = await axios.get(url);
+    return resp.data.reports;
+  } catch (error) {
+    return [];
+  }
 }

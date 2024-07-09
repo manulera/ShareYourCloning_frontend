@@ -6,7 +6,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Alert, Box, FormHelperText, FormLabel } from '@mui/material';
 import PostRequestSelect from '../form/PostRequestSelect';
-import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession } from '../../utils/ncbiRequests';
+import { getReferenceAssemblyId, taxonSuggest, geneSuggest, getInfoFromAssemblyId, getInfoFromSequenceAccession, getSequenceAccessionsFromAssemblyAccession } from '../../utils/ncbiRequests';
 import TextFieldValidate from '../form/TextFieldValidate';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 
@@ -39,20 +39,17 @@ function formatBackendPayloadWithGene(assemblyId, gene, shiftUpstream, shiftDown
   };
 }
 
-function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
+function SpeciesPicker({ setSpecies, setAssemblyId }) {
   const speciesPostRequestSettings = React.useMemo(() => ({
     setValue: (v) => {
       if (v === null) {
         setSpecies(null);
         setAssemblyId('');
-        setGene(null);
         return;
       }
       getReferenceAssemblyId(v.tax_id).then((response) => {
         // Set the species
         setSpecies(v);
-        // Unset gene
-        setGene(null);
         // Set the assemblyId
         setAssemblyId(response === null ? '' : response);
       });
@@ -61,8 +58,35 @@ function SpeciesPicker({ setSpecies, setAssemblyId, setGene }) {
     getOptionLabel: (option) => (option ? `${option.sci_name} - ${option.tax_id}` : ''),
     isOptionEqualToValue: (option, value) => option.tax_id === value.tax_id,
     textLabel: 'Species',
-  }));
+  }), []);
   return (<PostRequestSelect {...speciesPostRequestSettings} />);
+}
+
+function SequenceAccessionPicker({ assemblyAccesion, sequenceAccession, setSequenceAccession }) {
+  const [options, setOptions] = React.useState([]);
+  React.useEffect(() => {
+    getSequenceAccessionsFromAssemblyAccession(assemblyAccesion).then((opts) => {
+      setOptions(opts);
+    }).catch((e) => { setOptions([]); console.error(e); });
+  }, [assemblyAccesion]);
+
+  return (
+    <FormControl fullWidth>
+      <InputLabel id="select-sequence-accession">Chromosome</InputLabel>
+      <Select
+        labelId="select-sequence-accession"
+        label="Chromosome"
+        value={sequenceAccession}
+        onChange={(event) => setSequenceAccession(event.target.value)}
+      >
+        {options.map(({ chr_name, refseq_accession }) => (
+          <MenuItem key={refseq_accession} value={refseq_accession}>
+            {`${chr_name} - ${refseq_accession}`}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+  );
 }
 
 // Extra component to be used in SourceGenomeRegion
@@ -81,9 +105,14 @@ function SourceGenomeRegionLocusOnReference({ source, requestStatus, sendPostReq
     sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
+  // Reset gene when species changes
+  React.useEffect(() => {
+    setGene(null);
+  }, [species]);
+
   return (
     <form onSubmit={onSubmit}>
-      <SpeciesPicker {...{ setSpecies, setAssemblyId, setGene }} />
+      <SpeciesPicker {...{ setSpecies, setAssemblyId }} />
       {assemblyId && (
         <>
           <KnownAssemblyField assemblyId={assemblyId} />
@@ -164,38 +193,45 @@ function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest
 }
 
 // Extra component to be used in SourceGenomeRegion
-function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRequest }) {
+function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRequest, selectionMode }) {
   // https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi?dbfrom=nuccore&db=assembly&id=CM041205.1&idtype=acc
   const { id: sourceId } = source;
   const [species, setSpecies] = React.useState(null);
-  const [assemblyId, setAssemblyId] = React.useState(null);
   const [sequenceAccession, setSequenceAccession] = React.useState('');
+  const [assemblyId, setAssemblyId] = React.useState('');
   const noError = { start: null, end: null, strand: null };
   const [formError, setFormError] = React.useState({ ...noError });
-  const coordsStartRef = React.useRef(null);
-  const coordsEndRef = React.useRef(null);
   // I don't manage to use refs for the Select component
-  const [coordsStrand, setCoordsStrand] = React.useState('');
+  const [coords, setCoords] = React.useState({ start: '', end: '', strand: '' });
+
+  React.useEffect(() => {
+    // Clear the form when the selection mode changes
+    setSpecies(null);
+    setSequenceAccession('');
+    setAssemblyId('');
+    setCoords({ start: '', end: '', strand: '' });
+  }, [selectionMode]);
+
   const onSubmit = (event) => {
     event.preventDefault();
-    if (coordsStartRef.current.value === '') {
+    if (coords.start === '') {
       setFormError({ ...noError, start: 'Field required' });
       return;
     }
-    if (coordsEndRef.current.value === '') {
+    if (coords.end === '') {
       setFormError({ ...noError, end: 'Field required' });
       return;
     }
-    if (coordsStrand === '') {
+    if (coords.strand === '') {
       setFormError({ ...noError, strand: 'Field required' });
       return;
     }
     // Start must be greater than zero
-    if (Number(coordsStartRef.current.value) < 1) {
+    if (Number(coords.start) < 1) {
       setFormError({ ...noError, start: 'Start must be greater than zero' });
       return;
     }
-    if (Number(coordsStartRef.current.value) >= Number(coordsEndRef.current.value)) {
+    if (Number(coords.start) >= Number(coords.end)) {
       setFormError({ ...noError, end: 'End must be greater than start' });
       return;
     }
@@ -204,49 +240,63 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
     const requestData = {
       id: sourceId,
       sequence_accession: sequenceAccession,
-      assembly_accession: assemblyId,
-      start: coordsStartRef.current.value,
-      end: coordsEndRef.current.value,
-      strand: coordsStrand === 'plus' ? 1 : -1,
+      assembly_accession: assemblyId || null,
+      start: coords.start,
+      end: coords.end,
+      strand: coords.strand === 'plus' ? 1 : -1,
     };
     sendPostRequest({ endpoint: 'genome_coordinates', requestData, source });
   };
 
-  const onAccessionChange = async (userInput, resp) => {
+  const onSequenceAccessionChange = async (userInput, resp) => {
+    setFormError({ ...noError });
+    setCoords({ start: '', end: '', strand: '' });
     if (resp === null) {
       setSpecies(null);
-      setAssemblyId(null);
       setSequenceAccession('');
-      setFormError({ ...noError });
-      setCoordsStrand('');
       return;
     }
-    if (resp.assemblyAccession !== null) {
-      try {
-        const { species: assemblySpecies } = await getInfoFromAssemblyId(resp.assemblyAccession);
-        setAssemblyId(resp.assemblyAccession);
-        setSpecies(assemblySpecies);
-      } catch (e) {
-        // TODO: Hotfix, handle properly
-        setAssemblyId(null);
-        setSpecies(null);
-      }
-    } else {
-      // The sequence accession is not linked to an assembly
-      setAssemblyId(null);
-      setSpecies(null);
-    }
+    setSpecies(resp.species || null);
     setSequenceAccession(resp.sequenceAccessionStandard);
+  };
+
+  const onAssemblyAccessionChange = (userInput, resp) => {
     setFormError({ ...noError });
-    setCoordsStrand('');
+    if (resp === null) {
+      setSpecies(null);
+      setSequenceAccession('');
+      setAssemblyId('');
+      return;
+    }
+    setSpecies(resp.species);
+    setAssemblyId(userInput);
   };
 
   return (
     <form onSubmit={onSubmit}>
-      <TextFieldValidate onChange={onAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
-      {species && (<KnownSpeciesField species={species} />)}
-      {assemblyId && (<KnownAssemblyField assemblyId={assemblyId} />)}
-      {sequenceAccession && !assemblyId && (<Alert severity="warning">The sequence accession is not linked to an assembly</Alert>)}
+      {(selectionMode === 'custom_sequence_accession') && (
+        (
+          <>
+            <TextFieldValidate onChange={onSequenceAccessionChange} getterFunction={getInfoFromSequenceAccession} label="Sequence accession" defaultHelperText="Example ID: NC_003424.3" />
+            {species && <KnownSpeciesField species={species} />}
+          </>
+        )
+      )}
+      {(selectionMode === 'custom_reference') && (
+        <>
+          {assemblyId && <KnownAssemblyField assemblyId={assemblyId} />}
+          <SpeciesPicker {...{ setSpecies, setAssemblyId }} />
+        </>
+      )}
+      {(selectionMode === 'custom_other') && (
+        <>
+          <TextFieldValidate onChange={onAssemblyAccessionChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCA_000002945.3" />
+          {species && <KnownSpeciesField species={species} />}
+        </>
+      )}
+      {assemblyId && ['custom_reference', 'custom_other'].includes(selectionMode) && (
+      <SequenceAccessionPicker {...{ assemblyAccesion: assemblyId, sequenceAccession, setSequenceAccession }} />
+      )}
       {sequenceAccession && (
         <>
           <Box component="fieldset" sx={{ p: 1, mb: 1 }} style={{ borderRadius: '.5em', boxShadow: null }}>
@@ -255,7 +305,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <TextField
                 fullWidth
                 label="Start"
-                inputRef={coordsStartRef}
+                value={coords.start}
+                onChange={(event) => setCoords((prev) => ({ ...prev, start: event.target.value }))}
                 type="number"
                 error={formError.start !== null}
                 helperText={formError.start}
@@ -265,7 +316,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <TextField
                 fullWidth
                 label="End"
-                inputRef={coordsEndRef}
+                value={coords.end}
+                onChange={(event) => setCoords((prev) => ({ ...prev, end: event.target.value }))}
                 type="number"
                 error={formError.end !== null}
                 helperText={formError.end}
@@ -276,8 +328,8 @@ function SourceGenomeRegionCustomCoordinates({ source, requestStatus, sendPostRe
               <Select
                 labelId={`selection-mode-${sourceId}-strand-label`}
                 label="Strand"
-                value={coordsStrand}
-                onChange={(event) => setCoordsStrand(event.target.value)}
+                value={coords.strand}
+                onChange={(event) => setCoords((prev) => ({ ...prev, strand: event.target.value }))}
                 error={formError.strand !== null}
               >
                 <MenuItem value="plus">plus</MenuItem>
@@ -367,13 +419,15 @@ function SourceGenomeRegion({ source, requestStatus, sendPostRequest }) {
           >
             <MenuItem value="reference_genome">Locus in reference genome</MenuItem>
             <MenuItem value="other_assembly">Locus in other assembly</MenuItem>
-            <MenuItem value="custom_coordinates">Custom coordinates</MenuItem>
+            <MenuItem value="custom_reference">Custom coordinates in reference genome</MenuItem>
+            <MenuItem value="custom_other">Custom coordinates in other assembly</MenuItem>
+            <MenuItem value="custom_sequence_accession">Custom coordinates in sequence accession</MenuItem>
           </Select>
         </FormControl>
       </form>
       {selectionMode === 'reference_genome' && (<SourceGenomeRegionLocusOnReference {...{ source, requestStatus, sendPostRequest }} />)}
       {selectionMode === 'other_assembly' && (<SourceGenomeRegionLocusOnOther {...{ source, requestStatus, sendPostRequest }} />)}
-      {selectionMode === 'custom_coordinates' && (<SourceGenomeRegionCustomCoordinates {...{ source, requestStatus, sendPostRequest }} />)}
+      {selectionMode.startsWith('custom') && (<SourceGenomeRegionCustomCoordinates {...{ source, requestStatus, sendPostRequest, selectionMode }} />)}
 
     </>
   );
