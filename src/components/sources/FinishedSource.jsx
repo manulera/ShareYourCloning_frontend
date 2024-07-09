@@ -33,7 +33,7 @@ function FinishedSource({ sourceId }) {
   switch (source.type) {
     case 'UploadedFileSource': message = `Read from uploaded file ${source.file_name}`; break;
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
-    case 'LigationSource': message = 'Ligation of fragments'; break;
+    case 'LigationSource': message = (source.input.length === 1) ? 'Circularization of fragment' : 'Ligation of fragments'; break;
     case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
     case 'RestrictionEnzymeDigestionSource': {
       const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
