@@ -29,5 +29,14 @@ describe('Can rename a sequence', () => {
     // The field is set in the data model
     cy.get('button.MuiTab-root').contains('Data model').click();
     cy.get('code').contains('"output_name": "name-2"').should('exist');
+    // If the server is down, you get an error
+    cy.get('button.MuiTab-root').contains('Cloning').click();
+    cy.get('li#sequence-2 svg[data-testid="EditIcon"]').click();
+    cy.get('div[role="presentation"]').contains('Rename sequence').first().click();
+    setInputValue('New name', 'name-3', 'div[role="presentation"]');
+    cy.intercept('POST', 'http://127.0.0.1:8000/*', { forceNetworkError: true }).as('error');
+    cy.get('div[role="presentation"] button').contains('Rename').click();
+    cy.wait('@error');
+    cy.get('div[role="presentation"]').contains('Cannot connect to backend server').should('exist');
   });
 });
