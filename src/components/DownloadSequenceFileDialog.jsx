@@ -1,13 +1,19 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { isEqual } from 'lodash-es';
+import { downloadSequence } from '../utils/readNwrite';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
 
-function DownloadSequenceFileDialog({ dialogOpen, setDialogOpen, defaultName = '', downloadSequence }) {
-  const [fileName, setFileName] = React.useState(defaultName);
+function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen }) {
+  const [fileName, setFileName] = React.useState('');
   const [extension, setExtension] = React.useState('.gb');
+  const entity = useSelector(({ cloning }) => cloning.entities.find((e) => e.id === id), isEqual);
 
   React.useEffect(() => {
-    setFileName(defaultName);
-  }, [defaultName]);
+    const seq = convertToTeselaJson(entity);
+    setFileName(seq.name);
+  }, [entity]);
 
   return (
     <Dialog
@@ -18,7 +24,7 @@ function DownloadSequenceFileDialog({ dialogOpen, setDialogOpen, defaultName = '
         onSubmit: (event) => {
           event.preventDefault();
           setDialogOpen(false);
-          downloadSequence(fileName + extension);
+          downloadSequence(fileName + extension, entity);
         },
       }}
     >
