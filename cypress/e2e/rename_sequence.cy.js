@@ -16,6 +16,8 @@ describe('Can rename a sequence', () => {
     cy.get('div[role="presentation"] button').contains('Cancel').should('exist');
     cy.get('div[role="presentation"] button').contains('Rename').should('not.exist');
     // Back to previous name
+    // For some reason we have to click outside, I think the tooltip is messing this up
+    cy.get('div[role="presentation"]').contains('Rename sequence').first().click();
     setInputValue('New name', 'name', 'div[role="presentation"]');
     cy.get('div[role="presentation"] button').contains('Cancel').should('exist');
     cy.get('div[role="presentation"] button').contains('Rename').should('not.exist');

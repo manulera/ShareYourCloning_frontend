@@ -13,6 +13,9 @@ describe('Test download history file', () => {
       expect(fileContent).to.include('"primers":');
       expect(fileContent).to.include('"description":');
     });
+    // Print cloning history to svg (works from another tab)
+    cy.get('button.MuiTab-root').contains('Primers').click();
+    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Print cloning history').click();
     cy.task('readFileMaybe', 'cypress/downloads/history.svg').then((fileContent) => {
       expect(fileContent).to.include('PCR with primers fwd and rvs');

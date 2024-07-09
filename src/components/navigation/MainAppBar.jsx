@@ -15,6 +15,7 @@ import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
 import FeedbackDialog from './FeedbackDialog';
 import MiscDialog from './MiscDialog';
+import { cloningActions } from '../../store/cloning';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -31,10 +32,15 @@ function MainAppBar() {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
+  const { setCurrentTab } = cloningActions;
   const fileMenu = [
     { display: 'Save cloning history to file', onClick: exportData },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
-    { display: 'Print cloning history to svg', onClick: () => downloadCloningStrategyAsSvg('history.svg') },
+    { display: 'Print cloning history to svg',
+      onClick: async () => {
+        await dispatch(setCurrentTab(0));
+        downloadCloningStrategyAsSvg('history.svg');
+      } },
     // elab-demo
     // { display: 'Submit to eLabFTW', onClick: () => setELabDialogOpen(true) },
   ];
