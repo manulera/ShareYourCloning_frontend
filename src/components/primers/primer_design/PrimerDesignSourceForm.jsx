@@ -7,15 +7,15 @@ import useStoreEditor from '../../../hooks/useStoreEditor';
 
 function PrimerDesignSourceForm({ source }) {
   const [primerDesignType, setPrimerDesignType] = React.useState('');
-  const [template, setTemplate] = React.useState('');
+  const [target, setTarget] = React.useState('');
   const { updateStoreEditor } = useStoreEditor();
   const { addTemplateChildAndSubsequentSource, setCurrentTab, setMainSequenceId } = cloningActions;
   const dispatch = useDispatch();
   const onSubmit = (event) => {
     event.preventDefault();
     const newSource = {
-      input: [Number(template)],
-      type: 'HomologousRecombinationSource',
+      input: [Number(target)],
+      type: primerDesignType === 'homologous_recombination' ? 'HomologousRecombinationSource' : 'CRISPRSource',
       output: null,
     };
     const newEntity = {
@@ -44,35 +44,50 @@ function PrimerDesignSourceForm({ source }) {
           label="Purpose of primers"
         >
           <MenuItem value="homologous_recombination">Homologous Recombination</MenuItem>
+          <MenuItem value="crispr">CRISPR</MenuItem>
         </Select>
       </FormControl>
-      <Alert severity="info" icon={false} sx={{ textAlign: 'left' }}>
-        <p style={{ marginBottom: 4 }}>
-          Use this to design primers to amplify a fragment of sequence
-          {' '}
-          {source.input[0]}
-          {' '}
-          and integrate it into another sequence (
-          <strong>template sequence</strong>
-          )
-          via homologous recombination.
-        </p>
-        <p>
-          If you haven&apos;t, import a
-          {' '}
-          <strong>template sequence</strong>
-          , then select it below.
-        </p>
-      </Alert>
-      <FormControl fullWidth>
-        <SingleInputSelector
-          label="Template sequence"
-          selectedId={template}
-          onChange={(e) => setTemplate(e.target.value)}
-          inputEntityIds={[]}
-        />
-      </FormControl>
-      {template && (
+      {['homologous_recombination', 'crispr'].includes(primerDesignType)
+      && (
+        <>
+          <Alert severity="info" icon={false} sx={{ textAlign: 'left' }}>
+            <p style={{ marginBottom: 4 }}>
+              Use this to design
+              {' '}
+              <strong>primers with homology arms</strong>
+              {' '}
+              to amplify a fragment of sequence
+              {' '}
+              {source.input[0]}
+              {' '}
+              and insert it into a
+              {' '}
+              <strong>target sequence</strong>
+              {' '}
+              via
+              {' '}
+              {primerDesignType === 'homologous_recombination' ? 'homologous recombination' : 'CRISPR cut + homologous repair'}
+              .
+            </p>
+            <p>
+              If you haven&apos;t, import a
+              {' '}
+              <strong>target sequence</strong>
+              , then select it below.
+            </p>
+          </Alert>
+          <FormControl fullWidth>
+            <SingleInputSelector
+              label="Target sequence"
+              selectedId={target}
+              onChange={(e) => setTarget(e.target.value)}
+              inputEntityIds={[]}
+            />
+          </FormControl>
+        </>
+      )}
+
+      {target && (
       <Button type="submit" variant="contained" color="success">
         Design primers
       </Button>
