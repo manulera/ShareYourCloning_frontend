@@ -94,6 +94,10 @@ function SequenceEditor({ entityId, isRootNode }) {
         // TODO: this does not work
         caretPosition,
         caretPositionUpdate: (a) => updateSelectedRegion(a, true),
+        annotationVisibility: {
+          // This is not working right now, waiting for https://github.com/TeselaGen/tg-oss/issues/85
+          featureTypesToHide: { source: true },
+        },
       }}
       />
       <OverhangsDisplay {...{ entity }} />

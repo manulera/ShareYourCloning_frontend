@@ -20,7 +20,6 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
       const lastId = input[Math.abs(assembly[assembly.length - 1].right.sequence) - 1];
       fragments.push({ id: lastId, left: null, right: null, reverseComplemented: null });
     }
-    console.log(fragments);
     assembly.forEach(({ left, right }) => {
       const leftId = input[Math.abs(left.sequence) - 1];
       const rightId = input[Math.abs(right.sequence) - 1];
@@ -68,7 +67,6 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
     const rightEdge = count + rightEnd - (left?.start || 0);
     // Ranges are 0-based, but [0:0] is not empty, it's the equivalent to python's [0:1]
     f.rangeInAssembly = translateRange({ start: leftEdge, end: rightEdge - 1 }, 0, productLength);
-    console.log(f);
     f.size = size;
 
     count += (rightStart - (left?.start || 0));
