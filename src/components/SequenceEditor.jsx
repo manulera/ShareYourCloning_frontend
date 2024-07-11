@@ -6,7 +6,8 @@ import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 import { cloningActions } from '../store/cloning';
-import getTransformCoords from '../utils/transformCoords.js';
+import getTransformCoords from '../utils/transformCoords';
+import { getPrimerLinks } from '../store/cloning_utils';
 
 const transformToRegion = (eventOutput) => {
   if (eventOutput.selectionLayer) {
@@ -19,8 +20,13 @@ const transformToRegion = (eventOutput) => {
 
 function SequenceEditor({ entityId, isRootNode }) {
   const editorName = `editor_${entityId}`;
-  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), shallowEqual);
+  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), isEqual);
+  const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
   const seq = convertToTeselaJson(entity);
+  // Filter out features of type "source"
+  seq.features = seq.features.filter((f) => f.type !== 'source');
+  // Add linked primers + make them the right color
+  seq.primers = [...seq.primers, ...linkedPrimers].map((p) => ({ ...p, color: '#53d969' }));
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
   const parentEntities = useSelector((state) => state.cloning.entities.filter((e) => parentSource.input.includes(e.id)), shallowEqual);
@@ -94,10 +100,6 @@ function SequenceEditor({ entityId, isRootNode }) {
         // TODO: this does not work
         caretPosition,
         caretPositionUpdate: (a) => updateSelectedRegion(a, true),
-        annotationVisibility: {
-          // This is not working right now, waiting for https://github.com/TeselaGen/tg-oss/issues/85
-          featureTypesToHide: { source: true },
-        },
       }}
       />
       <OverhangsDisplay {...{ entity }} />

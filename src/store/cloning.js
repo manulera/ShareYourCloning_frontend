@@ -22,6 +22,7 @@ const initialState = {
     { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
     { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
   ],
+  primer2entityLinks: [],
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -227,10 +228,18 @@ const reducer = {
   },
 
   addPrimer(state, action) {
-    const newPrimer = action.payload;
+    const primer = action.payload;
     const { primers } = state;
-    newPrimer.id = getNextPrimerId(primers);
-    primers.push(newPrimer);
+    const nextPrimerId = getNextPrimerId(primers);
+    primers.push({ ...primer, id: nextPrimerId });
+  },
+
+  addPrimerAndLinkToEntity(state, action) {
+    const { primer, entityId, position } = action.payload;
+    const { primers, primer2entityLinks } = state;
+    const nextPrimerId = getNextPrimerId(primers);
+    primers.push({ ...primer, id: nextPrimerId });
+    primer2entityLinks.push({ primerId: nextPrimerId, entityId, position });
   },
 
   setPrimers(state, action) {
@@ -250,6 +259,8 @@ const reducer = {
   deletePrimer(state, action) {
     const primerId = action.payload;
     state.primers = state.primers.filter((p) => p.id !== primerId);
+    // Delete all links to this primer
+    state.primer2entityLinks = state.primer2entityLinks.filter((link) => link.primerId !== primerId);
   },
 
   editPrimer(state, action) {

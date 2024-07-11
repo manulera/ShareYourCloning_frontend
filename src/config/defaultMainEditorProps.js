@@ -31,4 +31,11 @@ export default {
       name: 'Properties',
     },
   ]],
+  massageCmds: (cmds) => {
+    // just using the print cmd here as an example but other cmds are also valid targets for modifying
+    Object.keys(cmds).forEach((key) => {
+      delete cmds[key].hotkey;
+    });
+    return cmds;
+  },
 };

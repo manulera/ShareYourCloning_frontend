@@ -9,7 +9,6 @@ function MainSequenceEditor({ onCreatePrimer }) {
   const dispatch = useDispatch();
   const store = useStore();
   const { setMainSequenceSelection } = cloningActions;
-
   const editorName = 'mainEditor';
   const extraProp = {
     onSelectionOrCaretChanged: (a) => dispatch(setMainSequenceSelection(a)),
@@ -18,6 +17,7 @@ function MainSequenceEditor({ onCreatePrimer }) {
     rightClickOverrides: {
       selectionLayerRightClicked: (items, { annotation }, props) => {
         const items2keep = items.filter((i) => i.text === 'Copy');
+        const { start, end } = annotation;
         return [
           ...items2keep,
           {
@@ -25,15 +25,19 @@ function MainSequenceEditor({ onCreatePrimer }) {
             submenu: [
               {
                 text: 'Primer from selection',
-                onClick: () => onCreatePrimer(
-                  getSequenceDataBetweenRange(props.sequenceData, annotation).sequence,
-                ),
+                onClick: () => {
+                  onCreatePrimer({
+                    sequence: getSequenceDataBetweenRange(props.sequenceData, annotation).sequence,
+                    position: { start, end, strand: 1 },
+                  });
+                },
               },
               {
                 text: 'Primer from reverse complement',
-                onClick: () => onCreatePrimer(
-                  getReverseComplementSequenceString(getSequenceDataBetweenRange(props.sequenceData, annotation).sequence),
-                ),
+                onClick: () => onCreatePrimer({
+                  sequence: getReverseComplementSequenceString(getSequenceDataBetweenRange(props.sequenceData, annotation).sequence),
+                  position: { start, end, strand: -1 },
+                }),
 
               },
             ],

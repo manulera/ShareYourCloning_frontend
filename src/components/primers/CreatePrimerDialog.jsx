@@ -3,17 +3,21 @@ import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import PrimerResultForm from './primer_design/PrimerResultForm';
 import { cloningActions } from '../../store/cloning';
+import useStoreEditor from '../../hooks/useStoreEditor';
 
-function CreatePrimerDialog({ primerSequence, setPrimerSequence }) {
+function CreatePrimerDialog({ primerSequence, setPrimerSequence, position }) {
   const [name, setName] = React.useState('');
   const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
-  const { addPrimer } = cloningActions;
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
+  const { addPrimerAndLinkToEntity } = cloningActions;
+  const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPrimer({ name, sequence: primerSequence }));
+    dispatch(addPrimerAndLinkToEntity({ primer: { name, sequence: primerSequence }, entityId: mainSequenceId, position }));
     setPrimerSequence('');
     setName('');
+    updateStoreEditor('mainEditor', mainSequenceId);
   };
 
   return (

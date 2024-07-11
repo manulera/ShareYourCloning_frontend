@@ -1,10 +1,9 @@
+import { isEqual } from 'lodash-es';
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 function DataModelDisplayer() {
-  const sources = useSelector((state) => state.cloning.sources, shallowEqual);
-  const sequences = useSelector((state) => state.cloning.entities, shallowEqual);
-  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
+  const { sources, entities: sequences, primers, primer2entityLinks } = useSelector((state) => state.cloning, isEqual);
   const trimmedSequences = sequences.map((s) => {
     const seqOut = { ...s };
     seqOut.file_content = '[...]';
@@ -21,7 +20,7 @@ function DataModelDisplayer() {
       </p>
 
       <code>
-        {JSON.stringify({ sources, sequences: trimmedSequences, primers }, null, 4)}
+        {JSON.stringify({ sources, sequences: trimmedSequences, primers, primer2entityLinks }, null, 4)}
       </code>
     </div>
   );

@@ -78,3 +78,19 @@ export function getPrimerDesignObject({ sources, entities }) {
 
   return { finalSource, templateSequencesIds, otherInputIds, pcrSources };
 }
+
+export function getPrimerLinks({ primers, primer2entityLinks }, entityId) {
+  const relatedLinks = primer2entityLinks.filter((link) => link.entityId === entityId);
+  return relatedLinks.map(({ position, primerId }) => {
+    const { name, sequence, id } = primers.find((p) => p.id === primerId);
+    return {
+      id: `${id}`,
+      name,
+      ...position,
+      type: 'primer_bind',
+      primerBindsOn: '3prime',
+      forward: position.strand === 1,
+      bases: sequence,
+    };
+  });
+}
