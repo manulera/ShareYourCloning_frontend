@@ -14,7 +14,7 @@ function SequenceTab() {
     <>
       <PrimerDesigner />
       <MainSequenceEditor onCreatePrimer={onCreatePrimer} />
-      <CreatePrimerDialog {...{ primerSequence, setPrimerSequence, position }} />
+      {position && <CreatePrimerDialog {...{ primerSequence, setPrimerSequence, position, setPosition }} />}
     </>
   );
 }
