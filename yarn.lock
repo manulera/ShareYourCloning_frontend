@@ -7635,6 +7635,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-draggable@npm:^4.4.6":
+  version: 4.4.6
+  resolution: "react-draggable@npm:4.4.6"
+  dependencies:
+    clsx: ^1.1.1
+    prop-types: ^15.8.1
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: 9b15aac59244873ac4561c5a2bead43a56e18d406e0a5f242bd4f9d151c074530c02b99387983104bf43417292f9cf8d063e554ed08d88792235e3fbc965f1b8
+  languageName: node
+  linkType: hard
+
 "react-dropzone@npm:^11.4.2":
   version: 11.7.1
   resolution: "react-dropzone@npm:11.7.1"
@@ -8464,6 +8477,7 @@ __metadata:
     lodash-es: ^4.17.21
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-draggable: ^4.4.6
     react-redux: ^8.1.1
     redux: ^4.2.1
     redux-form: ^8.3.10

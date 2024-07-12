@@ -7,6 +7,7 @@ import useStoreEditor from '../../hooks/useStoreEditor';
 import CreatePrimerFromSequenceForm from './CreatePrimerFromSequenceForm';
 import { getStructuredBases } from '../../utils/getStructuredBases';
 import { convertToTeselaJson } from '../../utils/sequenceParsers';
+import DraggableDialogPaper from '../DraggableDialogPaper';
 
 function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPosition }) {
   const [name, setName] = React.useState('');
@@ -24,6 +25,7 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
     setName('');
     updateStoreEditor('mainEditor', entity.id);
   };
+
   const { sequence: fullSequence } = convertToTeselaJson(entity);
   // getStructuredBases();
 
@@ -40,13 +42,18 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
         bases: primerSequence,
       };
       editorState.sequenceData.primers.shareyourcloningDummyPrimer = dummyPrimer;
+      editorState.panelsShown[0].forEach((p) => {
+        if (p.id === 'sequence') {
+          p.active = true;
+        } else { p.active = false; }
+      });
       updateEditor(store, 'mainEditor', editorState);
     }
   }, [primerSequence, position]);
 
   return (
-    <Dialog open={primerSequence !== ''} onClose={() => { setPrimerSequence(''); setPosition(null); }} className="load-example-dialog">
-      <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large' }}> Create primer </DialogTitle>
+    <Dialog aria-labelledby="draggable-dialog-title" open={primerSequence !== ''} onClose={() => { setPrimerSequence(''); setPosition(null); }} PaperComponent={DraggableDialogPaper}>
+      <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large', cursor: 'move' }}> Create primer </DialogTitle>
       <DialogContent sx={{ minWidth: '600px' }}>
         <form onSubmit={onSubmit}>
           <CreatePrimerFromSequenceForm
