@@ -7,7 +7,7 @@ import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 import { cloningActions } from '../store/cloning';
 import getTransformCoords from '../utils/transformCoords';
-import { getPrimerLinks } from '../store/cloning_utils';
+import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
 
 const transformToRegion = (eventOutput) => {
   if (eventOutput.selectionLayer) {
@@ -22,10 +22,12 @@ function SequenceEditor({ entityId, isRootNode }) {
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), isEqual);
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
+  const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, entityId), isEqual);
   const seq = convertToTeselaJson(entity);
   // Filter out features of type "source"
   seq.features = seq.features.filter((f) => f.type !== 'source');
-  seq.primers = [...seq.primers, ...linkedPrimers];
+  seq.primers = [...seq.primers, ...linkedPrimers, ...pcrPrimers];
+  console.log(entityId, pcrPrimers);
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
   const parentEntities = useSelector((state) => state.cloning.entities.filter((e) => parentSource.input.includes(e.id)), shallowEqual);

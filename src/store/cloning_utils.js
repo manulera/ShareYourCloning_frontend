@@ -1,3 +1,5 @@
+import { convertToTeselaJson } from '../utils/sequenceParsers';
+
 export const isEntityInputOfAnySource = (id, sources) => (sources.find((source) => source.input.includes(id))) !== undefined;
 
 export function getIdsOfEntitiesWithoutChildSource(sources, entities) {
@@ -102,4 +104,44 @@ export function getPrimerLinks({ primers, primer2entityLinks }, entityId) {
     return formatPrimer(primer, position);
   });
   return out.filter((p) => p !== null);
+}
+
+export function pcrPrimerPositionsInInput(source) {
+  if (source.type !== 'PCRSource') {
+    throw new Error('Source is not a PCRSource');
+  }
+  const fwd = { ...source.assembly[0].right.location };
+  fwd.end -= 1;
+  fwd.strand = 1;
+  const rvs = { ...source.assembly[1].left.location };
+  rvs.end -= 1;
+  rvs.strand = -1;
+  return [fwd, rvs];
+}
+
+export function pcrPrimerPositionsInOutput(primers, entity) {
+  const sequenceData = convertToTeselaJson(entity);
+  const [fwdPrimer, rvsPrimer] = primers;
+  return [
+    { start: 0, end: fwdPrimer.sequence.length - 1, strand: 1 },
+    { start: sequenceData.size - rvsPrimer.sequence.length, end: sequenceData.size - 1, strand: -1 },
+  ];
+}
+
+export function getPCRPrimers({ primers, sources, entities }, entityId) {
+  const sourceInput = sources.find((s) => s.input.includes(entityId));
+  const sourceOutput = sources.find((s) => s.output === entityId);
+  let out = [];
+  if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 2) {
+    const pcrPrimers = [sourceInput.forward_primer, sourceInput.reverse_primer].map((id) => primers.find((p) => p.id === id));
+    const primerPositions = pcrPrimerPositionsInInput(sourceInput);
+    out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
+  }
+  if (sourceOutput?.type === 'PCRSource') {
+    const pcrPrimers = [sourceOutput.forward_primer, sourceOutput.reverse_primer].map((id) => primers.find((p) => p.id === id));
+    const entity = entities.find((e) => e.id === entityId);
+    const primerPositions = pcrPrimerPositionsInOutput(pcrPrimers, entity);
+    out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
+  }
+  return out;
 }

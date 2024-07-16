@@ -1,7 +1,7 @@
 import { useStore } from 'react-redux';
 import { updateEditor } from '@teselagen/ove';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
-import { getPrimerLinks } from '../store/cloning_utils';
+import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
 
 export default function useStoreEditor() {
   const store = useStore();
@@ -17,8 +17,9 @@ export default function useStoreEditor() {
       const entity = entities.find((e) => e.id === id);
       const sequenceData = entity === undefined ? undefined : convertToTeselaJson(entity);
       const linkedPrimers = getPrimerLinks(cloning, id);
+      const pcrPrimers = getPCRPrimers(cloning, id);
       linkedPrimers.forEach((p) => { p.color = 'lightblue'; });
-      sequenceData.primers = sequenceData.primers.concat(linkedPrimers);
+      sequenceData.primers = sequenceData.primers.concat([...linkedPrimers, ...pcrPrimers]);
       updateEditor(store, editorName, { sequenceData, selectionLayer });
     }
   };
