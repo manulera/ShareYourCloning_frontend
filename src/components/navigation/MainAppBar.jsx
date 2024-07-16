@@ -88,19 +88,19 @@ function MainAppBar() {
   };
 
   // If you want to load a particular example on page load, you can do it here.
-  React.useEffect(() => {
-    const fetchExample = async () => {
-      const { data } = await axios.get('examples/homologous_recombination.json');
-      loadData(data, false, dispatch, setLoadedFileError);
-      dispatch(setCurrentTab(3));
-      // 500 ms timeout
-      setTimeout(() => {
-        dispatch(setMainSequenceId(2));
-        updateStoreEditor('mainEditor', 2);
-      }, 500);
-    };
-    fetchExample();
-  }, []);
+  // React.useEffect(() => {
+  //   const fetchExample = async () => {
+  //     const { data } = await axios.get('examples/homologous_recombination.json');
+  //     loadData(data, false, dispatch, setLoadedFileError);
+  //     dispatch(setCurrentTab(3));
+  //     // 500 ms timeout
+  //     setTimeout(() => {
+  //       dispatch(setMainSequenceId(2));
+  //       updateStoreEditor('mainEditor', 2);
+  //     }, 500);
+  //   };
+  //   fetchExample();
+  // }, []);
 
   return (
     <AppBar position="static" className="app-bar">
