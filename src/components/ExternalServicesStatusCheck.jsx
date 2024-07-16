@@ -1,6 +1,7 @@
 import { Alert, Button, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
+import { backendRoute } from '../utils/routing';
 
 function ExternalServicesStatusCheck() {
   const [servicesDown, setServicesDown] = React.useState([]);
@@ -13,12 +14,12 @@ function ExternalServicesStatusCheck() {
       const services = [
         {
           message: 'Backend server is down',
-          url: new URL('', import.meta.env.VITE_REACT_APP_BACKEND_URL).href,
+          url: backendRoute(''),
           check: (resp) => resp.status === 200,
         },
         {
           message: 'NCBI server is down',
-          url: new URL('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', import.meta.env.VITE_REACT_APP_BACKEND_URL).href,
+          url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761',
           check: (resp) => (resp.status === 200) && (resp.data.result['22258761']),
         },
       ];

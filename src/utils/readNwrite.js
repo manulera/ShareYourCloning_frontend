@@ -2,6 +2,7 @@ import axios from 'axios';
 import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
 import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 import { cloningActions } from '../store/cloning';
+import { backendRoute } from './routing';
 
 const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers } = cloningActions;
 
@@ -145,7 +146,7 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
 export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError) => {
   if (isTemplate !== true) {
     // Validate using the API
-    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    const url = backendRoute('validate');
     // TODO: for validation, the sequences could be sent empty to reduce size
     try {
       await axios.post(url, newState);

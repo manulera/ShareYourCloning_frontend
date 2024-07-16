@@ -6,6 +6,7 @@ import axios from 'axios';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
+import { backendRoute } from '../utils/routing';
 
 function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
   const [name, setName] = React.useState('');
@@ -21,7 +22,7 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
 
   const changeName = async (newName) => {
     setError('');
-    const url = new URL('rename_sequence', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    const url = backendRoute('rename_sequence');
     try {
       const { data: newEntity } = await axios.post(url, entity, { params: { name } });
       const newSource = { ...source, output_name: newName };

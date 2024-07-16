@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, batch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import { loadData } from '../utils/readNwrite';
+import { backendRoute } from '../utils/routing';
 
 async function processSequenceFiles(files) {
   const allSources = [];
@@ -20,7 +21,7 @@ async function processSequenceFiles(files) {
         'content-type': 'multipart/form-data',
       },
     };
-    const url = new URL('read_from_file', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    const url = backendRoute('read_from_file');
     try {
       const { data: { sources, sequences } } = await axios.post(url, formData, config);
       return { sources, sequences };

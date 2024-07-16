@@ -8,7 +8,8 @@ COPY . /app
 RUN corepack enable
 RUN yarn install
 # This parameter can be changed at build time with --build-arg option
-ARG BACKEND_URL=http://localhost:8000
+# Trailing slash is important if there is a path after the first part of the URL
+ARG BACKEND_URL=/api
 RUN VITE_REACT_APP_BACKEND_URL=$BACKEND_URL yarn build
 
 # For now the image contains the dev server. Ideally we want to be able to set
@@ -20,4 +21,7 @@ FROM node:18-alpine
 WORKDIR /build
 COPY --from=builder /app/build .
 RUN npm install http-server -g
-CMD ["http-server", "--port", "3000"]
+# Install curl
+RUN apk add --no-cache curl
+RUN curl https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types > mime.types
+CMD ["http-server", "--port", "3000", "--mime-types", "mime.types"]
