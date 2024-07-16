@@ -78,8 +78,9 @@ export async function geneSuggest(assemblyId, userInput) {
 }
 
 export async function getInfoFromAssemblyId(assemblyId) {
-  const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/dataset_report`;
+  const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/dataset_report?filters.assembly_version=all_assemblies`;
   const resp = await axios.get(url, { validateStatus: false });
+
   if (resp.status === 404 || resp.data.reports === undefined) {
     return null;
   }
@@ -89,15 +90,17 @@ export async function getInfoFromAssemblyId(assemblyId) {
   }
 
   const species = reports[0].organism;
+  const newerAssembly = reports[0].assembly_info.assembly_status !== 'current' ? reports[0].current_accession : null;
 
-  const url2 = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/annotation_report/download_summary`;
-  try {
-    const resp2 = await axios.get(url2);
-    const hasAnnotation = resp2.data.record_count !== undefined;
-    return { species, hasAnnotation };
-  } catch (error) {
-    return { species, hasAnnotation: false };
-  }
+  // const url2 = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/${assemblyId}/annotation_report/download_summary`;
+  // try {
+  //   const resp2 = await axios.get(url2);
+  //   const hasAnnotation = resp2.data.record_count !== undefined;
+  //   return { species, hasAnnotation, newerAssembly };
+  // } catch (error) {
+  //   return { species, hasAnnotation: false, newerAssembly };
+  // }
+  return { species, hasAnnotation: reports[0].annotation_info !== undefined, newerAssembly };
 
   // I used to check like this, but no longer works (see https://github.com/ncbi/datasets/issues/380)
   // const annotationInfo = reports[0].annotation_info || null;

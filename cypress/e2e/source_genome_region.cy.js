@@ -77,6 +77,9 @@ describe('GenomeRegion Source', () => {
     // Shows the right message if the assembly has no annotations
     setInputValue('Assembly ID', 'GCA_006386175.1', 'li#source-1');
     cy.get('li#source-1').contains('The selected assembly has no gene annotations', { timeout: 20000 });
+    // Shows a warning if a newer assembly exists
+    setInputValue('Assembly ID', 'GCF_000002945.1', 'li#source-1');
+    cy.get('li#source-1').contains('Newer assembly exists', { timeout: 20000 });
     setInputValue('Assembly ID', 'GCF_000146045.2', 'li#source-1');
     cy.get('label').contains('Gene', { timeOut: 20000 }).siblings('div').children('input')
       .type('dummy');
