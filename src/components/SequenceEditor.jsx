@@ -25,8 +25,7 @@ function SequenceEditor({ entityId, isRootNode }) {
   const seq = convertToTeselaJson(entity);
   // Filter out features of type "source"
   seq.features = seq.features.filter((f) => f.type !== 'source');
-  // Add linked primers + make them the right color
-  seq.primers = [...seq.primers, ...linkedPrimers].map((p) => ({ ...p, color: '#53d969' }));
+  seq.primers = [...seq.primers, ...linkedPrimers];
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
   const parentEntities = useSelector((state) => state.cloning.entities.filter((e) => parentSource.input.includes(e.id)), shallowEqual);

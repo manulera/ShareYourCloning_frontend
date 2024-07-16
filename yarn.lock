@@ -1597,9 +1597,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/ove@npm:^0.5.21":
-  version: 0.5.21
-  resolution: "@teselagen/ove@npm:0.5.21"
+"@teselagen/ove@npm:^0.5.22":
+  version: 0.5.22
+  resolution: "@teselagen/ove@npm:0.5.22"
   dependencies:
     "@blueprintjs/core": 3.52.0
     "@blueprintjs/datetime": 3.23.19
@@ -1686,7 +1686,7 @@ __metadata:
     use-deep-compare-effect: ^1.6.1
     validate.io-nonnegative-integer-array: ^1.0.1
     write-excel-file: ^1.4.25
-  checksum: 766d6dd1340062f73fbdbc2bee446afc1b77f3a21478aa485240fb0af9e6f7508dd6232508e973e340d3793d8916fc95f540d0172e70d979aa19ed1205692b0e
+  checksum: b2c5950896026b88be9ae7d903f8d052a4a706cd667e3120956413c1e033ed09261c25d5e9e5efd47b55d1c02ca4c10ca547da33fb5634c3499a067fa002091b
   languageName: node
   linkType: hard
 
@@ -8457,7 +8457,7 @@ __metadata:
     "@mui/material": ^5.15.17
     "@reduxjs/toolkit": ^1.9.7
     "@teselagen/bio-parsers": ^0.4.19
-    "@teselagen/ove": ^0.5.21
+    "@teselagen/ove": ^0.5.22
     "@teselagen/range-utils": ^0.3.8
     "@teselagen/sequence-utils": ^0.3.25
     "@testing-library/jest-dom": ^6.1.4

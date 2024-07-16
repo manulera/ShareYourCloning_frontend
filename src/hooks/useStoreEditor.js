@@ -17,8 +17,8 @@ export default function useStoreEditor() {
       const entity = entities.find((e) => e.id === id);
       const sequenceData = entity === undefined ? undefined : convertToTeselaJson(entity);
       const linkedPrimers = getPrimerLinks(cloning, id);
+      linkedPrimers.forEach((p) => { p.color = 'lightblue'; });
       sequenceData.primers = sequenceData.primers.concat(linkedPrimers);
-      sequenceData.primers.forEach((p) => { p.color = '#53d969'; });
       updateEditor(store, editorName, { sequenceData, selectionLayer });
     }
   };
