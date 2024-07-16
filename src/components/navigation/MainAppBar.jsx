@@ -16,6 +16,7 @@ import SelectTemplateDialog from './SelectTemplateDialog';
 import FeedbackDialog from './FeedbackDialog';
 import MiscDialog from './MiscDialog';
 import { cloningActions } from '../../store/cloning';
+import useStoreEditor from '../../hooks/useStoreEditor';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -24,6 +25,7 @@ function MainAppBar() {
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
+  const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
   const exportData = () => {
     dispatch(exportStateThunk());
@@ -32,7 +34,7 @@ function MainAppBar() {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
-  const { setCurrentTab } = cloningActions;
+  const { setCurrentTab, setMainSequenceId } = cloningActions;
   const fileMenu = [
     { display: 'Save cloning history to file', onClick: exportData },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
@@ -88,8 +90,14 @@ function MainAppBar() {
   // If you want to load a particular example on page load, you can do it here.
   // React.useEffect(() => {
   //   const fetchExample = async () => {
-  //     const { data } = await axios.get('examples/golden_gate.json');
+  //     const { data } = await axios.get('examples/homologous_recombination.json');
   //     loadData(data, false, dispatch, setLoadedFileError);
+  //     dispatch(setCurrentTab(3));
+  //     // 500 ms timeout
+  //     setTimeout(() => {
+  //       dispatch(setMainSequenceId(2));
+  //       updateStoreEditor('mainEditor', 2);
+  //     }, 500);
   //   };
   //   fetchExample();
   // }, []);

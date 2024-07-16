@@ -64,14 +64,15 @@ function ShareYourCloning() {
           <DescriptionEditor />
         </div>
       </TabPannel>
-      <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="share-your-cloning">
-          <CloningHistory network={network} />
-        </div>
-      </TabPannel>
+      {/* For some reason, putting this here is required for primer.color to work */}
       <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">
         <div className="main-sequence-editor">
           <SequenceTab />
+        </div>
+      </TabPannel>
+      <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
+        <div className="share-your-cloning">
+          <CloningHistory network={network} />
         </div>
       </TabPannel>
       <TabPannel index={4} value={currentTab} className="data-model-tab-pannel">

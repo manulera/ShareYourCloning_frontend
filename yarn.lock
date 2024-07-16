@@ -519,6 +519,68 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dnd-kit/accessibility@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@dnd-kit/accessibility@npm:3.1.0"
+  dependencies:
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: fcb88c961e2f4c226ab575bc4a13712419884bb0f60761befcaa23bcb6c9939dc2cac6633416f2a07baee9a8830350c6df444039332408cdaaf27cad17c6b64b
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/core@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "@dnd-kit/core@npm:6.1.0"
+  dependencies:
+    "@dnd-kit/accessibility": ^3.1.0
+    "@dnd-kit/utilities": ^3.2.2
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 3b8f46d2f4d2723abad4721c7bc4d1df2c4f6f26ce54673243666212cfa6f34f33e3255b53144a847da469dc736c966c19e4c45330f967ce8c01f8f878ec7f5b
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/modifiers@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "@dnd-kit/modifiers@npm:7.0.0"
+  dependencies:
+    "@dnd-kit/utilities": ^3.2.2
+    tslib: ^2.0.0
+  peerDependencies:
+    "@dnd-kit/core": ^6.1.0
+    react: ">=16.8.0"
+  checksum: 176f76a552a2692a205f7fe647c836aa7ded7f0fdc3370407f3633c153139fe838cb85e59cbc3b156377cc8fe3fb7b72af15b97ed3de15cec904eae35f0c36e6
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/sortable@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@dnd-kit/sortable@npm:8.0.0"
+  dependencies:
+    "@dnd-kit/utilities": ^3.2.2
+    tslib: ^2.0.0
+  peerDependencies:
+    "@dnd-kit/core": ^6.1.0
+    react: ">=16.8.0"
+  checksum: 26589fd23c18d930a949489b232a7345c0bee4abb6be91d3673232bc79085f13cb5d82087c2068edbc51cbdd3d47c2fe386bada92dc7f2d0dcde13d6be379daa
+  languageName: node
+  linkType: hard
+
+"@dnd-kit/utilities@npm:3.2.2, @dnd-kit/utilities@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "@dnd-kit/utilities@npm:3.2.2"
+  dependencies:
+    tslib: ^2.0.0
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: 8a5015c2faa52760ab82a64287b2ac6a3d798867a1bca5ccbc1178560dbd9a1f9f1a21faea80f590ba1a4277c3eb7e7c4d3b4a39f1f32171bf6bc8174b370547
+  languageName: node
+  linkType: hard
+
 "@emotion/babel-plugin@npm:^11.11.0":
   version: 11.11.0
   resolution: "@emotion/babel-plugin@npm:11.11.0"
@@ -1495,22 +1557,22 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/bio-parsers@npm:0.4.18, @teselagen/bio-parsers@npm:^0.4.18":
-  version: 0.4.18
-  resolution: "@teselagen/bio-parsers@npm:0.4.18"
+"@teselagen/bio-parsers@npm:0.4.19, @teselagen/bio-parsers@npm:^0.4.19":
+  version: 0.4.19
+  resolution: "@teselagen/bio-parsers@npm:0.4.19"
   dependencies:
     "@gmod/gff": ^1.2.1
     "@teselagen/range-utils": 0.3.7
-    "@teselagen/sequence-utils": 0.3.24
+    "@teselagen/sequence-utils": 0.3.25
     buffer: ^6.0.3
     bufferpack: ^0.0.6
     color: ^4.2.3
     fast-xml-parser: ^4.2.5
     fflate: ^0.8.0
-    lodash: ^4.17.21
+    lodash-es: ^4.17.21
     string_decoder: ^1.3.0
     validate.io-nonnegative-integer-array: ^1.0.1
-  checksum: edcb5969e587625642db7d070f6f506ca8588d00409615d57230a628c1c51ad0a3f7856bcbd2710ecd248fa21351e5d326f2bc3268ac5b127f0eafd2cf465940
+  checksum: 58a916c50dec74d41e56bfeab6ce85754605f11f5147fc2a27963182cfb3d0967092829db6c5e9d1b8e07c53f72bc9d535f5c53757475826321188066fb4a473
   languageName: node
   linkType: hard
 
@@ -1535,24 +1597,28 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/ove@npm:^0.5.14":
-  version: 0.5.14
-  resolution: "@teselagen/ove@npm:0.5.14"
+"@teselagen/ove@npm:^0.5.22":
+  version: 0.5.22
+  resolution: "@teselagen/ove@npm:0.5.22"
   dependencies:
     "@blueprintjs/core": 3.52.0
     "@blueprintjs/datetime": 3.23.19
     "@blueprintjs/icons": 3.33.0
     "@blueprintjs/select": 3.18.11
+    "@dnd-kit/core": ^6.1.0
+    "@dnd-kit/modifiers": ^7.0.0
+    "@dnd-kit/sortable": ^8.0.0
+    "@dnd-kit/utilities": 3.2.2
     "@hello-pangea/dnd": 16.2.0
     "@risingstack/react-easy-state": ^6.3.0
-    "@teselagen/bio-parsers": 0.4.18
+    "@teselagen/bio-parsers": 0.4.19
     "@teselagen/bounce-loader": 0.3.11
     "@teselagen/file-utils": 0.3.16
     "@teselagen/range-utils": 0.3.7
     "@teselagen/react-list": 0.8.18
     "@teselagen/react-table": 6.10.16
-    "@teselagen/sequence-utils": 0.3.24
-    "@teselagen/ui": 0.4.11
+    "@teselagen/sequence-utils": 0.3.25
+    "@teselagen/ui": 0.4.18
     "@use-gesture/react": ^10.2.23
     bluebird: 3.7.2
     bson-objectid: 2.0.4
@@ -1582,7 +1648,6 @@ __metadata:
     lodash: 4.17.21
     lodash-es: ^4.17.21
     math-expression-evaluator: ^1.3.7
-    mobx: ^6.10.2
     mobx-react: ^9.0.1
     mock-fs: 5.2.0
     nanoid: ^4.0.0
@@ -1593,7 +1658,9 @@ __metadata:
     popper.js: ^1.16.1
     prop-types: ^15.6.2
     qs: ^6.9.6
+    react: ^18.2.0
     react-color: ^2.19.3
+    react-dom: ^18.2.0
     react-draggable: 4.4.5
     react-dropzone: ^11.4.2
     react-markdown: 8.0.7
@@ -1602,7 +1669,6 @@ __metadata:
     react-rnd: ^10.2.4
     react-router-dom: ^4.3.1
     react-sizeme: ^2.6.12
-    react-sortable-hoc: ^0.6.8
     react-transition-group: ^2.4.0
     recompose: "npm:react-recompose@0.31.1"
     redux: ^4.1.2
@@ -1620,7 +1686,7 @@ __metadata:
     use-deep-compare-effect: ^1.6.1
     validate.io-nonnegative-integer-array: ^1.0.1
     write-excel-file: ^1.4.25
-  checksum: 9711aeda8f55546bcd861338f5fb7d01af97df4b6c2716a5734f319e8bb0ae3ac3d62fc5a594837561e2e101da66499561ba9b9605204cb60df4f0db3b250e0c
+  checksum: b2c5950896026b88be9ae7d903f8d052a4a706cd667e3120956413c1e033ed09261c25d5e9e5efd47b55d1c02ca4c10ca547da33fb5634c3499a067fa002091b
   languageName: node
   linkType: hard
 
@@ -1667,27 +1733,31 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@teselagen/sequence-utils@npm:0.3.24, @teselagen/sequence-utils@npm:^0.3.24":
-  version: 0.3.24
-  resolution: "@teselagen/sequence-utils@npm:0.3.24"
+"@teselagen/sequence-utils@npm:0.3.25, @teselagen/sequence-utils@npm:^0.3.25":
+  version: 0.3.25
+  resolution: "@teselagen/sequence-utils@npm:0.3.25"
   dependencies:
     "@teselagen/range-utils": 0.3.7
     bson-objectid: ^2.0.4
     escape-string-regexp: ^5.0.0
     jsondiffpatch: 0.4.1
     string-splice: ^1.3.0
-  checksum: 71876a925b3a50281cdbc11b4f0f98a37314cd244a42abf9b801f597ff8d56c6c30c7fbb2b2105661285b522e2d609a1cf23fd1c142338013451a83770a87f46
+  checksum: a6f3d03eaa95fb97b776ad2264ed04a00baafa56b35b4e99f1f038773b031cfd6f5fad0e65ff0787aac699dba695f6524aaebd7faad49b27e5cef99813b2fd08
   languageName: node
   linkType: hard
 
-"@teselagen/ui@npm:0.4.11":
-  version: 0.4.11
-  resolution: "@teselagen/ui@npm:0.4.11"
+"@teselagen/ui@npm:0.4.18":
+  version: 0.4.18
+  resolution: "@teselagen/ui@npm:0.4.18"
   dependencies:
     "@blueprintjs/core": 3.52.0
     "@blueprintjs/datetime": 3.23.19
     "@blueprintjs/icons": 3.33.0
     "@blueprintjs/select": 3.18.11
+    "@dnd-kit/core": ^6.1.0
+    "@dnd-kit/modifiers": ^7.0.0
+    "@dnd-kit/sortable": ^8.0.0
+    "@dnd-kit/utilities": 3.2.2
     "@teselagen/bounce-loader": 0.3.11
     "@teselagen/file-utils": 0.3.16
     "@teselagen/react-table": 6.10.16
@@ -1704,22 +1774,21 @@ __metadata:
     immer: ^9.0.15
     is-mobile: ^3.0.0
     jszip: ^3.10.1
-    lodash: 4.17.21
     lodash-es: ^4.17.21
     math-expression-evaluator: ^1.3.7
-    mobx: ^6.10.2
     mobx-react: ^9.0.1
     mock-fs: 5.2.0
     nanoid: ^4.0.0
     papaparse: ^5.3.2
     qs: ^6.9.6
+    react: ^18.2.0
     react-color: ^2.19.3
+    react-dom: ^18.2.0
     react-dropzone: ^11.4.2
     react-markdown: 8.0.7
     react-redux: ^8.0.5
     react-rnd: ^10.2.4
     react-router-dom: ^4.3.1
-    react-sortable-hoc: ^0.6.8
     react-transition-group: ^2.4.0
     recompose: "npm:react-recompose@0.31.1"
     redux: ^4.1.2
@@ -1730,7 +1799,7 @@ __metadata:
     url-join: ^4.0.1
     use-deep-compare-effect: ^1.6.1
     write-excel-file: ^1.4.25
-  checksum: 59c16a92b3ec076fd4352c1cb1f8c2e9e90f3b5bae85a9fb381d42f5d7547d71c1b5832b37c75079c0fdcbe5a6f4b0501570bc9b4a3a88baf2ad99dc9ad62edb
+  checksum: f9d6a937f4f5513433b6a9004971ee5faa248902e6a6c05335bff3eb3f8ffed47291475f73b22d0e90ee231dd11d2f5a6e9b77f3e2eb6e01afc70f06e1fe47e3
   languageName: node
   linkType: hard
 
@@ -2613,16 +2682,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"babel-runtime@npm:^6.11.6":
-  version: 6.26.0
-  resolution: "babel-runtime@npm:6.26.0"
-  dependencies:
-    core-js: ^2.4.0
-    regenerator-runtime: ^0.11.0
-  checksum: 8aeade94665e67a73c1ccc10f6fd42ba0c689b980032b70929de7a6d9a12eb87ef51902733f8fefede35afea7a5c3ef7e916a64d503446c1eedc9e3284bd3d50
-  languageName: node
-  linkType: hard
-
 "bail@npm:^2.0.0":
   version: 2.0.2
   resolution: "bail@npm:2.0.2"
@@ -3174,13 +3233,6 @@ __metadata:
   dependencies:
     toggle-selection: ^1.0.6
   checksum: e0a325e39b7615108e6c1c8ac110ae7b829cdc4ee3278b1df6a0e4228c490442cc86444cd643e2da344fbc424b3aab8909e2fec82f8bc75e7e5b190b7c24eecf
-  languageName: node
-  linkType: hard
-
-"core-js@npm:^2.4.0":
-  version: 2.6.12
-  resolution: "core-js@npm:2.6.12"
-  checksum: 44fa9934a85f8c78d61e0c8b7b22436330471ffe59ec5076fe7f324d6e8cf7f824b14b1c81ca73608b13bdb0fef035bd820989bf059767ad6fa13123bb8bd016
   languageName: node
   linkType: hard
 
@@ -5195,7 +5247,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"invariant@npm:^2.2.1, invariant@npm:^2.2.4":
+"invariant@npm:^2.2.4":
   version: 2.2.4
   resolution: "invariant@npm:2.2.4"
   dependencies:
@@ -5974,7 +6026,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:4.17.21, lodash@npm:^4.0.1, lodash@npm:^4.12.0, lodash@npm:^4.17.15, lodash@npm:^4.17.21":
+"lodash@npm:4.17.21, lodash@npm:^4.0.1, lodash@npm:^4.17.15, lodash@npm:^4.17.21":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -6834,13 +6886,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mobx@npm:^6.10.2":
-  version: 6.10.2
-  resolution: "mobx@npm:6.10.2"
-  checksum: 14d6f1db4e3a61c823510ea130229c96bd4958b77d81057ac1abc6a439703eaf3ea2289192ef205b4250d3adb1d83a439ad56d5e53f2b967c6e62a6bccc23d8a
-  languageName: node
-  linkType: hard
-
 "mock-fs@npm:5.2.0":
   version: 5.2.0
   resolution: "mock-fs@npm:5.2.0"
@@ -7437,7 +7482,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:15, prop-types@npm:^15.0.0, prop-types@npm:^15.5.10, prop-types@npm:^15.5.7, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
+"prop-types@npm:15, prop-types@npm:^15.0.0, prop-types@npm:^15.5.10, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -7587,6 +7632,19 @@ __metadata:
     react: ">= 16.3.0"
     react-dom: ">= 16.3.0"
   checksum: 21c3775db086e13020967627c20acd41d1ddbc7c7d7fca51491a5bbb54a0aa7e1730a4bc9af17141eb50a4954e547a5e25b2368f5f54b70db6f2686a897bacf2
+  languageName: node
+  linkType: hard
+
+"react-draggable@npm:^4.4.6":
+  version: 4.4.6
+  resolution: "react-draggable@npm:4.4.6"
+  dependencies:
+    clsx: ^1.1.1
+    prop-types: ^15.8.1
+  peerDependencies:
+    react: ">= 16.3.0"
+    react-dom: ">= 16.3.0"
+  checksum: 9b15aac59244873ac4561c5a2bead43a56e18d406e0a5f242bd4f9d151c074530c02b99387983104bf43417292f9cf8d063e554ed08d88792235e3fbc965f1b8
   languageName: node
   linkType: hard
 
@@ -7790,21 +7848,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-sortable-hoc@npm:^0.6.8":
-  version: 0.6.8
-  resolution: "react-sortable-hoc@npm:0.6.8"
-  dependencies:
-    babel-runtime: ^6.11.6
-    invariant: ^2.2.1
-    lodash: ^4.12.0
-    prop-types: ^15.5.7
-  peerDependencies:
-    react: ^0.14.0 || ^15.0.0 || ^16.0.0
-    react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0
-  checksum: ca2b3b06797d8f63ea5773e006ebf821abe83bbbbac3e7df461e1cbd860da628564e61d16719fc584f373a96796eeaa3cfb68700e8890b7e269f9141651b592d
-  languageName: node
-  linkType: hard
-
 "react-transition-group@npm:^2.4.0, react-transition-group@npm:^2.9.0":
   version: 2.9.0
   resolution: "react-transition-group@npm:2.9.0"
@@ -7982,13 +8025,6 @@ __metadata:
     globalthis: ^1.0.3
     which-builtin-type: ^1.1.3
   checksum: 16e2361988dbdd23274b53fb2b1b9cefeab876c3941a2543b4cadac6f989e3db3957b07a44aac46cfceb3e06e2871785ec2aac992d824f76292f3b5ee87f66f2
-  languageName: node
-  linkType: hard
-
-"regenerator-runtime@npm:^0.11.0":
-  version: 0.11.1
-  resolution: "regenerator-runtime@npm:0.11.1"
-  checksum: 3c97bd2c7b2b3247e6f8e2147a002eb78c995323732dad5dc70fac8d8d0b758d0295e7015b90d3d444446ae77cbd24b9f9123ec3a77018e81d8999818301b4f4
   languageName: node
   linkType: hard
 
@@ -8420,10 +8456,10 @@ __metadata:
     "@mui/icons-material": ^5.15.17
     "@mui/material": ^5.15.17
     "@reduxjs/toolkit": ^1.9.7
-    "@teselagen/bio-parsers": ^0.4.18
-    "@teselagen/ove": ^0.5.14
+    "@teselagen/bio-parsers": ^0.4.19
+    "@teselagen/ove": ^0.5.22
     "@teselagen/range-utils": ^0.3.8
-    "@teselagen/sequence-utils": ^0.3.24
+    "@teselagen/sequence-utils": ^0.3.25
     "@testing-library/jest-dom": ^6.1.4
     "@testing-library/react": ^14.0.0
     "@testing-library/user-event": ^14.5.1
@@ -8441,6 +8477,7 @@ __metadata:
     lodash-es: ^4.17.21
     react: ^18.2.0
     react-dom: ^18.2.0
+    react-draggable: ^4.4.6
     react-redux: ^8.1.1
     redux: ^4.2.1
     redux-form: ^8.3.10
@@ -9115,6 +9152,13 @@ __metadata:
   version: 2.3.1
   resolution: "tslib@npm:2.3.1"
   checksum: de17a98d4614481f7fcb5cd53ffc1aaf8654313be0291e1bfaee4b4bb31a20494b7d218ff2e15017883e8ea9626599b3b0e0229c18383ba9dce89da2adf15cb9
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.0.0":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 74fce0e100f1ebd95b8995fbbd0e6c91bdd8f4c35c00d4da62e285a3363aaa534de40a80db30ecfd388ed7c313c42d930ee0eaf108e8114214b180eec3dbe6f5
   languageName: node
   linkType: hard
 

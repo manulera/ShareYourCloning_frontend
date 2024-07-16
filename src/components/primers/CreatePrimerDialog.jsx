@@ -1,29 +1,90 @@
 import { Button, Dialog, DialogContent, DialogTitle } from '@mui/material';
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import PrimerResultForm from './primer_design/PrimerResultForm';
+import { shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
+import { updateEditor } from '@teselagen/ove';
+import { expandOrContractRangeByLength } from '@teselagen/range-utils';
 import { cloningActions } from '../../store/cloning';
+import useStoreEditor from '../../hooks/useStoreEditor';
+import CreatePrimerFromSequenceForm from './CreatePrimerFromSequenceForm';
+import { convertToTeselaJson } from '../../utils/sequenceParsers';
+import DraggableDialogPaper from '../DraggableDialogPaper';
+import './CreatePrimerDialog.css';
 
-function CreatePrimerDialog({ primerSequence, setPrimerSequence }) {
+function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPosition }) {
   const [name, setName] = React.useState('');
+  const store = useStore();
   const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
-  const { addPrimer } = cloningActions;
+  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId));
+  const { addPrimerAndLinkToEntity } = cloningActions;
+  const sequenceData = convertToTeselaJson(entity);
+  const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPrimer({ name, sequence: primerSequence }));
+    dispatch(addPrimerAndLinkToEntity({ primer: { name, sequence: primerSequence }, entityId: entity.id, position }));
     setPrimerSequence('');
+    setPosition(null);
     setName('');
+    updateStoreEditor('mainEditor', entity.id);
+  };
+  const clearDummyPrimer = () => {
+    const editorState = store.getState().VectorEditor.mainEditor;
+    delete editorState.sequenceData.primers.shareyourcloningDummyPrimer;
+    updateEditor(store, 'mainEditor', editorState);
   };
 
+  React.useEffect(() => {
+    if (primerSequence && position) {
+      const editorState = store.getState().VectorEditor.mainEditor;
+      const forward = position.strand === 1;
+      const endPos = forward ? { start: position.end, end: position.end } : { start: position.start, end: position.start };
+      const primerPosition = expandOrContractRangeByLength(endPos, primerSequence.length - 1, forward, sequenceData.sequence.length);
+      // If the 5' of the primer extends beyond the start of the sequence in a linear sequence, we need to adjust the position
+      const bases = primerSequence;
+      if (!sequenceData.circular && primerPosition.start > primerPosition.end) {
+        primerPosition.start = 0;
+      }
+
+      editorState.caretPosition = primerPosition.end + 1;
+      editorState.selectionLayer = { start: -1, end: -1 };
+
+      const dummyPrimer = {
+        id: 'shareyourcloningDummyPrimer',
+        name,
+        ...primerPosition,
+        type: 'primer_bind',
+        primerBindsOn: '3prime',
+        forward,
+        bases,
+      };
+      editorState.sequenceData.primers.shareyourcloningDummyPrimer = dummyPrimer;
+      editorState.panelsShown[0].forEach((p) => {
+        if (p.id === 'sequence') {
+          p.active = true;
+        } else { p.active = false; }
+      });
+      updateEditor(store, 'mainEditor', editorState);
+      // Scroll to the bottom of the screen
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+  }, [primerSequence, position]);
+
   return (
-    <Dialog open={primerSequence !== ''} onClose={() => setPrimerSequence('')} className="load-example-dialog">
-      <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large' }}> Create primer </DialogTitle>
+    <Dialog
+      className="create-primer-dialog"
+      aria-labelledby="draggable-dialog-title"
+      open={primerSequence !== ''}
+      onClose={() => { setPrimerSequence(''); setPosition(null); clearDummyPrimer(); }}
+      PaperComponent={DraggableDialogPaper}
+      slotProps={{ backdrop: { style: { backgroundColor: 'transparent' } } }}
+    >
+      <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large', cursor: 'move' }}> Create primer </DialogTitle>
       <DialogContent sx={{ minWidth: '600px' }}>
         <form onSubmit={onSubmit}>
-          <PrimerResultForm
+          <CreatePrimerFromSequenceForm
             primer={{ name, sequence: primerSequence }}
-            updatePrimerName={setName}
+            setName={setName}
+            setSequence={setPrimerSequence}
             existingPrimerNames={existingPrimerNames}
           />
           <div style={{ textAlign: 'center' }}>

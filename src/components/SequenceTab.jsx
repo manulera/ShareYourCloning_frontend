@@ -5,14 +5,16 @@ import CreatePrimerDialog from './primers/CreatePrimerDialog';
 
 function SequenceTab() {
   const [primerSequence, setPrimerSequence] = React.useState('');
-  const onCreatePrimer = (sequence) => {
+  const [position, setPosition] = React.useState(null);
+  const onCreatePrimer = ({ sequence, position: newPos }) => {
     setPrimerSequence(sequence);
+    setPosition(newPos);
   };
   return (
     <>
       <PrimerDesigner />
       <MainSequenceEditor onCreatePrimer={onCreatePrimer} />
-      <CreatePrimerDialog {...{ primerSequence, setPrimerSequence }} />
+      {position && <CreatePrimerDialog {...{ primerSequence, setPrimerSequence, position, setPosition }} />}
     </>
   );
 }

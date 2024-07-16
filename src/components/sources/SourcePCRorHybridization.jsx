@@ -78,7 +78,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
     // }));
     setDesigningPrimers(true);
   };
-
+  console.log(designingPrimers);
   const goToPrimerTab = () => {
     dispatch(setCurrentTab(1));
   };
