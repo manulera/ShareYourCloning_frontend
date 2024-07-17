@@ -160,6 +160,7 @@ function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest
   const [species, setSpecies] = React.useState(null);
   const [assemblyId, setAssemblyId] = React.useState('');
   const [noAnnotationError, setNoAnnotationError] = React.useState(false);
+  const [newerAssembly, setNewerAssembly] = React.useState(false);
   const upstreamBasesRef = React.useRef(null);
   const downstreamBasesRef = React.useRef(null);
 
@@ -175,6 +176,7 @@ function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest
     setSpecies(resp === null ? null : resp.species);
     setAssemblyId(resp === null ? null : userInput);
     setNoAnnotationError(resp !== null && !resp.hasAnnotation);
+    setNewerAssembly(resp !== null && resp.newerAssembly);
   };
 
   return (
@@ -182,6 +184,13 @@ function SourceGenomeRegionLocusOnOther({ source, requestStatus, sendPostRequest
       <TextFieldValidate onChange={onAssemblyIdChange} getterFunction={getInfoFromAssemblyId} label="Assembly ID" defaultHelperText="Example ID: GCA_000002945.3" />
       {assemblyId && !noAnnotationError && (
         <>
+          {newerAssembly && (
+          <Alert severity="warning">
+            Newer assembly exists:
+            {' '}
+            <a href={`https://www.ncbi.nlm.nih.gov/datasets/genome/${newerAssembly}`} target="_blank" rel="noopener noreferrer">{newerAssembly}</a>
+          </Alert>
+          )}
           <KnownSpeciesField species={species} />
           <SourceGenomeRegionSelectGene {...{ gene, upstreamBasesRef, downstreamBasesRef, setGene, assemblyId }} />
           {gene && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}

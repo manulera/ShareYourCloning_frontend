@@ -23,6 +23,10 @@ const initialState = {
     { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
   ],
   primer2entityLinks: [],
+  config: {
+    loaded: false,
+    backendUrl: null,
+  },
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -215,7 +219,10 @@ const reducer = {
   },
 
   revertToInitialState(state) {
+    // Revert but keep the config
+    const { config } = state;
     Object.assign(state, initialState);
+    state.config = config;
     state.network = constructNetwork(initialState.entities, initialState.sources);
   },
 
@@ -225,6 +232,11 @@ const reducer = {
 
   setKnownErrors(state, action) {
     state.knownErrors = action.payload;
+  },
+
+  setConfig(state, action) {
+    state.config = action.payload;
+    state.config.loaded = true;
   },
 
   addPrimer(state, action) {

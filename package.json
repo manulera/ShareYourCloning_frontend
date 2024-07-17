@@ -27,6 +27,7 @@
     "scripts": {
         "start": "yarn run vite --force --port 3000",
         "build": "vite build",
+        "build:docker": "vite build --mode docker",
         "test": "vitest"
     },
     "eslintConfig": {

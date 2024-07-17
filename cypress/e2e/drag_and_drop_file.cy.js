@@ -1,6 +1,7 @@
 describe('Test drag and drop functionality', () => {
   beforeEach(() => {
     cy.visit('/');
+    cy.get('li#source-1').should('exist');
   });
   it('Shows the drop area when dragging a file', () => {
     cy.get('div.cloning-history').trigger('dragover');

@@ -26,7 +26,7 @@ docker build --build-arg BACKEND_URL=http://localhost:9837 -t manulera/shareyour
 You can then deploy with with `docker-compose` or run it directly with:
 
 ```bash
-docker run --rm -d --name syc-front -p 3000:3000 manulera/shareyourcloningfrontend
+docker run --rm -d --name frontendcontainer -p 3000:3000 manulera/shareyourcloningfrontend
 ```
 
 The command above will expose the service on port 3000 of the host system.

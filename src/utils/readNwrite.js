@@ -142,10 +142,9 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError) => {
+export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError, url) => {
   if (isTemplate !== true) {
     // Validate using the API
-    const url = new URL('validate', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
     // TODO: for validation, the sequences could be sent empty to reduce size
     try {
       await axios.post(url, newState);

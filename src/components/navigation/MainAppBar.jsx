@@ -17,6 +17,7 @@ import FeedbackDialog from './FeedbackDialog';
 import MiscDialog from './MiscDialog';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
+import useBackendRoute from '../../hooks/useBackendRoute';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -24,6 +25,7 @@ function MainAppBar() {
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
+  const backendRoute = useBackendRoute();
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
@@ -60,7 +62,7 @@ function MainAppBar() {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
       }
-      loadData(data, isTemplate, dispatch, setLoadedFileError);
+      loadData(data, isTemplate, dispatch, setLoadedFileError, backendRoute('validate'));
     }
   };
 
@@ -83,7 +85,7 @@ function MainAppBar() {
         setLoadedFileError('Input file should be a JSON file with the history');
         return;
       }
-      loadData(jsonObject, false, dispatch, setLoadedFileError);
+      loadData(jsonObject, false, dispatch, setLoadedFileError, backendRoute('validate'));
     };
   };
 
@@ -91,7 +93,7 @@ function MainAppBar() {
   // React.useEffect(() => {
   //   const fetchExample = async () => {
   //     const { data } = await axios.get('examples/homologous_recombination.json');
-  //     loadData(data, false, dispatch, setLoadedFileError);
+  //     loadData(data, false, dispatch, setLoadedFileError, backendRoute('validate'));
   //     dispatch(setCurrentTab(3));
   //     // 500 ms timeout
   //     setTimeout(() => {

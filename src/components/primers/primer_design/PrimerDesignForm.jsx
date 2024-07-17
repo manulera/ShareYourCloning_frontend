@@ -11,6 +11,7 @@ import { cloningActions } from '../../../store/cloning';
 import error2String from '../../../utils/error2String';
 import PrimerResultForm from './PrimerResultForm';
 import useStoreEditor from '../../../hooks/useStoreEditor';
+import useBackendRoute from '../../../hooks/useBackendRoute';
 
 function selectedRegion2String(selectedRegion) {
   if (!selectedRegion) {
@@ -73,6 +74,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
   const dispatch = useDispatch();
   const store = useStore();
   const { updateStoreEditor } = useStoreEditor();
+  const backendRoute = useBackendRoute();
 
   const { setMainSequenceId, setCurrentTab } = cloningActions;
   const { addPrimersToPCRSource } = cloningActions;
@@ -129,7 +131,7 @@ export default function PrimerDesignForm({ pcrTemplateId, homologousRecombinatio
         target_tm: targetTm,
       },
     };
-    const url = new URL('/primer_design/homologous_recombination', import.meta.env.VITE_REACT_APP_BACKEND_URL).href;
+    const url = backendRoute('/primer_design/homologous_recombination');
     try {
       const resp = await axios.post(url, requestData, config);
       setError('');
