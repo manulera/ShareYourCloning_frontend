@@ -219,7 +219,10 @@ const reducer = {
   },
 
   revertToInitialState(state) {
+    // Revert but keep the config
+    const { config } = state;
     Object.assign(state, initialState);
+    state.config = config;
     state.network = constructNetwork(initialState.entities, initialState.sources);
   },
 
