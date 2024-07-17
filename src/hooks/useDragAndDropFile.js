@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useDispatch, batch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import { loadData } from '../utils/readNwrite';
-import { backendRoute } from '../utils/routing';
+import useBackendRoute from './useBackendRoute';
 
-async function processSequenceFiles(files) {
+async function processSequenceFiles(files, backendRoute) {
   const allSources = [];
   const allEntities = [];
 
@@ -46,7 +46,7 @@ async function processSequenceFiles(files) {
 
 export default function useDragAndDropFile() {
   const dispatch = useDispatch();
-
+  const backendRoute = useBackendRoute();
   const [isDragging, setIsDragging] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
   const { addSourceAndItsOutputEntity } = cloningActions;
@@ -73,7 +73,7 @@ export default function useDragAndDropFile() {
       reader.readAsText(e.dataTransfer.files[0], 'UTF-8');
       reader.onload = (event) => {
         const newState = JSON.parse(event.target.result);
-        loadData(newState, false, dispatch, setErrorMessage);
+        loadData(newState, false, dispatch, setErrorMessage, backendRoute('validate'));
       };
     } else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       // If any is a JSON file, give an error
@@ -84,7 +84,7 @@ export default function useDragAndDropFile() {
         }
       }
       try {
-        const { sources, entities } = await processSequenceFiles(e.dataTransfer.files);
+        const { sources, entities } = await processSequenceFiles(e.dataTransfer.files, backendRoute);
         batch(() => {
           for (let i = 0; i < sources.length; i += 1) {
             dispatch(addSourceAndItsOutputEntity({ source: sources[i], entity: entities[i], replaceEmptySource: i === 0 }));

@@ -1,5 +1,9 @@
-node_modules
+node_modules/
 .gitignore
+.github/
+.vscode/
+.yarn/
+build/
 Dockerfile
 .git
 ShareYourCloning_backend

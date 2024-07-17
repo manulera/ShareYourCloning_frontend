@@ -7,14 +7,8 @@ WORKDIR /app
 COPY . /app
 RUN corepack enable
 RUN yarn install
-# This parameter can be changed at build time with --build-arg option
-# Trailing slash is important if there is a path after the first part of the URL
-ARG BACKEND_URL=/api
-RUN VITE_REACT_APP_BACKEND_URL=$BACKEND_URL yarn build
-
-# For now the image contains the dev server. Ideally we want to be able to set
-# the BACKEND_URL from runtime environment, but it is not possible to do so
-# with Vite.
+# build:docker sets the same config.json as the dev one
+RUN yarn build:docker
 
 # Stage 2: Create a lightweight production image
 FROM node:18-alpine

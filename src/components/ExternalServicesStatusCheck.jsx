@@ -1,13 +1,14 @@
 import { Alert, Button, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import React from 'react';
-import { backendRoute } from '../utils/routing';
+import useBackendRoute from '../hooks/useBackendRoute';
 
 function ExternalServicesStatusCheck() {
   const [servicesDown, setServicesDown] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
   const [successMessage, setSuccessMessage] = React.useState('');
+  const backendRoute = useBackendRoute();
   React.useEffect(() => {
     setLoading(true);
     const checkServices = async () => {

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
-import { backendRoute } from '../utils/routing';
+import useBackendRoute from '../hooks/useBackendRoute';
 
 function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
   const [name, setName] = React.useState('');
@@ -16,6 +16,7 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
     cloning.entities.find((e) => e.id === id),
     cloning.sources.find((s) => s.output === id),
   ], isEqual);
+  const backendRoute = useBackendRoute();
 
   const { updateEntityAndItsSource } = cloningActions;
   const dispatch = useDispatch();

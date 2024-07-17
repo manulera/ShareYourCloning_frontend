@@ -23,6 +23,10 @@ const initialState = {
     { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
   ],
   primer2entityLinks: [],
+  config: {
+    loaded: false,
+    backendUrl: null,
+  },
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -225,6 +229,11 @@ const reducer = {
 
   setKnownErrors(state, action) {
     state.knownErrors = action.payload;
+  },
+
+  setConfig(state, action) {
+    state.config = action.payload;
+    state.config.loaded = true;
   },
 
   addPrimer(state, action) {

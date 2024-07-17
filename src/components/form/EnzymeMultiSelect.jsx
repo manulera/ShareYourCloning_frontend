@@ -1,8 +1,9 @@
 import * as React from 'react';
 import GetRequestMultiSelect from './GetRequestMultiSelect';
-import { backendRoute } from '../../utils/routing';
+import useBackendRoute from '../../hooks/useBackendRoute';
 
 export default function EnzymeMultiSelect({ setEnzymes }) {
+  const backendRoute = useBackendRoute();
   const url = backendRoute('restriction_enzyme_list');
   const getOptionsFromResponse = (data) => data.enzyme_names;
   const label = 'Enzymes used';
