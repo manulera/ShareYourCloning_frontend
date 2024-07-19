@@ -72,21 +72,19 @@ If you run `yarn start`, then you should be able to access the frontend at [http
 
 For the application to work, you must have a running backend. For that, see the [backend installation instructions](https://github.com/manulera/ShareYourCloning_backend#local-installation).
 
-The requests to the backend are made to the url set at build time (Docker), or `VITE_REACT_APP_BACKEND_URL` environment variable given to the `yarn build` command.
+By default, if you run the dev server with `uvicorn main:app --reload --reload-exclude='.venv'`, the backend will be running at `http://localhost:8000/`. That's where the dev server of the frontend (ran with `yarn start`) will send the requests to by default.
 
-* When you run the application with the development server using `yarn start`, `VITE_REACT_APP_BACKEND_URL` is set to `http://127.0.0.1:8000`, indicated in the file `.env.development` (the default address used when running FastAPI locally).
-* When you build the static assets using `yarn build`, the url is set to the address of the hosted api `https://shareyourcloning.api.genestorian.org`.
+The backend URL can be changed by setting a different value in the `config.json` (see next section).
 
-If you want to specify the backend url (for example, if you are running the api in Docker at `http://localhost:8000`), you can do:
+See also [connecting to the frontend section](https://github.com/manulera/ShareYourCloning_backend?tab=readme-ov-file#connecting-to-the-frontend) in the backend repo.
 
-```bash
-# To run the dev server
-VITE_REACT_APP_BACKEND_URL=http://localhost:8000 yarn start
-# To build the static assets
-VITE_REACT_APP_BACKEND_URL=http://localhost:8000 yarn build
-```
+### Configuration
 
-Finally, if you are serving the frontend at an address different from `http://localhost:3000`, you will have to add the url of the frontend to the CORS allowed origins in the backend ([see here](https://github.com/manulera/ShareYourCloning_backend#connecting-to-the-frontend)). Note that you will also get a CORS error if you run `yarn build` and try to make a request to the backend from `build/index.html` if you just open it in your browser instead of serving it at `localhost:3000`.
+The configuration of the frontend is done in the file that will be served from `/config.json`. In the dev server, this file is served from `public/config.json`. That file is not included in the repository, and is generated from `public/config.dev.json` when you run `yarn start`. For the production site, `config.prod.json` is used. The things you can configure are:
+
+* `backendUrl`: The URL of the backend. By default, it is `http://localhost:8000/`.
+
+For production: when building the site with `yarn build`, simply replace `build/config.json` with your settings. This is what is done in [this docker-compose file](https://github.com/manulera/ShareYourCloning).
 
 ## Contributing :hammer_and_wrench:
 
