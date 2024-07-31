@@ -50,9 +50,11 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.multiple-output-selector', { timeout: 20000 }).should('exist');
-    clickSequenceOutputArrow('li#source-5');
+    cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('not.exist');
     clickSequenceOutputArrow('li#source-5');
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('exist');
+    clickSequenceOutputArrow('li#source-5');
+    cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('not.exist');
     cy.get('li#source-5 button').contains('Choose fragment').click();
     cy.get('li#sequence-6 li#source-5');
     cy.get('li#sequence-6').contains('12 bps');

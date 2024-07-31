@@ -1,12 +1,20 @@
 import react from '@vitejs/plugin-react';
+import { ViteEjsPlugin } from 'vite-plugin-ejs';
+import { loadEnv } from 'vite';
+
 import { resolve } from 'path';
 import fs from 'fs';
 
 export default ({ mode }) => {
   const configFileName = mode === 'production' ? 'config.prod.json' : 'config.dev.json';
+  const env = loadEnv(mode, process.cwd());
+
   return {
     plugins: [
       react(),
+      ViteEjsPlugin({
+        umami_website_id: env.VITE_UMAMI_WEBSITE_ID,
+      }),
       {
         name: 'copy-config',
         // When running the dev server, copy the config file to the public folder

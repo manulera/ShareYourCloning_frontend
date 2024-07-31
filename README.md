@@ -112,6 +112,10 @@ cd ..
 
 ## Misc
 
+### Web analytics
+
+You can configure website analytics using umami by setting the env var `VITE_UMAMI_WEBSITE_ID` to the website id. When building the site, the analytics script will be included in the build. See `index.html` and `vite.config.js` to see how this is done (using ejs templating).
+
 ### Recording video with cypress
 
 Settings (they can also be set as env vars or passed with flags).
