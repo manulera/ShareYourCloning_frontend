@@ -22,7 +22,8 @@
         "react-redux": "^8.1.1",
         "redux": "^4.2.1",
         "redux-form": "^8.3.10",
-        "redux-thunk": "^2.4.2"
+        "redux-thunk": "^2.4.2",
+        "vite-plugin-ejs": "^1.7.0"
     },
     "scripts": {
         "start": "yarn run vite --force --port 3000",
