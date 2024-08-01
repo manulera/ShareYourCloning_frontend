@@ -9,7 +9,7 @@ describe('Makes all examples', () => {
     // Load addgene plasmid
     addSource('RepositoryIdSource', true);
     clickMultiSelectOption('Select repository', 'AddGene', 'li#source-1');
-    setInputValue('ID in repository', '19342', 'li#source-1');
+    setInputValue('AddGene ID', '19342', 'li#source-1');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
     cy.get('li#sequence-2', { timeout: 20000 }).should('exist');
     // Do a pcr on it
@@ -64,7 +64,7 @@ describe('Makes all examples', () => {
     addLane();
     addSource('RepositoryIdSource', true);
     clickMultiSelectOption('Select repository', 'AddGene', 'li#source-5');
-    setInputValue('ID in repository', '39296', 'li#source-5');
+    setInputValue('AddGene ID', '39296', 'li#source-5');
     cy.get('button.MuiButtonBase-root').contains('Submit').click();
     cy.get('li#sequence-6', { timeout: 20000 }).should('exist');
 

@@ -5,6 +5,22 @@ import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFun
 
 // TODO refactor this to use common part
 
+function BenchlingMessage({ source }) {
+  const { repository_id: repositoryId } = source;
+  const editUrl = repositoryId.replace(/\.gb$/, '/edit');
+  return (
+    <>
+      Request to Benchling (
+      <strong>
+        <a href={editUrl} target="_blank" rel="noopener noreferrer">
+          link
+        </a>
+      </strong>
+      )
+    </>
+  );
+}
+
 function RepositoryIdMessage({ source }) {
   const { repository_name: repositoryName } = source;
   let url = '';
@@ -61,6 +77,8 @@ function FinishedSource({ sourceId }) {
     case 'RepositoryIdSource': message = <RepositoryIdMessage source={source} />;
       break;
     case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
+      break;
+    case 'BenchlingUrlSource': message = <BenchlingMessage source={source} />;
       break;
     case 'GenomeCoordinatesSource':
       message = (
