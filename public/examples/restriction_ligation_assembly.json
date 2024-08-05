@@ -58,12 +58,6 @@
       "addgene_sequence_type": "addgene-full"
     },
     {
-      "id": 7,
-      "input": [
-        2
-      ],
-      "output": 8,
-      "type": "PCRSource",
       "assembly": [
         {
           "left": {
@@ -96,7 +90,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 3,
+            "sequence": 2,
             "location": {
               "start": 0,
               "end": 24,
@@ -106,22 +100,20 @@
           }
         }
       ],
-      "circular": false,
-      "forward_primer": 1,
-      "reverse_primer": 2
+      "id": 7,
+      "input": [
+        2
+      ],
+      "output": 8,
+      "type": "PCRSource",
+      "output_name": null,
+      "circular": false
     },
     {
-      "id": 9,
-      "input": [
-        8,
-        6
-      ],
-      "output": 10,
-      "type": "RestrictionAndLigationSource",
       "assembly": [
         {
           "left": {
-            "sequence": 1,
+            "sequence": 8,
             "location": {
               "start": 2257,
               "end": 2261,
@@ -130,7 +122,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
+            "sequence": 6,
             "location": {
               "start": 2355,
               "end": 2359,
@@ -141,7 +133,7 @@
         },
         {
           "left": {
-            "sequence": 2,
+            "sequence": 6,
             "location": {
               "start": 2329,
               "end": 2333,
@@ -150,7 +142,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 1,
+            "sequence": 8,
             "location": {
               "start": 7,
               "end": 11,
@@ -160,6 +152,14 @@
           }
         }
       ],
+      "id": 9,
+      "input": [
+        8,
+        6
+      ],
+      "output": 10,
+      "type": "RestrictionAndLigationSource",
+      "output_name": null,
       "circular": true,
       "restriction_enzymes": [
         "AscI",

@@ -133,12 +133,12 @@ export function getPCRPrimers({ primers, sources, entities }, entityId) {
   const sourceOutput = sources.find((s) => s.output === entityId);
   let out = [];
   if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 2) {
-    const pcrPrimers = [sourceInput.forward_primer, sourceInput.reverse_primer].map((id) => primers.find((p) => p.id === id));
+    const pcrPrimers = [sourceInput.assembly[0].left.sequence, sourceInput.assembly[1].right.sequence].map((id) => primers.find((p) => p.id === id));
     const primerPositions = pcrPrimerPositionsInInput(sourceInput);
     out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
   }
   if (sourceOutput?.type === 'PCRSource') {
-    const pcrPrimers = [sourceOutput.forward_primer, sourceOutput.reverse_primer].map((id) => primers.find((p) => p.id === id));
+    const pcrPrimers = [sourceOutput.assembly[0].left.sequence, sourceOutput.assembly[1].right.sequence].map((id) => primers.find((p) => p.id === id));
     const entity = entities.find((e) => e.id === entityId);
     const primerPositions = pcrPrimerPositionsInOutput(pcrPrimers, entity);
     out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));

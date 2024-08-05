@@ -56,9 +56,7 @@
                     "1..3"
                 ]
             ],
-            "circular": false,
-            "forward_primer": 6,
-            "reverse_primer": 5
+            "circular": false
         }
     ],
     "description": "",

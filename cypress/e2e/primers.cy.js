@@ -1,9 +1,11 @@
+import { loadExample } from './common_functions';
+
 describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
-  it.skip('Can delete primers', () => {
+  it('Can delete primers', () => {
     let examplePrimerNumber = 2;
     while (examplePrimerNumber > 0) {
       cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', examplePrimerNumber);
@@ -12,7 +14,30 @@ describe('Tests primer functionality', () => {
     }
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('not.exist');
   });
-  it.skip('Can add primers', () => {
+  it('Cannot delete primers in use', () => {
+    [
+      'Integration of cassette by homologous recombination',
+      'Templateless PCR',
+    ].forEach((example) => {
+      cy.get('button.MuiTab-root').contains('Cloning').click();
+      loadExample(example);
+      cy.get('button.MuiTab-root').contains('Primers').click();
+      // Hover over the delete icon
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().trigger('mouseover');
+      cy.get('.MuiTooltip-tooltip').contains('Cannot delete primer in use');
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().trigger('mouseout');
+
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(1).trigger('mouseover');
+      cy.get('.MuiTooltip-tooltip').contains('Cannot delete primer in use');
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(1).trigger('mouseout');
+
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
+      cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(1).click();
+      cy.get('.primer-table-container td.name').contains('fwd').should('exist');
+      cy.get('.primer-table-container td.name').contains('rvs').should('exist');
+    });
+  });
+  it('Can add primers', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
@@ -29,7 +54,7 @@ describe('Tests primer functionality', () => {
   //   cy.get('form.primer-row').should('exist');
   //   // TODO: Implement paste command
   // });
-  it.skip('Can close add form', () => {
+  it('Can close add form', () => {
     // Add two dummy primers
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
@@ -42,7 +67,7 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-form-container [data-testid="CancelIcon"').click();
     cy.get('form.primer-row').should('not.exist');
   });
-  it.skip('Can edit primers', () => {
+  it('Can edit primers', () => {
     cy.get('.primer-table-container tr').contains('fwd').should('exist');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
     // The edited primer is not shown in the table
@@ -68,8 +93,7 @@ describe('Tests primer functionality', () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
       cy.get('form.primer-row').should('exist');
     };
-    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
-    cy.get('li span').contains('Integration of cassette by homologous recombination').click();
+    loadExample('Integration of cassette by homologous recombination');
     // Wait for the table to load
     cy.get('.primer-table-container').contains('AGTTTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAA').should('exist');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
@@ -94,7 +118,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row input#name').type('rvs');
     cy.get('form.primer-row .MuiFormHelperText-root').contains('Name exists').should('not.exist');
   });
-  it.skip('Can change name of  used primer', () => {
+  it('Can change name of  used primer', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
@@ -106,7 +130,7 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-table-container tr').contains('fwd').should('not.exist');
     cy.get('.primer-table-container tr').contains('AGTTTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAAACATCGTTTTATTGAGCTCATTTACATCAACCGGTTCACGGATCCCCGGGTTAATTAA').should('exist');
   });
-  it.skip('Applies contrains to edit unused primer', () => {
+  it('Applies contrains to edit unused primer', () => {
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
@@ -135,7 +159,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row input#sequence').type('ATGC');
     cy.get('form.primer-row .MuiFormHelperText-root').should('have.text', '');
   });
-  it.skip('Applies constrains to new primer', () => {
+  it('Applies constrains to new primer', () => {
     // Useful to check the form is not submitted
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
@@ -176,7 +200,7 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
     cy.get('form.primer-row').should('not.exist');
   });
-  it.skip('Edit overrides add', () => {
+  it('Edit overrides add', () => {
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
     // Type something

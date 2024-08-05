@@ -96,3 +96,10 @@ export function manuallyTypeSequence(seq, circular = false, overhangs = []) {
 export function waitForEnzymes(parentSelector = '') {
   cy.get(`${parentSelector} .enzyme-multi-select`, { timeout: 20000 }).should('exist');
 }
+
+export function loadExample(name) {
+  cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
+  cy.get('.load-example-dialog .load-example-item').contains(name).click();
+  // This is not always the case, but it will work for several cases
+  cy.get('li#source-1').contains('Import a sequence').should('not.exist');
+}

@@ -63,7 +63,11 @@ function FinishedSource({ sourceId }) {
     }
       break;
     case 'PCRSource':
-      message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
+      {
+        const [fwdPrimer, rvsPrimer] = [source.assembly[0].left.sequence, source.assembly[1].right.sequence];
+        message = `PCR with primers ${primers.find((p) => fwdPrimer === p.id).name} and ${primers.find((p) => rvsPrimer === p.id).name}`;
+      }
+
       break;
     case 'OligoHybridizationSource':
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;

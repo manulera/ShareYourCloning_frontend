@@ -58,16 +58,10 @@
       "repository_id": "39295"
     },
     {
-      "id": 5,
-      "input": [
-        4
-      ],
-      "output": 6,
-      "type": "PCRSource",
       "assembly": [
         {
           "left": {
-            "sequence": 1,
+            "sequence": 6,
             "location": {
               "start": 80,
               "end": 100,
@@ -76,7 +70,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
+            "sequence": 4,
             "location": {
               "start": 66,
               "end": 86,
@@ -87,7 +81,7 @@
         },
         {
           "left": {
-            "sequence": 2,
+            "sequence": 4,
             "location": {
               "start": 136,
               "end": 156,
@@ -96,7 +90,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 3,
+            "sequence": 7,
             "location": {
               "start": 0,
               "end": 20,
@@ -106,22 +100,20 @@
           }
         }
       ],
-      "circular": false,
-      "forward_primer": 6,
-      "reverse_primer": 7
+      "id": 5,
+      "input": [
+        4
+      ],
+      "output": 6,
+      "type": "PCRSource",
+      "output_name": null,
+      "circular": false
     },
     {
-      "id": 7,
-      "input": [
-        3,
-        6
-      ],
-      "output": 8,
-      "type": "CRISPRSource",
       "assembly": [
         {
           "left": {
-            "sequence": 1,
+            "sequence": 3,
             "location": {
               "start": 1276,
               "end": 1356,
@@ -130,7 +122,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
+            "sequence": 6,
             "location": {
               "start": 0,
               "end": 80,
@@ -141,7 +133,7 @@
         },
         {
           "left": {
-            "sequence": 2,
+            "sequence": 6,
             "location": {
               "start": 170,
               "end": 250,
@@ -150,7 +142,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 1,
+            "sequence": 3,
             "location": {
               "start": 1356,
               "end": 1436,
@@ -160,10 +152,15 @@
           }
         }
       ],
-      "circular": false,
-      "guides": [
-        5
-      ]
+      "id": 7,
+      "input": [
+        3,
+        6
+      ],
+      "output": 8,
+      "type": "HomologousRecombinationSource",
+      "output_name": null,
+      "circular": false
     }
   ],
   "description": "Replacing a fragment in the ase1 ORF by a 3xHA tag, using CRISPR-HDR",

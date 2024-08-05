@@ -9,20 +9,16 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
   let fragments;
   if (sourceType !== 'PCRSource') {
   // We take all left fragments
-    fragments = assembly.map(({ left }) => {
-      const leftId = input[Math.abs(left.sequence) - 1];
-      return { id: leftId, left: null, right: null, reverseComplemented: null };
-    });
+    fragments = assembly.map(({ left }) => ({ id: left.sequence, left: null, right: null, reverseComplemented: null }));
 
     // We add the last right fragment if the assembly is linear
     // TODO: This will give an error for insertion assemblies
     if (!circular) {
-      const lastId = input[Math.abs(assembly[assembly.length - 1].right.sequence) - 1];
-      fragments.push({ id: lastId, left: null, right: null, reverseComplemented: null });
+      fragments.push({ id: assembly[assembly.length - 1].right.sequence, left: null, right: null, reverseComplemented: null });
     }
     assembly.forEach(({ left, right }) => {
-      const leftId = input[Math.abs(left.sequence) - 1];
-      const rightId = input[Math.abs(right.sequence) - 1];
+      const leftId = left.sequence;
+      const rightId = right.sequence;
       if (leftId) {
         const leftFragment = fragments.find((f) => f.id === leftId);
         leftFragment.right = { start: left.location.start, end: left.location.end };
@@ -50,8 +46,8 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
     count = assembly[0].left.location.start;
   }
   // Special case for insertion assemblies
-  if (assembly[0].left.sequence === assembly[assembly.length - 1].right.sequence && !circular) {
-    const concernedFragments = fragments.filter((f) => f.id === input[Math.abs(assembly[0].left.sequence) - 1]);
+  else if (assembly[0].left.sequence === assembly[assembly.length - 1].right.sequence && !circular) {
+    const concernedFragments = fragments.filter((f) => f.id === assembly[0].left.sequence);
     concernedFragments[1].left = concernedFragments[0].left;
     concernedFragments[0].left = null;
     concernedFragments[1].reverseComplemented = concernedFragments[0].reverseComplemented;

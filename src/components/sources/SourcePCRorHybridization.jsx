@@ -57,8 +57,6 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
       const config = { params: { minimal_annealing: minimalAnnealingRef.current.value } };
       sendPostRequest({ endpoint: 'oligonucleotide_hybridization', requestData, config, source });
     } else {
-      requestData.source.forward_primer = forwardPrimerId;
-      requestData.source.reverse_primer = reversePrimerId;
       const config = { params: {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
