@@ -29,6 +29,7 @@ export const classNameToEndPointMap = {
   PolymeraseExtensionSource: 'polymerase_extension',
   LigationSource: 'ligation',
   GibsonAssemblySource: 'gibson_assembly',
+  OverlapExtensionPCRLigationSource: 'gibson_assembly',
   HomologousRecombinationSource: 'homologous_recombination',
   CRISPRSource: 'crispr',
   RestrictionAndLigationSource: 'restriction_and_ligation',

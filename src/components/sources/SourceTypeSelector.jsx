@@ -43,6 +43,7 @@ function SourceTypeSelector({ source }) {
     options.push(<MenuItem key="HomologousRecombinationSource" value="HomologousRecombinationSource">Homologous recombination</MenuItem>);
     options.push(<MenuItem key="CRISPRSource" value="CRISPRSource">CRISPR</MenuItem>);
     options.push(<MenuItem key="RestrictionAndLigationSource" value="RestrictionAndLigationSource">Restriction + ligation / Golden Gate</MenuItem>);
+    options.push(<MenuItem key="OverlapExtensionPCRLigationSource" value="OverlapExtensionPCRLigationSource">Join overlap extension PCR fragments</MenuItem>);
   }
 
   return (

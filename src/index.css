@@ -258,3 +258,24 @@ body.bp3-overlay-open {
     align-items: center;
     justify-content: center;
 }
+
+
+div.pcr-unit.MuiAccordion-root:first-of-type {
+    border-radius: 1.2em;
+    overflow: clip;
+}
+
+div.pcr-unit.MuiAccordion-root {
+    border-radius: 1.2em;
+    overflow: clip;
+    margin-bottom: .5em;
+}
+
+.pcr-unit div.MuiAccordionSummary-root.MuiAccordionSummary-root {
+    min-height: 0;
+}
+
+.pcr-unit div.MuiAccordionSummary-content {
+    margin-top: .35em;
+    margin-bottom: .35em;
+}

@@ -55,6 +55,8 @@ function Source({ source }) {
       specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'GibsonAssemblySource':
       specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
+    case 'OverlapExtensionPCRLigationSource':
+      specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'HomologousRecombinationSource':
       specificSource = <SourceHomologousRecombination {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'PCRSource':

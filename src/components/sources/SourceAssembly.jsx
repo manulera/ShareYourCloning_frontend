@@ -41,11 +41,13 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
       source: { id: sourceId, input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    if (assemblyType === 'GibsonAssemblySource') {
+    if (['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType)) {
       const config = { params: {
         minimal_homology: minimalHomology,
         circular_only: circularOnly,
       } };
+      // To instantiate the correct class on the backend
+      requestData.source.type = assemblyType;
       sendPostRequest({ endpoint: 'gibson_assembly', requestData, config, source });
     } else if (assemblyType === 'RestrictionAndLigationSource') {
       if (enzymes.length === 0) { return; }
@@ -74,7 +76,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
           }}
           />
         </FormControl>
-        { (assemblyType === 'GibsonAssemblySource') && (
+        { ['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType) && (
         // I don't really understand why fullWidth is required here
         <FormControl>
           <TextField
@@ -90,7 +92,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
         { (assemblyType === 'RestrictionAndLigationSource') && (
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
         )}
-        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource'].includes(assemblyType) && (
+        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
