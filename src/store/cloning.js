@@ -27,6 +27,7 @@ const initialState = {
     loaded: false,
     backendUrl: null,
   },
+  sourcesWithHiddenAncestors: [],
 };
 
 function getNextUniqueId({ sources, entities }) {
@@ -306,6 +307,16 @@ const reducer = {
     source.reverse_primer = nextId + 1;
 
     state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  addToSourcesWithHiddenAncestors(state, action) {
+    const sourceId = action.payload;
+    state.sourcesWithHiddenAncestors.push(sourceId);
+  },
+
+  removeFromSourcesWithHiddenAncestors(state, action) {
+    const sourceId = action.payload;
+    state.sourcesWithHiddenAncestors = state.sourcesWithHiddenAncestors.filter((id) => id !== sourceId);
   },
 };
 /* eslint-enable no-param-reassign */
