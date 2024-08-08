@@ -69,7 +69,7 @@ function NetWorkNode({
           <div className="corner-id">
             {node.source.id}
           </div>
-          {node.source.input.length > 0 && (
+          { (node.source.input.length > 0 && node.source.output) && (
             <div className="before-node">
               <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title={iconToolTip} placement="left">
                 <div>
