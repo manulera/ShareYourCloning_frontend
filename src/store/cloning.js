@@ -186,12 +186,14 @@ const reducer = {
     const { sources, entities } = state;
     const sources2delete = [];
     const entities2delete = [];
-    let currentSource = sources.find((s) => s.id === sourceId);
-    while (currentSource !== undefined) {
+    const currentSources = [sources.find((s) => s.id === sourceId)];
+    while (currentSources.length > 0) {
+      const currentSource = currentSources.pop();
       sources2delete.push(currentSource.id);
-      if (currentSource.output === null) { break; }
-      entities2delete.push(currentSource.output);
-      currentSource = sources.find((ss) => ss.input.includes(currentSource.output));
+      if (currentSource.output !== null) {
+        entities2delete.push(currentSource.output);
+        currentSources.push(...sources.filter((ss) => ss.input.includes(currentSource.output)));
+      }
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));

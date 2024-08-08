@@ -33,7 +33,7 @@ function SourceTypeSelector({ source }) {
     // elab-demo
     // options.push(<MenuItem key="elabftw" value="elabftw">Import from eLabFTW</MenuItem>);
     if (entitiesExist) {
-      options.push(<MenuItem key="CopySequence" value="CopySequence">Use an existing sequence</MenuItem>);
+      options.push(<MenuItem key="CopyEntity" value="CopyEntity">Use an existing sequence</MenuItem>);
     }
   } else {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101

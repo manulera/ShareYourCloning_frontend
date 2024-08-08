@@ -78,7 +78,7 @@ function Source({ source }) {
       specificSource = <ELabFTWSource {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'CollectionSource':
       specificSource = <CollectionSource {...{ source, requestStatus, sendPostRequest }} />; break;
-    case 'CopySequence':
+    case 'CopyEntity':
       specificSource = <SourceCopyEntity {...{ source }} />; break;
     default:
       break;
