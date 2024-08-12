@@ -1,7 +1,7 @@
 import { clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
 
-const allOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'PolymeraseExtensionSource', 'CRISPRSource'];
-const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource'];
+const allOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'PolymeraseExtensionSource', 'CRISPRSource', 'OverlapExtensionPCRLigationSource'];
+const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource', 'OverlapExtensionPCRLigationSource'];
 function checkAllOptions(sourceId) {
   cy.get(`ul[aria-labelledby="select-source-${sourceId}-label"] li`).should('have.length', allOptions.length);
   allOptions.forEach((value) => {
