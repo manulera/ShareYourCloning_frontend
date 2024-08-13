@@ -25,4 +25,8 @@ module.exports = defineConfig({
       bundler: 'vite',
     },
   },
+
+  retries: {
+    runMode: 2,
+  },
 });

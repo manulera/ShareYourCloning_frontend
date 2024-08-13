@@ -34,6 +34,12 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
     return () => clearTimeout(timeOutId);
   }, [userInput, connectAttempt]);
 
+  React.useEffect(() => {
+    // Reset the value when the component is re-rendered at the same position
+    // with different functions
+    setUserInput('');
+  }, [setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel]);
+
   if (error) {
     return (
       <Alert
@@ -49,12 +55,6 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
       </Alert>
     );
   }
-
-  React.useEffect(() => {
-    // Reset the value when the component is re-rendered at the same position
-    // with different functions
-    setUserInput('');
-  }, [setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel]);
 
   return (
     <FormControl fullWidth>
