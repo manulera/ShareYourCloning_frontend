@@ -17,16 +17,11 @@ function MainSequenceCheckBox({ id }) {
   const { setMainSequenceId, setCurrentTab } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const toggleMain = () => {
-    if (mainSequenceId === id) {
-      dispatch(setMainSequenceId(null));
-      updateStoreEditor('mainEditor', null);
-    } else {
-      dispatch(setMainSequenceId(id));
-      dispatch(setCurrentTab(3));
-      updateStoreEditor('mainEditor', id);
-      // TODO: ideally this should be done with a ref
-      document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
-    }
+    dispatch(setMainSequenceId(id));
+    dispatch(setCurrentTab(3));
+    updateStoreEditor('mainEditor', id);
+    // TODO: ideally this should be done with a ref
+    document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
   };
   const tooltipText = <div className="tooltip-text">See sequence in main editor</div>;
 
