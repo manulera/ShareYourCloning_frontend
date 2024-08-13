@@ -57,7 +57,7 @@ function SpeciesPicker({ setSpecies, setAssemblyId }) {
     getOptions: taxonSuggest,
     getOptionLabel: (option) => (option ? `${option.sci_name} - ${option.tax_id}` : ''),
     isOptionEqualToValue: (option, value) => option.tax_id === value.tax_id,
-    textLabel: 'Species',
+    textLabel: 'Species / taxon ID',
   }), []);
   return (<PostRequestSelect {...speciesPostRequestSettings} />);
 }
