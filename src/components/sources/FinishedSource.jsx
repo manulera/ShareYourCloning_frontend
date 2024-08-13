@@ -51,6 +51,7 @@ function FinishedSource({ sourceId }) {
     case 'ManuallyTypedSource': message = 'Manually typed sequence'; break;
     case 'LigationSource': message = (source.input.length === 1) ? 'Circularization of fragment' : 'Ligation of fragments'; break;
     case 'GibsonAssemblySource': message = 'Gibson assembly of fragments'; break;
+    case 'OverlapExtensionPCRLigationSource': message = 'Overlap extension PCR ligation'; break;
     case 'RestrictionEnzymeDigestionSource': {
       const uniqueEnzymes = enzymesInRestrictionEnzymeDigestionSource(source);
       message = `Restriction with ${uniqueEnzymes.join(' and ')}`;
@@ -63,7 +64,11 @@ function FinishedSource({ sourceId }) {
     }
       break;
     case 'PCRSource':
-      message = `PCR with primers ${primers.find((p) => source.forward_primer === p.id).name} and ${primers.find((p) => source.reverse_primer === p.id).name}`;
+      {
+        const [fwdPrimer, rvsPrimer] = [source.assembly[0].left.sequence, source.assembly[1].right.sequence];
+        message = `PCR with primers ${primers.find((p) => fwdPrimer === p.id).name} and ${primers.find((p) => rvsPrimer === p.id).name}`;
+      }
+
       break;
     case 'OligoHybridizationSource':
       message = `Hybridization of primers ${primers.find((p) => source.forward_oligo === p.id).name} and ${primers.find((p) => source.reverse_oligo === p.id).name}`;

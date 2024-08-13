@@ -50,8 +50,8 @@ describe('Tests oligo hybridization source', () => {
     cy.get('.MuiAlert-message').contains('No pair of annealing oligos');
   });
   it('works with several options', () => {
-    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
-    addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
+    addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattgaa');
+    addPrimer('rvs-hyb', 'acGCGGCCGCttcaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');

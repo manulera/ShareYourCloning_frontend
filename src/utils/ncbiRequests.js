@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { escapeStringRegexp } from './other';
 
 export async function querySpecies(userInput) {
   // Get ids from search
@@ -51,7 +52,7 @@ export async function taxonSuggest(userInput) {
     rank: 'SPECIES',
   };
   // Compare with regex
-  const regex = new RegExp(`${userInput}`, 'i');
+  const regex = new RegExp(escapeStringRegexp(userInput), 'i');
   if (regex.test(eColi.sci_name)) {
     taxons.push(eColi);
   }

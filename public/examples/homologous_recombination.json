@@ -58,12 +58,6 @@
       "strand": 1
     },
     {
-      "id": 7,
-      "input": [
-        2
-      ],
-      "output": 8,
-      "type": "PCRSource",
       "assembly": [
         {
           "left": {
@@ -96,7 +90,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 3,
+            "sequence": 2,
             "location": {
               "start": 0,
               "end": 20,
@@ -106,22 +100,20 @@
           }
         }
       ],
-      "circular": false,
-      "forward_primer": 1,
-      "reverse_primer": 2
+      "id": 7,
+      "input": [
+        2
+      ],
+      "output": 8,
+      "type": "PCRSource",
+      "output_name": null,
+      "circular": false
     },
     {
-      "id": 9,
-      "input": [
-        6,
-        8
-      ],
-      "output": 10,
-      "type": "HomologousRecombinationSource",
       "assembly": [
         {
           "left": {
-            "sequence": 1,
+            "sequence": 6,
             "location": {
               "start": 1093,
               "end": 1173,
@@ -130,7 +122,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
+            "sequence": 8,
             "location": {
               "start": 0,
               "end": 80,
@@ -141,7 +133,7 @@
         },
         {
           "left": {
-            "sequence": 2,
+            "sequence": 8,
             "location": {
               "start": 2153,
               "end": 2233,
@@ -150,7 +142,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 1,
+            "sequence": 6,
             "location": {
               "start": 3416,
               "end": 3496,
@@ -160,6 +152,14 @@
           }
         }
       ],
+      "id": 9,
+      "input": [
+        6,
+        8
+      ],
+      "output": 10,
+      "type": "HomologousRecombinationSource",
+      "output_name": null,
       "circular": false
     }
   ],

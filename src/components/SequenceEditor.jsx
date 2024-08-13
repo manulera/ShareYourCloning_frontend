@@ -27,7 +27,6 @@ function SequenceEditor({ entityId, isRootNode }) {
   // Filter out features of type "source"
   seq.features = seq.features.filter((f) => f.type !== 'source');
   seq.primers = [...seq.primers, ...linkedPrimers, ...pcrPrimers];
-  console.log(entityId, pcrPrimers);
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
   const parentEntities = useSelector((state) => state.cloning.entities.filter((e) => parentSource.input.includes(e.id)), shallowEqual);

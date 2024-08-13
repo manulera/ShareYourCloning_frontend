@@ -64,7 +64,7 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   const state = getState();
   const { primers } = state.primers;
   const { description, network, sources, entities } = state.cloning;
-  const usedPrimersIds = sources.filter((s) => s.type === 'PCRSource').map((s) => [s.forward_primer, s.reverse_primer]).flat();
+  const usedPrimersIds = sources.filter((s) => s.type === 'PCRSource' && s.assembly.lenth > 0).map((s) => [s.assembly[0].left.sequence, s.assembly[1].right.sequence]).flat();
   const primersToUpload = primers.filter((p) => usedPrimersIds.includes(p.id));
 
   const eLabFTWSources = sources.filter((source) => source.type === 'ELabFTWFileSource');

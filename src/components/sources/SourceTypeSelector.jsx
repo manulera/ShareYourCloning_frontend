@@ -22,6 +22,7 @@ function SourceTypeSelector({ source }) {
     }));
   };
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const entitiesExist = useSelector((state) => state.cloning.entities.length > 0, shallowEqual);
   const options = [];
   if (inputEntities.length === 0) {
     options.push(<MenuItem key="UploadedFileSource" value="UploadedFileSource">Submit file</MenuItem>);
@@ -31,6 +32,9 @@ function SourceTypeSelector({ source }) {
     options.push(<MenuItem key="OligoHybridizationSource" value="OligoHybridizationSource">Oligonucleotide hybridization</MenuItem>);
     // elab-demo
     // options.push(<MenuItem key="elabftw" value="elabftw">Import from eLabFTW</MenuItem>);
+    if (entitiesExist) {
+      options.push(<MenuItem key="CopyEntity" value="CopyEntity">Use an existing sequence</MenuItem>);
+    }
   } else {
     // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
     if (inputEntities.length < 2) {
@@ -43,6 +47,7 @@ function SourceTypeSelector({ source }) {
     options.push(<MenuItem key="HomologousRecombinationSource" value="HomologousRecombinationSource">Homologous recombination</MenuItem>);
     options.push(<MenuItem key="CRISPRSource" value="CRISPRSource">CRISPR</MenuItem>);
     options.push(<MenuItem key="RestrictionAndLigationSource" value="RestrictionAndLigationSource">Restriction + ligation / Golden Gate</MenuItem>);
+    options.push(<MenuItem key="OverlapExtensionPCRLigationSource" value="OverlapExtensionPCRLigationSource">Join overlap extension PCR fragments</MenuItem>);
   }
 
   return (

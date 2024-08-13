@@ -18,6 +18,7 @@ import KnownSourceErrors from './KnownSourceErrors';
 import useBackendAPI from '../../hooks/useBackendAPI';
 import MultipleOutputsSelector from './MultipleOutputsSelector';
 import { cloningActions } from '../../store/cloning';
+import SourceCopyEntity from './SourceCopyEntity';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
@@ -55,6 +56,8 @@ function Source({ source }) {
       specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'GibsonAssemblySource':
       specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
+    case 'OverlapExtensionPCRLigationSource':
+      specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'HomologousRecombinationSource':
       specificSource = <SourceHomologousRecombination {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'PCRSource':
@@ -75,6 +78,8 @@ function Source({ source }) {
       specificSource = <ELabFTWSource {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'CollectionSource':
       specificSource = <CollectionSource {...{ source, requestStatus, sendPostRequest }} />; break;
+    case 'CopyEntity':
+      specificSource = <SourceCopyEntity {...{ source }} />; break;
     default:
       break;
     /* eslint-enable */

@@ -33,6 +33,8 @@ jobs:
           poetry install --no-dev
 
       - name: run python dev server in background
+        env:
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
           cd ShareYourCloning_backend
           poetry run uvicorn main:app &

@@ -65,7 +65,7 @@
       "assembly": [
         {
           "left": {
-            "sequence": 1,
+            "sequence": 3,
             "location": {
               "start": 17,
               "end": 21,
@@ -74,7 +74,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 2,
+            "sequence": 5,
             "location": {
               "start": 0,
               "end": 4,
@@ -85,7 +85,7 @@
         },
         {
           "left": {
-            "sequence": 2,
+            "sequence": 5,
             "location": {
               "start": 8,
               "end": 12,
@@ -94,7 +94,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 3,
+            "sequence": 7,
             "location": {
               "start": 0,
               "end": 4,
@@ -105,7 +105,7 @@
         },
         {
           "left": {
-            "sequence": 3,
+            "sequence": 7,
             "location": {
               "start": 9,
               "end": 13,
@@ -114,7 +114,7 @@
             "reverse_complemented": false
           },
           "right": {
-            "sequence": 1,
+            "sequence": 3,
             "location": {
               "start": 0,
               "end": 4,
@@ -132,6 +132,7 @@
       ],
       "output": 9,
       "type": "GibsonAssemblySource",
+      "output_name": null,
       "circular": true
     }
   ],

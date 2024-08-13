@@ -1,3 +1,5 @@
+/* Adapted from https://github.com/dumptyd/treeflex */
+
 .tf-ancestor-tree {
     position: relative;
 }
@@ -52,7 +54,8 @@
     left: -.03125em;
     position: absolute;
     top: -1.00em;
-    width: 100%
+    width: 100%;
+    z-index: -1;
 }
 
 .tf-tree li li:first-child:before {
@@ -93,6 +96,7 @@
     left: calc(50% - .03125em);
     position: absolute;
     width: 2px;
+    z-index: -1;
 }
 
 .tf-tree .tf-nc:after, .tf-tree .tf-node-content:after {
