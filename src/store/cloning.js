@@ -127,6 +127,26 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  addSequenceInBetween(state, action) {
+    const existingSourceId = action.payload;
+    const existingSource = state.sources.find((s) => s.id === existingSourceId);
+    const newSourceId = getNextUniqueId(state);
+    const newEntity = {
+      id: newSourceId + 1,
+      type: 'TemplateSequence',
+    };
+    const newSource = {
+      id: newSourceId,
+      input: existingSource.input,
+      output: newEntity.id,
+      type: null,
+    };
+    existingSource.input = [newEntity.id];
+    state.sources.push(newSource);
+    state.entities.push(newEntity);
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   addEntityAndUpdateItsSource(state, action) {
     const { newEntity, newSource } = action.payload;
     const { entities, sources } = state;
