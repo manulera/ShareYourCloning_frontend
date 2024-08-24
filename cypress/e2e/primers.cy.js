@@ -18,6 +18,7 @@ describe('Tests primer functionality', () => {
     [
       'Integration of cassette by homologous recombination',
       'Templateless PCR',
+      'CRISPR HDR',
     ].forEach((example) => {
       cy.get('button.MuiTab-root').contains('Cloning').click();
       loadExample(example);
@@ -31,10 +32,22 @@ describe('Tests primer functionality', () => {
       cy.get('.MuiTooltip-tooltip').contains('Cannot delete primer in use');
       cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(1).trigger('mouseout');
 
+      if (example === 'CRISPR HDR') {
+        cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(2).trigger('mouseover');
+        cy.get('.MuiTooltip-tooltip').contains('Cannot delete primer in use');
+        cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(2).trigger('mouseout');
+      }
+
       cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
       cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(1).click();
+      if (example === 'CRISPR HDR') {
+        cy.get('.primer-table-container [data-testid="DeleteIcon"]').eq(2).click();
+      }
       cy.get('.primer-table-container td.name').contains('fwd').should('exist');
       cy.get('.primer-table-container td.name').contains('rvs').should('exist');
+      if (example === 'CRISPR HDR') {
+        cy.get('.primer-table-container td.name').contains('sgRNA').should('exist');
+      }
     });
   });
   it('Can add primers', () => {
