@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { addHistory, loadData } from '../utils/readNwrite';
 import useBackendRoute from '../hooks/useBackendRoute';
 
-function HistoryDownloadedDialog({ loadedHistory, setLoadedHistory, setErrorMessage }) {
+function HistoryLoadedDialog({ loadedHistory, setLoadedHistory, setErrorMessage }) {
   const [selectedOption, setSelectedOption] = React.useState('replace');
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
@@ -25,6 +25,7 @@ function HistoryDownloadedDialog({ loadedHistory, setLoadedHistory, setErrorMess
           setLoadedHistory(null);
         },
       }}
+      className="history-loaded-dialog"
     >
       <DialogTitle>History loaded</DialogTitle>
       <DialogContent>
@@ -50,4 +51,4 @@ function HistoryDownloadedDialog({ loadedHistory, setLoadedHistory, setErrorMess
   );
 }
 
-export default HistoryDownloadedDialog;
+export default HistoryLoadedDialog;

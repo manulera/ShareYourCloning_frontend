@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Alert, Button, Tooltip } from '@mui/material';
 import './MainAppBar.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useStore } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
 import { downloadCloningStrategyAsSvg, exportStateThunk, loadData } from '../../utils/readNwrite';
@@ -18,6 +18,7 @@ import MiscDialog from './MiscDialog';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
 import useBackendRoute from '../../hooks/useBackendRoute';
+import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -25,9 +26,12 @@ function MainAppBar() {
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
-  const backendRoute = useBackendRoute();
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
+  const [loadedHistory, setLoadedHistory] = React.useState(null);
+
+  const backendRoute = useBackendRoute();
   const { updateStoreEditor } = useStoreEditor();
+  const store = useStore();
   const dispatch = useDispatch();
   const exportData = () => {
     dispatch(exportStateThunk());
@@ -85,7 +89,15 @@ function MainAppBar() {
         setLoadedFileError('Input file should be a JSON file with the history');
         return;
       }
-      loadData(jsonObject, false, dispatch, setLoadedFileError, backendRoute('validate'));
+      const { cloning } = store.getState();
+      console.log(cloning.entities);
+      // If no sequences have been loaded yet, simply load the history
+      if (cloning.entities.length === 0) {
+        loadData(jsonObject, false, dispatch, setLoadedFileError, backendRoute('validate'));
+      } else {
+        // Else ask the user whether they want to replace or append the history
+        setLoadedHistory(jsonObject);
+      }
     };
   };
 
@@ -142,7 +154,7 @@ function MainAppBar() {
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
       ) */}
-
+      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage: setLoadedFileError }} />
     </AppBar>
   );
 }
