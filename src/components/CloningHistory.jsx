@@ -5,6 +5,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
 import useDragAndDropFile from '../hooks/useDragAndDropFile';
+import HistoryDownloadedDialog from './HistoryLoadedDialog';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -16,7 +17,7 @@ function CloningHistory({ network }) {
   const topDivRef = React.useRef(null);
   const innerDivRef = React.useRef(null);
   const bottomDivRef = React.useRef(null);
-  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage } = useDragAndDropFile();
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory } = useDragAndDropFile();
 
   const scrollSync = () => {
     // Set the scroll of the bottom div to the scroll of the top ul
@@ -38,6 +39,7 @@ function CloningHistory({ network }) {
       onDrop={handleDrop}
       className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
+      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage }} />
       {errorMessage && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }} onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
       {isDragging ? (
         <div className="drag-file-wrapper">

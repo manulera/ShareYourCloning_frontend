@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { constructNetwork } from '../utils/network';
+import { getNextPrimerId, getNextUniqueId } from './cloning_utils';
 
 const initialState = {
   mainSequenceId: null,
@@ -29,21 +30,6 @@ const initialState = {
   },
   sourcesWithHiddenAncestors: [],
 };
-
-function getNextUniqueId({ sources, entities }) {
-  const allIds = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
-  if (allIds.length === 0) {
-    return 1;
-  }
-  return Math.max(...allIds) + 1;
-}
-function getNextPrimerId(primers) {
-  const allIds = primers.map((p) => p.id);
-  if (allIds.length === 0) {
-    return 1;
-  }
-  return Math.max(...allIds) + 1;
-}
 
 /* eslint-disable no-param-reassign */
 const reducer = {

@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { useDispatch, batch } from 'react-redux';
+import { useDispatch, batch, useStore } from 'react-redux';
 import { cloningActions } from '../store/cloning';
-import { loadData } from '../utils/readNwrite';
 import useBackendRoute from './useBackendRoute';
+import { loadData } from '../utils/readNwrite';
 
 async function processSequenceFiles(files, backendRoute) {
   const allSources = [];
@@ -49,6 +49,8 @@ export default function useDragAndDropFile() {
   const backendRoute = useBackendRoute();
   const [isDragging, setIsDragging] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState('');
+  const [loadedHistory, setLoadedHistory] = React.useState(null);
+  const store = useStore();
   const { addSourceAndItsOutputEntity } = cloningActions;
 
   const handleDragOver = React.useCallback((e) => {
@@ -72,8 +74,15 @@ export default function useDragAndDropFile() {
       const reader = new FileReader();
       reader.readAsText(e.dataTransfer.files[0], 'UTF-8');
       reader.onload = (event) => {
-        const newState = JSON.parse(event.target.result);
-        loadData(newState, false, dispatch, setErrorMessage, backendRoute('validate'));
+        const jsonContent = JSON.parse(event.target.result);
+        const { cloning } = store.getState();
+        // If no sequences have been loaded yet, simply load the history
+        if (cloning.entities.length === 0) {
+          loadData(jsonContent, false, dispatch, setErrorMessage, backendRoute('validate'));
+        } else {
+          // Else ask the user whether they want to replace or append the history
+          setLoadedHistory(jsonContent);
+        }
       };
     } else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       // If any is a JSON file, give an error
@@ -96,5 +105,5 @@ export default function useDragAndDropFile() {
     }
   }, []);
 
-  return { handleDragLeave, handleDragOver, handleDrop, isDragging, errorMessage, setErrorMessage };
+  return { handleDragLeave, handleDragOver, handleDrop, isDragging, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory };
 }

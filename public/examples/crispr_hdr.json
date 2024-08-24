@@ -158,9 +158,12 @@
         6
       ],
       "output": 8,
-      "type": "HomologousRecombinationSource",
+      "type": "CRISPRSource",
       "output_name": null,
-      "circular": false
+      "circular": false,
+      "guides": [
+        5
+      ]
     }
   ],
   "description": "Replacing a fragment in the ase1 ORF by a 3xHA tag, using CRISPR-HDR",

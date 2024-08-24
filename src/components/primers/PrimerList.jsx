@@ -13,8 +13,11 @@ function getUsedPrimerIds(sources) {
   const forHybridization = sources
     .filter((s) => s.type === 'OligoHybridizationSource')
     .flatMap((s) => [s.forward_oligo, s.reverse_oligo]);
+  const forCRISPR = sources
+    .filter((s) => s.type === 'CRISPRSource')
+    .flatMap((s) => s.guides);
 
-  return forPcr.concat(forHybridization);
+  return forPcr.concat(forHybridization).concat(forCRISPR);
 }
 
 function PrimerList() {

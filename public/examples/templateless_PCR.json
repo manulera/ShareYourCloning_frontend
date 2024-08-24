@@ -40,12 +40,12 @@
   "primers": [
     {
       "id": 1,
-      "name": "fwd",
+      "name": "fwd_hyb",
       "sequence": "agaactcaaccattacgggtttgacgaatatagacgagattcgcaattacttgtctgatggattaccaagatgatgggct"
     },
     {
       "id": 2,
-      "name": "rvs",
+      "name": "rvs_hyb",
       "sequence": "ttacgagatatttgagttaaacttcatgcataccctccaaaaactcaatcatttcaccaagcccatcatcttggtaatcc"
     }
   ]
