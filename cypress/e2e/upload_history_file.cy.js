@@ -4,7 +4,7 @@ describe('Test upload history from file', () => {
   beforeEach(() => {
     cy.visit('/');
   });
-  it.skip('Can upload a correct json file', () => {
+  it('Can upload a correct json file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/restriction_then_ligation.json', { force: true });
     cy.get('div.cloning-tab-pannel').contains('PCR with primers fwd and rvs');
     cy.get('div.cloning-tab-pannel').should('be.visible');
@@ -33,8 +33,11 @@ describe('Test upload history from file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/crispr_hdr.json', { force: true });
     cy.get('.history-loaded-dialog').contains('Replace existing').click();
     cy.get('.history-loaded-dialog button').contains('Select').click();
+
+    cy.get('div.cloning-tab-pannel').contains('Ligation of fragments').should('not.exist');
+    cy.get('div.cloning-tab-pannel').contains('CRISPR HDR with').should('exist');
   });
-  it.skip('Gives an error message for an incorrect type of file', () => {
+  it('Gives an error message for an incorrect type of file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/ase1.gb', { force: true });
     cy.get('.MuiAlert-message').contains('should be a JSON');
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/wrong_history.json', { force: true });
