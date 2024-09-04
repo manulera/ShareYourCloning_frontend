@@ -137,16 +137,5 @@
     }
   ],
   "description": "Dummy gibson assembly example with 4 bps of overlap between fragments.",
-  "primers": [
-    {
-      "id": 1,
-      "name": "fwd",
-      "sequence": "gatctcgccataaaagacag"
-    },
-    {
-      "id": 2,
-      "name": "rvs",
-      "sequence": "ttaacaaagcgactataagt"
-    }
-  ]
+  "primers": []
 }

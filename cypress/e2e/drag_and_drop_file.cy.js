@@ -1,3 +1,5 @@
+import { loadExample } from './common_functions';
+
 describe('Test drag and drop functionality', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -50,5 +52,33 @@ describe('Test drag and drop functionality', () => {
     // Files which are not sequences mixed with sequences
     cy.get('div.cloning-history').selectFile(['public/examples/ase1.gb', 'public/favicon.ico'], { action: 'drag-drop' });
     cy.get('div.MuiAlert-message').contains('Could not read the file favicon.ico');
+  });
+  it('Can merge with existing history', () => {
+    loadExample('Gibson assembly');
+    cy.get('div.cloning-history').selectFile('public/examples/homologous_recombination.json', { action: 'drag-drop' });
+    cy.get('.history-loaded-dialog').contains('Add to existing').click();
+    cy.get('.history-loaded-dialog button').contains('Select').click();
+
+    // Previous
+    cy.get('div.cloning-tab-pannel').contains('Gibson assembly of fragments');
+    // Newly loaded
+    cy.get('div.cloning-tab-pannel').contains('Homologous recombination');
+
+    // Cannot load one with the same primer names again
+    cy.get('div.cloning-history').selectFile('public/examples/homologous_recombination.json', { action: 'drag-drop', force: true });
+    cy.get('.history-loaded-dialog').contains('Add to existing').click();
+    cy.get('.history-loaded-dialog button').contains('Select').click();
+
+    // Shows error and does not load them again
+    cy.get('.MuiAlert-message').contains('Primer name from loaded file exists in current session').should('exist');
+    cy.get('div.cloning-tab-pannel').contains('Homologous recombination').should('have.length', 1);
+
+    // Can replace the history
+    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/crispr_hdr.json', { force: true });
+    cy.get('.history-loaded-dialog').contains('Replace existing').click();
+    cy.get('.history-loaded-dialog button').contains('Select').click();
+
+    cy.get('div.cloning-tab-pannel').contains('Homologous recombination').should('not.exist');
+    cy.get('div.cloning-tab-pannel').contains('CRISPR HDR with').should('exist');
   });
 });

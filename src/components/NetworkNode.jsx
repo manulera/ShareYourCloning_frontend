@@ -3,6 +3,7 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Tooltip } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Source from './sources/Source';
 import './NetworkTree.css';
 import SequenceEditor from './SequenceEditor';
@@ -12,7 +13,7 @@ import TemplateSequence from './TemplateSequence';
 import { isSourceATemplate } from '../store/cloning_utils';
 import { cloningActions } from '../store/cloning';
 
-const { addToSourcesWithHiddenAncestors, removeFromSourcesWithHiddenAncestors } = cloningActions;
+const { addToSourcesWithHiddenAncestors, removeFromSourcesWithHiddenAncestors, addSequenceInBetween } = cloningActions;
 
 // A component that renders the ancestry tree
 function NetWorkNode({
@@ -41,7 +42,7 @@ function NetWorkNode({
   };
 
   const Icon = ancestorsHidden ? VisibilityIcon : VisibilityOffIcon;
-  const iconToolTip = ancestorsHidden ? 'Show ancestors' : 'Hide ancestors';
+  const visibilityIconToolTip = ancestorsHidden ? 'Show ancestors' : 'Hide ancestors';
   const parentsContent = node.parentNodes.length === 0 ? null : (
     <ul className={ancestorsHidden ? 'hidden-ancestors' : ''}>
       {node.parentNodes.map((parentNode) => (
@@ -69,15 +70,25 @@ function NetWorkNode({
           <div className="corner-id">
             {node.source.id}
           </div>
-          { (node.source.input.length > 0 && node.source.output) && (
-            <div className="before-node">
-              <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title={iconToolTip} placement="left">
+          { (!sourceIsTemplate && node.source.input.length > 0 && node.source.output) && (
+            <div className="before-node before-node-visibility">
+              <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title={visibilityIconToolTip} placement="left">
                 <div>
-                  <Icon onClick={onVisibilityClick} />
+                  <Icon onClick={onVisibilityClick} style={{ color: 'grey' }} />
                 </div>
               </Tooltip>
             </div>
           )}
+          { (sourceIsTemplate && node.source.input.length > 0)
+            && (
+            <div className="before-node before-node-sequence-in-between">
+              <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title="Add sequence in between" placement={node.source.input.length > 1 ? 'top' : 'left'}>
+                <div>
+                  <AddCircleIcon onClick={() => { dispatch(addSequenceInBetween(sourceId)); }} color="success" />
+                </div>
+              </Tooltip>
+            </div>
+            )}
         </span>
       </span>
       {parentsContent}

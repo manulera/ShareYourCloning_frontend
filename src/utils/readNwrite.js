@@ -1,7 +1,9 @@
 import axios from 'axios';
 import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
 import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
+import { batch } from 'react-redux';
 import { cloningActions } from '../store/cloning';
+import { shiftStateIds } from '../store/cloning_utils';
 
 const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers } = cloningActions;
 
@@ -54,6 +56,25 @@ export const loadStateThunk = (newState) => async (dispatch, getState) => {
   if (newState.description) {
     dispatch(setDescription(newState.description));
   }
+};
+
+export const mergeStateThunk = (newState) => async (dispatch, getState) => {
+  const { cloning: oldState } = getState();
+  const existingPrimerNames = oldState.primers.map((p) => p.name);
+
+  if (newState.primers) {
+    if (newState.primers.some((p) => existingPrimerNames.includes(p.name))) {
+      throw new Error('Primer name from loaded file exists in current session');
+    }
+  }
+  const newState2 = shiftStateIds(newState, oldState);
+  batch(() => {
+    dispatch(setPrimers([...oldState.primers, ...newState2.primers]));
+    dispatch(setCloningState({
+      sources: [...oldState.sources, ...newState2.sources],
+      entities: [...oldState.entities, ...newState2.entities],
+    }));
+  });
 };
 
 export const resetStateThunk = () => async (dispatch) => {
@@ -140,6 +161,22 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
     historyFormData,
     { headers: { Authorization: apiKey, 'content-type': 'multipart/form-data' } },
   );
+};
+
+export const addHistory = async (newState, dispatch, setLoadedFileError, url) => {
+  try {
+    await axios.post(url, newState);
+  } catch (e) {
+    if (e.code === 'ERR_NETWORK') {
+      setLoadedFileError('Cannot connect to backend server to validate the JSON file');
+    } else { setLoadedFileError('JSON file in wrong format'); }
+  }
+  try {
+    await dispatch(mergeStateThunk(newState));
+  } catch (e) {
+    console.error(e);
+    setLoadedFileError(e.message);
+  }
 };
 
 export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError, url) => {

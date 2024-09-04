@@ -73,12 +73,12 @@
     },
     {
       "id": 6,
-      "name": "ase1_Fw",
+      "name": "ase1_fwd",
       "sequence": "TTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAAACATCGTTTTATTGAGCTCATTTACATCAACCGGTTCAATGtacccatacgatgttcctga"
     },
     {
       "id": 7,
-      "name": "ase1_Rv",
+      "name": "ase1_rvs",
       "sequence": "AAGTTAGATTCATTATTAGAGTGATTATCTTTTTCAGCAATAGAATCAGTGCTTTGAATGTCATCCATCATTACTGTTTGagcgtaatctggaacgtcat"
     }
   ]

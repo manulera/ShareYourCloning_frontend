@@ -26,11 +26,8 @@ export function getInputEntitiesFromSourceId(state, sourceId) {
 export function isSourceATemplate({ sources, entities }, sourceId) {
   // Get the output sequence
   const source = sources.find((s) => s.id === sourceId);
-  const sequence = entities.find((e) => e.id === source.output);
-  if (sequence !== undefined && sequence.type === 'TemplateSequence') {
-    return true;
-  }
-  return false;
+  const sequences = [...entities.filter((e) => e.id === source.output), ...entities.filter((e) => source.input.includes(e.id))];
+  return sequences.some((s) => s.type === 'TemplateSequence');
 }
 
 export function getPrimerDesignObject({ sources, entities }) {
@@ -147,4 +144,73 @@ export function getPCRPrimers({ primers, sources, entities }, entityId) {
     out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
   }
   return out;
+}
+
+export function getNextUniqueId({ sources, entities }) {
+  const allIds = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
+}
+
+export function getNextPrimerId(primers) {
+  const allIds = primers.map((p) => p.id);
+  if (allIds.length === 0) {
+    return 1;
+  }
+  return Math.max(...allIds) + 1;
+}
+
+export function shiftSource(source, networkShift, primerShift) {
+  const newSource = { ...source };
+
+  // Common part
+  newSource.id += networkShift;
+  if (newSource.output) {
+    newSource.output += networkShift;
+  }
+  newSource.input = newSource.input.map((i) => i + networkShift);
+
+  // Primer part
+  if (newSource.type === 'PCRSource' && newSource.assembly?.length > 0) {
+    // Shift primer ids in assembly representation
+    newSource.assembly[0].left.sequence += primerShift;
+    newSource.assembly[1].right.sequence += primerShift;
+
+    // Shift sequence ids in assembly representation
+    newSource.assembly[0].right.sequence += networkShift;
+    newSource.assembly[1].left.sequence += networkShift;
+  } else if (newSource.type === 'OligoHybridizationSource') {
+    if (newSource.forward_oligo) {
+      newSource.forward_oligo += primerShift;
+    }
+    if (newSource.reverse_oligo) {
+      newSource.reverse_oligo += primerShift;
+    }
+  } else if (newSource.type === 'CRISPRSource') {
+    newSource.guides = newSource.guides?.map((i) => i + primerShift);
+  }
+
+  // Shift assembly representation
+  if (newSource.type !== 'PCRSource' && newSource.assembly?.length > 0) {
+    newSource.assembly.forEach((part) => {
+      part.left.sequence += networkShift;
+      part.right.sequence += networkShift;
+    });
+  }
+
+  return newSource;
+}
+
+export function shiftStateIds(newState, oldState) {
+  const { sources: newSources, sequences: newEntities, primers: newPrimers } = newState;
+  const { sources: oldSources, entities: oldEntities, primers: oldPrimers } = oldState;
+  const networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities });
+  const primerShift = getNextPrimerId(oldPrimers);
+  return {
+    entities: newEntities.map((e) => ({ ...e, id: e.id + networkShift })),
+    primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
+    sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
+  };
 }

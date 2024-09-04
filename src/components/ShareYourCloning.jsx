@@ -47,7 +47,8 @@ function ShareYourCloning() {
           }
         });
         dispatch(setKnownErrors(knownErrors));
-      });
+      })
+      .catch(((e) => { console.error(e); }));
   }, []);
 
   if (!stateLoaded) {
