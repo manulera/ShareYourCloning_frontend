@@ -46,7 +46,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen
         <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
       </div>
       <form onSubmit={chooseFragment}>
-        <Button fullWidth type="submit" variant="contained">Choose fragment</Button>
+        <Button fullWidth type="submit" variant="contained">Choose product</Button>
       </form>
     </div>
   );

@@ -55,7 +55,8 @@ describe('Test drag and drop functionality', () => {
   });
   it('Can merge with existing history', () => {
     loadExample('Gibson assembly');
-    cy.get('div.cloning-history').selectFile('public/examples/homologous_recombination.json', { action: 'drag-drop' });
+
+    cy.get('div.cloning-history').selectFile('public/examples/homologous_recombination.json', { action: 'drag-drop', force: true });
     cy.get('.history-loaded-dialog').contains('Add to existing').click();
     cy.get('.history-loaded-dialog button').contains('Select').click();
 
@@ -65,6 +66,7 @@ describe('Test drag and drop functionality', () => {
     cy.get('div.cloning-tab-pannel').contains('Homologous recombination');
 
     // Cannot load one with the same primer names again
+
     cy.get('div.cloning-history').selectFile('public/examples/homologous_recombination.json', { action: 'drag-drop', force: true });
     cy.get('.history-loaded-dialog').contains('Add to existing').click();
     cy.get('.history-loaded-dialog button').contains('Select').click();

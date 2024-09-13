@@ -107,10 +107,10 @@ export function pcrPrimerPositionsInInput(source) {
   if (source.type !== 'PCRSource') {
     throw new Error('Source is not a PCRSource');
   }
-  const fwd = { ...source.assembly[0].right.location };
+  const fwd = { ...source.assembly[1].left_location };
   fwd.end -= 1;
   fwd.strand = 1;
-  const rvs = { ...source.assembly[1].left.location };
+  const rvs = { ...source.assembly[1].right_location };
   rvs.end -= 1;
   rvs.strand = -1;
   return [fwd, rvs];
@@ -126,19 +126,22 @@ export function pcrPrimerPositionsInOutput(primers, entity) {
 }
 
 export function getPCRPrimers({ primers, sources, entities }, entityId) {
-  // The same sequence can be used as input in multiple PCRs
-  const sourcesInput = sources.filter((s) => s.input.includes(entityId));
-  const sourceOutput = sources.find((s) => s.output === entityId);
   let out = [];
+
+  // Get PCRs that have this entity as input
+  const sourcesInput = sources.filter((s) => s.input.includes(entityId));
   sourcesInput.forEach((sourceInput) => {
-    if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 2) {
-      const pcrPrimers = [sourceInput.assembly[0].left.sequence, sourceInput.assembly[1].right.sequence].map((id) => primers.find((p) => p.id === id));
+    if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 3) {
+      const pcrPrimers = [sourceInput.assembly[0].sequence, sourceInput.assembly[2].sequence].map((id) => primers.find((p) => p.id === id));
       const primerPositions = pcrPrimerPositionsInInput(sourceInput);
       out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
     }
   });
+
+  // Get the PCR that have this entity as output (if any)
+  const sourceOutput = sources.find((s) => s.output === entityId);
   if (sourceOutput?.type === 'PCRSource') {
-    const pcrPrimers = [sourceOutput.assembly[0].left.sequence, sourceOutput.assembly[1].right.sequence].map((id) => primers.find((p) => p.id === id));
+    const pcrPrimers = [sourceOutput.assembly[0].sequence, sourceOutput.assembly[2].sequence].map((id) => primers.find((p) => p.id === id));
     const entity = entities.find((e) => e.id === entityId);
     const primerPositions = pcrPrimerPositionsInOutput(pcrPrimers, entity);
     out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
@@ -175,12 +178,11 @@ export function shiftSource(source, networkShift, primerShift) {
   // Primer part
   if (newSource.type === 'PCRSource' && newSource.assembly?.length > 0) {
     // Shift primer ids in assembly representation
-    newSource.assembly[0].left.sequence += primerShift;
-    newSource.assembly[1].right.sequence += primerShift;
+    newSource.assembly[0].sequence += primerShift;
+    newSource.assembly[2].sequence += primerShift;
 
     // Shift sequence ids in assembly representation
-    newSource.assembly[0].right.sequence += networkShift;
-    newSource.assembly[1].left.sequence += networkShift;
+    newSource.assembly[1].sequence += networkShift;
   } else if (newSource.type === 'OligoHybridizationSource') {
     if (newSource.forward_oligo) {
       newSource.forward_oligo += primerShift;
@@ -195,8 +197,7 @@ export function shiftSource(source, networkShift, primerShift) {
   // Shift assembly representation
   if (newSource.type !== 'PCRSource' && newSource.assembly?.length > 0) {
     newSource.assembly.forEach((part) => {
-      part.left.sequence += networkShift;
-      part.right.sequence += networkShift;
+      part.sequence += networkShift;
     });
   }
 

@@ -38,6 +38,10 @@ describe('Makes all examples', () => {
     cy.get('li#source-7 button.submit-backend-api').click();
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
+    // Rename downloaded file
+    cy.readFile('cypress/downloads/history.json').then((file) => {
+      cy.writeFile('cypress/downloads/homologous_recombination.json', JSON.stringify(file, null, 2));
+    });
   });
   it('Restriction-ligation single step', () => {
     // Load Ase1 sequence with some extra sequences on the sides
@@ -74,10 +78,15 @@ describe('Makes all examples', () => {
     clickMultiSelectOption('Enzymes used', 'AscI', 'li#source-7');
     clickMultiSelectOption('Enzymes used', 'SalI', 'li#source-7');
     cy.get('li#source-7 button.submit-backend-api').click();
-    cy.get('li#source-7').contains('Choose fragment', { timeout: 20000 }).click();
+    cy.get('li#source-7').contains('Choose product', { timeout: 20000 }).click();
     cy.get('li#sequence-8', { timeout: 20000 }).contains('ase1').should('exist');
     cy.get('li#sequence-8').contains('kanMX').should('exist');
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
+
+    // Rename downloaded file
+    cy.readFile('cypress/downloads/history.json').then((file) => {
+      cy.writeFile('cypress/downloads/restriction_ligation_assembly.json', JSON.stringify(file, null, 2));
+    });
   });
 });

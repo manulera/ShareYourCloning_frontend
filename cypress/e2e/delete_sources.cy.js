@@ -20,10 +20,10 @@ describe('Test delete source functionality', () => {
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
     cy.get('div.select-source').contains('Homologous recombination').parent('div.select-source').find('[data-testid="DeleteIcon"]')
       .click();
-    cy.get('li#source-9').should('not.exist');
-    cy.get('li#sequence-10').should('not.exist');
+    cy.get('li#source-7').should('not.exist');
+    cy.get('li#sequence-8').should('not.exist');
 
-    cy.get('li#sequence-8').should('exist');
+    cy.get('li#sequence-4').should('exist');
     cy.get('li#sequence-6').should('exist');
   });
 });
