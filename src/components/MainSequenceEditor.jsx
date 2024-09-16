@@ -51,6 +51,6 @@ function MainSequenceEditor({ onCreatePrimer }) {
     updateEditor(store, editorName, { ...defaultMainEditorProps, ...extraProp });
   }, []);
 
-  return (<Editor {...{ editorName, ...defaultMainEditorProps, ...extraProp, height: '800' }} />);
+  return (<Editor {...{ editorName, ...defaultMainEditorProps, ...extraProp}} />);
 }
 export default React.memo(MainSequenceEditor);

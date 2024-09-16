@@ -24,11 +24,21 @@ li.hidden-ancestors {
     position: relative;
 }
 
+/* Fit OVE to screen */
 .main-sequence-editor {
+    overflow: hidden;
     width: 70%;
     margin: auto;
+    height: 80vh;  /* Reduced height */
 }
 
+.mainEditor {
+    height: 100%; /* OVE to full size of parent*/
+}
+
+body.sequence-active {
+    overflow: hidden; /* Disable scrolling */
+}
 
 .node-corner {
     position: absolute;

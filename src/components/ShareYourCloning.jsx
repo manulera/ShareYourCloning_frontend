@@ -78,7 +78,7 @@ function ShareYourCloning() {
       {/* For some reason, putting this here is required for primer.color to work */}
       <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">
         <div className="main-sequence-editor">
-          <SequenceTab />
+          <SequenceTab isActive={currentTab === 3} /> {/* Pass active status */}
         </div>
       </TabPannel>
       <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
