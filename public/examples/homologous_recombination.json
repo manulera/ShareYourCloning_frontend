@@ -153,7 +153,7 @@
       ]
     }
   ],
-  "description": "Cloning the ase1 gene from S. pombe's genome into pREP42-MCS+ expression vector using Gibson assembly.",
+  "description": "Deletion of the ORF of ase1 by homologous recombination in S.pombe",
   "primers": [
     {
       "id": 1,
