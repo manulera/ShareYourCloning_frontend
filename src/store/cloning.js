@@ -93,6 +93,55 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  addPCRsAndSubsequentSourcesForAssembly(state, action) {
+    // This is used by the PCR primer design for Gibson Assemblies. You pass a
+    // sourceId (PCR from which the primer design was started),
+    // and a list of templateIds to be amplified by PCR. Their outputs
+    // will be used as input for a subsequent assembly reaction.
+    const { sourceId, templateIds, sourceType, newEntity } = action.payload;
+    const { sources, entities } = state;
+
+    if (sources.find((s) => s.id === sourceId) === undefined) {
+      throw new Error('Source not found');
+    }
+    const sources2update = [sourceId];
+    // Add the PCR sources
+    templateIds.forEach((templateId) => {
+      const nextId = getNextUniqueId(state);
+      const newSource = {
+        id: nextId,
+        input: [templateId],
+        output: null,
+        type: 'PCRSource',
+      };
+      sources.push(newSource);
+      sources2update.push(newSource.id);
+    });
+
+    // Add the output entities
+    const newEntityIds = [];
+    sources2update.forEach((id) => {
+      const newEntityId = getNextUniqueId(state);
+      entities.push({
+        ...newEntity,
+        id: newEntityId,
+      });
+      newEntityIds.push(newEntityId);
+      const newSource = sources.find((s) => s.id === id);
+      newSource.output = newEntityId;
+    });
+
+    // Add the Assembly that takes the PCR outputs as input
+    sources.push({
+      id: getNextUniqueId(state),
+      input: newEntityIds,
+      output: null,
+      type: sourceType,
+    });
+
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   addSourceAndItsOutputEntity(state, action) {
     const { source, entity, replaceEmptySource } = action.payload;
     const { sources, entities } = state;
