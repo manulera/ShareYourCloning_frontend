@@ -3,11 +3,12 @@ import { shallowEqual, useSelector } from 'react-redux';
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-function MultipleInputsSelector({ inputEntityIds, onChange }) {
+function MultipleInputsSelector({ inputEntityIds, onChange, label }) {
   const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
 
   // The possible options should include the already selected ones + the one without children
-  const options = inputEntityIds.concat(entityNotChildSourceIds);
+  // we eliminate duplicates (can happen if the change of input does not update the source)
+  const options = [...new Set(inputEntityIds.concat(entityNotChildSourceIds))];
 
   const onInputChange = (event) => {
     const selectedIds = event.target.value;
@@ -20,14 +21,14 @@ function MultipleInputsSelector({ inputEntityIds, onChange }) {
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-multiple-chip-label">Input sequences</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
         value={inputEntityIds}
         onChange={onInputChange}
-        label="Input sequences"
+        label={label}
         // input={<OutlinedInput id="select-multiple-chip" label="Select input sequences" />}
         renderValue={(selected) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
