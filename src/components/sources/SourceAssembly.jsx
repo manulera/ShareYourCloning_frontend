@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { FormControl } from '@mui/base';
 import MultipleInputsSelector from './MultipleInputsSelector';
@@ -7,6 +7,7 @@ import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
+import { cloningActions } from '../../store/cloning';
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ source, requestStatus, sendPostRequest }) {
@@ -18,6 +19,9 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const [circularOnly, setCircularOnly] = React.useState(false);
   const [bluntLigation, setBluntLigation] = React.useState(false);
   const [enzymes, setEnzymes] = React.useState([]);
+
+  const dispatch = useDispatch();
+  const { updateSource } = cloningActions;
 
   const preventSubmit = (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0);
 
@@ -67,12 +71,20 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
     }
   };
 
+  const onChangeInput = (newInput) => {
+    // We prevent setting empty input
+    if (newInput.length === 0) {
+      return;
+    }
+    dispatch(updateSource({ id: sourceId, input: newInput, type: assemblyType }));
+  };
+
   return (
     <div className="assembly">
       <form onSubmit={onSubmit}>
         <FormControl>
           <MultipleInputsSelector {...{
-            inputEntityIds, sourceId, sourceType: assemblyType,
+            inputEntityIds, sourceId, sourceType: assemblyType, onChange: onChangeInput,
           }}
           />
         </FormControl>
