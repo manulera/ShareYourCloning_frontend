@@ -84,7 +84,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
       <form onSubmit={onSubmit}>
         <FormControl>
           <MultipleInputsSelector {...{
-            inputEntityIds, sourceId, sourceType: assemblyType, onChange: onChangeInput,
+            inputEntityIds, onChange: onChangeInput,
           }}
           />
         </FormControl>
