@@ -42,7 +42,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       }
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#source-5 .multiple-output-selector', { timeOut: 2000 }).should('exist');
-      cy.get('li#source-5 button').contains('Choose fragment').click();
+      cy.get('li#source-5 button').contains('Choose product').click();
       cy.get('li#sequence-6 li#source-5').should('exist');
       deleteSource(5);
     });

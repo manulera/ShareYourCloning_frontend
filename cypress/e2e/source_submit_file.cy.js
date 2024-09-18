@@ -40,6 +40,6 @@ describe('File Source', () => {
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     clickMultiSelectOption('File format', 'FASTA', 'li#source-1');
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/fasta_file_with_gb_extension.gb', { force: true });
-    cy.get('li#source-1', { timeout: 20000 }).contains('Choose fragment');
+    cy.get('li#source-1', { timeout: 20000 }).contains('Choose product');
   });
 });

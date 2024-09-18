@@ -16,7 +16,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('not.exist');
     clickSequenceOutputArrow('li#source-5');
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('exist');
-    cy.get('li#source-5 button').contains('Choose fragment').click();
+    cy.get('li#source-5 button').contains('Choose product').click();
     cy.get('li#sequence-6 li#source-5');
     cy.get('li#sequence-6').contains('40 bps');
   });
@@ -55,7 +55,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('exist');
     clickSequenceOutputArrow('li#source-5');
     cy.get('li#source-5 .assembly-plan-displayer').contains('rc').should('not.exist');
-    cy.get('li#source-5 button').contains('Choose fragment').click();
+    cy.get('li#source-5 button').contains('Choose product').click();
     cy.get('li#sequence-6 li#source-5');
     cy.get('li#sequence-6').contains('12 bps');
   });

@@ -18,7 +18,7 @@ describe('Tests restriction-ligation functionality', () => {
     cy.get('li#source-5 .multiple-output-selector').should('exist');
 
     // Click to get result
-    cy.get('li#source-5 button').contains('Choose fragment').click();
+    cy.get('li#source-5 button').contains('Choose product').click();
 
     // Check that the result is correct
     cy.get('li#source-5').contains('Restriction with EcoRI, then ligation');
@@ -38,7 +38,7 @@ describe('Tests restriction-ligation functionality', () => {
     cy.get('li#source-3 .multiple-output-selector .veLinearView').contains('15 bps');
 
     // Click to get result
-    cy.get('li#source-3 button').contains('Choose fragment').click();
+    cy.get('li#source-3 button').contains('Choose product').click();
 
     // // Check that the result is correct
     cy.get('li#source-3').contains('Restriction with EcoRI, then ligation');

@@ -65,7 +65,7 @@ function FinishedSource({ sourceId }) {
       break;
     case 'PCRSource':
       {
-        const [fwdPrimer, rvsPrimer] = [source.assembly[0].left.sequence, source.assembly[1].right.sequence];
+        const [fwdPrimer, rvsPrimer] = [source.assembly[0].sequence, source.assembly[2].sequence];
         message = `PCR with primers ${primers.find((p) => fwdPrimer === p.id).name} and ${primers.find((p) => rvsPrimer === p.id).name}`;
       }
 

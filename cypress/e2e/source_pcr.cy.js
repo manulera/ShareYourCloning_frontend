@@ -1,4 +1,5 @@
-import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue } from './common_functions';
+import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
+import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue, deleteSource, addLane } from './common_functions';
 
 describe('Tests PCR functionality', () => {
   beforeEach(() => {
@@ -95,7 +96,29 @@ describe('Tests PCR functionality', () => {
     cy.get('li#sequence-4 li#source-3', { timeout: 20000 }).should('exist');
     cy.get('li#sequence-4').contains('22 bps');
   });
-  it('dummy', () => {
-    manuallyTypeSequence('TTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
+  it('works when there are two possible PCR products', () => {
+    addPrimer('fwd_test', 'ACGTACGT');
+    addPrimer('rvs_test', 'GCGCGCGC');
+    manuallyTypeSequence('ACGTACGTTTTTACGTACGTAAAAAAGCGCGCGCTTTTT');
+
+    addSource('PCRSource');
+    clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
+    clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
+
+    setInputValue('Minimal annealing', '8', 'li#source-3');
+    cy.get('button').contains('Perform PCR').click();
+    cy.get('.multiple-output-selector').should('exist');
+
+    deleteSource('1');
+    addLane();
+    manuallyTypeSequence(getReverseComplementSequenceString('ACGTACGTTTTTACGTACGTAAAAAAGCGCGCGCTTTTT'));
+
+    addSource('PCRSource');
+    clickMultiSelectOption('Forward primer', 'fwd_test', 'li#source-3');
+    clickMultiSelectOption('Reverse primer', 'rvs_test', 'li#source-3');
+
+    setInputValue('Minimal annealing', '8', 'li#source-3');
+    cy.get('button').contains('Perform PCR').click();
+    cy.get('.multiple-output-selector').should('exist');
   });
 });

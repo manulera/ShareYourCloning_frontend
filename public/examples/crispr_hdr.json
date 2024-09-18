@@ -22,7 +22,7 @@
       "sequence_file_format": "genbank",
       "overhang_crick_3prime": 0,
       "overhang_watson_3prime": 0,
-      "file_content": "LOCUS       name                     250 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     CDS             81..170\n                     /codon_start=1\n                     /product=\"three tandem HA epitope tags\"\n                     /label=\"3xHA\"\n                     /translation=\"YPYDVPDYAGYPYDVPDYAGSYPYDVPDYA\"\nORIGIN\n        1 tttcatatct tcctttatat tctattaatt gaatttcaaa catcgtttta ttgagctcat\n       61 ttacatcaac cggttcaatg tacccatacg atgttcctga ctatgcgggc tatccgtatg\n      121 acgtcccgga ctatgcagga tcctatccat atgacgttcc agattacgct caaacagtaa\n      181 tgatggatga cattcaaagc actgattcta ttgctgaaaa agataatcac tctaataatg\n      241 aatctaactt\n//"
+      "file_content": "LOCUS       pcr_product              250 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   6\nVERSION     6\nKEYWORDS    .\nSOURCE      \n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     CDS             81..170\n                     /codon_start=1\n                     /product=\"three tandem HA epitope tags\"\n                     /label=\"3xHA\"\n                     /translation=\"YPYDVPDYAGYPYDVPDYAGSYPYDVPDYA\"\nORIGIN\n        1 tttcatatct tcctttatat tctattaatt gaatttcaaa catcgtttta ttgagctcat\n       61 ttacatcaac cggttcaatg tacccatacg atgttcctga ctatgcgggc tatccgtatg\n      121 acgtcccgga ctatgcagga tcctatccat atgacgttcc agattacgct caaacagtaa\n      181 tgatggatga cattcaaagc actgattcta ttgctgaaaa agataatcac tctaataatg\n      241 aatctaactt\n//"
     },
     {
       "id": 8,
@@ -30,7 +30,7 @@
       "sequence_file_format": "genbank",
       "overhang_crick_3prime": 0,
       "overhang_watson_3prime": 0,
-      "file_content": "LOCUS       name                    4808 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   id\nVERSION     id\nKEYWORDS    .\nSOURCE      .\n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     gene            <1..856\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /db_xref=\"GeneID:2543374\"\n     mRNA            <1..856\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /product=\"uncharacterized protein\"\n                     /transcript_id=\"NM_001018956.2\"\n                     /db_xref=\"GeneID:2543374\"\n     CDS             <1..573\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /note=\"sequence orphan\"\n                     /codon_start=1\n                     /product=\"uncharacterized protein\"\n                     /protein_id=\"NP_593522.2\"\n                     /db_xref=\"EnsemblGenomes-Gn:SPAPB1A10.08\"\n                     /db_xref=\"EnsemblGenomes-Tr:SPAPB1A10.08.1\"\n                     /db_xref=\"GeneID:2543374\"\n                     /db_xref=\"GOA:Q9HDY2\"\n                     /db_xref=\"PomBase:SPAPB1A10.08\"\n                     /db_xref=\"PomBase:SPAPB1A10.08.1\"\n                     /translation=\"MMTRMELRPLEIGFSKALTEVAPVTCQCECWDHNLCSSQASEMDL\n                     IYQSQDTHSCASKQDAVFQLLSETKIPVPNRYRKISHRLSTLSNKKTLKSQLDRFLSSS\n                     KKLHNDDVNRGDYCFLLSTPVECSASTNSHSYDCLWNFSCNSFPEYSSYSASETSSVAS\n                     YSYYSGPNPATPSSSSCNLVNANSLDIYLNINNLKKSKSVPRLRGQFMEPVEHNHPLSK\n                     SLEEQSSFLEQSKDASSNLTACNRSGSSLSSNFYSSRLSKKTSLASLNKSRASLQHKIM\n                     SLSRNIIRRVFHKPEVHLDPSASILNLSSSHGESNLTNGLLCQNFKLFQDDWLMEDCAP\n                     DANFTLYTPLQPWEKRSVKPEIRRPRLNPNFFRVFVLEAQMRRAGKLSANTAGRAQLIY\n                     LPKPAVTFSTSPLHVEL\"\n     CDS             1357..1446\n                     /codon_start=1\n                     /product=\"three tandem HA epitope tags\"\n                     /label=\"3xHA\"\n                     /translation=\"YPYDVPDYAGYPYDVPDYAGSYPYDVPDYA\"\n     gene            complement(3780..>4808)\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /db_xref=\"GeneID:2543411\"\n     mRNA            complement(join(3780..4407,4462..>4560))\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /product=\"GTPase Ypt71\"\n                     /transcript_id=\"NM_001018958.2\"\n                     /db_xref=\"GeneID:2543411\"\n     CDS             complement(join(3961..4407,4462..>4560))\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /codon_start=1\n                     /product=\"GTPase Ypt71\"\n                     /protein_id=\"NP_593524.1\"\n                     /db_xref=\"EnsemblGenomes-Gn:SPAPB1A10.10c\"\n                     /db_xref=\"EnsemblGenomes-Tr:SPAPB1A10.10c.1\"\n                     /db_xref=\"GeneID:2543411\"\n                     /db_xref=\"GOA:Q9HDY0\"\n                     /db_xref=\"InterPro:IPR001806\"\n                     /db_xref=\"InterPro:IPR003579\"\n                     /db_xref=\"InterPro:IPR005225\"\n                     /db_xref=\"InterPro:IPR027417\"\n                     /db_xref=\"PomBase:SPAPB1A10.10c\"\n                     /db_xref=\"PomBase:SPAPB1A10.10c.1\"\n                     /translation=\"MSAQKRVFLKVVILGDSGVGKTCLMNQFVNQKFSREYKATIGADF\n                     LTKDVVVDDKLVTLQLWDTAGQERFQSLGMAFYRGADCCVIVYNVNNSKSFDSVENWRQ\n                     EFLYQTSQDECAFPFIIVGNQIDKDASKRAVSLHRALDYCKSKHGSNMIHFEASAKENT\n                     NVTDLFETVSRLALENESSRDDFVNDFSEPLLLSKPLNNTSSCNC\"\nORIGIN\n        1 caatcctctt ttttggaaca atcaaaggat gcttcctcta acttgaccgc ctgcaatagg\n       61 agtggctcta gtttatcatc taatttctac tcatctaggt tgtccaaaaa aacatcttta\n      121 gcatctttaa ataagtctcg agcttcttta cagcataaaa taatgtcgct atctcgtaat\n      181 atcatcagac gtgtatttca caagccagaa gtgcatttgg atccaagtgc ctccatttta\n      241 aatctctcat cttcgcatgg cgaaagcaac ctgacaaatg gtttgctttg tcaaaatttc\n      301 aagctttttc aggatgattg gttgatggag gattgtgcgc cagatgccaa tttcactttg\n      361 tacaccccgc ttcaaccctg ggaaaagcga agtgtgaaac ctgaaatcag acgtcctcga\n      421 ttaaatccta attttttccg agtatttgtt ttagaagctc aaatgcgacg agctggaaag\n      481 ctatcagcaa acactgctgg ccgagcccag ttaatttacc tcccaaagcc tgccgttacc\n      541 ttctccacta gccctttgca tgttgaattg taaaaattta acgcatgact tatatacatt\n      601 tgcattcttc caagctggtt atatttattt tcattttttt ctcacccaat acttttttat\n      661 ccctactgtc tttatggaca atcgactcac aattgtttct ttttgttgta tatgattttt\n      721 tttttaaagg aaatgggttt cgcgatactg ggttgaatcc caattgcggt taatattaca\n      781 taaaataatt ctcccatagt cctagatcct gtctttgaat atgagcaaat aaaagaattg\n      841 aacaaatcat gaatgctttt ctctcttaga tgatattttg tatgcataag tctaattata\n      901 ttgattacga taagacttaa aaagtaagcc tttgtatcct tttaagcagt atttgaattt\n      961 tcttgtatca tattttaggt agagcaaaag ataccagttt gtagaacttt atgtgcttcc\n     1021 ttacattggt atatttcagg cacataaata ttcttcaact tacaattcta agtattttgt\n     1081 ttatactaaa aggagctgaa taacgtttat acagtgctga cattgaaatc tatttgcttt\n     1141 ctttggaata taagcgcatg ctgagttact ttcgcaggcc aagccatatc caaccaccat\n     1201 ttttgtgcca agcttttatg caaggttaat tccttgtact gcttgttatg ttataatata\n     1261 tcaacatctt aacagttttc atatcttcct ttatattcta ttaattgaat ttcaaacatc\n     1321 gttttattga gctcatttac atcaaccggt tcaatgtacc catacgatgt tcctgactat\n     1381 gcgggctatc cgtatgacgt cccggactat gcaggatcct atccatatga cgttccagat\n     1441 tacgctcaaa cagtaatgat ggatgacatt caaagcactg attctattgc tgaaaaagat\n     1501 aatcactcta ataatgaatc taactttact tggaaagcgt ttcgtgaaca agtggaaaag\n     1561 catttttcta aaattgaaag gcttcaccaa gtccttggaa cagatggaga caattcatca\n     1621 ttatttgagt tgtttacaac ggcaatgaat gcccagcttc atgaaatgga acagtgccag\n     1681 aaaaaacttg aagatgactg tcagcaaaga attgattcaa tcagattttt ggtttcctca\n     1741 ttaaagttaa cggatgatac ttctagtctc aaaattgagt ctcctttaat tcagtgtttg\n     1801 aatcgtttgt caatggtaga aggacaatat atggcacagt atgatcaaaa gttaagtacg\n     1861 attaaaggta tgtaatcgtc tttaatttag acttgtgttt taactgatgt atagaaatgt\n     1921 atcacaaatt ggagtcatat tgtaaccgct taggaagtcc gttcgtttta cctgattttg\n     1981 agaattcatt tttatctgat gtatccgatg cttttactga atctttgaga ggacgcatca\n     2041 acgaagccga aaaggagatt gatgcgagat tagaggttat taattccttt gaagaagaaa\n     2101 ttttgggttt gtggtctgaa ctcggtgttg agcccgctga tgttccacaa tacgaacaat\n     2161 tgcttgaatc ccatactaat cgaccaaatg atgtttatgt tactcaagaa cttatcgacc\n     2221 aactttgcaa gcaaaaagaa gttttttccg ctgaaaaaga aaagagaagt gatcatttaa\n     2281 aaagtataca atcagaagtt agcaacttgt ggaataagct tcaagtttct cccaatgaac\n     2341 aaagtcaatt tggcgattca tcaaacatta atcaagaaaa tatttcatta tgggaaactg\n     2401 aacttgaaaa acttcatcag ttaaaaaagg agcatttacc cattttttta gaagactgtc\n     2461 gtcaacaaat tcttcagctt tgggattctc tgttttattc agaagaacaa agaaagtcct\n     2521 ttacacctat gtatgaagac attattacag agcaggttct tacggcccat gaaaactata\n     2581 taaagcaact agaggccgaa gtttctgcta ataagtcctt tttaagctta attaatcgct\n     2641 atgcctcttt aatagaagga aagaaagagc ttgaagctag ttctaatgat gcctctcgtc\n     2701 taacacaacg gggacgccgg gacccaggtt tacttctacg tgaagagaaa atccgtaagc\n     2761 gactttctag agaacttcct aaggttcagt cgctgcttat accagagatt acagcatggg\n     2821 aagaaagaaa tggaaggacg ttcctttttt atgatgaacc acttctcaag atttgccaag\n     2881 aggccactca accaaaatca ttatatagaa gtgcaagtgc tgccgcaaac cgcccgaaaa\n     2941 cagcaactac aacggactct gttaatagaa caccttctca acgagggcgt gtagctgtac\n     3001 cttcaacacc aagtgttagg tccgcttctc gagctatgac gagtccaagg acaccgcttc\n     3061 ctagagtaaa aaacactcaa aatccaagtc gttccattag tgcagaaccg ccatcagcaa\n     3121 ccagtaccgc caatagaaga caccccactg ctaatcgaat tgatataaac gctagattaa\n     3181 acagtgctag tcggtctcga agcgcgaaca tgataagaca aggggcaaat ggtagtgaca\n     3241 gcaatatgtc ttcttcaccc gtttctggaa attccaatac cccttttaac aagtttccaa\n     3301 attctgtatc tcgcaataca cattttgaat ccaagtcacc gcacccaaat tactctcgaa\n     3361 ctcctcatga aacgtattca aaggcttcat ctaagaacgt cccattaagt cctccaaagc\n     3421 agcgtgtagt taatgaacac gctttaaata ttatgtcgga aaaattgcaa agaactaatc\n     3481 tgaaagaaca aacacccgag atggacattg aaaacagctc gcagaacctt cctttttctc\n     3541 ctatgaagat atcccccata agagcatcac ccgtaaagac aattccatca tcaccgtccc\n     3601 ccactaccaa cattttttct gctccactca acaatattac aaattgtaca ccgatggagg\n     3661 atgaatgggg agaagaaggc ttttaagctt cttatttacc taatcgatca aatttaaata\n     3721 tacatatttt tgcatatgaa tacagcatat agataattca taaaagttta ttaactgagg\n     3781 tcataattaa aagactattt acacctaaaa aaaaacgtgt atcaatagag ggaaaagaga\n     3841 agaattaaga acagaaagta accatagttt tgttaaaata gcaatgtaaa aaaatattat\n     3901 gaaaagaaaa cgtatagcac attttgaaat gtaaaagaat ctgagagagc gtgtgaatat\n     3961 ctagcaatta caagaagatg tattattcaa aggctttgaa agaagcaaag gttcagagaa\n     4021 gtcattaaca aagtcatctc tcgagctttc attttctaaa gctaaacgac tgactgtttc\n     4081 gaaaaggtca gtaacgtttg tattttcttt tgcactagct tcaaaatgaa tcatatttga\n     4141 tccatgtttg gatttgcaat agtcaagagc tcgatgaaga gatacggctc gtttagacgc\n     4201 gtctttgtcg atttgatttc caacgataat gaaagggaat gcacattcat cttgtgaagt\n     4261 ttgatataaa aattcttgcc tccagttttc tactgagtca aaagacttcg agttattcac\n     4321 attataaaca attacacaac aatcggcccc tctgtaaaaa gccattccca ggctttgaaa\n     4381 tcgttcttga ccagcagtat cccaaagctg tttataatta gcaaacgaat ttagatgggc\n     4441 ggaacttata ttggaactta cctgtaatgt gaccaatttg tcgtcaacca caacgtcctt\n     4501 ggttaaaaaa tcagcaccga tggtagcttt atattcgcga ctaaactttt gattgacgaa\n     4561 ctaaaatgac gatgttaaca aattgccaaa gcaatactca tagagaagct gatgtaaaga\n     4621 tcgttaacca tatttgagct agtatttaat aacaaagtga ataaatttta aaagcaatca\n     4681 ccttgtagcg acaaataaca acttatcgac ataaaatcaa tgggaaattg cagtattgga\n     4741 ttttacagct caatacaaaa accaaaaaga aaaatatact gaacgtataa aatttaacgc\n     4801 ttcaattg\n//"
+      "file_content": "LOCUS       modified_locus          4808 bp    DNA     linear   UNK 01-JAN-1980\nDEFINITION  description.\nACCESSION   8\nVERSION     8\nKEYWORDS    .\nSOURCE      \n  ORGANISM  .\n            .\nFEATURES             Location/Qualifiers\n     gene            <1..856\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /db_xref=\"GeneID:2543374\"\n     mRNA            <1..856\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /product=\"uncharacterized protein\"\n                     /transcript_id=\"NM_001018956.2\"\n                     /db_xref=\"GeneID:2543374\"\n     CDS             <1..573\n                     /locus_tag=\"SPAPB1A10.08\"\n                     /note=\"sequence orphan\"\n                     /codon_start=1\n                     /product=\"uncharacterized protein\"\n                     /protein_id=\"NP_593522.2\"\n                     /db_xref=\"EnsemblGenomes-Gn:SPAPB1A10.08\"\n                     /db_xref=\"EnsemblGenomes-Tr:SPAPB1A10.08.1\"\n                     /db_xref=\"GeneID:2543374\"\n                     /db_xref=\"GOA:Q9HDY2\"\n                     /db_xref=\"PomBase:SPAPB1A10.08\"\n                     /db_xref=\"PomBase:SPAPB1A10.08.1\"\n                     /translation=\"MMTRMELRPLEIGFSKALTEVAPVTCQCECWDHNLCSSQASEMDL\n                     IYQSQDTHSCASKQDAVFQLLSETKIPVPNRYRKISHRLSTLSNKKTLKSQLDRFLSSS\n                     KKLHNDDVNRGDYCFLLSTPVECSASTNSHSYDCLWNFSCNSFPEYSSYSASETSSVAS\n                     YSYYSGPNPATPSSSSCNLVNANSLDIYLNINNLKKSKSVPRLRGQFMEPVEHNHPLSK\n                     SLEEQSSFLEQSKDASSNLTACNRSGSSLSSNFYSSRLSKKTSLASLNKSRASLQHKIM\n                     SLSRNIIRRVFHKPEVHLDPSASILNLSSSHGESNLTNGLLCQNFKLFQDDWLMEDCAP\n                     DANFTLYTPLQPWEKRSVKPEIRRPRLNPNFFRVFVLEAQMRRAGKLSANTAGRAQLIY\n                     LPKPAVTFSTSPLHVEL\"\n     CDS             1357..1446\n                     /codon_start=1\n                     /product=\"three tandem HA epitope tags\"\n                     /label=\"3xHA\"\n                     /translation=\"YPYDVPDYAGYPYDVPDYAGSYPYDVPDYA\"\n     gene            complement(3780..>4808)\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /db_xref=\"GeneID:2543411\"\n     mRNA            complement(join(3780..4407,4462..>4560))\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /product=\"GTPase Ypt71\"\n                     /transcript_id=\"NM_001018958.2\"\n                     /db_xref=\"GeneID:2543411\"\n     CDS             complement(join(3961..4407,4462..>4560))\n                     /gene=\"ypt71\"\n                     /locus_tag=\"SPAPB1A10.10c\"\n                     /codon_start=1\n                     /product=\"GTPase Ypt71\"\n                     /protein_id=\"NP_593524.1\"\n                     /db_xref=\"EnsemblGenomes-Gn:SPAPB1A10.10c\"\n                     /db_xref=\"EnsemblGenomes-Tr:SPAPB1A10.10c.1\"\n                     /db_xref=\"GeneID:2543411\"\n                     /db_xref=\"GOA:Q9HDY0\"\n                     /db_xref=\"InterPro:IPR001806\"\n                     /db_xref=\"InterPro:IPR003579\"\n                     /db_xref=\"InterPro:IPR005225\"\n                     /db_xref=\"InterPro:IPR027417\"\n                     /db_xref=\"PomBase:SPAPB1A10.10c\"\n                     /db_xref=\"PomBase:SPAPB1A10.10c.1\"\n                     /translation=\"MSAQKRVFLKVVILGDSGVGKTCLMNQFVNQKFSREYKATIGADF\n                     LTKDVVVDDKLVTLQLWDTAGQERFQSLGMAFYRGADCCVIVYNVNNSKSFDSVENWRQ\n                     EFLYQTSQDECAFPFIIVGNQIDKDASKRAVSLHRALDYCKSKHGSNMIHFEASAKENT\n                     NVTDLFETVSRLALENESSRDDFVNDFSEPLLLSKPLNNTSSCNC\"\nORIGIN\n        1 caatcctctt ttttggaaca atcaaaggat gcttcctcta acttgaccgc ctgcaatagg\n       61 agtggctcta gtttatcatc taatttctac tcatctaggt tgtccaaaaa aacatcttta\n      121 gcatctttaa ataagtctcg agcttcttta cagcataaaa taatgtcgct atctcgtaat\n      181 atcatcagac gtgtatttca caagccagaa gtgcatttgg atccaagtgc ctccatttta\n      241 aatctctcat cttcgcatgg cgaaagcaac ctgacaaatg gtttgctttg tcaaaatttc\n      301 aagctttttc aggatgattg gttgatggag gattgtgcgc cagatgccaa tttcactttg\n      361 tacaccccgc ttcaaccctg ggaaaagcga agtgtgaaac ctgaaatcag acgtcctcga\n      421 ttaaatccta attttttccg agtatttgtt ttagaagctc aaatgcgacg agctggaaag\n      481 ctatcagcaa acactgctgg ccgagcccag ttaatttacc tcccaaagcc tgccgttacc\n      541 ttctccacta gccctttgca tgttgaattg taaaaattta acgcatgact tatatacatt\n      601 tgcattcttc caagctggtt atatttattt tcattttttt ctcacccaat acttttttat\n      661 ccctactgtc tttatggaca atcgactcac aattgtttct ttttgttgta tatgattttt\n      721 tttttaaagg aaatgggttt cgcgatactg ggttgaatcc caattgcggt taatattaca\n      781 taaaataatt ctcccatagt cctagatcct gtctttgaat atgagcaaat aaaagaattg\n      841 aacaaatcat gaatgctttt ctctcttaga tgatattttg tatgcataag tctaattata\n      901 ttgattacga taagacttaa aaagtaagcc tttgtatcct tttaagcagt atttgaattt\n      961 tcttgtatca tattttaggt agagcaaaag ataccagttt gtagaacttt atgtgcttcc\n     1021 ttacattggt atatttcagg cacataaata ttcttcaact tacaattcta agtattttgt\n     1081 ttatactaaa aggagctgaa taacgtttat acagtgctga cattgaaatc tatttgcttt\n     1141 ctttggaata taagcgcatg ctgagttact ttcgcaggcc aagccatatc caaccaccat\n     1201 ttttgtgcca agcttttatg caaggttaat tccttgtact gcttgttatg ttataatata\n     1261 tcaacatctt aacagttttc atatcttcct ttatattcta ttaattgaat ttcaaacatc\n     1321 gttttattga gctcatttac atcaaccggt tcaatgtacc catacgatgt tcctgactat\n     1381 gcgggctatc cgtatgacgt cccggactat gcaggatcct atccatatga cgttccagat\n     1441 tacgctcaaa cagtaatgat ggatgacatt caaagcactg attctattgc tgaaaaagat\n     1501 aatcactcta ataatgaatc taactttact tggaaagcgt ttcgtgaaca agtggaaaag\n     1561 catttttcta aaattgaaag gcttcaccaa gtccttggaa cagatggaga caattcatca\n     1621 ttatttgagt tgtttacaac ggcaatgaat gcccagcttc atgaaatgga acagtgccag\n     1681 aaaaaacttg aagatgactg tcagcaaaga attgattcaa tcagattttt ggtttcctca\n     1741 ttaaagttaa cggatgatac ttctagtctc aaaattgagt ctcctttaat tcagtgtttg\n     1801 aatcgtttgt caatggtaga aggacaatat atggcacagt atgatcaaaa gttaagtacg\n     1861 attaaaggta tgtaatcgtc tttaatttag acttgtgttt taactgatgt atagaaatgt\n     1921 atcacaaatt ggagtcatat tgtaaccgct taggaagtcc gttcgtttta cctgattttg\n     1981 agaattcatt tttatctgat gtatccgatg cttttactga atctttgaga ggacgcatca\n     2041 acgaagccga aaaggagatt gatgcgagat tagaggttat taattccttt gaagaagaaa\n     2101 ttttgggttt gtggtctgaa ctcggtgttg agcccgctga tgttccacaa tacgaacaat\n     2161 tgcttgaatc ccatactaat cgaccaaatg atgtttatgt tactcaagaa cttatcgacc\n     2221 aactttgcaa gcaaaaagaa gttttttccg ctgaaaaaga aaagagaagt gatcatttaa\n     2281 aaagtataca atcagaagtt agcaacttgt ggaataagct tcaagtttct cccaatgaac\n     2341 aaagtcaatt tggcgattca tcaaacatta atcaagaaaa tatttcatta tgggaaactg\n     2401 aacttgaaaa acttcatcag ttaaaaaagg agcatttacc cattttttta gaagactgtc\n     2461 gtcaacaaat tcttcagctt tgggattctc tgttttattc agaagaacaa agaaagtcct\n     2521 ttacacctat gtatgaagac attattacag agcaggttct tacggcccat gaaaactata\n     2581 taaagcaact agaggccgaa gtttctgcta ataagtcctt tttaagctta attaatcgct\n     2641 atgcctcttt aatagaagga aagaaagagc ttgaagctag ttctaatgat gcctctcgtc\n     2701 taacacaacg gggacgccgg gacccaggtt tacttctacg tgaagagaaa atccgtaagc\n     2761 gactttctag agaacttcct aaggttcagt cgctgcttat accagagatt acagcatggg\n     2821 aagaaagaaa tggaaggacg ttcctttttt atgatgaacc acttctcaag atttgccaag\n     2881 aggccactca accaaaatca ttatatagaa gtgcaagtgc tgccgcaaac cgcccgaaaa\n     2941 cagcaactac aacggactct gttaatagaa caccttctca acgagggcgt gtagctgtac\n     3001 cttcaacacc aagtgttagg tccgcttctc gagctatgac gagtccaagg acaccgcttc\n     3061 ctagagtaaa aaacactcaa aatccaagtc gttccattag tgcagaaccg ccatcagcaa\n     3121 ccagtaccgc caatagaaga caccccactg ctaatcgaat tgatataaac gctagattaa\n     3181 acagtgctag tcggtctcga agcgcgaaca tgataagaca aggggcaaat ggtagtgaca\n     3241 gcaatatgtc ttcttcaccc gtttctggaa attccaatac cccttttaac aagtttccaa\n     3301 attctgtatc tcgcaataca cattttgaat ccaagtcacc gcacccaaat tactctcgaa\n     3361 ctcctcatga aacgtattca aaggcttcat ctaagaacgt cccattaagt cctccaaagc\n     3421 agcgtgtagt taatgaacac gctttaaata ttatgtcgga aaaattgcaa agaactaatc\n     3481 tgaaagaaca aacacccgag atggacattg aaaacagctc gcagaacctt cctttttctc\n     3541 ctatgaagat atcccccata agagcatcac ccgtaaagac aattccatca tcaccgtccc\n     3601 ccactaccaa cattttttct gctccactca acaatattac aaattgtaca ccgatggagg\n     3661 atgaatgggg agaagaaggc ttttaagctt cttatttacc taatcgatca aatttaaata\n     3721 tacatatttt tgcatatgaa tacagcatat agataattca taaaagttta ttaactgagg\n     3781 tcataattaa aagactattt acacctaaaa aaaaacgtgt atcaatagag ggaaaagaga\n     3841 agaattaaga acagaaagta accatagttt tgttaaaata gcaatgtaaa aaaatattat\n     3901 gaaaagaaaa cgtatagcac attttgaaat gtaaaagaat ctgagagagc gtgtgaatat\n     3961 ctagcaatta caagaagatg tattattcaa aggctttgaa agaagcaaag gttcagagaa\n     4021 gtcattaaca aagtcatctc tcgagctttc attttctaaa gctaaacgac tgactgtttc\n     4081 gaaaaggtca gtaacgtttg tattttcttt tgcactagct tcaaaatgaa tcatatttga\n     4141 tccatgtttg gatttgcaat agtcaagagc tcgatgaaga gatacggctc gtttagacgc\n     4201 gtctttgtcg atttgatttc caacgataat gaaagggaat gcacattcat cttgtgaagt\n     4261 ttgatataaa aattcttgcc tccagttttc tactgagtca aaagacttcg agttattcac\n     4321 attataaaca attacacaac aatcggcccc tctgtaaaaa gccattccca ggctttgaaa\n     4381 tcgttcttga ccagcagtat cccaaagctg tttataatta gcaaacgaat ttagatgggc\n     4441 ggaacttata ttggaactta cctgtaatgt gaccaatttg tcgtcaacca caacgtcctt\n     4501 ggttaaaaaa tcagcaccga tggtagcttt atattcgcga ctaaactttt gattgacgaa\n     4561 ctaaaatgac gatgttaaca aattgccaaa gcaatactca tagagaagct gatgtaaaga\n     4621 tcgttaacca tatttgagct agtatttaat aacaaagtga ataaatttta aaagcaatca\n     4681 ccttgtagcg acaaataaca acttatcgac ataaaatcaa tgggaaattg cagtattgga\n     4741 ttttacagct caatacaaaa accaaaaaga aaaatatact gaacgtataa aatttaacgc\n     4801 ttcaattg\n//"
     }
   ],
   "sources": [
@@ -58,100 +58,52 @@
       "repository_id": "39295"
     },
     {
-      "assembly": [
-        {
-          "left": {
-            "sequence": 6,
-            "location": {
-              "start": 80,
-              "end": 100,
-              "strand": null
-            },
-            "reverse_complemented": false
-          },
-          "right": {
-            "sequence": 4,
-            "location": {
-              "start": 66,
-              "end": 86,
-              "strand": null
-            },
-            "reverse_complemented": false
-          }
-        },
-        {
-          "left": {
-            "sequence": 4,
-            "location": {
-              "start": 136,
-              "end": 156,
-              "strand": null
-            },
-            "reverse_complemented": false
-          },
-          "right": {
-            "sequence": 7,
-            "location": {
-              "start": 0,
-              "end": 20,
-              "strand": null
-            },
-            "reverse_complemented": true
-          }
-        }
-      ],
       "id": 5,
       "input": [
         4
       ],
       "output": 6,
       "type": "PCRSource",
-      "output_name": null,
-      "circular": false
-    },
-    {
+      "output_name": "pcr_product",
+      "circular": false,
       "assembly": [
         {
-          "left": {
-            "sequence": 3,
-            "location": {
-              "start": 1276,
-              "end": 1356,
-              "strand": null
-            },
-            "reverse_complemented": false
+          "sequence": 6,
+          "left_location": null,
+          "right_location": {
+            "start": 80,
+            "end": 100,
+            "strand": null
           },
-          "right": {
-            "sequence": 6,
-            "location": {
-              "start": 0,
-              "end": 80,
-              "strand": null
-            },
-            "reverse_complemented": false
-          }
+          "reverse_complemented": false
         },
         {
-          "left": {
-            "sequence": 6,
-            "location": {
-              "start": 170,
-              "end": 250,
-              "strand": null
-            },
-            "reverse_complemented": false
+          "sequence": 4,
+          "left_location": {
+            "start": 66,
+            "end": 86,
+            "strand": null
           },
-          "right": {
-            "sequence": 3,
-            "location": {
-              "start": 1356,
-              "end": 1436,
-              "strand": null
-            },
-            "reverse_complemented": false
-          }
+          "right_location": {
+            "start": 136,
+            "end": 156,
+            "strand": null
+          },
+          "reverse_complemented": false
+        },
+        {
+          "sequence": 7,
+          "left_location": {
+            "start": 0,
+            "end": 20,
+            "strand": null
+          },
+          "right_location": null,
+          "reverse_complemented": true
         }
-      ],
+      ]
+    },
+    {
       "id": 7,
       "input": [
         3,
@@ -159,8 +111,44 @@
       ],
       "output": 8,
       "type": "CRISPRSource",
-      "output_name": null,
+      "output_name": "modified_locus",
       "circular": false,
+      "assembly": [
+        {
+          "sequence": 3,
+          "left_location": null,
+          "right_location": {
+            "start": 1276,
+            "end": 1356,
+            "strand": null
+          },
+          "reverse_complemented": false
+        },
+        {
+          "sequence": 6,
+          "left_location": {
+            "start": 0,
+            "end": 80,
+            "strand": null
+          },
+          "right_location": {
+            "start": 170,
+            "end": 250,
+            "strand": null
+          },
+          "reverse_complemented": false
+        },
+        {
+          "sequence": 3,
+          "left_location": {
+            "start": 1356,
+            "end": 1436,
+            "strand": null
+          },
+          "right_location": null,
+          "reverse_complemented": false
+        }
+      ],
       "guides": [
         5
       ]

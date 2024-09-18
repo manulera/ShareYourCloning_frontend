@@ -6,20 +6,19 @@ function AssemblyPlanDisplayer({
   if (!source.assembly) {
     return null;
   }
-  const mappedAssembly = source.assembly.map((a) => {
-    const { left, right } = a;
-    const { sequence: u, location: leftLocation, reverse_complemented: leftRc } = left;
-    const { sequence: v, location: rightLocation, reverse_complemented: rightRc } = right;
-    const uText = leftRc ? `rc(${u})` : `${u}`;
-    const vText = rightRc ? `rc(${v})` : `${v}`;
-    const locU = `${leftLocation.start}:${leftLocation.end}`;
-    const locV = `${rightLocation.start}:${rightLocation.end}`;
-    return `${uText}[${locU}]:${vText}[${locV}]`;
+
+  const fragments = source.assembly.map((fragment) => {
+    const { sequence, left_location, right_location, reverse_complemented } = fragment;
+    const leftPart = left_location ? `${left_location.start}:${left_location.end}` : '';
+    const rightPart = right_location ? `${right_location.start}:${right_location.end}` : '';
+    return `${sequence}${reverse_complemented ? '_rc' : ''}[${leftPart},${rightPart}]`;
   });
+
+  // Join left-right pairs with
 
   return (
     <div className="assembly-plan-displayer">
-      {mappedAssembly.join(' - ')}
+      {fragments.join(' - ')}
     </div>
   );
 }

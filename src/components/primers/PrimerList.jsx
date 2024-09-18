@@ -9,7 +9,7 @@ import { cloningActions } from '../../store/cloning';
 function getUsedPrimerIds(sources) {
   const forPcr = sources
     .filter((s) => s.type === 'PCRSource' && s.assembly?.length > 0)
-    .map((s) => [s.assembly[0].left.sequence, s.assembly[1].right.sequence]).flat();
+    .map((s) => [s.assembly[0].sequence, s.assembly[2].sequence]).flat();
   const forHybridization = sources
     .filter((s) => s.type === 'OligoHybridizationSource')
     .flatMap((s) => [s.forward_oligo, s.reverse_oligo]);

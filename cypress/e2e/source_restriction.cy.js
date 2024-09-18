@@ -27,7 +27,7 @@ describe('Test restriction component', () => {
     cy.get('li#source-3 .multiple-output-selector [data-testid="ForwardIcon"]').first().click();
     cy.get('li#source-3 .overhang-representation').contains('aattcaaaag');
     cy.get('li#source-3 .overhang-representation').contains('gttttcttaa');
-    cy.get('button').contains('Choose fragment').click();
+    cy.get('button').contains('Choose product').click();
     // The result is shown
     cy.get('li#sequence-4 li#source-3').should('exist');
     cy.get('li#sequence-4 li#source-3').contains('Restriction with EcoRI');
@@ -51,7 +51,7 @@ describe('Test restriction component', () => {
     cy.get('li#source-3 .overhang-representation').contains('ttcttaa');
 
     // We select the first fragment (only EcoRI)
-    cy.get('button').contains('Choose fragment').click();
+    cy.get('button').contains('Choose product').click();
     // The result is shown
     cy.get('li#sequence-4 li#source-3').should('exist');
     cy.get('li#sequence-4 li#source-3').contains('Restriction with EcoRI');
@@ -90,7 +90,7 @@ describe('Test restriction component', () => {
     // The cut shown is SalI
     cy.get('li#source-3 .overhang-representation', { timeout: 20000 }).contains('TTCTT...TTTTCAGCT');
     // Select this cut
-    cy.get('button').contains('Choose fragment').click();
+    cy.get('button').contains('Choose product').click();
     // The result is shown
     cy.get('li#sequence-4 li#source-3', { timeout: 20000 }).should('exist');
     cy.get('li#sequence-4 .overhang-representation').contains('TTCTT...TTTTCAGCT');

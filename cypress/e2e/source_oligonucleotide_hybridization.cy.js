@@ -65,7 +65,7 @@ describe('Tests oligo hybridization source', () => {
     cy.get('li#source-1').contains('50 bps');
     clickSequenceOutputArrow('li#source-1');
     cy.get('li#source-1').contains('68 bps');
-    cy.get('button').contains('Choose fragment').click();
+    cy.get('button').contains('Choose product').click();
     cy.get('li#sequence-2 li#source-1').should('exist');
     cy.get('li#sequence-2').contains('68 bps');
   });

@@ -2,7 +2,6 @@ import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
 import { shallowEqual, useSelector } from 'react-redux';
 import { reversePositionInRange } from '@teselagen/range-utils';
-import { parseFeatureLocation } from '@teselagen/bio-parsers';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import { convertToTeselaJson } from '../../utils/sequenceParsers';
 
@@ -28,15 +27,15 @@ function SubSequenceDisplayer({
   let selectionLayer = null;
 
   if (['PCRSource'].includes(source.type)) {
-    if (source.assembly[0][1] > 0) {
+    if (!source.assembly[1].reverse_complemented) {
       selectionLayer = {
-        start: parseFeatureLocation(source.assembly[0][3])[0].start,
-        end: parseFeatureLocation(source.assembly[1][2])[0].end,
+        start: source.assembly[1].left_location.start,
+        end: source.assembly[1].right_location.end,
       };
     } else {
       selectionLayer = {
-        end: reversePositionInRange(parseFeatureLocation(source.assembly[0][3])[0].start, seq.size),
-        start: reversePositionInRange(parseFeatureLocation(source.assembly[1][2])[0].end, seq.size),
+        end: reversePositionInRange(source.assembly[1].left_location.start, seq.size),
+        start: reversePositionInRange(source.assembly[1].right_location.end, seq.size),
       };
     }
   }
