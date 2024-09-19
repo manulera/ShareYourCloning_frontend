@@ -3,7 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { Alert, Button, FormControl } from '@mui/material';
-import { batch, useDispatch, useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector, useStore } from 'react-redux';
+import { updateEditor } from '@teselagen/ove';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from './TabPanel';
@@ -12,26 +13,36 @@ import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
+import { simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
   // TODO: shrinking horizontally removes tabs
+  const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
   const { primers, error, designPrimers, setPrimers, rois, onSelectRegion } = usePrimerDesign('homologous_recombination', 2);
+
+  const dispatch = useDispatch();
+  const store = useStore();
+  const { updateStoreEditor } = useStoreEditor();
 
   const templateSequenceId = pcrSource.input[0];
 
   const [selectedTab, setSelectedTab] = React.useState(0);
   const [homologyLength, setHomologyLength] = React.useState(80);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
-  const [insertionOrientation, setInsertionOrientation] = React.useState('');
+  const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
   const [targetTm, setTargetTm] = React.useState(55);
 
-  const dispatch = useDispatch();
-  const { updateStoreEditor } = useStoreEditor();
-
-  const { setMainSequenceId, setCurrentTab } = cloningActions;
-  const { addPrimersToPCRSource } = cloningActions;
-
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
+
+  const sequenceProduct = React.useMemo(() => {
+    if (rois.every((roi) => roi !== null) && insertionOrientation) {
+      const { entities } = store.getState().cloning;
+      const templateEntity = entities.find((e) => e.id === templateSequenceId);
+      const targetEntity = entities.find((e) => e.id === homologousRecombinationTargetId);
+      return simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse');
+    }
+    return null;
+  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId]);
 
   React.useEffect(() => {
     // Focus on the correct sequence
@@ -42,6 +53,12 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     }
   }, [templateSequenceId, homologousRecombinationTargetId, mainSequenceId]);
 
+  React.useEffect(() => {
+    if (sequenceProduct && selectedTab === 2) {
+      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
+    }
+  }, [sequenceProduct, selectedTab]);
+
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue === 0) {
@@ -50,6 +67,10 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     } else if (newValue === 1) {
       updateStoreEditor('mainEditor', homologousRecombinationTargetId);
       dispatch(setMainSequenceId(homologousRecombinationTargetId));
+    } else if (newValue === 2 && sequenceProduct) {
+      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
+    } else {
+      updateStoreEditor('mainEditor', null);
     }
   };
 
@@ -70,7 +91,6 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
       homology_length: homologyLength,
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
-      insert_forward: insertionOrientation === 'forward',
     };
     designPrimers([templateSequenceId, homologousRecombinationTargetId], rois, params, [insertionOrientation === 'forward', null]);
     setSelectedTab(3);

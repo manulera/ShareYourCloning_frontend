@@ -17,3 +17,16 @@ export function joinEntitiesIntoSingleSequence(entities, locations, orientations
   }
   return outputSequence;
 }
+
+export function simulateHomologousRecombination(templateEntity, targetEntity, rois, invertFragment) {
+  const [amplifyRange, insertionRange] = rois;
+
+  const templateSequence = convertToTeselaJson(templateEntity);
+  let templateFragment = getSequenceDataBetweenRange(templateSequence, amplifyRange);
+  if (invertFragment) {
+    templateFragment = getReverseComplementSequenceAndAnnotations(templateFragment);
+  }
+
+  const targetSequence = convertToTeselaJson(targetEntity);
+  return insertSequenceDataAtPositionOrRange(templateFragment, targetSequence, insertionRange);
+}

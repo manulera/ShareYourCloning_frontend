@@ -56,6 +56,7 @@ export function usePrimerDesign(designType, nbSequences) {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
           location: selectedRegion2SequenceLocation(locations[0]),
+          orientation: fragmentOrientations[0],
         },
         homologous_recombination_target: {
           sequence: entities.find((e) => e.id === homologousRecombinationTargetId),
