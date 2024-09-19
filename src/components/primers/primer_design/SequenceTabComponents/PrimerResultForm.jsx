@@ -1,8 +1,8 @@
 import React from 'react';
 import { FormControl, TextField } from '@mui/material';
-import '../PrimerForm.css';
-import '../PrimerList.css';
-import CustomFormHelperText from '../../form/CustomFormHelperText';
+import '../../PrimerForm.css';
+import '../../PrimerList.css';
+import CustomFormHelperText from '../../../form/CustomFormHelperText';
 
 function PrimerResultForm({
   primer: { name, sequence }, updatePrimerName, existingPrimerNames,

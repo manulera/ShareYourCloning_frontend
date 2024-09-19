@@ -1,9 +1,9 @@
 import { Button, FormControl } from '@mui/material';
 import React from 'react';
 import { batch, useDispatch } from 'react-redux';
-import MultipleInputsSelector from '../../sources/MultipleInputsSelector';
-import { cloningActions } from '../../../store/cloning';
-import useStoreEditor from '../../../hooks/useStoreEditor';
+import MultipleInputsSelector from '../../../sources/MultipleInputsSelector';
+import { cloningActions } from '../../../../store/cloning';
+import useStoreEditor from '../../../../hooks/useStoreEditor';
 
 function PrimerDesignGibsonAssembly({ source }) {
   const [targets, setTargets] = React.useState(source.input);

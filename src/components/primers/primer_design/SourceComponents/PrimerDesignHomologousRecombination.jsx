@@ -1,9 +1,9 @@
 import { Alert, Button, FormControl } from '@mui/material';
 import React from 'react';
 import { batch, useDispatch } from 'react-redux';
-import SingleInputSelector from '../../sources/SingleInputSelector';
-import { cloningActions } from '../../../store/cloning';
-import useStoreEditor from '../../../hooks/useStoreEditor';
+import SingleInputSelector from '../../../sources/SingleInputSelector';
+import { cloningActions } from '../../../../store/cloning';
+import useStoreEditor from '../../../../hooks/useStoreEditor';
 
 function PrimerDesignHomologousRecombination({ source, primerDesignType }) {
   const [target, setTarget] = React.useState('');

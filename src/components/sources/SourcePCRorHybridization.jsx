@@ -4,8 +4,8 @@ import { Button, FormControl, TextField } from '@mui/material';
 
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
-import PrimerDesignSourceForm from '../primers/primer_design/PrimerDesignSourceForm';
 import PCRUnitForm from './PCRUnitForm';
+import PrimerDesignSourceForm from '../primers/primer_design/SourceComponents/PrimerDesignSourceForm';
 
 function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
