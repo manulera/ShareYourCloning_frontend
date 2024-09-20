@@ -1,42 +1,34 @@
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
 import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-import { cloningActions } from '../../store/cloning';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
-function MultipleInputsSelector({ inputEntityIds, sourceId, sourceType }) {
-  const dispatch = useDispatch();
-  const { updateSource } = cloningActions;
-
+function MultipleInputsSelector({ inputEntityIds, onChange, label }) {
   const entityNotChildSourceIds = useSelector(({ cloning }) => getIdsOfEntitiesWithoutChildSource(cloning.sources, cloning.entities), shallowEqual);
 
   // The possible options should include the already selected ones + the one without children
-  const options = inputEntityIds.concat(entityNotChildSourceIds);
+  // we eliminate duplicates (can happen if the change of input does not update the source)
+  const options = [...new Set(inputEntityIds.concat(entityNotChildSourceIds))];
 
-  const onChange = (event) => {
-    const input = event.target.value;
-    // We prevent setting empty input
-    // TODO: test this
-    if (input.length === 0) {
-      return;
+  const onInputChange = (event) => {
+    const selectedIds = event.target.value;
+    if (selectedIds.includes('all')) {
+      onChange(options);
+    } else {
+      onChange(selectedIds);
     }
-    if (input.includes('all')) {
-      dispatch(updateSource({ id: sourceId, input: options, type: sourceType }));
-      return;
-    }
-    dispatch(updateSource({ id: sourceId, input, type: sourceType }));
   };
 
   return (
     <FormControl fullWidth>
-      <InputLabel id="demo-multiple-chip-label">Input sequences</InputLabel>
+      <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
         id="demo-multiple-chip"
         multiple
         value={inputEntityIds}
-        onChange={onChange}
-        label="Input sequences"
+        onChange={onInputChange}
+        label={label}
         // input={<OutlinedInput id="select-multiple-chip" label="Select input sequences" />}
         renderValue={(selected) => (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>

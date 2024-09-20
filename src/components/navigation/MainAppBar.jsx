@@ -90,7 +90,6 @@ function MainAppBar() {
         return;
       }
       const { cloning } = store.getState();
-      console.log(cloning.entities);
       // If no sequences have been loaded yet, simply load the history
       if (cloning.entities.length === 0) {
         loadData(jsonObject, false, dispatch, setLoadedFileError, backendRoute('validate'));

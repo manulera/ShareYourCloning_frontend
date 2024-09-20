@@ -35,7 +35,7 @@ export function getPrimerDesignObject({ sources, entities }) {
   const mockSequences = entities.filter((e) => e.type === 'TemplateSequence' && e.primer_design === true);
   if (mockSequences.length === 0) {
     // return 'No primer design sequence templates found';
-    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [] };
   }
   const mockSequenceIds = mockSequences.map((s) => s.id);
 
@@ -44,11 +44,11 @@ export function getPrimerDesignObject({ sources, entities }) {
 
   if (finalSources.length === 0) {
     // return 'No sources with primer design sequence templates as inputs found';
-    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [] };
   }
   if (finalSources.length > 1) {
     // return 'More than one source with primer design sequence templates as inputs found';
-    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [] };
   }
 
   const finalSource = finalSources[0];
@@ -62,20 +62,19 @@ export function getPrimerDesignObject({ sources, entities }) {
   // They should not be mock sequences
   if (templateSequences.some((ts) => ts.type === 'TemplateSequence')) {
     // return 'TemplateSequence input to final source is a TemplateSequence';
-    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [] };
   }
 
-  const templateSequencesIds = templateSequences.map((s) => s.id);
   // Inputs to the finalSource that are not mock sequences with primer_design
   const otherInputIds = finalSource.input.filter((i) => !mockSequenceIds.includes(i));
   const otherInputs = entities.filter((e) => otherInputIds.includes(e.id));
   // There should be no TemplateSequence as an input that does not have primer_design set to true
   if (otherInputs.some((i) => i.type === 'TemplateSequence' && i.primer_design !== true)) {
     // return 'TemplateSequence input to final source does not have primer_design set to true';
-    return { finalSource: null, templateSequencesIds: [], otherInputIds: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [] };
   }
 
-  return { finalSource, templateSequencesIds, otherInputIds, pcrSources };
+  return { finalSource, otherInputIds, pcrSources };
 }
 
 const formatPrimer = (primer, position) => {

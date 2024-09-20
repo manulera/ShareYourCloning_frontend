@@ -9,7 +9,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('aagaattcaaaagaattcaa');
     addSource('LigationSource');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
     cy.get('#tab-panel-0 span').contains('Blunt ligation').click();
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
@@ -35,7 +35,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('caaGGG', false, [-3, 0]);
     addSource('LigationSource');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#sequence-6 li#source-5');
@@ -46,7 +46,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('caaGGGttg', false, [-3, -3]);
     addSource('LigationSource');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.multiple-output-selector', { timeout: 20000 }).should('exist');
@@ -64,7 +64,7 @@ describe('Tests ligation assembly functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('aaGGG', false, [-3, 0]);
     addSource('LigationSource');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
     cy.get('#tab-panel-0 span').contains('Allow partial overlaps').click();
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
@@ -98,7 +98,7 @@ describe('Tests ligation assembly functionality', () => {
     // same with two inputs
     cy.get('svg[data-testid="AddCircleIcon"]').last().click();
     manuallyTypeSequence('aagaattcaaaagaattcaa');
-    clickMultiSelectOption('Input sequences', '5', 'li#source-3');
+    clickMultiSelectOption('Assembly inputs', '5', 'li#source-3');
     cy.get('li#source-3 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message');

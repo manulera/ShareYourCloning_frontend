@@ -1,6 +1,6 @@
 import React from 'react';
 import MainSequenceEditor from './MainSequenceEditor';
-import PrimerDesigner from './primers/primer_design/PrimerDesigner';
+import PrimerDesigner from './primers/primer_design/SequenceTabComponents/PrimerDesigner';
 import CreatePrimerDialog from './primers/CreatePrimerDialog';
 
 function SequenceTab() {

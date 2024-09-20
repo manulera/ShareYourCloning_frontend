@@ -77,7 +77,7 @@ describe('Test Source input constrains', () => {
         checkAllOptions(5);
         cy.get('body').click(0, 0);
         // We cannot unset the first input
-        clickMultiSelectOption('Input sequences', '2', 'li#source-5');
+        clickMultiSelectOption('Assembly inputs', '2', 'li#source-5');
         // Still there
         cy.get('li#source-5 li#sequence-2').should('exist');
       } else {

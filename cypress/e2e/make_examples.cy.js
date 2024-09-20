@@ -74,7 +74,7 @@ describe('Makes all examples', () => {
 
     // Do a restriction-ligation
     addSource('RestrictionAndLigationSource');
-    clickMultiSelectOption('Input sequences', 'Select all', 'li#source-7');
+    clickMultiSelectOption('Assembly inputs', 'Select all', 'li#source-7');
     clickMultiSelectOption('Enzymes used', 'AscI', 'li#source-7');
     clickMultiSelectOption('Enzymes used', 'SalI', 'li#source-7');
     cy.get('li#source-7 button.submit-backend-api').click();

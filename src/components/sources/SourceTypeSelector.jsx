@@ -10,6 +10,7 @@ import { cloningActions } from '../../store/cloning';
 function SourceTypeSelector({ source }) {
   const { id: sourceId, type: sourceType } = source;
   const dispatch = useDispatch();
+  const sourceIsPrimerDesign = source.output && useSelector((state) => state.cloning.entities.find((e) => e.id === source.output).primer_design === true);
   const { replaceSource } = cloningActions;
 
   const onChange = (event) => {
@@ -62,6 +63,7 @@ function SourceTypeSelector({ source }) {
           // Note how you have to set the label in two places
           // see https://stackoverflow.com/questions/67064682/material-ui-outlined-select-label-is-not-rendering-properly
           label="Source type"
+          disabled={sourceIsPrimerDesign}
         >
           {options}
         </Select>
