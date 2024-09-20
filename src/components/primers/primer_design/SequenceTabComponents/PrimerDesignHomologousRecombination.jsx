@@ -86,14 +86,16 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     updateStoreEditor('mainEditor', null);
   };
 
-  const onPrimerDesign = () => {
+  const onPrimerDesign = async () => {
     const params = {
       homology_length: homologyLength,
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
     };
-    designPrimers([templateSequenceId, homologousRecombinationTargetId], rois, params, [insertionOrientation === 'forward', null]);
-    setSelectedTab(3);
+    const serverError = await designPrimers([templateSequenceId, homologousRecombinationTargetId], rois, params, [insertionOrientation === 'forward', null]);
+    if (!serverError) {
+      setSelectedTab(3);
+    }
   };
 
   return (
@@ -137,6 +139,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
             <Button variant="contained" onClick={onPrimerDesign} sx={{ marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
           </FormControl>
           )}
+          {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
         </TabPanel>
         {primers.length === 2 && (
@@ -144,7 +147,6 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
           <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
         </TabPanel>
         )}
-        {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
       </Box>
     </Box>

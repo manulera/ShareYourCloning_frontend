@@ -72,11 +72,11 @@ export function usePrimerDesign(designType, nbSequences) {
       setError('');
       const newPrimers = designType === 'gibson_assembly' ? resp.data.primers : [resp.data.forward_primer, resp.data.reverse_primer];
       setPrimers(newPrimers);
-      return { primers: newPrimers, error: '' };
+      return false;
     } catch (thrownError) {
       const errorMessage = error2String(thrownError);
       setError(errorMessage);
-      return { primers: [], error: errorMessage };
+      return true;
     }
   };
 

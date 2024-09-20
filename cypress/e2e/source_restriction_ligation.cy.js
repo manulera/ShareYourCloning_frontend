@@ -9,7 +9,7 @@ describe('Tests restriction-ligation functionality', () => {
     cy.get('svg[data-testid="AddCircleIcon"]', { timeout: 20000 }).last().click();
     manuallyTypeSequence('ccGAATTCcc');
     addSource('RestrictionAndLigationSource');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
     clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-5');
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
@@ -67,7 +67,7 @@ describe('Tests restriction-ligation functionality', () => {
 
     clickMultiSelectOption('Enzymes used', 'EcoRI', 'li#source-5');
     clickMultiSelectOption('Enzymes used', 'SalI', 'li#source-5');
-    clickMultiSelectOption('Input sequences', '4', 'li#source-5');
+    clickMultiSelectOption('Assembly inputs', '4', 'li#source-5');
 
     cy.get('li#source-5 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });

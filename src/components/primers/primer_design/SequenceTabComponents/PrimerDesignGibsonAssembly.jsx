@@ -91,15 +91,18 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
     updateStoreEditor('mainEditor', null);
   };
 
-  const onPrimerDesign = () => {
+  const onPrimerDesign = async () => {
     const params = {
       homology_length: homologyLength,
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
       circular: circularAssembly,
     };
-    designPrimers(templateSequencesIds, rois, params, fragmentOrientations);
-    setSelectedTab(templateSequencesIds.length + 1);
+    const serverError = await designPrimers(templateSequencesIds, rois, params, fragmentOrientations);
+
+    if (!serverError) {
+      setSelectedTab(templateSequencesIds.length + 1);
+    }
   };
 
   return (
