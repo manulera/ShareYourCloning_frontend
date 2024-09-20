@@ -1,19 +1,26 @@
 import React from 'react';
-import { shallowEqual, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { Button, FormControl, TextField } from '@mui/material';
 
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import PCRUnitForm from './PCRUnitForm';
 import PrimerDesignSourceForm from '../primers/primer_design/SourceComponents/PrimerDesignSourceForm';
+import { cloningActions } from '../../store/cloning';
+import useStoreEditor from '../../hooks/useStoreEditor';
 
 function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
 
+  const dispatch = useDispatch();
+  const { updateStoreEditor } = useStoreEditor();
+  const { setCurrentTab, setMainSequenceId } = cloningActions;
   const { id: sourceId } = source;
 
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
   const primers = useSelector((state) => state.cloning.primers);
+  const isPcr = inputEntities.length !== 0;
+  const outputIsPrimerDesign = isPcr && source.output && useSelector((state) => state.cloning.entities.find((e) => e.id === source.output).primer_design === true);
 
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
@@ -21,8 +28,6 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
 
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
-
-  const isPcr = inputEntities.length !== 0;
 
   React.useEffect(() => {
     if (source.forward_primer) { setForwardPrimerId(source.forward_primer); }
@@ -57,6 +62,23 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   const onPrimerDesign = () => {
     setDesigningPrimers(true);
   };
+
+  if (outputIsPrimerDesign && !forwardPrimerId && !reversePrimerId) {
+    const goToPrimerDesign = () => {
+      dispatch(setCurrentTab(3));
+      dispatch(setMainSequenceId(source.input[0]));
+      updateStoreEditor('mainEditor', source.input[0]);
+    };
+    return (
+      <Button variant="contained" color="success" sx={{ mt: 1 }} onClick={goToPrimerDesign}>
+        <span style={{ fontSize: '1.2em', marginRight: 12 }}>✨</span>
+        {' '}
+        Design primers
+        {' '}
+        <span style={{ fontSize: '1.2em', marginLeft: 12 }}>✨</span>
+      </Button>
+    );
+  }
 
   if (designingPrimers && !source.output) {
     return <PrimerDesignSourceForm source={source} />;

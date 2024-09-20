@@ -46,9 +46,9 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
 
   React.useEffect(() => {
     // Focus on the correct sequence
-    if (templateSequenceId && templateSequenceId === mainSequenceId) {
+    if (templateSequenceId === mainSequenceId) {
       setSelectedTab(0);
-    } else if (homologousRecombinationTargetId && homologousRecombinationTargetId === mainSequenceId) {
+    } else if (homologousRecombinationTargetId === mainSequenceId) {
       setSelectedTab(1);
     }
   }, [templateSequenceId, homologousRecombinationTargetId, mainSequenceId]);

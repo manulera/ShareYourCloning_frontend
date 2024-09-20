@@ -8,7 +8,7 @@ function PrimerResultList({ primers, setPrimers, addPrimers }) {
 
   const primersAreValid = primers.length && primers.every((primer) => primer.name && !existingPrimerNames.includes(primer.name));
   return (
-    <>
+    <div style={{ marginTop: '12px' }}>
       {primers.map((primer, index) => (
         <PrimerResultForm
           key={index}
@@ -31,7 +31,7 @@ function PrimerResultList({ primers, setPrimers, addPrimers }) {
         Save primers
       </Button>
       )}
-    </>
+    </div>
   );
 }
 

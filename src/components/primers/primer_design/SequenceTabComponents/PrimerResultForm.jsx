@@ -2,7 +2,6 @@ import React from 'react';
 import { FormControl, TextField } from '@mui/material';
 import '../../PrimerForm.css';
 import '../../PrimerList.css';
-import CustomFormHelperText from '../../../form/CustomFormHelperText';
 
 function PrimerResultForm({
   primer: { name, sequence }, updatePrimerName, existingPrimerNames,
@@ -15,25 +14,40 @@ function PrimerResultForm({
     nameError = 'Name is required';
   }
   return (
-    <div className="primer-result-form">
-      <FormControl sx={{ m: 1, pb: 2, display: { width: '30%' } }}>
+    <div
+      className="primer-design-form"
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        marginBottom: nameError ? '12px' : '0',
+      }}
+    >
+      <FormControl sx={{ mx: 1, width: '30%' }}>
         <TextField
           label="Name"
           value={name}
           onChange={(e) => updatePrimerName(e.target.value)}
           error={nameError !== ''}
           FormHelperTextProps={{ component: 'div' }}
-          helperText={<CustomFormHelperText>{nameError}</CustomFormHelperText>}
+          helperText={nameError}
         />
       </FormControl>
-      <FormControl sx={{ m: 1, pb: 2, display: { width: '60%' } }}>
+      <FormControl sx={{ mx: 1, width: '60%' }}>
         <TextField
           label="Sequence"
           value={sequence}
-          inputProps={{ id: 'sequence' }}
-          FormHelperTextProps={{ component: 'div' }}
+          inputProps={{
+            id: 'sequence',
+            style: { fontSize: '0.8rem' }, // Reduce font size
+          }}
           disabled
-          helperText={<CustomFormHelperText>Cannot edit, change parameters to design new primers</CustomFormHelperText>}
+          helperText=" " // Add an empty helper text to maintain consistent height
+          sx={{
+            '& .MuiInputBase-root': {
+              height: '56px', // Maintain the default height of TextField
+            },
+          }}
         />
       </FormControl>
     </div>
