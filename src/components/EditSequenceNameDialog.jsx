@@ -40,8 +40,8 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
     setOriginalName(seq.name);
   }, [entity]);
 
-  const submissionAllowed = name && name !== originalName;
-
+  const nameIsNotValid = /\s/.test(name);
+  const submissionAllowed = name && name !== originalName && !nameIsNotValid;
   return (
     <Dialog
       open={dialogOpen}
@@ -66,6 +66,8 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             sx={{ mb: 2 }}
+            error={nameIsNotValid}
+            helperText={nameIsNotValid && 'Name cannot contain spaces'}
           />
         </FormControl>
 

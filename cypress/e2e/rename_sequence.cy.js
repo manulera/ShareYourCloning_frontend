@@ -21,7 +21,12 @@ describe('Can rename a sequence', () => {
     setInputValue('New name', 'name', 'div[role="presentation"]');
     cy.get('div[role="presentation"] button').contains('Cancel').should('exist');
     cy.get('div[role="presentation"] button').contains('Rename').should('not.exist');
+    // Cannot submit if name contains spaces
+    setInputValue('New name', ' with space', 'div[role="presentation"]');
+    cy.get('div[role="presentation"] button').contains('Cancel').should('exist');
+    cy.get('div[role="presentation"] button').contains('Rename').should('not.exist');
     // Can submit if name changed
+    clearInputValue('New name', 'div[role="presentation"]');
     setInputValue('New name', 'name-2', 'div[role="presentation"]');
     cy.get('div[role="presentation"] button').contains('Cancel').should('exist');
     cy.get('div[role="presentation"] button').contains('Rename').should('exist');
