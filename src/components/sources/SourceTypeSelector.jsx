@@ -10,7 +10,7 @@ import { cloningActions } from '../../store/cloning';
 function SourceTypeSelector({ source }) {
   const { id: sourceId, type: sourceType } = source;
   const dispatch = useDispatch();
-  const sourceIsPrimerDesign = source.output && useSelector((state) => state.cloning.entities.find((e) => e.id === source.output).primer_design === true);
+  const sourceIsPrimerDesign = source.output && useSelector((state) => state.cloning.entities.find((e) => e.id === source.output).primer_design !== undefined);
   const { replaceSource } = cloningActions;
 
   const onChange = (event) => {

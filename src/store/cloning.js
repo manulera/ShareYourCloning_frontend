@@ -131,13 +131,15 @@ const reducer = {
       newSource.output = newEntityId;
     });
 
-    // Add the Assembly that takes the PCR outputs as input
-    sources.push({
-      id: getNextUniqueId(state),
-      input: newEntityIds,
-      output: null,
-      type: sourceType,
-    });
+    if (sourceType !== null) {
+      // Add the Assembly that takes the PCR outputs as input
+      sources.push({
+        id: getNextUniqueId(state),
+        input: newEntityIds,
+        output: null,
+        type: sourceType,
+      });
+    }
 
     state.network = constructNetwork(state.entities, state.sources);
   },

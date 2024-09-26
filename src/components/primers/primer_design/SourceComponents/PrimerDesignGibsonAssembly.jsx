@@ -24,7 +24,7 @@ function PrimerDesignGibsonAssembly({ source }) {
     event.preventDefault();
     const newEntity = {
       type: 'TemplateSequence',
-      primer_design: true,
+      primer_design: 'gibson_assembly',
       circular: false,
     };
 
