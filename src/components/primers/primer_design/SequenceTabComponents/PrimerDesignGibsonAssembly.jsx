@@ -14,6 +14,8 @@ import PrimerSettingsForm from './PrimerSettingsForm';
 import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
+import PrimerSpacerForm from './PrimerSpacerForm';
+import { getSequenceName, stringIsNotDNA } from '../../../../store/cloning_utils';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
@@ -35,17 +37,23 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const [fragmentOrientations, setFragmentOrientations] = React.useState(templateSequencesIds.map(() => 'forward'));
   const [targetTm, setTargetTm] = React.useState(55);
   const [circularAssembly, setCircularAssembly] = React.useState(false);
+  const [spacers, setSpacers] = React.useState(Array(pcrSources.length + 1).fill(''));
 
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
-
+  const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
   const sequenceProduct = React.useMemo(() => {
-    if (rois.every((region) => region !== null) && fragmentOrientations.every((orientation) => orientation !== null)) {
+    if (rois.every((region) => region !== null) && spacersAreValid && fragmentOrientations.every((orientation) => orientation !== null)) {
       const { entities } = store.getState().cloning;
       const templateEntities = templateSequencesIds.map((id) => entities.find((e) => e.id === id));
-      return joinEntitiesIntoSingleSequence(templateEntities, rois.map((s) => s.selectionLayer), fragmentOrientations);
+      return joinEntitiesIntoSingleSequence(templateEntities, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
     }
     return null;
-  }, [fragmentOrientations, rois, templateSequencesIds]);
+  }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, spacersAreValid]);
+
+  const sequenceNames = React.useMemo(() => {
+    const { entities } = store.getState().cloning;
+    return templateSequencesIds.map((id) => getSequenceName(entities.find((e) => e.id === id)));
+  }, [templateSequencesIds, store]);
 
   React.useEffect(() => {
     // Focus on the correct sequence
@@ -60,6 +68,17 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
       updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
     }
   }, [sequenceProduct, selectedTab]);
+
+  const onCircularAssemblyChange = (event) => {
+    setCircularAssembly(event.target.checked);
+    if (event.target.checked) {
+      // Remove the first spacer
+      setSpacers((current) => current.slice(1));
+    } else {
+      // Add it again
+      setSpacers((current) => ['', ...current]);
+    }
+  };
 
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -98,7 +117,7 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
       target_tm: targetTm,
       circular: circularAssembly,
     };
-    const serverError = await designPrimers(templateSequencesIds, rois, params, fragmentOrientations);
+    const serverError = await designPrimers(templateSequencesIds, rois, params, fragmentOrientations, spacers);
 
     if (!serverError) {
       setSelectedTab(templateSequencesIds.length + 1);
@@ -124,45 +143,54 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
           </TabPanel>
         ))}
         <TabPanel value={selectedTab} index={templateSequencesIds.length}>
-          <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, fragmentOrientations, setFragmentOrientations }} />
-          {rois.every((region) => region !== null) && (
-          <>
-            <div>
-              <FormLabel sx={{ mb: 2 }}>Fragment orientation</FormLabel>
-              {/* Per fragment */}
-              {templateSequencesIds.map((id, index) => (
-                <OrientationPicker
-                  key={id}
-                  value={fragmentOrientations[index]}
-                  onChange={(e) => setFragmentOrientations((current) => changeValueAtIndex(current, index, e.target.value))}
-                  label={`Sequence ${id}`}
-                  index={index}
-                />
-              ))}
-            </div>
-            <div>
-              <FormControl sx={{ py: 1 }}>
-                <FormControlLabel
-                  control={(
-                    <Checkbox
-                      checked={circularAssembly}
-                      onChange={(e) => setCircularAssembly(e.target.checked)}
-                      name="circular-assembly"
-                    />
-                )}
-                  label="Circular assembly"
-                />
-              </FormControl>
-            </div>
-          </>
-          )}
+          <Box sx={{ width: '80%', margin: 'auto' }}>
+            <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, fragmentOrientations, setFragmentOrientations }} />
+            {rois.every((region) => region !== null) && (
+            <>
+              <Box sx={{ mt: 3, mb: 3 }}>
+                <FormLabel sx={{ mb: 2 }}>Fragment orientation</FormLabel>
+                {/* Per fragment */}
+                {templateSequencesIds.map((id, index) => (
+                  <OrientationPicker
+                    key={id}
+                    value={fragmentOrientations[index]}
+                    onChange={(e) => setFragmentOrientations((current) => changeValueAtIndex(current, index, e.target.value))}
+                    label={sequenceNames[index] && sequenceNames[index] !== 'name' ? `Seq. ${id} (${sequenceNames[index]})` : `Seq. ${id}`}
+                    index={index}
+                  />
+                ))}
+              </Box>
+              <PrimerSpacerForm
+                spacers={spacers}
+                setSpacers={setSpacers}
+                fragmentCount={pcrSources.length}
+                circularAssembly={circularAssembly}
+                sequenceNames={sequenceNames}
+                sequenceIds={templateSequencesIds}
+              />
+              <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+                <FormControl>
+                  <FormControlLabel
+                    control={(
+                      <Checkbox
+                        checked={circularAssembly}
+                        onChange={onCircularAssemblyChange}
+                        name="circular-assembly"
+                      />
+                    )}
+                    label="Circular assembly"
+                  />
+                </FormControl>
+              </Box>
+            </>
+            )}
 
-          { (rois.every((region) => region !== null) && targetTm && hybridizationLength && homologyLength) && (
-          <FormControl>
-            <Button variant="contained" onClick={onPrimerDesign} sx={{ marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
-          </FormControl>
-          )}
-
+            { (rois.every((region) => region !== null) && targetTm && hybridizationLength && homologyLength && spacersAreValid) && (
+            <FormControl>
+              <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
+            </FormControl>
+            )}
+          </Box>
         </TabPanel>
         {primers.length > 0 && (
           <TabPanel value={selectedTab} index={templateSequencesIds.length + 1}>

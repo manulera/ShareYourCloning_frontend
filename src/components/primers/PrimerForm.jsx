@@ -4,8 +4,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import Tooltip from '@mui/material/Tooltip';
 import { IconButton } from '@mui/material';
 import ValidatedTextField from '../form/ValidatedTextField';
-import { stringIsNotDNA } from './validators';
+
 import './PrimerForm.css';
+import { stringIsNotDNA } from '../../store/cloning_utils';
 
 function PrimerForm({
   primer = { name: '', sequence: '', id: null }, submitPrimer, cancelForm, existingNames, disabledSequenceText = '',

@@ -40,6 +40,7 @@ export function usePrimerDesign(designType, nbSequences) {
     locations,
     params,
     fragmentOrientations,
+    spacers = [],
   ) => {
     const { cloning: { entities } } = store.getState();
 

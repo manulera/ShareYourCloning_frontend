@@ -2,7 +2,7 @@ import React from 'react';
 import { Checkbox, FormControl, FormControlLabel, TextField } from '@mui/material';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import ValidatedTextField from '../form/ValidatedTextField';
-import { stringIsNotDNA } from '../primers/validators';
+import { stringIsNotDNA } from '../../store/cloning_utils';
 
 function SourceManuallyTyped({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;

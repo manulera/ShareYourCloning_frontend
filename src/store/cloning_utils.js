@@ -214,3 +214,13 @@ export function shiftStateIds(newState, oldState) {
     sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
   };
 }
+
+export function getSequenceName(entity) {
+  // Read the entity to tesela json and get the name
+  const teselaJson = convertToTeselaJson(entity);
+  return teselaJson.name;
+}
+
+export function stringIsNotDNA(str) {
+  return str.match(/[^agct]/i) !== null;
+}
