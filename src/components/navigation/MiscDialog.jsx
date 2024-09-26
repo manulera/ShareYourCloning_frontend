@@ -8,6 +8,7 @@ import DownloadSequenceFileDialog from '../DownloadSequenceFileDialog';
 
 function MiscDialog({ open, setOpen }) {
   const { requestStatus, sendPostRequest, sources, entities } = useBackendAPI();
+
   const [downloadSequence, setDownloadSequence] = React.useState(() => null);
   const [downloadDialogOpen, setDownloadDialogOpen] = React.useState(false);
   React.useEffect(() => {
@@ -33,7 +34,7 @@ function MiscDialog({ open, setOpen }) {
           <SourceGenomeRegion {...{ source, requestStatus, sendPostRequest }} />
         </div>
       </DialogContent>
-      <DownloadSequenceFileDialog {...{ downloadSequence, dialogOpen: downloadDialogOpen, setDialogOpen: setDownloadDialogOpen }} />
+      { downloadSequence && <DownloadSequenceFileDialog {...{ downloadSequence, dialogOpen: downloadDialogOpen, setDialogOpen: setDownloadDialogOpen, downloadCallback: downloadSequence }} /> }
     </Dialog>
   );
 }

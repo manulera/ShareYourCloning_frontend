@@ -5,8 +5,8 @@ import useBackendRoute from './useBackendRoute';
 
 export default function useBackendAPI() {
   const [requestStatus, setRequestStatus] = useState({ status: null, message: '' });
-  const [sources, setSources] = useState('');
-  const [entities, setEntities] = useState('');
+  const [sources, setSources] = useState([]);
+  const [entities, setEntities] = useState([]);
   const backendRoute = useBackendRoute();
 
   const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { output }, modifySource = (s) => s }) => {
