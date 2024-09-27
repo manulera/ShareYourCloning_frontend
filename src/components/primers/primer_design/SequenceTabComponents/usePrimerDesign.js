@@ -46,11 +46,14 @@ export function usePrimerDesign(designType, nbSequences) {
 
     let requestData;
     if (designType === 'gibson_assembly') {
-      requestData = sequenceIds.map((id, index) => ({
-        sequence: entities.find((e) => e.id === id),
-        location: selectedRegion2SequenceLocation(locations[index]),
-        forward_orientation: fragmentOrientations[index] === 'forward',
-      }));
+      requestData = {
+        pcr_templates: sequenceIds.map((id, index) => ({
+          sequence: entities.find((e) => e.id === id),
+          location: selectedRegion2SequenceLocation(locations[index]),
+          forward_orientation: fragmentOrientations[index] === 'forward',
+        })),
+        spacers,
+      };
     } else if (designType === 'homologous_recombination') {
       const [pcrTemplateId, homologousRecombinationTargetId] = sequenceIds;
       requestData = {
