@@ -76,7 +76,7 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
                       id: 'sequence',
                     }}
                     // Error if not DNA
-                    error={error}
+                    error={error !== ''}
                     helperText={error}
                   />
                 </FormControl>

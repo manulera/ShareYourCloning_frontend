@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import DescriptionEditor from './DescriptionEditor';
 import PrimerList from './primers/PrimerList';
 import { cloningActions } from '../store/cloning';
-import TabPannel from './navigation/TabPannel';
+import TabPanel from './navigation/TabPanel';
 import CustomTab from './navigation/CustomTab';
 import DataModelDisplayer from './DataModelDisplayer';
 import CloningHistory from './CloningHistory';
@@ -34,30 +34,30 @@ function ShareYourCloning() {
         <CustomTab label="Sequence" index={3} />
         <CustomTab label="Data model" index={4} />
       </Tabs>
-      <TabPannel index={1} value={currentTab} className="primer-tab-pannel">
+      <TabPanel index={1} value={currentTab} className="primer-tab-pannel">
         <div className="primer-list-container">
           <PrimerList />
         </div>
-      </TabPannel>
-      <TabPannel index={2} value={currentTab} className="description-tab-pannel">
+      </TabPanel>
+      <TabPanel index={2} value={currentTab} className="description-tab-pannel">
         <div className="description-editor">
           <DescriptionEditor />
         </div>
-      </TabPannel>
+      </TabPanel>
       {/* For some reason, putting this here is required for primer.color to work */}
-      <TabPannel index={3} value={currentTab} className="main-editor-tab-pannel">
+      <TabPanel index={3} value={currentTab} className="main-editor-tab-pannel">
         <div className="main-sequence-editor">
           <SequenceTab />
         </div>
-      </TabPannel>
-      <TabPannel index={0} value={currentTab} className="cloning-tab-pannel">
+      </TabPanel>
+      <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
         <div className="share-your-cloning">
           <CloningHistory network={network} />
         </div>
-      </TabPannel>
-      <TabPannel index={4} value={currentTab} className="data-model-tab-pannel">
+      </TabPanel>
+      <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">
         <DataModelDisplayer />
-      </TabPannel>
+      </TabPanel>
     </div>
   );
 }

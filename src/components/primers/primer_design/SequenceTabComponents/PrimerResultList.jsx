@@ -5,7 +5,6 @@ import PrimerResultForm from './PrimerResultForm';
 
 function PrimerResultList({ primers, setPrimers, addPrimers }) {
   const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
-
   const primersAreValid = primers.length && primers.every((primer) => primer.name && !existingPrimerNames.includes(primer.name));
   return (
     <div style={{ marginTop: '12px' }}>

@@ -60,12 +60,22 @@ export function usePrimerDesign(designType, nbSequences) {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
           location: selectedRegion2SequenceLocation(locations[0]),
-          orientation: fragmentOrientations[0],
+          forward_orientation: fragmentOrientations[0] === 'forward',
         },
         homologous_recombination_target: {
           sequence: entities.find((e) => e.id === homologousRecombinationTargetId),
           location: selectedRegion2SequenceLocation(locations[1]),
         },
+      };
+    } else if (designType === 'restriction_ligation') {
+      const [pcrTemplateId] = sequenceIds;
+      requestData = {
+        pcr_template: {
+          sequence: entities.find((e) => e.id === pcrTemplateId),
+          location: selectedRegion2SequenceLocation(locations[0]),
+          forward_orientation: true,
+        },
+        spacers,
       };
     }
 
@@ -74,10 +84,12 @@ export function usePrimerDesign(designType, nbSequences) {
     try {
       const resp = await axios.post(url, requestData, { params });
       setError('');
-      const newPrimers = designType === 'gibson_assembly' ? resp.data.primers : [resp.data.forward_primer, resp.data.reverse_primer];
+      const newPrimers = resp.data.primers;
       setPrimers(newPrimers);
       return false;
     } catch (thrownError) {
+      console.log('requestData', requestData);
+      console.log('params', params);
       const errorMessage = error2String(thrownError);
       setError(errorMessage);
       return true;
