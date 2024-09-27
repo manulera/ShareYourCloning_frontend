@@ -125,30 +125,26 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   };
 
   return (
-    <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
-      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
-        <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
-      </Box>
-      <Box>
-        <Tabs value={selectedTab} onChange={onTabChange} variant="scrollable" scrollButtons="auto">
-          {templateSequencesIds.map((id) => (
-            <Tab key={id} label={`Seq ${id}`} />
-          ))}
-          <Tab label="Other settings" />
-          {primers.length && (<Tab label="Results" />)}
-        </Tabs>
-        {templateSequencesIds.map((id, index) => (
-          <TabPanel key={id} value={selectedTab} index={index}>
-            <SequenceRoiSelect selectedRegion={rois[index]} onSelectRegion={() => onSelectRegion(index)} description={`Select the fragment of sequence ${id} to be amplified`} inputLabel={`Amplified region (sequence ${id})`} />
-          </TabPanel>
+    <Box>
+      <Tabs value={selectedTab} onChange={onTabChange} variant="scrollable" scrollButtons="auto">
+        {templateSequencesIds.map((id) => (
+          <Tab key={id} label={`Seq ${id}`} />
         ))}
-        <TabPanel value={selectedTab} index={templateSequencesIds.length}>
-          <Box sx={{ width: '80%', margin: 'auto' }}>
-            <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, fragmentOrientations, setFragmentOrientations }} />
-            {rois.every((region) => region !== null) && (
+        <Tab label="Other settings" />
+        {primers.length && (<Tab label="Results" />)}
+      </Tabs>
+      {templateSequencesIds.map((id, index) => (
+        <TabPanel key={id} value={selectedTab} index={index}>
+          <SequenceRoiSelect selectedRegion={rois[index]} onSelectRegion={() => onSelectRegion(index)} description={`Select the fragment of sequence ${id} to be amplified`} inputLabel={`Amplified region (sequence ${id})`} />
+        </TabPanel>
+      ))}
+      <TabPanel value={selectedTab} index={templateSequencesIds.length}>
+        <Box sx={{ width: '80%', margin: 'auto' }}>
+          <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, fragmentOrientations, setFragmentOrientations }} />
+          {rois.every((region) => region !== null) && (
             <>
-              <Box sx={{ mt: 3, mb: 3 }}>
-                <FormLabel sx={{ mb: 2 }}>Fragment orientation</FormLabel>
+              <Box sx={{ mt: 2 }}>
+                <FormLabel>Fragment orientation</FormLabel>
                 {/* Per fragment */}
                 {templateSequencesIds.map((id, index) => (
                   <OrientationPicker
@@ -183,23 +179,22 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
                 </FormControl>
               </Box>
             </>
-            )}
+          )}
 
-            { (rois.every((region) => region !== null) && targetTm && hybridizationLength && homologyLength && spacersAreValid) && (
+          { (rois.every((region) => region !== null) && targetTm && hybridizationLength && homologyLength && spacersAreValid) && (
             <FormControl>
               <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
             </FormControl>
-            )}
-          </Box>
-        </TabPanel>
-        {primers.length > 0 && (
-          <TabPanel value={selectedTab} index={templateSequencesIds.length + 1}>
-            <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
-          </TabPanel>
-        )}
-        {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
+          )}
+        </Box>
+      </TabPanel>
+      {primers.length > 0 && (
+      <TabPanel value={selectedTab} index={templateSequencesIds.length + 1}>
+        <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
+      </TabPanel>
+      )}
+      {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
-      </Box>
     </Box>
   );
 }

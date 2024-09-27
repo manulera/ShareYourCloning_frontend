@@ -99,56 +99,55 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
   };
 
   return (
-    <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
-      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
-        <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
-      </Box>
-      <Box>
-        <Tabs value={selectedTab} onChange={onTabChange} centered>
-          <Tab label="Amplified region" />
-          <Tab label="Replaced region" />
-          <Tab label="Other settings" />
-          {primers.length === 2 && (<Tab label="Results" />)}
-        </Tabs>
-        <TabPanel value={selectedTab} index={0}>
-          <SequenceRoiSelect
-            selectedRegion={rois[0]}
-            onSelectRegion={() => onSelectRegion(0, false)}
-            description={`Select the fragment of sequence ${templateSequenceId} to be amplified`}
-            inputLabel={`Amplified region (sequence ${templateSequenceId})`}
-          />
-        </TabPanel>
-        <TabPanel value={selectedTab} index={1}>
-          <SequenceRoiSelect
-            selectedRegion={rois[1]}
-            onSelectRegion={() => onSelectRegion(1, true)}
-            description="Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment"
-            inputLabel={`Replaced region (sequence ${homologousRecombinationTargetId})`}
-          />
-        </TabPanel>
-        <TabPanel value={selectedTab} index={2}>
-          <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, insertionOrientation, setInsertionOrientation }} />
+
+    <Box>
+      <Tabs value={selectedTab} onChange={onTabChange} centered>
+        <Tab label="Amplified region" />
+        <Tab label="Replaced region" />
+        <Tab label="Other settings" />
+        {primers.length === 2 && (<Tab label="Results" />)}
+      </Tabs>
+      <TabPanel value={selectedTab} index={0}>
+        <SequenceRoiSelect
+          selectedRegion={rois[0]}
+          onSelectRegion={() => onSelectRegion(0, false)}
+          description={`Select the fragment of sequence ${templateSequenceId} to be amplified`}
+          inputLabel={`Amplified region (sequence ${templateSequenceId})`}
+        />
+      </TabPanel>
+      <TabPanel value={selectedTab} index={1}>
+        <SequenceRoiSelect
+          selectedRegion={rois[1]}
+          onSelectRegion={() => onSelectRegion(1, true)}
+          description="Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment"
+          inputLabel={`Replaced region (sequence ${homologousRecombinationTargetId})`}
+        />
+      </TabPanel>
+      <TabPanel value={selectedTab} index={2}>
+        <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, insertionOrientation, setInsertionOrientation }} />
+        <Box sx={{ pt: 2 }}>
           <OrientationPicker
             value={insertionOrientation}
             onChange={(e) => setInsertionOrientation(e.target.value)}
             label="Orientation of insert"
             index={0}
           />
-          { (rois.every((roi) => roi !== null) && insertionOrientation && targetTm && hybridizationLength && homologyLength) && (
+        </Box>
+        { (rois.every((roi) => roi !== null) && insertionOrientation && targetTm && hybridizationLength && homologyLength) && (
           <FormControl>
-            <Button variant="contained" onClick={onPrimerDesign} sx={{ marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
+            <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
           </FormControl>
-          )}
-          {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
+        )}
+        {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
-        </TabPanel>
-        {primers.length === 2 && (
+      </TabPanel>
+      {primers.length === 2 && (
         <TabPanel value={selectedTab} index={3}>
           <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
         </TabPanel>
-        )}
+      )}
 
-      </Box>
     </Box>
+
   );
 }

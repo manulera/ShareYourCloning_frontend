@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { getPrimerDesignObject } from '../../../../store/cloning_utils';
 import PrimerDesignHomologousRecombination from './PrimerDesignHomologousRecombination';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
@@ -37,22 +37,31 @@ function PrimerDesigner() {
       </div>
     );
   }
-
+  let component = null;
   // Check conditions for different types of primer design
   if (finalSource === null && pcrSources.length === 1 && outputSequences[0].primer_design === 'restriction_ligation') {
-    return <PrimerDesignRestrictionLigation />;
+    component = <PrimerDesignRestrictionLigation pcrSource={pcrSources[0]} />;
   }
   if (finalSource?.type === 'GibsonAssemblySource') {
-    return <PrimerDesignGibsonAssembly pcrSources={pcrSources} />;
+    component = <PrimerDesignGibsonAssembly pcrSources={pcrSources} />;
   }
   if (finalSource?.type === 'HomologousRecombinationSource' && otherInputIds.length === 1 && pcrSources.length === 1) {
-    return (
+    component = (
       <PrimerDesignHomologousRecombination
         homologousRecombinationTargetId={otherInputIds[0]}
         pcrSource={pcrSources[0]}
       />
     );
   }
+
+  return (
+    <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
+      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
+        <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
+      </Box>
+      {component}
+    </Box>
+  );
 }
 
 export default React.memo(PrimerDesigner);
