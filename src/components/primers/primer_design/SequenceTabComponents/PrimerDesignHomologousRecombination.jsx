@@ -3,8 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { Alert, Button, FormControl } from '@mui/material';
-import { batch, useDispatch, useSelector, useStore } from 'react-redux';
-import { updateEditor } from '@teselagen/ove';
+import { batch, useDispatch, useStore } from 'react-redux';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from './TabPanel';
@@ -16,63 +15,32 @@ import OrientationPicker from './OrientationPicker';
 import { simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
-  // TODO: shrinking horizontally removes tabs
+  const templateSequenceId = pcrSource.input[0];
+  const sequenceIds = React.useMemo(() => [templateSequenceId, homologousRecombinationTargetId], [templateSequenceId, homologousRecombinationTargetId]);
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion } = usePrimerDesign('homologous_recombination', 2);
+  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('homologous_recombination', sequenceIds);
 
   const dispatch = useDispatch();
   const store = useStore();
   const { updateStoreEditor } = useStoreEditor();
 
-  const templateSequenceId = pcrSource.input[0];
-
-  const [selectedTab, setSelectedTab] = React.useState(0);
   const [homologyLength, setHomologyLength] = React.useState(80);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
   const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
   const [targetTm, setTargetTm] = React.useState(55);
 
-  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
-
-  const sequenceProduct = React.useMemo(() => {
+  React.useEffect(() => {
     if (rois.every((roi) => roi !== null) && insertionOrientation) {
       const { entities } = store.getState().cloning;
       const templateEntity = entities.find((e) => e.id === templateSequenceId);
       const targetEntity = entities.find((e) => e.id === homologousRecombinationTargetId);
-      return simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse');
-    }
-    return null;
-  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId]);
-
-  React.useEffect(() => {
-    // Focus on the correct sequence
-    if (templateSequenceId === mainSequenceId) {
-      setSelectedTab(0);
-    } else if (homologousRecombinationTargetId === mainSequenceId) {
-      setSelectedTab(1);
-    }
-  }, [templateSequenceId, homologousRecombinationTargetId, mainSequenceId]);
-
-  React.useEffect(() => {
-    if (sequenceProduct && selectedTab === 2) {
-      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
-    }
-  }, [sequenceProduct, selectedTab]);
-
-  const onTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    if (newValue === 0) {
-      updateStoreEditor('mainEditor', templateSequenceId);
-      dispatch(setMainSequenceId(templateSequenceId));
-    } else if (newValue === 1) {
-      updateStoreEditor('mainEditor', homologousRecombinationTargetId);
-      dispatch(setMainSequenceId(homologousRecombinationTargetId));
-    } else if (newValue === 2 && sequenceProduct) {
-      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
+      const sequenceProduct = simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse');
+      sequenceProduct.name = 'Homologous recombination product';
+      setSequenceProduct(sequenceProduct);
     } else {
-      updateStoreEditor('mainEditor', null);
+      setSequenceProduct(null);
     }
-  };
+  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId]);
 
   const addPrimers = () => {
     batch(() => {
@@ -81,7 +49,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
       dispatch(setCurrentTab(0));
     });
     setPrimers([]);
-    setSelectedTab(0);
+    onTabChange(null, 0);
     document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
   };
@@ -92,9 +60,9 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
     };
-    const serverError = await designPrimers([templateSequenceId, homologousRecombinationTargetId], rois, params, [insertionOrientation === 'forward', null]);
+    const serverError = await designPrimers(rois, params, [insertionOrientation === 'forward', null]);
     if (!serverError) {
-      setSelectedTab(3);
+      onTabChange(null, 3);
     }
   };
 

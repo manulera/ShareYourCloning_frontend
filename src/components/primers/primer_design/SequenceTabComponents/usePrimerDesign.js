@@ -1,20 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useStore } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
+import { updateEditor } from '@teselagen/ove';
 import useBackendRoute from '../../../../hooks/useBackendRoute';
 import { selectedRegion2SequenceLocation } from '../../../../utils/selectedRegionUtils';
 import error2String from '../../../../utils/error2String';
+import useStoreEditor from '../../../../hooks/useStoreEditor';
+import { cloningActions } from '../../../../store/cloning';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
 }
 
-export function usePrimerDesign(designType, nbSequences) {
+export function usePrimerDesign(designType, sequenceIds) {
   const [primers, setPrimers] = useState([]);
-  const [rois, setRois] = useState(Array(nbSequences).fill(null));
+  const [rois, setRois] = useState(Array(sequenceIds.length).fill(null));
   const [error, setError] = useState('');
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [sequenceProduct, setSequenceProduct] = useState(null);
+
   const store = useStore();
   const backendRoute = useBackendRoute();
+  const dispatch = useDispatch();
+  const { updateStoreEditor } = useStoreEditor();
+  const { setMainSequenceId } = cloningActions;
+
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
 
   const onSelectRegion = (index, allowSinglePosition = false) => {
     const selectedRegion = store.getState().cloning.mainSequenceSelection;
@@ -35,15 +46,41 @@ export function usePrimerDesign(designType, nbSequences) {
     return 'Select a region (not a single position) to amplify';
   };
 
+  const onTabChange = (event, newValue) => {
+    setSelectedTab(newValue);
+    if (newValue < sequenceIds.length) {
+      updateStoreEditor('mainEditor', sequenceIds[newValue]);
+      dispatch(setMainSequenceId(sequenceIds[newValue]));
+    } else if (newValue === sequenceIds.length) {
+      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct || '', selectionLayer: {} });
+    } else {
+      updateStoreEditor('mainEditor', null);
+    }
+  };
+
+  // Focus on the right sequence when changing tabs
+  useEffect(() => {
+    // Focus on the correct sequence
+    const mainSequenceIndex = sequenceIds.indexOf(mainSequenceId);
+    if (mainSequenceIndex !== -1) {
+      setSelectedTab(mainSequenceIndex);
+    }
+  }, [sequenceIds, mainSequenceId]);
+
+  // Update the sequence product in the editor if in the last tab
+  useEffect(() => {
+    if (sequenceProduct && selectedTab === sequenceIds.length) {
+      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
+    }
+  }, [sequenceProduct]);
+
   const designPrimers = async (
-    sequenceIds,
     locations,
     params,
     fragmentOrientations,
     spacers = [],
   ) => {
     const { cloning: { entities } } = store.getState();
-
     let requestData;
     if (designType === 'gibson_assembly') {
       requestData = {
@@ -96,5 +133,5 @@ export function usePrimerDesign(designType, nbSequences) {
     }
   };
 
-  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion };
+  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion, selectedTab, onTabChange, setSequenceProduct, setSelectedTab };
 }

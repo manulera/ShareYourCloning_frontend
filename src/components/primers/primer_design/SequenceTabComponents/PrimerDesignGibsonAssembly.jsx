@@ -3,8 +3,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/material';
-import { batch, useDispatch, useSelector, useStore } from 'react-redux';
-import { updateEditor } from '@teselagen/ove';
+import { batch, useDispatch, useStore } from 'react-redux';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from './TabPanel';
@@ -23,7 +22,8 @@ function changeValueAtIndex(current, index, newValue) {
 
 export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion } = usePrimerDesign('gibson_assembly', pcrSources.length);
+  const sequenceIds = React.useMemo(() => pcrSources.map((pcrSource) => pcrSource.input[0]), [pcrSources]);
+  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, onTabChange, selectedTab, setSequenceProduct } = usePrimerDesign('gibson_assembly', sequenceIds);
 
   const dispatch = useDispatch();
   const store = useStore();
@@ -31,7 +31,6 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
 
   const templateSequencesIds = React.useMemo(() => pcrSources.map((pcrSource) => pcrSource.input[0]), [pcrSources]);
 
-  const [selectedTab, setSelectedTab] = React.useState(0);
   const [homologyLength, setHomologyLength] = React.useState(35);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
   const [fragmentOrientations, setFragmentOrientations] = React.useState(templateSequencesIds.map(() => 'forward'));
@@ -39,35 +38,23 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const [circularAssembly, setCircularAssembly] = React.useState(false);
   const [spacers, setSpacers] = React.useState(Array(pcrSources.length + 1).fill(''));
 
-  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
   const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
-  const sequenceProduct = React.useMemo(() => {
+  React.useEffect(() => {
     if (rois.every((region) => region !== null) && spacersAreValid && fragmentOrientations.every((orientation) => orientation !== null)) {
       const { entities } = store.getState().cloning;
       const templateEntities = templateSequencesIds.map((id) => entities.find((e) => e.id === id));
-      return joinEntitiesIntoSingleSequence(templateEntities, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
+      const newSequenceProduct = joinEntitiesIntoSingleSequence(templateEntities, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
+      newSequenceProduct.name = 'Gibson Assembly product';
+      setSequenceProduct(newSequenceProduct);
+    } else {
+      setSequenceProduct(null);
     }
-    return null;
-  }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, spacersAreValid]);
+  }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, spacersAreValid, store, setSequenceProduct]);
 
   const sequenceNames = React.useMemo(() => {
     const { entities } = store.getState().cloning;
     return templateSequencesIds.map((id) => getSequenceName(entities.find((e) => e.id === id)));
   }, [templateSequencesIds, store]);
-
-  React.useEffect(() => {
-    // Focus on the correct sequence
-    const mainTab = templateSequencesIds.findIndex((id) => id === mainSequenceId);
-    if (mainTab !== -1) {
-      setSelectedTab(mainTab);
-    }
-  }, [templateSequencesIds, mainSequenceId]);
-
-  React.useEffect(() => {
-    if (sequenceProduct && selectedTab === templateSequencesIds.length) {
-      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
-    }
-  }, [sequenceProduct, selectedTab]);
 
   const onCircularAssemblyChange = (event) => {
     setCircularAssembly(event.target.checked);
@@ -77,18 +64,6 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
     } else {
       // Add it again
       setSpacers((current) => ['', ...current]);
-    }
-  };
-
-  const onTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    if (newValue < templateSequencesIds.length) {
-      updateStoreEditor('mainEditor', templateSequencesIds[newValue]);
-      dispatch(setMainSequenceId(templateSequencesIds[newValue]));
-    } else if (rois.every((region) => region !== null)) {
-      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
-    } else {
-      updateStoreEditor('mainEditor', null);
     }
   };
 
@@ -105,7 +80,7 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
       dispatch(setCurrentTab(0));
     });
     setPrimers([]);
-    setSelectedTab(0);
+    onTabChange(null, 0);
     document.getElementById(`source-${pcrSources[0].id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
   };
@@ -117,10 +92,10 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
       target_tm: targetTm,
       circular: circularAssembly,
     };
-    const serverError = await designPrimers(templateSequencesIds, rois, params, fragmentOrientations, spacers);
+    const serverError = await designPrimers(rois, params, fragmentOrientations, spacers);
 
     if (!serverError) {
-      setSelectedTab(templateSequencesIds.length + 1);
+      onTabChange(null, templateSequencesIds.length + 1);
     }
   };
 

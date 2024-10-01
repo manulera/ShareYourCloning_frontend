@@ -22,63 +22,49 @@ function getRecognitionSequence(enzyme) {
   if (!enzyme) {
     return '';
   }
-  const recogSeq = enzymeArray.find((e) => e.aliases.includes(enzyme))?.site;
-  if (!recogSeq) {
+  const recognitionSeq = enzymeArray.find((e) => e.aliases.includes(enzyme))?.site;
+  if (!recognitionSeq) {
     return '????';
   }
-  return recogSeq.split('').map((base) => (base in ambiguousDnaBases ? ambiguousDnaBases[base] : base)).join('');
+  return recognitionSeq.split('').map((base) => (base in ambiguousDnaBases ? ambiguousDnaBases[base] : base)).join('');
 }
 
 function PrimerDesignRestrictionLigation({ pcrSource }) {
+  const templateSequenceId = pcrSource.input[0];
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion } = usePrimerDesign('restriction_ligation', 1);
+  const sequenceIds = React.useMemo(() => [templateSequenceId], [templateSequenceId]);
+  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, selectedTab, onTabChange, setSequenceProduct } = usePrimerDesign('restriction_ligation', sequenceIds);
 
   const dispatch = useDispatch();
   const { updateStoreEditor } = useStoreEditor();
 
-  const templateSequenceId = pcrSource.input[0];
   const templateSequenceName = useSelector((state) => state.cloning.entities.find((e) => e.id === templateSequenceId).name);
 
-  const [selectedTab, setSelectedTab] = React.useState(0);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
   const [targetTm, setTargetTm] = React.useState(55);
   const [leftEnzyme, setLeftEnzyme] = React.useState(null);
   const [rightEnzyme, setRightEnzyme] = React.useState(null);
   const [spacers, setSpacers] = React.useState(['', '']);
   const [fillerBases, setFillerBases] = React.useState('TTT');
-  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
 
   const store = useStore();
 
-  React.useEffect(() => {
-    if (templateSequenceId === mainSequenceId) {
-      setSelectedTab(0);
-    }
-  }, [templateSequenceId, mainSequenceId]);
-
-  const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + getRecognitionSequence(leftEnzyme) + spacers[0];
-  const reversePrimerStartingSeq = (rightEnzyme ? fillerBases : '') + reverseComplement(getRecognitionSequence(rightEnzyme)) + reverseComplement(spacers[1]);
   const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
-  const startingSequencesAreValid = React.useMemo(() => !stringIsNotDNA(forwardPrimerStartingSeq) && !stringIsNotDNA(reversePrimerStartingSeq), [forwardPrimerStartingSeq, reversePrimerStartingSeq]);
+  const fillersAreValid = React.useMemo(() => !stringIsNotDNA(fillerBases), [fillerBases]);
 
-  const sequenceProduct = React.useMemo(() => {
-    if (rois.every((region) => region !== null) && startingSequencesAreValid) {
+  React.useEffect(() => {
+    if (rois.every((region) => region !== null) && spacersAreValid && fillersAreValid) {
+      const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + getRecognitionSequence(leftEnzyme) + spacers[0];
+      const reversePrimerStartingSeq = reverseComplement((rightEnzyme ? fillerBases : '') + getRecognitionSequence(rightEnzyme) + reverseComplement(spacers[1]));
       const templateEntity = store.getState().cloning.entities.find((e) => e.id === templateSequenceId);
 
-      return joinEntitiesIntoSingleSequence([templateEntity], rois.map((s) => s.selectionLayer), ['forward'], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false);
-    }
-    return null;
-  }, [forwardPrimerStartingSeq, reversePrimerStartingSeq, rois]);
-
-  const onTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
-    if (newValue === 0) {
-      updateStoreEditor('mainEditor', templateSequenceId);
-      dispatch(setMainSequenceId(templateSequenceId));
+      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateEntity], rois.map((s) => s.selectionLayer), ['forward'], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false);
+      newSequenceProduct.name = 'PCR product';
+      setSequenceProduct(newSequenceProduct);
     } else {
-      updateStoreEditor('mainEditor', null);
+      setSequenceProduct(null);
     }
-  };
+  }, [fillerBases, rightEnzyme, leftEnzyme, spacers, rois, spacersAreValid, fillersAreValid, templateSequenceId, store, setSequenceProduct]);
 
   const addPrimers = () => {
     batch(() => {
@@ -91,7 +77,7 @@ function PrimerDesignRestrictionLigation({ pcrSource }) {
       dispatch(setCurrentTab(0));
     });
     setPrimers([]);
-    setSelectedTab(0);
+    onTabChange(null, 0);
     document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
   };
@@ -104,10 +90,9 @@ function PrimerDesignRestrictionLigation({ pcrSource }) {
       right_enzyme: rightEnzyme,
       filler_bases: fillerBases,
     };
-    const serverError = await designPrimers([templateSequenceId], rois, params, ['forward'], spacers);
-
+    const serverError = await designPrimers(rois, params, ['forward'], spacers);
     if (!serverError) {
-      setSelectedTab(2);
+      onTabChange(null, 2);
     }
   };
 
@@ -154,18 +139,6 @@ function PrimerDesignRestrictionLigation({ pcrSource }) {
                   helperText={stringIsNotDNA(fillerBases) ? 'Invalid DNA sequence' : ''}
                 />
               </FormControl>
-              { forwardPrimerStartingSeq && (
-              <Box>
-                Forward primer starting sequence:
-                {forwardPrimerStartingSeq}
-              </Box>
-              ) }
-              { reversePrimerStartingSeq && (
-              <Box>
-                Reverse primer starting sequence:
-                {reversePrimerStartingSeq}
-              </Box>
-              ) }
             </Box>
           </Box>
 
