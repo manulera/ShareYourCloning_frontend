@@ -61,7 +61,7 @@ export function joinEntitiesIntoSingleSequence(entities, locations, orientations
   return outputSequence;
 }
 
-export function simulateHomologousRecombination(templateEntity, targetEntity, rois, invertFragment) {
+export function simulateHomologousRecombination(templateEntity, targetEntity, rois, invertFragment, spacers) {
   const [amplifyRange, insertionRange] = rois;
 
   const templateSequence = convertToTeselaJson(templateEntity);
@@ -70,6 +70,15 @@ export function simulateHomologousRecombination(templateEntity, targetEntity, ro
     templateFragment = getReverseComplementSequenceAndAnnotations(templateFragment);
   }
 
+  const spacerSequences = spacers.map(getSpacerSequence);
+
+  let templateWithSpacers = spacerSequences[0] || templateFragment;
+  if (spacerSequences[0]) {
+    templateWithSpacers = insertSequenceDataAtPositionOrRange(templateFragment, templateWithSpacers, templateWithSpacers.sequence.length);
+  }
+  if (spacerSequences[1]) {
+    templateWithSpacers = insertSequenceDataAtPositionOrRange(spacerSequences[1], templateWithSpacers, templateWithSpacers.sequence.length);
+  }
   const targetSequence = convertToTeselaJson(targetEntity);
-  return insertSequenceDataAtPositionOrRange(templateFragment, targetSequence, insertionRange);
+  return insertSequenceDataAtPositionOrRange(templateWithSpacers, targetSequence, insertionRange);
 }

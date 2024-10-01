@@ -103,6 +103,7 @@ export function usePrimerDesign(designType, sequenceIds) {
           sequence: entities.find((e) => e.id === homologousRecombinationTargetId),
           location: selectedRegion2SequenceLocation(locations[1]),
         },
+        spacers,
       };
     } else if (designType === 'restriction_ligation') {
       const [pcrTemplateId] = sequenceIds;

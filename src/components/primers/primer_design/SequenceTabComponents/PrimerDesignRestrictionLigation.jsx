@@ -152,7 +152,7 @@ function PrimerDesignRestrictionLigation({ pcrSource }) {
           />
           {
             (leftEnzyme || rightEnzyme) && rois[0] && spacersAreValid && (
-              <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design Primers</Button>
+              <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
             )
           }
         </Box>

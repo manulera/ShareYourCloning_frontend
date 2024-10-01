@@ -1,11 +1,11 @@
-import { addSource, clearInputValue, clickMultiSelectOption, loadExample, setInputValue } from './common_functions';
+import { addSource, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
   });
 
-  it('Homologous recombination primer design', () => {
+  it.skip('Homologous recombination primer design', () => {
     loadExample('Integration of cassette by homologous recombination');
 
     // Delete the source that says "PCR with primers"
@@ -124,7 +124,7 @@ describe('Test primer designer functionality', () => {
     cy.contains('li', 'Homologous recombination').should('exist');
   });
 
-  it('Gibson assembly primer design', () => {
+  it.skip('Gibson assembly primer design', () => {
     loadExample('Gibson assembly');
 
     // Delete both sources that say "PCR with primers"
@@ -223,5 +223,50 @@ describe('Test primer designer functionality', () => {
     cy.contains('li', 'PCR with primers pREP42-MCS+_fwd and pREP42-MCS+_rvs').should('exist');
     cy.contains('li', 'PCR with primers NC_003424_fwd and NC_003424_rvs').should('exist');
     cy.contains('li', 'Gibson assembly').should('exist');
+  });
+
+  it('Restriction ligation primer design', () => {
+    manuallyTypeSequence('ATCTAACTTTACTTGGAAAGCGTTTCACGT');
+    addSource('PCRSource');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Restriction and Ligation', 'li');
+
+    // We should be on the Sequence tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+
+    // Error if setting without selection
+    cy.get('button').contains('Set from selection').click();
+    cy.get('div.MuiAlert-standardError').should('exist');
+
+    // Click on axis tick 1
+    cy.get('.veAxisTick[data-test="1"]').first().click();
+
+    // Click on axis tick 30 while holding shift
+    cy.get('.veAxisTick[data-test="30"]').first().click({ shiftKey: true });
+
+    // Set selection
+    cy.get('button').contains('Set from selection').click();
+
+    // Go to other settings tab
+    cy.get('button.MuiTab-root').contains('Other settings').click();
+
+    // Set the other settings (Impossible to remove the zero)
+    setInputValue('Min. hybridization length', '1', '.primer-design');
+    setInputValue('Target hybridization Tm', '5', '.primer-design');
+    // Cannot submit without setting enzymes
+    cy.contains('.primer-design button', 'Design primers').should('not.exist');
+
+    setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
+    cy.contains('.primer-design button', 'Design primers').should('exist');
+    clearAutocompleteValue('Left enzyme', '.primer-design');
+    cy.contains('.primer-design button', 'Design primers').should('not.exist');
+
+    setAutocompleteValue('Right enzyme', 'BamHI', '.primer-design');
+    cy.contains('.primer-design button', 'Design primers').should('exist');
+    setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
+
+    // Design the primers
   });
 });

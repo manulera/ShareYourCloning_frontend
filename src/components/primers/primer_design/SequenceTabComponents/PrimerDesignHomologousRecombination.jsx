@@ -3,7 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { Alert, Button, FormControl } from '@mui/material';
-import { batch, useDispatch, useStore } from 'react-redux';
+import { batch, useDispatch, useSelector, useStore } from 'react-redux';
+import { isEqual } from 'lodash-es';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from './TabPanel';
@@ -13,34 +14,39 @@ import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import { simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
+import PrimerSpacerForm from './PrimerSpacerForm';
+import { getSequenceName } from '../../../../store/cloning_utils';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
   const templateSequenceId = pcrSource.input[0];
+  const templateSequenceNames = useSelector((state) => [getSequenceName(state.cloning.entities.find((e) => e.id === templateSequenceId))], isEqual);
   const sequenceIds = React.useMemo(() => [templateSequenceId, homologousRecombinationTargetId], [templateSequenceId, homologousRecombinationTargetId]);
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
   const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('homologous_recombination', sequenceIds);
 
   const dispatch = useDispatch();
   const store = useStore();
+
   const { updateStoreEditor } = useStoreEditor();
 
   const [homologyLength, setHomologyLength] = React.useState(80);
   const [hybridizationLength, setHybridizationLength] = React.useState(20);
   const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
   const [targetTm, setTargetTm] = React.useState(55);
+  const [spacers, setSpacers] = React.useState(['', '']);
 
   React.useEffect(() => {
     if (rois.every((roi) => roi !== null) && insertionOrientation) {
       const { entities } = store.getState().cloning;
       const templateEntity = entities.find((e) => e.id === templateSequenceId);
       const targetEntity = entities.find((e) => e.id === homologousRecombinationTargetId);
-      const sequenceProduct = simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse');
+      const sequenceProduct = simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse', spacers);
       sequenceProduct.name = 'Homologous recombination product';
       setSequenceProduct(sequenceProduct);
     } else {
       setSequenceProduct(null);
     }
-  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId]);
+  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId, spacers]);
 
   const addPrimers = () => {
     batch(() => {
@@ -60,7 +66,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
     };
-    const serverError = await designPrimers(rois, params, [insertionOrientation === 'forward', null]);
+    const serverError = await designPrimers(rois, params, [insertionOrientation === 'forward', null], spacers);
     if (!serverError) {
       onTabChange(null, 3);
     }
@@ -101,6 +107,14 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
             index={0}
           />
         </Box>
+        <PrimerSpacerForm
+          spacers={spacers}
+          setSpacers={setSpacers}
+          fragmentCount={1}
+          circularAssembly={false}
+          sequenceNames={templateSequenceNames}
+          sequenceIds={pcrSource.input}
+        />
         { (rois.every((roi) => roi !== null) && insertionOrientation && targetTm && hybridizationLength && homologyLength) && (
           <FormControl>
             <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
