@@ -13,6 +13,9 @@ module.exports = defineConfig({
           return null;
         },
       });
+      require('@cypress/code-coverage/task')(on, config);
+
+      return config;
     },
     baseUrl: 'http://localhost:3000',
     experimentalStudio: true,

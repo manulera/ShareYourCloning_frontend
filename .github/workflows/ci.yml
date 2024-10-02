@@ -46,6 +46,8 @@ jobs:
       # and run all Cypress tests
       - name: Cypress run
         uses: cypress-io/github-action@v6
+        env:
+          VITE_COVERAGE: "true"
         with:
           start: yarn start
       - name: Upload screenshots
@@ -54,6 +56,16 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
+      - name: Upload coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: cypress-coverage
+          path: coverage
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/coverage-final.json
   # Update docker image when committing to prod branch if tests pass
   push_to_registry:
     name: Push Docker image to Docker Hub

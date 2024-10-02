@@ -4,6 +4,8 @@ import { loadEnv } from 'vite';
 
 import { resolve } from 'path';
 import fs from 'fs';
+import istanbul from "vite-plugin-istanbul";
+
 
 export default ({ mode }) => {
   const configFileName = mode === 'production' ? 'config.prod.json' : 'config.dev.json';
@@ -12,6 +14,12 @@ export default ({ mode }) => {
   return {
     plugins: [
       react(),
+      istanbul({
+        include: 'src/*',
+        exclude: ['node_modules', 'tests/'],
+        extension: ['.js', '.jsx'],
+        requireEnv: true,
+      }),
       ViteEjsPlugin({
         umami_website_id: env.VITE_UMAMI_WEBSITE_ID,
       }),
