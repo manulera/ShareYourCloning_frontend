@@ -46,6 +46,19 @@ export function setInputValue(label, value, parentSelector = '') {
     .type(value);
 }
 
+export function setAutocompleteValue(label, value, parentSelector = '') {
+  setInputValue(label, value, parentSelector);
+  // We use the regex so that its the exact match
+  cy.get('div[role="presentation"]').contains(new RegExp(`^${value}$`)).click();
+}
+
+export function clearAutocompleteValue(label, parentSelector = '') {
+  cy.get(parentSelector).contains(label).siblings('div')
+    .get('button.MuiAutocomplete-clearIndicator')
+    .first()
+    .click();
+}
+
 export function clearInputValue(label, parentSelector = '') {
   cy.get(parentSelector).contains(label).siblings('div').first()
     .children('input')

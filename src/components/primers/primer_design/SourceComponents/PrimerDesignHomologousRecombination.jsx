@@ -20,7 +20,7 @@ function PrimerDesignHomologousRecombination({ source, primerDesignType }) {
     };
     const newEntity = {
       type: 'TemplateSequence',
-      primer_design: true,
+      primer_design: 'homologous_recombination',
       circular: false,
     };
 

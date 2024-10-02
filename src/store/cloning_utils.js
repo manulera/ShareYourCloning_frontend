@@ -31,27 +31,13 @@ export function isSourceATemplate({ sources, entities }, sourceId) {
 }
 
 export function getPrimerDesignObject({ sources, entities }) {
-  // Find sequences that are templates and have primer_design set to true
-  const mockSequences = entities.filter((e) => e.type === 'TemplateSequence' && e.primer_design === true);
-  if (mockSequences.length === 0) {
+  // Find sequences that are templates and have primer_design set
+  const outputSequences = entities.filter((e) => e.type === 'TemplateSequence' && e.primer_design !== undefined);
+  if (outputSequences.length === 0) {
     // return 'No primer design sequence templates found';
-    return { finalSource: null, otherInputIds: [], pcrSources: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [], outputSequences: [] };
   }
-  const mockSequenceIds = mockSequences.map((s) => s.id);
-
-  // Find the source they are input to (there should only be one)
-  const finalSources = sources.filter((s) => s.input.some((i) => mockSequenceIds.includes(i)));
-
-  if (finalSources.length === 0) {
-    // return 'No sources with primer design sequence templates as inputs found';
-    return { finalSource: null, otherInputIds: [], pcrSources: [] };
-  }
-  if (finalSources.length > 1) {
-    // return 'More than one source with primer design sequence templates as inputs found';
-    return { finalSource: null, otherInputIds: [], pcrSources: [] };
-  }
-
-  const finalSource = finalSources[0];
+  const mockSequenceIds = outputSequences.map((s) => s.id);
 
   // Find the PCRs from which the mock sequences are outputs
   const pcrSources = sources.filter((s) => mockSequenceIds.includes(s.output));
@@ -62,19 +48,33 @@ export function getPrimerDesignObject({ sources, entities }) {
   // They should not be mock sequences
   if (templateSequences.some((ts) => ts.type === 'TemplateSequence')) {
     // return 'TemplateSequence input to final source is a TemplateSequence';
-    return { finalSource: null, otherInputIds: [], pcrSources: [] };
+    return { finalSource: null, otherInputIds: [], pcrSources: [], outputSequences: [] };
   }
+
+  // Find the source they are input to (there should be zero or one)
+  const finalSources = sources.filter((s) => s.input.some((i) => mockSequenceIds.includes(i)));
+
+  if (finalSources.length === 0) {
+    // return as is
+    return { finalSource: null, otherInputIds: [], pcrSources, outputSequences };
+  }
+  if (finalSources.length > 1) {
+    // error
+    return { finalSource: null, otherInputIds: [], pcrSources: [], outputSequences: [] };
+  }
+
+  const finalSource = finalSources[0];
 
   // Inputs to the finalSource that are not mock sequences with primer_design
   const otherInputIds = finalSource.input.filter((i) => !mockSequenceIds.includes(i));
   const otherInputs = entities.filter((e) => otherInputIds.includes(e.id));
-  // There should be no TemplateSequence as an input that does not have primer_design set to true
-  if (otherInputs.some((i) => i.type === 'TemplateSequence' && i.primer_design !== true)) {
-    // return 'TemplateSequence input to final source does not have primer_design set to true';
-    return { finalSource: null, otherInputIds: [], pcrSources: [] };
+  // There should be no TemplateSequence as an input that does not have primer_design set
+  if (otherInputs.some((i) => i.type === 'TemplateSequence' && i.primer_design === undefined)) {
+    // return 'TemplateSequence input to final source does not have primer_design set';
+    return { finalSource: null, otherInputIds: [], pcrSources: [], outputSequences: [] };
   }
 
-  return { finalSource, otherInputIds, pcrSources };
+  return { finalSource, otherInputIds, pcrSources, outputSequences };
 }
 
 const formatPrimer = (primer, position) => {
@@ -213,4 +213,14 @@ export function shiftStateIds(newState, oldState) {
     primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
     sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
   };
+}
+
+export function getSequenceName(entity) {
+  // Read the entity to tesela json and get the name
+  const teselaJson = convertToTeselaJson(entity);
+  return teselaJson.name;
+}
+
+export function stringIsNotDNA(str) {
+  return str.match(/[^agct]/i) !== null;
 }

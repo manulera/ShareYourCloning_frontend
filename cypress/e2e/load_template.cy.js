@@ -11,8 +11,9 @@ describe('Test load template functionality', () => {
     cy.get('.load-template-item').contains('🔎 Can\'t find your favourite kit?').should('exist');
 
     // Load first template
-    cy.get('.MuiAccordionSummary-root').contains('MoClo YTK').click();
-    cy.get('.MuiAccordionDetails-root').contains('CDS self-replicating').first().click();
+    cy.contains('.MuiAccordionSummary-root', 'MoClo YTK').click();
+    cy.contains('.MuiAccordionSummary-root', 'MoClo YTK').parent().find('.MuiAccordionDetails-root').contains('CDS self-replicating')
+      .click();
 
     // The dialog should be closed
     cy.get('.load-template-dialog').should('not.exist');
