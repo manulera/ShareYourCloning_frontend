@@ -54,6 +54,10 @@ jobs:
         with:
           name: cypress-screenshots
           path: cypress/screenshots
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
   # Update docker image when committing to prod branch if tests pass
   push_to_registry:
     name: Push Docker image to Docker Hub
