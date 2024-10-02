@@ -2,7 +2,7 @@ import { getReverseComplementSequenceAndAnnotations, getSequenceDataBetweenRange
 import { fastaToJson } from '@teselagen/bio-parsers';
 import { convertToTeselaJson } from './sequenceParsers';
 
-function getSpacerSequence(spacer) {
+function getSpacerSequence(spacer, spacerFeatureName = 'spacer') {
   if (!spacer) {
     return null;
   }
@@ -12,27 +12,29 @@ function getSpacerSequence(spacer) {
     start: 0,
     end: spacer.length - 1,
     type: 'misc_feature',
-    name: 'spacer',
+    name: spacerFeatureName,
     strand: 1,
     forward: true,
   }];
   return spacerSequence;
 }
 
-export function joinEntitiesIntoSingleSequence(entities, locations, orientations, spacers, circularAssembly) {
+export function joinEntitiesIntoSingleSequence(entities, locations, orientations, spacers, circularAssembly, spacerFeatureName = 'spacer') {
   const sequences = entities.map(convertToTeselaJson);
   // Turn the spacers into sequences by parsing them as FASTA with fastaToJson
-  const spacerSequences = spacers.map(getSpacerSequence);
-
+  const spacerSequences = spacers.map((spacer) => getSpacerSequence(spacer, spacerFeatureName));
   // Intercalate the spacers into the sequences
   const sequences2join = [];
   const locations2join = [];
   const orientations2join = [];
 
-  if (!circularAssembly && spacerSequences[0]) {
-    sequences2join.push(spacerSequences.shift());
-    locations2join.push({ start: 0, end: sequences2join[0].sequence.length - 1 });
-    orientations2join.push('forward');
+  if (!circularAssembly) {
+    const firstSpacer = spacerSequences.shift();
+    if (firstSpacer) {
+      sequences2join.push(firstSpacer);
+      locations2join.push({ start: 0, end: firstSpacer.sequence.length - 1 });
+      orientations2join.push('forward');
+    }
   }
 
   for (let i = 0; i < sequences.length; i++) {

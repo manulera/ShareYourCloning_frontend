@@ -27,7 +27,7 @@ describe('Test upload history from file', () => {
 
     // Shows error and does not load them again
     cy.get('.MuiAlert-message').contains('Primer name from loaded file exists in current session').should('exist');
-    cy.get('div.cloning-tab-pannel').contains('CRISPR HDR with').should('have.length', 1);
+    cy.get('div.cloning-tab-pannel').filter(':contains("CRISPR HDR with")').should('have.length', 1);
 
     // Can replace the history
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/crispr_hdr.json', { force: true });

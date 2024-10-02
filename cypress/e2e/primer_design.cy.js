@@ -5,7 +5,7 @@ describe('Test primer designer functionality', () => {
     cy.visit('/');
   });
 
-  it.skip('Homologous recombination primer design', () => {
+  it('Homologous recombination primer design', () => {
     loadExample('Integration of cassette by homologous recombination');
 
     // Delete the source that says "PCR with primers"
@@ -24,7 +24,7 @@ describe('Test primer designer functionality', () => {
 
     // Go back to the cloning tab and check that the button is displayed
     cy.get('button.MuiTab-root').contains('Cloning').click();
-    cy.get('button').contains('Design primers').should('have.length', 1);
+    cy.get('button').filter(':contains("Design primers")').should('have.length', 1);
 
     // Click it, should bring us back to the Sequence tab
     cy.get('button').contains('Design primers').click();
@@ -124,7 +124,7 @@ describe('Test primer designer functionality', () => {
     cy.contains('li', 'Homologous recombination').should('exist');
   });
 
-  it.skip('Gibson assembly primer design', () => {
+  it('Gibson assembly primer design', () => {
     loadExample('Gibson assembly');
 
     // Delete both sources that say "PCR with primers"
@@ -226,7 +226,8 @@ describe('Test primer designer functionality', () => {
   });
 
   it('Restriction ligation primer design', () => {
-    manuallyTypeSequence('ATCTAACTTTACTTGGAAAGCGTTTCACGT');
+    const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
+    manuallyTypeSequence(sequence);
     addSource('PCRSource');
 
     // Click on design primers
@@ -254,19 +255,64 @@ describe('Test primer designer functionality', () => {
 
     // Set the other settings (Impossible to remove the zero)
     setInputValue('Min. hybridization length', '1', '.primer-design');
-    setInputValue('Target hybridization Tm', '5', '.primer-design');
+    setInputValue('Target hybridization Tm', '4', '.primer-design');
     // Cannot submit without setting enzymes
     cy.contains('.primer-design button', 'Design primers').should('not.exist');
 
+    // One enzyme is enough to submit, either one
     setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
     cy.contains('.primer-design button', 'Design primers').should('exist');
     clearAutocompleteValue('Left enzyme', '.primer-design');
     cy.contains('.primer-design button', 'Design primers').should('not.exist');
-
     setAutocompleteValue('Right enzyme', 'BamHI', '.primer-design');
     cy.contains('.primer-design button', 'Design primers').should('exist');
+
+    // There should be a single primer tail feature displayed
+    cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 1);
     setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
 
-    // Design the primers
+    // There should be two now
+    cy.get('.veLabelText').then(($els) => {
+      console.log($els);
+    });
+
+    cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 2);
+    // Go to sequence tab
+    cy.get('.veTabSequenceMap').contains('Sequence Map').click();
+    // Check that the right sequence is displayed
+    const selectedSequence = sequence.slice(1).toLowerCase();
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgaattc${selectedSequence}ggatccAAA`);
+
+    // Add spacers
+    cy.get('label').contains('Spacer sequences').siblings('button').click({ force: true });
+    setInputValue('Before', 'AAA', '.primer-spacer-form');
+    setInputValue('After', 'CCC', '.primer-spacer-form');
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgaattcAAA${selectedSequence}CCCggatccAAA`);
+
+    // Create primers
+    cy.get('button').contains('Design primers').click();
+
+    // We should be on the Results tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Results').should('exist');
+
+    // Check that the primers are correct
+    cy.get('.primer-design-form input').first().should('have.value', 'seq_2_EcoRI_fwd');
+    cy.get('.primer-design-form input').eq(1).invoke('val').should('match', /^TTTGAATTCAAA/);
+    cy.get('.primer-design-form input').eq(2).should('have.value', 'seq_2_BamHI_rvs');
+    cy.get('.primer-design-form input').eq(3).invoke('val').should('match', /^TTTGGATCCGGG/);
+
+    // Save the primers
+    cy.get('button').contains('Save primers').click();
+
+    // This should have sent us to the Cloning tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Cloning').should('exist');
+
+    // Do the PCR
+    // Set minimal annealing to 10
+    setInputValue('Minimal annealing', '10', '.share-your-cloning');
+    cy.get('button').contains('Perform PCR').click();
+
+    // Check that the PCR was successful
+    cy.get('li').contains('PCR with primers seq_2_EcoRI_fwd and seq_2_BamHI_rvs').should('exist');
   });
 });

@@ -48,7 +48,7 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
   };
 
   return (
-    <>
+    <Box className="primer-spacer-form">
       <Box sx={{ mt: 1 }}>
         <FormLabel>Spacer sequences</FormLabel>
         <IconButton
@@ -85,7 +85,7 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
           </Box>
         </Box>
       </Collapse>
-    </>
+    </Box>
   );
 }
 

@@ -53,12 +53,11 @@ function PrimerDesignRestrictionLigation({ pcrSource }) {
   const fillersAreValid = React.useMemo(() => !stringIsNotDNA(fillerBases), [fillerBases]);
 
   React.useEffect(() => {
-    if (rois.every((region) => region !== null) && spacersAreValid && fillersAreValid) {
+    if (rois.every((region) => region !== null) && spacersAreValid && fillersAreValid && (leftEnzyme || rightEnzyme)) {
       const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + getRecognitionSequence(leftEnzyme) + spacers[0];
       const reversePrimerStartingSeq = reverseComplement((rightEnzyme ? fillerBases : '') + getRecognitionSequence(rightEnzyme) + reverseComplement(spacers[1]));
       const templateEntity = store.getState().cloning.entities.find((e) => e.id === templateSequenceId);
-
-      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateEntity], rois.map((s) => s.selectionLayer), ['forward'], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false);
+      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateEntity], rois.map((s) => s.selectionLayer), ['forward'], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false, 'primer tail');
       newSequenceProduct.name = 'PCR product';
       setSequenceProduct(newSequenceProduct);
     } else {
