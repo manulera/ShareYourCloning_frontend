@@ -1,29 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FormControl, TextField, Box, FormLabel, IconButton, Collapse } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 
 function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds }) {
   // To add a delay and not update the final product every time the user types
-  const [localSpacers, setLocalSpacers] = useState(spacers);
   const [showSpacers, setShowSpacers] = useState(false);
 
-  useEffect(() => {
-    setLocalSpacers(spacers);
-  }, [spacers]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setSpacers(localSpacers);
-    }, 1000);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [localSpacers, setSpacers]);
-
   const handleSpacerChange = (index, value) => {
-    setLocalSpacers((current) => current.map((spacer, i) => (i === index ? value : spacer)));
+    setSpacers((current) => current.map((spacer, i) => (i === index ? value : spacer)));
   };
 
   const sequenceNamesWrapped = [...sequenceNames, sequenceNames[0]];
@@ -62,7 +47,7 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
       <Collapse in={showSpacers}>
         <Box sx={{ pt: 1, width: '80%', margin: 'auto' }}>
           <Box>
-            {localSpacers.map((spacer, index) => {
+            {spacers.map((spacer, index) => {
               const error = stringIsNotDNA(spacer) ? 'Invalid DNA sequence' : '';
               return (
                 <FormControl key={index} fullWidth sx={{ mb: 2 }}>

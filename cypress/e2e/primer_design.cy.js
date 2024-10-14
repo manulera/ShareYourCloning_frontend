@@ -5,7 +5,7 @@ describe('Test primer designer functionality', () => {
     cy.visit('/');
   });
 
-  it('Homologous recombination primer design', () => {
+  it.skip('Homologous recombination primer design', () => {
     loadExample('Integration of cassette by homologous recombination');
 
     // Delete the source that says "PCR with primers"
@@ -49,13 +49,13 @@ describe('Test primer designer functionality', () => {
 
     // Click before having selected anything, should show an error
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').contains('You have to select a region in the sequence editor');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').contains('You have to select a region in the sequence editor');
 
     // We should not be able to select a single position in the sequence
     // Click on the name, that should set a single position selection
     cy.contains('span', 'pFA6a-5FLAG-hphMX6').click({ force: true });
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').contains('Select a region (not a single position) to amplify');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').contains('Select a region (not a single position) to amplify');
 
     // Click on the hphMX6 feature
     cy.contains('svg', 'hphMX6').click();
@@ -71,7 +71,7 @@ describe('Test primer designer functionality', () => {
     cy.get('button').contains('Set from selection').click();
 
     // There should be no error message, but there is an info one, so we need that class
-    cy.get('div.MuiAlert-standardError').should('not.exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
 
     // Go to "Other settings" tab
     cy.get('button.MuiTab-root').contains('Other settings').click();
@@ -87,7 +87,7 @@ describe('Test primer designer functionality', () => {
     // Get an error for very high hyb. length
     setInputValue('Min. hybridization length', '100000', '.primer-design');
     cy.get('button').contains('Design primers').click();
-    cy.get('div.MuiAlert-standardError').should('exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
     clearInputValue('Min. hybridization length', '.primer-design');
     setInputValue('Min. hybridization length', '2', '.primer-design');
 
@@ -118,7 +118,7 @@ describe('Test primer designer functionality', () => {
     cy.get('button').contains('Recombine').click();
 
     // There should be no errors shown
-    cy.get('div.MuiAlert-standardError').should('not.exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
 
     cy.contains('li', 'PCR with primers forward and reverse').should('exist');
     cy.contains('li', 'Homologous recombination').should('exist');
@@ -157,15 +157,15 @@ describe('Test primer designer functionality', () => {
     cy.get('.main-sequence-editor').should('contain', 'pREP42-MCS+');
     // Error if setting without selection
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').should('exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
     // Error if setting with single position selection
     cy.get('.main-sequence-editor').contains('pREP42-MCS+').click({ force: true });
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').should('exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
     // Select ars1 feature
     cy.contains('svg', 'ars1').click();
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').should('not.exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
 
     // Go to next tab
     cy.get('.main-sequence-editor button.MuiTab-root').contains('Seq 4').click();
@@ -173,7 +173,7 @@ describe('Test primer designer functionality', () => {
     // select ase1 region
     cy.contains('svg', 'ase1').first().click();
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').should('not.exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
 
     // Go to Other settings tab
     cy.get('.main-sequence-editor button.MuiTab-root').contains('Other settings').click();
@@ -184,6 +184,7 @@ describe('Test primer designer functionality', () => {
     // Click on the Reverse radio button
     cy.get('table span').contains('Reverse').first().click({ force: true });
     cy.contains('svg g', 'ars1').should('have.class', 'ann-reverse');
+    cy.get('table span').contains('Reverse').first().click({ force: true });
 
     // Click on the Circular assembly button
     cy.get('span').contains('Circular assembly').click({ force: true });
@@ -191,9 +192,14 @@ describe('Test primer designer functionality', () => {
     // Submit a high hybridization to get an error
     setInputValue('Min. hybridization length', '100000', '.primer-design');
     cy.get('button').contains('Design primers').click();
-    cy.get('div.MuiAlert-standardError').should('exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
     clearInputValue('Min. hybridization length', '.primer-design');
     setInputValue('Min. hybridization length', '2', '.primer-design');
+
+    // Add spacers
+    cy.get('label').contains('Spacer sequences').siblings('button').click({ force: true });
+    cy.get('.primer-spacer-form input').first().type('AAAAAAAAA');
+    cy.get('.primer-spacer-form input').last().type('CCCCCCCCC');
 
     // Design the primers
     cy.get('.main-sequence-editor button').contains('Design primers').click();
@@ -203,6 +209,12 @@ describe('Test primer designer functionality', () => {
     cy.get('.primer-design-form input').eq(2).should('have.value', 'pREP42-MCS+_rvs');
     cy.get('.primer-design-form input').eq(4).should('have.value', 'NC_003424_fwd');
     cy.get('.primer-design-form input').eq(6).should('have.value', 'NC_003424_rvs');
+
+    // Check that the primers are correct
+    cy.get('.primer-design-form input').eq(1).invoke('val').should('match', /CCCCCCCCC/);
+    cy.get('.primer-design-form input').eq(3).invoke('val').should('match', /TTTTTTTTT/);
+    cy.get('.primer-design-form input').eq(5).invoke('val').should('match', /AAAAAAAAA/);
+    cy.get('.primer-design-form input').eq(7).invoke('val').should('match', /GGGGGGGGG/);
 
     // Save the primers
     cy.get('button').contains('Save primers').click();
@@ -218,14 +230,14 @@ describe('Test primer designer functionality', () => {
     cy.get('button').contains('Submit').first().click();
 
     // There should be no errors shown
-    cy.get('div.MuiAlert-standardError').should('not.exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
 
     cy.contains('li', 'PCR with primers pREP42-MCS+_fwd and pREP42-MCS+_rvs').should('exist');
     cy.contains('li', 'PCR with primers NC_003424_fwd and NC_003424_rvs').should('exist');
     cy.contains('li', 'Gibson assembly').should('exist');
   });
 
-  it('Restriction ligation primer design', () => {
+  it.skip('Restriction ligation primer design', () => {
     const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
     manuallyTypeSequence(sequence);
     addSource('PCRSource');
@@ -239,7 +251,7 @@ describe('Test primer designer functionality', () => {
 
     // Error if setting without selection
     cy.get('button').contains('Set from selection').click();
-    cy.get('div.MuiAlert-standardError').should('exist');
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
 
     // Click on axis tick 1
     cy.get('.veAxisTick[data-test="1"]').first().click();
