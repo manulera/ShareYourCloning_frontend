@@ -35,10 +35,16 @@ function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen
         <IconButton onClick={decreaseSelectedOutput} type="button" sx={{ height: 'fit-content' }}>
           <ForwardIcon sx={{ rotate: '180deg' }} />
         </IconButton>
+        {selectedOutput + 1}
+        {' '}
+        /
+        {' '}
+        {sources.length}
         <IconButton onClick={incrementSelectedOutput} type="button" sx={{ height: 'fit-content' }}>
           <ForwardIcon />
         </IconButton>
       </div>
+
       <div className="fragment-picker">
         <SubSequenceDisplayer {...{ source: sources[selectedOutput], sourceId }} />
         <AssemblyPlanDisplayer {...{ source: sources[selectedOutput] }} />
