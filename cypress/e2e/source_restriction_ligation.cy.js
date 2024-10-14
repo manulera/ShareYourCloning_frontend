@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, addLane } from './common_functions';
 
 describe('Tests restriction-ligation functionality', () => {
   beforeEach(() => {
@@ -86,5 +86,18 @@ describe('Tests restriction-ligation functionality', () => {
     cy.get('li#source-3 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('li#source-3 .MuiAlert-message').contains('Internal server error');
+  });
+  it('Gives error it too many possible products', () => {
+    manuallyTypeSequence('aaGCGGCCGCaaGCGGCCGC', true);
+    addLane();
+    manuallyTypeSequence('aaGCGGCCGCaaGCGGCCGC', true);
+    addLane();
+    manuallyTypeSequence('aaGCGGCCGCaaGCGGCCGCaaGCGGCCGCaaGCGGCCGC', true);
+    addSource('RestrictionAndLigationSource');
+    clickMultiSelectOption('Enzymes used', 'NotI', '.share-your-cloning');
+    clickMultiSelectOption('Assembly inputs', 'Select all', '.share-your-cloning');
+    cy.get('li#source-7 button').contains('Submit').click();
+    cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
+    cy.get('.MuiAlert-message').contains('Too many assemblies');
   });
 });

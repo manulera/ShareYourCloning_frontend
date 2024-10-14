@@ -69,10 +69,14 @@ export function usePrimerDesign(designType, sequenceIds) {
 
   // Update the sequence product in the editor if in the last tab
   useEffect(() => {
-    if (sequenceProduct && selectedTab === sequenceIds.length) {
-      updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct });
-    }
-  }, [sequenceProduct]);
+    const timeoutId = setTimeout(() => {
+      if (selectedTab === sequenceIds.length) {
+        updateEditor(store, 'mainEditor', { sequenceData: sequenceProduct || {} });
+      }
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [sequenceProduct, store]);
 
   const designPrimers = async (
     locations,
