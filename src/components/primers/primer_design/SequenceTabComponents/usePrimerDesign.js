@@ -109,13 +109,13 @@ export function usePrimerDesign(designType, sequenceIds) {
         },
         spacers,
       };
-    } else if (designType === 'restriction_ligation') {
+    } else if (designType === 'simple_pair') {
       const [pcrTemplateId] = sequenceIds;
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
           location: selectedRegion2SequenceLocation(locations[0]),
-          forward_orientation: true,
+          forward_orientation: fragmentOrientations[0] === 'forward',
         },
         spacers,
       };

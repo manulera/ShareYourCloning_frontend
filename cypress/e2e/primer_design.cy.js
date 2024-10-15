@@ -8,7 +8,7 @@ describe('Test primer designer functionality', () => {
     skipNcbiCheck();
   });
 
-  it.skip('Homologous recombination primer design', () => {
+  it('Homologous recombination primer design', () => {
     loadExample('Integration of cassette by homologous recombination');
 
     // Delete the source that says "PCR with primers"
@@ -93,6 +93,29 @@ describe('Test primer designer functionality', () => {
     cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
     clearInputValue('Min. hybridization length', '.primer-design');
     setInputValue('Min. hybridization length', '2', '.primer-design');
+
+    // Change values
+    setInputValue('Homology length', '2', '.primer-design');
+    setInputValue('Target hybridization Tm', '3', '.primer-design');
+    setInputValue('Min. hybridization length', '1', '.primer-design');
+
+    // Verify that the right values are being submitted
+    cy.intercept({ method: 'POST', url: 'http://127.0.0.1:8000/primer_design/homologous_recombination*', times: 2 }, (req) => {
+      req.reply({
+        forceNetworkError: true,
+      });
+    }).as('primerDesign');
+    cy.get('button').contains('Design primers').click();
+    cy.wait('@primerDesign').then((interception) => {
+      expect(interception.request.query.homology_length).to.equal('20');
+      expect(interception.request.query.target_tm).to.equal('30');
+      expect(interception.request.query.minimal_hybridization_length).to.equal('10');
+    });
+
+    // Back to default values
+    setInputValue('Homology length', '8', '.primer-design');
+    setInputValue('Min. hybridization length', '2', '.primer-design');
+    setInputValue('Target hybridization Tm', '6', '.primer-design');
 
     // Design the primers
     cy.get('button').contains('Design primers').click();
@@ -204,6 +227,28 @@ describe('Test primer designer functionality', () => {
     cy.get('.primer-spacer-form input').first().type('AAAAAAAAA');
     cy.get('.primer-spacer-form input').last().type('CCCCCCCCC');
 
+    // Verify that the right values are being submitted
+    setInputValue('Homology length', '2', '.primer-design');
+    setInputValue('Min. hybridization length', '3', '.primer-design');
+    setInputValue('Target hybridization Tm', '3', '.primer-design');
+    // For some reason, we need to intercept twice
+    cy.intercept({ method: 'POST', url: 'http://127.0.0.1:8000/primer_design/gibson_assembly*', times: 2 }, (req) => {
+      req.reply({
+        forceNetworkError: true,
+      });
+    }).as('primerDesign');
+    cy.get('.main-sequence-editor button').contains('Design primers').click();
+    cy.wait('@primerDesign').then((interception) => {
+      expect(interception.request.query.homology_length).to.equal('20');
+      expect(interception.request.query.minimal_hybridization_length).to.equal('30');
+      expect(interception.request.query.target_tm).to.equal('30');
+    });
+
+    // Back to sensible values
+    setInputValue('Homology length', '3', '.primer-design');
+    setInputValue('Min. hybridization length', '2', '.primer-design');
+    setInputValue('Target hybridization Tm', '6', '.primer-design');
+
     // Design the primers
     cy.get('.main-sequence-editor button').contains('Design primers').click();
 
@@ -240,7 +285,7 @@ describe('Test primer designer functionality', () => {
     cy.contains('li', 'Gibson assembly').should('exist');
   });
 
-  it.skip('Restriction ligation primer design', () => {
+  it('Restriction ligation primer design', () => {
     const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
     manuallyTypeSequence(sequence);
     addSource('PCRSource');
@@ -287,10 +332,6 @@ describe('Test primer designer functionality', () => {
     setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
 
     // There should be two now
-    cy.get('.veLabelText').then(($els) => {
-      console.log($els);
-    });
-
     cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 2);
     // Go to sequence tab
     cy.get('.veTabSequenceMap').contains('Sequence Map').click();
@@ -304,8 +345,13 @@ describe('Test primer designer functionality', () => {
     setInputValue('After', 'CCC', '.primer-spacer-form');
     cy.get('svg.rowViewTextContainer text').contains(`TTTgaattcAAA${selectedSequence}CCCggatccAAA`);
 
-    // Create primers
+    // Create primers and check that the right values are being submitted
+    cy.intercept({ method: 'POST', url: 'http://127.0.0.1:8000/primer_design/simple_pair*', times: 2 }).as('primerDesign');
     cy.get('button').contains('Design primers').click();
+    cy.wait('@primerDesign').then((interception) => {
+      expect(interception.request.query.minimal_hybridization_length).to.equal('10');
+      expect(interception.request.query.target_tm).to.equal('40');
+    });
 
     // We should be on the Results tab
     cy.get('button.MuiTab-root.Mui-selected').contains('Results').should('exist');
@@ -329,5 +375,68 @@ describe('Test primer designer functionality', () => {
 
     // Check that the PCR was successful
     cy.get('li').contains('PCR with primers seq_2_EcoRI_fwd and seq_2_BamHI_rvs').should('exist');
+  });
+
+  it.only('Simple pair primer design', () => {
+    const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
+    manuallyTypeSequence(sequence);
+    addSource('PCRSource');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Normal PCR', 'li');
+
+    // We should be on the Sequence tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+
+    // Error if setting without selection
+    cy.get('button').contains('Set from selection').click();
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('exist');
+
+    // Click on axis tick 1
+    cy.get('.veAxisTick[data-test="1"]').first().click();
+
+    // Click on axis tick 30 while holding shift
+    cy.get('.veAxisTick[data-test="30"]').first().click({ shiftKey: true });
+
+    // Set selection
+    cy.get('button').contains('Set from selection').click();
+
+    // Go to other settings tab
+    cy.get('button.MuiTab-root').contains('Other settings').click();
+
+    // Set the other settings (Impossible to remove the zero)
+    setInputValue('Min. hybridization length', '1', '.primer-design');
+    setInputValue('Target hybridization Tm', '4', '.primer-design');
+    cy.get('table span').contains('Reverse').first().click({ force: true });
+    // Submit and check that the right values are being submitted
+    cy.intercept({ method: 'POST', url: 'http://127.0.0.1:8000/primer_design/simple_pair*', times: 2 }).as('primerDesign');
+    cy.get('button').contains('Design primers').click();
+    cy.wait('@primerDesign').then((interception) => {
+      expect(interception.request.query.minimal_hybridization_length).to.equal('10');
+      expect(interception.request.query.target_tm).to.equal('40');
+      expect(interception.request.body.pcr_template.forward_orientation).to.equal(false);
+    });
+
+    // We should be on the Results tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Results').should('exist');
+
+    // Check that the primers are correct
+    cy.get('.primer-design-form input').first().should('have.value', 'seq_2_fwd');
+    cy.get('.primer-design-form input').eq(2).should('have.value', 'seq_2_rvs');
+
+    // Save the primers
+    cy.get('button').contains('Save primers').click();
+
+    // This should have sent us to the Cloning tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Cloning').should('exist');
+
+    // Do the PCR
+    // Set minimal annealing to 10
+    setInputValue('Minimal annealing', '10', '.share-your-cloning');
+    cy.get('button').contains('Perform PCR').click();
+
+    // Check that the PCR was successful
+    cy.get('li').contains('PCR with primers seq_2_fwd and seq_2_rvs').should('exist');
   });
 });

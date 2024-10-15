@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
-import { FormControl, TextField, Box, FormLabel, IconButton, Collapse } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React from 'react';
+import { FormControl, TextField, Box } from '@mui/material';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
+import CollapsableLabel from './CollapsableLabel';
 
 function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds }) {
-  // To add a delay and not update the final product every time the user types
-  const [showSpacers, setShowSpacers] = useState(false);
-
   const handleSpacerChange = (index, value) => {
     setSpacers((current) => current.map((spacer, i) => (i === index ? value : spacer)));
   };
@@ -33,44 +30,32 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
   };
 
   return (
-    <Box className="primer-spacer-form">
-      <Box sx={{ mt: 1 }}>
-        <FormLabel>Spacer sequences</FormLabel>
-        <IconButton
-          onClick={() => setShowSpacers(!showSpacers)}
-          aria-expanded={showSpacers}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </Box>
-      <Collapse in={showSpacers}>
-        <Box sx={{ pt: 1, width: '80%', margin: 'auto' }}>
-          <Box>
-            {spacers.map((spacer, index) => {
-              const error = stringIsNotDNA(spacer) ? 'Invalid DNA sequence' : '';
-              return (
-                <FormControl key={index} fullWidth sx={{ mb: 2 }}>
-                  <TextField
-                    label={getSpacerLabel(index)}
-                    value={spacer}
-                    onChange={(e) => handleSpacerChange(index, e.target.value)}
-                    variant="outlined"
-                    size="small"
-                    inputProps={{
-                      id: 'sequence',
-                    }}
+    <CollapsableLabel label="Spacer sequences" className="primer-spacer-form">
+      <Box sx={{ pt: 1, width: '80%', margin: 'auto' }}>
+        <Box>
+          {spacers.map((spacer, index) => {
+            const error = stringIsNotDNA(spacer) ? 'Invalid DNA sequence' : '';
+            return (
+              <FormControl key={index} fullWidth sx={{ mb: 2 }}>
+                <TextField
+                  label={getSpacerLabel(index)}
+                  value={spacer}
+                  onChange={(e) => handleSpacerChange(index, e.target.value)}
+                  variant="outlined"
+                  size="small"
+                  inputProps={{
+                    id: 'sequence',
+                  }}
                     // Error if not DNA
-                    error={error !== ''}
-                    helperText={error}
-                  />
-                </FormControl>
-              );
-            })}
-          </Box>
+                  error={error !== ''}
+                  helperText={error}
+                />
+              </FormControl>
+            );
+          })}
         </Box>
-      </Collapse>
-    </Box>
+      </Box>
+    </CollapsableLabel>
   );
 }
 

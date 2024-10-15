@@ -15,6 +15,7 @@ import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import PrimerSpacerForm from './PrimerSpacerForm';
 import { getSequenceName, stringIsNotDNA } from '../../../../store/cloning_utils';
+import usePrimerDesignSettings from './usePrimerDesignSettings';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
@@ -31,10 +32,8 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
 
   const templateSequencesIds = React.useMemo(() => pcrSources.map((pcrSource) => pcrSource.input[0]), [pcrSources]);
 
-  const [homologyLength, setHomologyLength] = React.useState(35);
-  const [hybridizationLength, setHybridizationLength] = React.useState(20);
+  const primerDesignSettings = usePrimerDesignSettings({ homologyLength: 35, hybridizationLength: 20, targetTm: 55 });
   const [fragmentOrientations, setFragmentOrientations] = React.useState(templateSequencesIds.map(() => 'forward'));
-  const [targetTm, setTargetTm] = React.useState(55);
   const [circularAssembly, setCircularAssembly] = React.useState(false);
   const [spacers, setSpacers] = React.useState(Array(pcrSources.length + 1).fill(''));
 
@@ -87,9 +86,9 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
 
   const onPrimerDesign = async () => {
     const params = {
-      homology_length: homologyLength,
-      minimal_hybridization_length: hybridizationLength,
-      target_tm: targetTm,
+      homology_length: primerDesignSettings.homologyLength,
+      minimal_hybridization_length: primerDesignSettings.hybridizationLength,
+      target_tm: primerDesignSettings.targetTm,
       circular: circularAssembly,
     };
     const serverError = await designPrimers(rois, params, fragmentOrientations, spacers);
@@ -115,7 +114,7 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
       ))}
       <TabPanel value={selectedTab} index={templateSequencesIds.length}>
         <Box sx={{ width: '80%', margin: 'auto' }}>
-          <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, fragmentOrientations, setFragmentOrientations }} />
+          <PrimerSettingsForm {...primerDesignSettings} />
           {rois.every((region) => region !== null) && (
             <>
               <Box sx={{ mt: 2 }}>
@@ -156,7 +155,7 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
             </>
           )}
 
-          { (rois.every((region) => region !== null) && targetTm && hybridizationLength && homologyLength && spacersAreValid) && (
+          { (rois.every((region) => region !== null) && primerDesignSettings.valid && spacersAreValid) && (
             <FormControl>
               <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
             </FormControl>
