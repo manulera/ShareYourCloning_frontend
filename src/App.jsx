@@ -12,7 +12,7 @@ function App() {
 
   React.useEffect(() => {
     // Load application configuration
-    axios.get('/config.json').then(({ data }) => {
+    axios.get(`${import.meta.env.BASE_URL}config.json`).then(({ data }) => {
       dispatch(setConfig(data));
     });
     // Load known errors from google sheet
