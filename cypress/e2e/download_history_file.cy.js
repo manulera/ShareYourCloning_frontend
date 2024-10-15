@@ -1,6 +1,11 @@
+import { skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+
 describe('Test download history file', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Can download the json and svg files', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();

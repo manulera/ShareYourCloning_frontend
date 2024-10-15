@@ -1,6 +1,11 @@
+import { skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+
 describe('Test delete source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Has the correct delete chain', () => {
     // Deletes the right children

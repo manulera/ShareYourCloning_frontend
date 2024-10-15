@@ -4,14 +4,14 @@ import { loadEnv } from 'vite';
 
 import { resolve } from 'path';
 import fs from 'fs';
-import istanbul from "vite-plugin-istanbul";
-
+import istanbul from 'vite-plugin-istanbul';
 
 export default ({ mode }) => {
   const configFileName = mode === 'production' ? 'config.prod.json' : 'config.dev.json';
   const env = loadEnv(mode, process.cwd());
 
   return {
+    logLevel: env.VITE_LOG_LEVEL,
     plugins: [
       react(),
       istanbul({

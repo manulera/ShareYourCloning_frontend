@@ -1,6 +1,11 @@
+import { skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+
 describe('Test description', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('works', () => {
     // Type a new description
