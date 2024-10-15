@@ -1,8 +1,11 @@
-import { loadExample } from './common_functions';
+import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test upload history from file', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Can upload a correct json file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/restriction_then_ligation.json', { force: true });

@@ -1,8 +1,11 @@
-import { setInputValue } from './common_functions';
+import { setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test download sequence file', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Can download the file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();

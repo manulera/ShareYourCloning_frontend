@@ -1,4 +1,4 @@
-import { clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
+import { clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 const allOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'PolymeraseExtensionSource', 'CRISPRSource', 'OverlapExtensionPCRLigationSource'];
 const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource', 'OverlapExtensionPCRLigationSource'];
@@ -18,6 +18,9 @@ function checkMultiInputOptions(sourceId) {
 describe('Test Source input constrains', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
 
   it('Empty source displays the right options', () => {

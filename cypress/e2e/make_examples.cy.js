@@ -1,8 +1,11 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSource, clickSequenceOutputArrow, setInputValue, addPrimer, clearPrimers, addLane } from './common_functions';
+import { addSource, clickMultiSelectOption, setInputValue, addPrimer, clearPrimers, addLane, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Makes all examples', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
     clearPrimers();
   });
   it('Homologous recombination', () => {

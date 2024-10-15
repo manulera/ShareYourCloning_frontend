@@ -1,6 +1,11 @@
+import { skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+
 describe('Test empty source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Creates / deletes empty sources', () => {
     cy.get('svg[data-testid="AddCircleIcon"]').parent().click();

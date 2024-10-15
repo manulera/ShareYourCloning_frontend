@@ -1,8 +1,11 @@
-import { loadExample } from './common_functions';
+import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Hides ancestors', () => {
     loadExample('homologous recombination');

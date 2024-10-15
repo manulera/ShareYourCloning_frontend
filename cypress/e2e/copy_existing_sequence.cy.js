@@ -1,8 +1,11 @@
-import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test copy existing sequence functionality', () => {
   beforeEach(() => {
     cy.visit('/');
+    // Intercepts must be in this order
+    skipGoogleSheetErrors();
+    skipNcbiCheck();
   });
   it('Copies the correct sequence', () => {
     manuallyTypeSequence('ACGT');

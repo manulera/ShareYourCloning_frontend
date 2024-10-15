@@ -48,6 +48,7 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
+          VITE_LOG_LEVEL: "warn"
         with:
           start: yarn start
       - name: Upload screenshots
