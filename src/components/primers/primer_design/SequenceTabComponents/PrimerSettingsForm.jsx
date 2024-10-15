@@ -1,6 +1,8 @@
 import { Box, FormControl, FormLabel, InputAdornment, TextField } from '@mui/material';
 import React from 'react';
 
+import primerDesignMinimalValues from './primerDesignMinimalValues.json';
+
 function PrimerSettingsForm({
   homologyLength, setHomologyLength,
   targetTm, setTargetTm,
@@ -10,7 +12,7 @@ function PrimerSettingsForm({
     <Box sx={{ pt: 1 }}>
       <FormLabel>Primer settings</FormLabel>
       <Box sx={{ pt: 1.5 }}>
-        {setHomologyLength !== null && (
+        {homologyLength !== null && (
         <Box>
           <FormControl>
             <TextField
@@ -22,6 +24,8 @@ function PrimerSettingsForm({
                 endAdornment: <InputAdornment position="end">bp</InputAdornment>,
                 sx: { width: '10em' },
               }}
+              error={homologyLength < primerDesignMinimalValues.homology_length}
+              helperText={homologyLength < primerDesignMinimalValues.homology_length ? `Min. ${primerDesignMinimalValues.homology_length} bp` : ''}
             />
           </FormControl>
         </Box>
@@ -37,6 +41,8 @@ function PrimerSettingsForm({
                 endAdornment: <InputAdornment position="end">°C</InputAdornment>,
                 sx: { width: '10em' },
               }}
+              error={targetTm < primerDesignMinimalValues.target_tm}
+              helperText={targetTm < primerDesignMinimalValues.target_tm ? `Min. ${primerDesignMinimalValues.target_tm} °C` : ''}
             />
           </FormControl>
 
@@ -51,6 +57,8 @@ function PrimerSettingsForm({
                 endAdornment: <InputAdornment position="end">bp</InputAdornment>,
                 sx: { width: '10em' },
               }}
+              error={hybridizationLength < primerDesignMinimalValues.hybridization_length}
+              helperText={hybridizationLength < primerDesignMinimalValues.hybridization_length ? `Min. ${primerDesignMinimalValues.hybridization_length} bp` : ''}
             />
           </FormControl>
         </Box>

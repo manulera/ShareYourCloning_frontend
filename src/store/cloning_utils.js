@@ -1,3 +1,4 @@
+import { flipContainedRange } from '@teselagen/range-utils';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 
 export const isEntityInputOfAnySource = (id, sources) => (sources.find((source) => source.input.includes(id))) !== undefined;
@@ -102,21 +103,31 @@ export function getPrimerLinks({ primers, primer2entityLinks }, entityId) {
   return out.filter((p) => p !== null);
 }
 
-export function pcrPrimerPositionsInInput(source) {
+export function pcrPrimerPositionsInInput(source, sequenceData) {
   if (source.type !== 'PCRSource') {
     throw new Error('Source is not a PCRSource');
   }
   const fwd = { ...source.assembly[1].left_location };
-  fwd.end -= 1;
-  fwd.strand = 1;
   const rvs = { ...source.assembly[1].right_location };
+  const { size } = sequenceData;
+
+  fwd.end -= 1;
   rvs.end -= 1;
-  rvs.strand = -1;
-  return [fwd, rvs];
+  if (source.assembly[1].forward_orientation) {
+    fwd.strand = 1;
+    rvs.strand = -1;
+    return [fwd, rvs];
+  }
+
+  const fwd2 = flipContainedRange(fwd, { start: 0, end: size - 1 }, size);
+  const rvs2 = flipContainedRange(rvs, { start: 0, end: size - 1 }, size);
+
+  fwd2.strand = -1;
+  rvs2.strand = 1;
+  return [fwd2, rvs2];
 }
 
-export function pcrPrimerPositionsInOutput(primers, entity) {
-  const sequenceData = convertToTeselaJson(entity);
+export function pcrPrimerPositionsInOutput(primers, sequenceData) {
   const [fwdPrimer, rvsPrimer] = primers;
   return [
     { start: 0, end: fwdPrimer.sequence.length - 1, strand: 1 },
@@ -129,10 +140,13 @@ export function getPCRPrimers({ primers, sources, entities }, entityId) {
 
   // Get PCRs that have this entity as input
   const sourcesInput = sources.filter((s) => s.input.includes(entityId));
+  const entity = entities.find((e) => e.id === entityId);
+  const sequenceData = convertToTeselaJson(entity);
+
   sourcesInput.forEach((sourceInput) => {
     if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 3) {
       const pcrPrimers = [sourceInput.assembly[0].sequence, sourceInput.assembly[2].sequence].map((id) => primers.find((p) => p.id === id));
-      const primerPositions = pcrPrimerPositionsInInput(sourceInput);
+      const primerPositions = pcrPrimerPositionsInInput(sourceInput, sequenceData);
       out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
     }
   });
@@ -141,8 +155,7 @@ export function getPCRPrimers({ primers, sources, entities }, entityId) {
   const sourceOutput = sources.find((s) => s.output === entityId);
   if (sourceOutput?.type === 'PCRSource') {
     const pcrPrimers = [sourceOutput.assembly[0].sequence, sourceOutput.assembly[2].sequence].map((id) => primers.find((p) => p.id === id));
-    const entity = entities.find((e) => e.id === entityId);
-    const primerPositions = pcrPrimerPositionsInOutput(pcrPrimers, entity);
+    const primerPositions = pcrPrimerPositionsInOutput(pcrPrimers, sequenceData);
     out = out.concat(pcrPrimers.map((primer, i) => formatPrimer(primer, primerPositions[i])));
   }
   return out;

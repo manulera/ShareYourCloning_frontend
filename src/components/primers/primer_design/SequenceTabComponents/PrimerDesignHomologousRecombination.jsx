@@ -16,6 +16,7 @@ import OrientationPicker from './OrientationPicker';
 import { simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
 import PrimerSpacerForm from './PrimerSpacerForm';
 import { getSequenceName, stringIsNotDNA } from '../../../../store/cloning_utils';
+import usePrimerDesignSettings from './usePrimerDesignSettings';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
   const templateSequenceId = pcrSource.input[0];
@@ -29,10 +30,9 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
 
   const { updateStoreEditor } = useStoreEditor();
 
-  const [homologyLength, setHomologyLength] = React.useState(80);
-  const [hybridizationLength, setHybridizationLength] = React.useState(20);
+  const primerDesignSettings = usePrimerDesignSettings({ homologyLength: 80, hybridizationLength: 20, targetTm: 55 });
+
   const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
-  const [targetTm, setTargetTm] = React.useState(55);
   const [spacers, setSpacers] = React.useState(['', '']);
   const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
 
@@ -63,9 +63,9 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
 
   const onPrimerDesign = async () => {
     const params = {
-      homology_length: homologyLength,
-      minimal_hybridization_length: hybridizationLength,
-      target_tm: targetTm,
+      homology_length: primerDesignSettings.homologyLength,
+      minimal_hybridization_length: primerDesignSettings.hybridizationLength,
+      target_tm: primerDesignSettings.targetTm,
     };
     const serverError = await designPrimers(rois, params, [insertionOrientation, 'forward'], spacers);
     if (!serverError) {
@@ -99,7 +99,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
         />
       </TabPanel>
       <TabPanel value={selectedTab} index={2}>
-        <PrimerSettingsForm {...{ homologyLength, setHomologyLength, targetTm, setTargetTm, hybridizationLength, setHybridizationLength, insertionOrientation, setInsertionOrientation }} />
+        <PrimerSettingsForm {...primerDesignSettings} />
         <Box sx={{ pt: 2 }}>
           <OrientationPicker
             value={insertionOrientation}
@@ -116,7 +116,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
           sequenceNames={templateSequenceNames}
           sequenceIds={pcrSource.input}
         />
-        { (rois.every((roi) => roi !== null) && insertionOrientation && targetTm && hybridizationLength && homologyLength) && (
+        { rois.every((roi) => roi !== null) && insertionOrientation && primerDesignSettings.valid && (
           <FormControl>
             <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
           </FormControl>

@@ -7,7 +7,7 @@ import PrimerDesignHomologousRecombination from './PrimerDesignHomologousRecombi
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import { cloningActions } from '../../../../store/cloning';
 import PrimerDesignGibsonAssembly from './PrimerDesignGibsonAssembly';
-import PrimerDesignRestrictionLigation from './PrimerDesignRestrictionLigation';
+import PrimerDesignSimplePair from './PrimerDesignSimplePair';
 
 function PrimerDesigner() {
   const { updateStoreEditor } = useStoreEditor();
@@ -40,7 +40,10 @@ function PrimerDesigner() {
   let component = null;
   // Check conditions for different types of primer design
   if (finalSource === null && pcrSources.length === 1 && outputSequences[0].primer_design === 'restriction_ligation') {
-    component = <PrimerDesignRestrictionLigation pcrSource={pcrSources[0]} />;
+    component = <PrimerDesignSimplePair pcrSource={pcrSources[0]} restrictionLigation />;
+  }
+  if (finalSource === null && pcrSources.length === 1 && outputSequences[0].primer_design === 'simple_pair') {
+    component = <PrimerDesignSimplePair pcrSource={pcrSources[0]} />;
   }
   if (finalSource?.type === 'GibsonAssemblySource') {
     component = <PrimerDesignGibsonAssembly pcrSources={pcrSources} />;

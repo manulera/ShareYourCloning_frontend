@@ -15,10 +15,10 @@ function PrimerDesignSourceForm({ source }) {
   const dispatch = useDispatch();
   React.useEffect(() => {
     // Here the user does not have to select anything else
-    if (primerDesignType === 'restriction_ligation') {
+    if (primerDesignType === 'restriction_ligation' || primerDesignType === 'simple_pair') {
       const newEntity = {
         type: 'TemplateSequence',
-        primer_design: 'restriction_ligation',
+        primer_design: primerDesignType,
         circular: false,
       };
 
@@ -43,6 +43,7 @@ function PrimerDesignSourceForm({ source }) {
           onChange={(event) => setPrimerDesignType(event.target.value)}
           label="Purpose of primers"
         >
+          <MenuItem value="simple_pair">Normal PCR</MenuItem>
           <MenuItem value="homologous_recombination">Homologous Recombination</MenuItem>
           <MenuItem value="crispr">CRISPR</MenuItem>
           <MenuItem value="gibson_assembly">Gibson Assembly</MenuItem>
