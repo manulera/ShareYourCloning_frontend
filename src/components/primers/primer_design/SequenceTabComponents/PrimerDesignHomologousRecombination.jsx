@@ -67,7 +67,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
       minimal_hybridization_length: hybridizationLength,
       target_tm: targetTm,
     };
-    const serverError = await designPrimers(rois, params, [insertionOrientation === 'forward', null], spacers);
+    const serverError = await designPrimers(rois, params, [insertionOrientation, 'forward'], spacers);
     if (!serverError) {
       onTabChange(null, 3);
     }

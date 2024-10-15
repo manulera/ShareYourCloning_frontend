@@ -84,6 +84,12 @@ export function usePrimerDesign(designType, sequenceIds) {
     fragmentOrientations,
     spacers = [],
   ) => {
+    // Validate fragmentOrientations
+    fragmentOrientations.forEach((orientation) => {
+      if (orientation !== 'forward' && orientation !== 'reverse') {
+        throw new Error('Invalid fragment orientation');
+      }
+    });
     const { cloning: { entities } } = store.getState();
     let requestData;
     if (designType === 'gibson_assembly') {
