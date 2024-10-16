@@ -4,6 +4,7 @@ import { Tooltip } from '@mui/material';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import { isEqual } from 'lodash-es';
 import Source from './sources/Source';
 import './NetworkTree.css';
 import SequenceEditor from './SequenceEditor';
@@ -16,12 +17,19 @@ import { cloningActions } from '../store/cloning';
 const { addToSourcesWithHiddenAncestors, removeFromSourcesWithHiddenAncestors, addSequenceInBetween } = cloningActions;
 
 // A component that renders the ancestry tree
-function NetWorkNode({
-  node, isRootNode,
-}) {
-  const sourceId = node.source.id;
+function NetWorkNode({ sourceId }) {
+  const [entityId, sourceInput] = useSelector((state) => {
+    const s = state.cloning.sources.find((source) => source.id === sourceId);
+    return [s.output, s.input];
+  }, isEqual);
+  const entityIsTemplate = entityId && useSelector((state) => state.cloning.entities.find((entity) => entity.id === entityId).type === 'TemplateSequence');
+
   const sourceIsTemplate = useSelector((state) => isSourceATemplate(state.cloning, sourceId), shallowEqual);
   const ancestorsHidden = useSelector((state) => state.cloning.sourcesWithHiddenAncestors.includes(sourceId), shallowEqual);
+  const parentSourceIds = useSelector((state) => {
+    const parentSources = state.cloning.sources.filter((source) => sourceInput.includes(source.output));
+    return parentSources.map((source) => source.id);
+  }, shallowEqual);
   const dispatch = useDispatch();
 
   const onVisibilityClick = () => {
@@ -30,8 +38,8 @@ function NetWorkNode({
       // Give it a bit of time to render the ancestors
       setTimeout(() => {
         // If it has children sequence align to the children
-        if (node.source.output) {
-          document.getElementById(`sequence-${node.source.output}`)?.scrollIntoView({ alignToTop: false, block: 'end' });
+        if (entityId) {
+          document.getElementById(`sequence-${entityId}`)?.scrollIntoView({ alignToTop: false, block: 'end' });
         } else {
           document.getElementById(`source-${sourceId}`)?.scrollIntoView({ alignToTop: false, block: 'end' });
         }
@@ -43,24 +51,18 @@ function NetWorkNode({
 
   const Icon = ancestorsHidden ? VisibilityIcon : VisibilityOffIcon;
   const visibilityIconToolTip = ancestorsHidden ? 'Show ancestors' : 'Hide ancestors';
-  const parentsContent = node.parentNodes.length === 0 ? null : (
+  const parentsContent = parentSourceIds.length === 0 ? null : (
     <ul className={ancestorsHidden ? 'hidden-ancestors' : ''}>
-      {node.parentNodes.map((parentNode) => (
-        <NetWorkNode
-          node={parentNode}
-          key={`node-${parentNode.source.id}`}
-          {...{
-            isRootNode: false,
-          }}
-        />
+      {parentSourceIds.map((id) => (
+        <NetWorkNode sourceId={id} key={`node-${id}`} />
       ))}
     </ul>
   );
 
-  const sourceComponent = (node.source.output !== null && !sourceIsTemplate) ? (
-    <FinishedSource {...{ sourceId: node.source.id }} />
+  const sourceComponent = (entityId !== null && !sourceIsTemplate) ? (
+    <FinishedSource {...{ sourceId }} />
   ) : (
-    <Source {...{ source: node.source }} />
+    <Source {...{ sourceId }} />
   );
   const sourceSection = (
     <li key={sourceId} id={`source-${sourceId}`} className={`source-node ${ancestorsHidden ? 'hidden-ancestors' : ''}`}>
@@ -68,9 +70,9 @@ function NetWorkNode({
         <span className="node-text">
           {sourceComponent}
           <div className="corner-id">
-            {node.source.id}
+            {sourceId}
           </div>
-          { (!sourceIsTemplate && node.source.input.length > 0 && node.source.output) && (
+          { (!sourceIsTemplate && sourceInput.length > 0 && entityId) && (
             <div className="before-node before-node-visibility">
               <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title={visibilityIconToolTip} placement="left">
                 <div>
@@ -79,10 +81,10 @@ function NetWorkNode({
               </Tooltip>
             </div>
           )}
-          { (sourceIsTemplate && node.source.input.length > 0)
+          { (sourceIsTemplate && sourceInput.length > 0)
             && (
             <div className="before-node before-node-sequence-in-between">
-              <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title="Add sequence in between" placement={node.source.input.length > 1 ? 'top' : 'left'}>
+              <Tooltip key={`ancestors-hidden-${ancestorsHidden}`} arrow title="Add sequence in between" placement={sourceInput.length > 1 ? 'top' : 'left'}>
                 <div>
                   <AddCircleIcon onClick={() => { dispatch(addSequenceInBetween(sourceId)); }} color="success" />
                 </div>
@@ -94,27 +96,26 @@ function NetWorkNode({
       {parentsContent}
     </li>
   );
-  const { entity } = node;
 
-  if (entity === null) {
+  if (entityId === null) {
     return sourceSection;
   }
 
   return (
-    <li key={entity.id} id={`sequence-${entity.id}`} className="sequence-node">
+    <li key={entityId} id={`sequence-${entityId}`} className="sequence-node">
       <span className="tf-nc">
         <span className="node-text">
           {
-            entity.type === 'TemplateSequence' ? (
-              <TemplateSequence entity={entity} />
+            entityIsTemplate ? (
+              <TemplateSequence entityId={entityId} />
             ) : (
               <>
-                <SequenceEditor {...{ entityId: entity.id, isRootNode }} />
-                <MainSequenceCheckBox {...{ id: entity.id }} />
+                <SequenceEditor {...{ entityId }} />
+                <MainSequenceCheckBox {...{ id: entityId }} />
               </>
             )
           }
-          <div className="corner-id">{entity.id}</div>
+          <div className="corner-id">{entityId}</div>
         </span>
       </span>
       <ul>
@@ -124,4 +125,4 @@ function NetWorkNode({
   );
 }
 
-export default NetWorkNode;
+export default React.memo(NetWorkNode);

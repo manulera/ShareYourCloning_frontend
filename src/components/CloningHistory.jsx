@@ -43,7 +43,7 @@ function CloningHistory({ network }) {
           <div>
             <ul>
               {network.map((node) => (
-                <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
+                <NetWorkNode key={node.source.id} {...{ sourceId: node.source.id }} />
               ))}
               {/* There is always a box on the right side to add a source */}
               <li key="new_source_box">

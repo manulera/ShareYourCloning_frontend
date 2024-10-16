@@ -18,7 +18,8 @@ const transformToRegion = (eventOutput) => {
   return { selectionLayer: { start: eventOutput.start, end: eventOutput.end }, caretPosition: -1 };
 };
 
-function SequenceEditor({ entityId, isRootNode }) {
+function SequenceEditor({ entityId }) {
+  const isRootNode = useSelector((state) => !state.cloning.sources.some((source) => source.input.includes(entityId)));
   const editorName = `editor_${entityId}`;
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), isEqual);
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
@@ -89,7 +90,7 @@ function SequenceEditor({ entityId, isRootNode }) {
 
   return (
     <div>
-      <SimpleCircularOrLinearView {...{
+      {/* <SimpleCircularOrLinearView {...{
         sequenceData: seq,
         editorName,
         height: seq.circular ? null : 'auto',
@@ -101,7 +102,7 @@ function SequenceEditor({ entityId, isRootNode }) {
         caretPosition,
         caretPositionUpdate: (a) => updateSelectedRegion(a, true),
       }}
-      />
+      /> */}
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}
     </div>
