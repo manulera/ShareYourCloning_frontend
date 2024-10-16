@@ -1,8 +1,7 @@
 import React from 'react';
 import { SimpleCircularOrLinearView } from '@teselagen/ove';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
-import { convertToTeselaJson } from '../utils/sequenceParsers';
 import OverhangsDisplay from './OverhangsDisplay';
 import NewSourceBox from './sources/NewSourceBox';
 import { cloningActions } from '../store/cloning';
@@ -24,20 +23,22 @@ function SequenceEditor({ entityId }) {
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), isEqual);
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
   const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, entityId), isEqual);
-  const seq = convertToTeselaJson(entity);
+  const seq = useSelector((state) => state.cloning.teselaJsonCache[entityId], isEqual);
+  // Make a copy
+  const seqCopy = structuredClone(seq);
   // Filter out features of type "source"
-  seq.features = seq.features.filter((f) => f.type !== 'source');
-  seq.primers = [...seq.primers, ...linkedPrimers, ...pcrPrimers];
+  seqCopy.features = seqCopy.features.filter((f) => f.type !== 'source');
+  seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
-  const parentEntities = useSelector((state) => state.cloning.entities.filter((e) => parentSource.input.includes(e.id)), shallowEqual);
+  const parentSequenceData = useSelector((state) => parentSource.input.map((id) => state.cloning.teselaJsonCache[id]), isEqual);
   const [rangeInParent, setRangeInParent] = React.useState(() => null);
   React.useEffect(() => {
-    const callBack = getTransformCoords(parentSource, parentEntities, seq.size);
+    const callBack = getTransformCoords(parentSource, parentSequenceData, seqCopy.size);
     // Here we have to set the state like this, since it's a function
     // otherwise, react calls the function with the previous state
     setRangeInParent(() => callBack);
-  }, [parentSource, parentEntities]);
+  }, [parentSource, parentSequenceData]);
 
   const { setSelectedRegions } = cloningActions;
   const dispatch = useDispatch();
@@ -90,7 +91,7 @@ function SequenceEditor({ entityId }) {
 
   return (
     <div>
-      {/* <SimpleCircularOrLinearView {...{
+      <SimpleCircularOrLinearView {...{
         sequenceData: seq,
         editorName,
         height: seq.circular ? null : 'auto',
@@ -102,7 +103,7 @@ function SequenceEditor({ entityId }) {
         caretPosition,
         caretPositionUpdate: (a) => updateSelectedRegion(a, true),
       }}
-      /> */}
+      />
       <OverhangsDisplay {...{ entity }} />
       {addSourceButton}
     </div>

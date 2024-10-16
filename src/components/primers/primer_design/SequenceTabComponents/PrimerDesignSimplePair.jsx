@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Box, Tab, Tabs, FormControl, Button, Alert, TextField, Tooltip, FormLabel, FormControlLabel, Checkbox } from '@mui/material';
+import { Box, Tab, Tabs, FormControl, Button, Alert, TextField, Tooltip, FormLabel } from '@mui/material';
 import { batch, useDispatch, useSelector, useStore } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import { aliasedEnzymesByName, getReverseComplementSequenceString as reverseComplement } from '@teselagen/sequence-utils';
@@ -63,8 +63,9 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
     if (rois.every((region) => region !== null) && spacersAreValid && fillersAreValid) {
       const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + getRecognitionSequence(leftEnzyme) + spacers[0];
       const reversePrimerStartingSeq = reverseComplement((rightEnzyme ? fillerBases : '') + getRecognitionSequence(rightEnzyme) + reverseComplement(spacers[1]));
-      const templateEntity = store.getState().cloning.entities.find((e) => e.id === templateSequenceId);
-      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateEntity], rois.map((s) => s.selectionLayer), [amplificationDirection], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false, 'primer tail');
+      const { teselaJsonCache } = store.getState().cloning;
+      const templateSequence = teselaJsonCache[templateSequenceId];
+      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], rois.map((s) => s.selectionLayer), [amplificationDirection], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false, 'primer tail');
       newSequenceProduct.name = 'PCR product';
       setSequenceProduct(newSequenceProduct);
     } else {

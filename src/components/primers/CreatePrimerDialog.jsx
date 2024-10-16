@@ -6,7 +6,6 @@ import { expandOrContractRangeByLength } from '@teselagen/range-utils';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
 import CreatePrimerFromSequenceForm from './CreatePrimerFromSequenceForm';
-import { convertToTeselaJson } from '../../utils/sequenceParsers';
 import DraggableDialogPaper from '../DraggableDialogPaper';
 import './CreatePrimerDialog.css';
 
@@ -14,18 +13,17 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
   const [name, setName] = React.useState('');
   const store = useStore();
   const existingPrimerNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
-  const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === state.cloning.mainSequenceId));
+  const sequenceData = useSelector((state) => state.cloning.teselaJsonCache[state.cloning.mainSequenceId]);
   const { addPrimerAndLinkToEntity } = cloningActions;
-  const sequenceData = convertToTeselaJson(entity);
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPrimerAndLinkToEntity({ primer: { name, sequence: primerSequence }, entityId: entity.id, position }));
+    dispatch(addPrimerAndLinkToEntity({ primer: { name, sequence: primerSequence }, entityId: sequenceData.id, position }));
     setPrimerSequence('');
     setPosition(null);
     setName('');
-    updateStoreEditor('mainEditor', entity.id);
+    updateStoreEditor('mainEditor', sequenceData.id);
   };
   const clearDummyPrimer = () => {
     const editorState = store.getState().VectorEditor.mainEditor;
