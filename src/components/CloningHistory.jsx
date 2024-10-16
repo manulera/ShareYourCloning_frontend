@@ -39,7 +39,7 @@ function CloningHistory({ network }) {
           </div>
         </div>
       ) : (
-        <ScrollSyncWrapper className="tf-tree tf-ancestor-tree" changingContent={network}>
+        <ScrollSyncWrapper className="tf-tree tf-ancestor-tree">
           <div>
             <ul>
               {network.map((node) => (
