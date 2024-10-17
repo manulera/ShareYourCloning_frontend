@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { constructNetwork } from '../utils/network';
 import { getNextPrimerId, getNextUniqueId } from './cloning_utils';
+import { convertToTeselaJson } from '../utils/sequenceParsers';
 
 const initialState = {
   mainSequenceId: null,
@@ -29,6 +30,7 @@ const initialState = {
     backendUrl: null,
   },
   sourcesWithHiddenAncestors: [],
+  teselaJsonCache: {},
 };
 
 /* eslint-disable no-param-reassign */
@@ -161,6 +163,7 @@ const reducer = {
       ...entity,
       id: entityId,
     });
+    state.teselaJsonCache[entityId] = convertToTeselaJson(entity);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -197,6 +200,7 @@ const reducer = {
     }
     sources.splice(sourceIndex, 1, newSource);
     entities.push(newEntity);
+    state.teselaJsonCache[newEntity.id] = convertToTeselaJson(newEntity);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -216,7 +220,7 @@ const reducer = {
       throw new Error('Entity not found');
     }
     entities.splice(entityIndex, 1, newEntity);
-
+    state.teselaJsonCache[newEntity.id] = convertToTeselaJson(newEntity);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -255,6 +259,9 @@ const reducer = {
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
+    entities2delete.forEach((e) => {
+      delete state.teselaJsonCache[e];
+    });
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -271,6 +278,12 @@ const reducer = {
     }
     state.sources = sources;
     state.entities = entities;
+    state.teselaJsonCache = {};
+    entities.forEach((e) => {
+      if (e.type !== 'TemplateSequence') {
+        state.teselaJsonCache[e.id] = convertToTeselaJson(e);
+      }
+    });
     state.network = constructNetwork(entities, sources);
   },
 

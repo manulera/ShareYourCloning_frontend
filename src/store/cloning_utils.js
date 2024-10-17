@@ -1,5 +1,4 @@
 import { flipContainedRange } from '@teselagen/range-utils';
-import { convertToTeselaJson } from '../utils/sequenceParsers';
 
 export const isEntityInputOfAnySource = (id, sources) => (sources.find((source) => source.input.includes(id))) !== undefined;
 
@@ -135,13 +134,12 @@ export function pcrPrimerPositionsInOutput(primers, sequenceData) {
   ];
 }
 
-export function getPCRPrimers({ primers, sources, entities }, entityId) {
+export function getPCRPrimers({ primers, sources, teselaJsonCache }, entityId) {
   let out = [];
 
   // Get PCRs that have this entity as input
   const sourcesInput = sources.filter((s) => s.input.includes(entityId));
-  const entity = entities.find((e) => e.id === entityId);
-  const sequenceData = convertToTeselaJson(entity);
+  const sequenceData = teselaJsonCache[entityId];
 
   sourcesInput.forEach((sourceInput) => {
     if (sourceInput?.type === 'PCRSource' && sourceInput.assembly?.length === 3) {
@@ -226,12 +224,6 @@ export function shiftStateIds(newState, oldState) {
     primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
     sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
   };
-}
-
-export function getSequenceName(entity) {
-  // Read the entity to tesela json and get the name
-  const teselaJson = convertToTeselaJson(entity);
-  return teselaJson.name;
 }
 
 export function stringIsNotDNA(str) {

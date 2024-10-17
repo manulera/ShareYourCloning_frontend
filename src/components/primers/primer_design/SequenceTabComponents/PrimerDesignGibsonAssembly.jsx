@@ -14,7 +14,7 @@ import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import PrimerSpacerForm from './PrimerSpacerForm';
-import { getSequenceName, stringIsNotDNA } from '../../../../store/cloning_utils';
+import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 
 function changeValueAtIndex(current, index, newValue) {
@@ -40,9 +40,9 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
   React.useEffect(() => {
     if (rois.every((region) => region !== null) && spacersAreValid && fragmentOrientations.every((orientation) => orientation !== null)) {
-      const { entities } = store.getState().cloning;
-      const templateEntities = templateSequencesIds.map((id) => entities.find((e) => e.id === id));
-      const newSequenceProduct = joinEntitiesIntoSingleSequence(templateEntities, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
+      const { teselaJsonCache } = store.getState().cloning;
+      const templateSequences = templateSequencesIds.map((id) => teselaJsonCache[id]);
+      const newSequenceProduct = joinEntitiesIntoSingleSequence(templateSequences, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
       newSequenceProduct.name = 'Gibson Assembly product';
       setSequenceProduct(newSequenceProduct);
     } else {
@@ -51,8 +51,8 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, spacersAreValid, store, setSequenceProduct]);
 
   const sequenceNames = React.useMemo(() => {
-    const { entities } = store.getState().cloning;
-    return templateSequencesIds.map((id) => getSequenceName(entities.find((e) => e.id === id)));
+    const { teselaJsonCache } = store.getState().cloning;
+    return templateSequencesIds.map((id) => teselaJsonCache[id].name);
   }, [templateSequencesIds, store]);
 
   const onCircularAssemblyChange = (event) => {

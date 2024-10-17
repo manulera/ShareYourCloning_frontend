@@ -1,9 +1,8 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, TextField } from '@mui/material';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import axios from 'axios';
-import { convertToTeselaJson } from '../utils/sequenceParsers';
 import { cloningActions } from '../store/cloning';
 import error2String from '../utils/error2String';
 import useBackendRoute from '../hooks/useBackendRoute';
@@ -16,6 +15,7 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
     cloning.entities.find((e) => e.id === id),
     cloning.sources.find((s) => s.output === id),
   ], isEqual);
+  const store = useStore();
   const backendRoute = useBackendRoute();
 
   const { updateEntityAndItsSource } = cloningActions;
@@ -35,7 +35,7 @@ function EditSequenceNameDialog({ id, dialogOpen, setDialogOpen }) {
   };
 
   React.useEffect(() => {
-    const seq = convertToTeselaJson(entity);
+    const seq = store.getState().cloning.teselaJsonCache[id];
     setName(seq.name);
     setOriginalName(seq.name);
   }, [entity]);

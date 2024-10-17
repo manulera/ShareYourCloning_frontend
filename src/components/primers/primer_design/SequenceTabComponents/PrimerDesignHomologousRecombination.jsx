@@ -15,12 +15,12 @@ import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import { simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
 import PrimerSpacerForm from './PrimerSpacerForm';
-import { getSequenceName, stringIsNotDNA } from '../../../../store/cloning_utils';
+import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
   const templateSequenceId = pcrSource.input[0];
-  const templateSequenceNames = useSelector((state) => [getSequenceName(state.cloning.entities.find((e) => e.id === templateSequenceId))], isEqual);
+  const templateSequenceNames = useSelector((state) => [state.cloning.teselaJsonCache[templateSequenceId].name], isEqual);
   const sequenceIds = React.useMemo(() => [templateSequenceId, homologousRecombinationTargetId], [templateSequenceId, homologousRecombinationTargetId]);
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
   const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('homologous_recombination', sequenceIds);
@@ -38,10 +38,10 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
 
   React.useEffect(() => {
     if (rois.every((roi) => roi !== null) && insertionOrientation && spacersAreValid) {
-      const { entities } = store.getState().cloning;
-      const templateEntity = entities.find((e) => e.id === templateSequenceId);
-      const targetEntity = entities.find((e) => e.id === homologousRecombinationTargetId);
-      const sequenceProduct = simulateHomologousRecombination(templateEntity, targetEntity, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse', spacers);
+      const { teselaJsonCache } = store.getState().cloning;
+      const templateSequence = teselaJsonCache[templateSequenceId];
+      const targetSequence = teselaJsonCache[homologousRecombinationTargetId];
+      const sequenceProduct = simulateHomologousRecombination(templateSequence, targetSequence, rois.map((s) => s.selectionLayer), insertionOrientation === 'reverse', spacers);
       sequenceProduct.name = 'Homologous recombination product';
       setSequenceProduct(sequenceProduct);
     } else {

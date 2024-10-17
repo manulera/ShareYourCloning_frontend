@@ -9,5 +9,6 @@ export function convertToTeselaJson(sequence) {
   if (sequence.file_content.split('\n')[0].includes('linear')) {
     parsedSequence.circular = false;
   }
+  parsedSequence.id = sequence.id;
   return tidyUpSequenceData(parsedSequence);
 }

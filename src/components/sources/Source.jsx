@@ -22,8 +22,9 @@ import SourceCopyEntity from './SourceCopyEntity';
 
 // There are several types of source, this components holds the common part,
 // which for now is a select element to pick which kind of source is created
-function Source({ source }) {
-  const { id: sourceId, type: sourceType } = source;
+function Source({ sourceId }) {
+  const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), isEqual);
+  const { type: sourceType } = source;
   let specificSource = null;
   const templateOnlySources = ['CollectionSource'];
   const knownErrors = useSelector((state) => state.cloning.knownErrors, isEqual);

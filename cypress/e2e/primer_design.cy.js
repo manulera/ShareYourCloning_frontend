@@ -377,7 +377,7 @@ describe('Test primer designer functionality', () => {
     cy.get('li').contains('PCR with primers seq_2_EcoRI_fwd and seq_2_BamHI_rvs').should('exist');
   });
 
-  it.only('Simple pair primer design', () => {
+  it('Simple pair primer design', () => {
     const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
     manuallyTypeSequence(sequence);
     addSource('PCRSource');

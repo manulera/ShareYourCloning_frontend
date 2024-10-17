@@ -6,6 +6,7 @@ import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
 import useDragAndDropFile from '../hooks/useDragAndDropFile';
 import HistoryDownloadedDialog from './HistoryLoadedDialog';
+import ScrollSyncWrapper from './utils/ScrollSyncWrapper';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -14,23 +15,7 @@ function CloningHistory({ network }) {
   // second div that contains only a scrollbar, and we sync the scroll
   // of the two divs.
 
-  const topDivRef = React.useRef(null);
-  const innerDivRef = React.useRef(null);
-  const bottomDivRef = React.useRef(null);
   const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory } = useDragAndDropFile();
-
-  const scrollSync = () => {
-    // Set the scroll of the bottom div to the scroll of the top ul
-    topDivRef.current.scrollLeft = bottomDivRef.current.scrollLeft;
-  };
-
-  // This ensures that the inner div is always as wide as the top div
-  React.useEffect(() => {
-    if (!topDivRef.current || !innerDivRef.current) {
-      return;
-    }
-    innerDivRef.current.style.width = `${topDivRef.current.scrollWidth}px`;
-  }, [network, topDivRef.current]);
 
   return (
     <div
@@ -54,14 +39,11 @@ function CloningHistory({ network }) {
           </div>
         </div>
       ) : (
-        <div
-          ref={topDivRef}
-          className="tf-tree tf-ancestor-tree"
-        >
+        <ScrollSyncWrapper className="tf-tree tf-ancestor-tree">
           <div>
             <ul>
               {network.map((node) => (
-                <NetWorkNode key={node.source.id} {...{ node, isRootNode: true }} />
+                <NetWorkNode key={node.source.id} {...{ sourceId: node.source.id }} />
               ))}
               {/* There is always a box on the right side to add a source */}
               <li key="new_source_box">
@@ -69,14 +51,7 @@ function CloningHistory({ network }) {
               </li>
             </ul>
           </div>
-          <div
-            className="horizontal-scrollbar"
-            ref={bottomDivRef}
-            onScroll={scrollSync}
-          >
-            <div ref={innerDivRef} />
-          </div>
-        </div>
+        </ScrollSyncWrapper>
       )}
     </div>
 

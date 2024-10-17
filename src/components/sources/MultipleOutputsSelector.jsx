@@ -29,6 +29,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen
   const editorName = `source_editor_${sourceId}`;
 
   const seq = convertToTeselaJson(entities[selectedOutput]);
+
   return (
     <div className="multiple-output-selector">
       <div>
@@ -49,7 +50,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen
         <SubSequenceDisplayer {...{ source: sources[selectedOutput], sourceId }} />
         <AssemblyPlanDisplayer {...{ source: sources[selectedOutput] }} />
         <SimpleCircularOrLinearView {...{ sequenceData: seq, editorName, height: 'auto' }} />
-        <OverhangsDisplay {...{ entity: entities[selectedOutput] }} />
+        <OverhangsDisplay {...{ sequenceData: seq, entity: entities[selectedOutput] }} />
       </div>
       <form onSubmit={chooseFragment}>
         <Button fullWidth type="submit" variant="contained">Choose product</Button>

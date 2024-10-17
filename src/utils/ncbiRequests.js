@@ -42,7 +42,7 @@ export async function querySpecies(userInput) {
 export async function taxonSuggest(userInput) {
   const url = `https://api.ncbi.nlm.nih.gov/datasets/v2alpha/taxonomy/taxon_suggest/${userInput}`;
   const params = {
-    taxon_resource_filter: 'TAXON_RESOURCE_FILTER_ALL',
+    taxon_resource_filter: 'TAXON_RESOURCE_FILTER_GENOME',
     tax_rank_filter: 'higher_taxon',
   };
   const resp = await axios.get(url, { params });

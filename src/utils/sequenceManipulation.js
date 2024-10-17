@@ -1,6 +1,5 @@
 import { getReverseComplementSequenceAndAnnotations, getSequenceDataBetweenRange, insertSequenceDataAtPositionOrRange } from '@teselagen/sequence-utils';
 import { fastaToJson } from '@teselagen/bio-parsers';
-import { convertToTeselaJson } from './sequenceParsers';
 
 function getSpacerSequence(spacer, spacerFeatureName = 'spacer') {
   if (!spacer) {
@@ -19,8 +18,7 @@ function getSpacerSequence(spacer, spacerFeatureName = 'spacer') {
   return spacerSequence;
 }
 
-export function joinEntitiesIntoSingleSequence(entities, locations, orientations, spacers, circularAssembly, spacerFeatureName = 'spacer') {
-  const sequences = entities.map(convertToTeselaJson);
+export function joinEntitiesIntoSingleSequence(sequences, locations, orientations, spacers, circularAssembly, spacerFeatureName = 'spacer') {
   // Turn the spacers into sequences by parsing them as FASTA with fastaToJson
   const spacerSequences = spacers.map((spacer) => getSpacerSequence(spacer, spacerFeatureName));
   // Intercalate the spacers into the sequences
@@ -63,10 +61,9 @@ export function joinEntitiesIntoSingleSequence(entities, locations, orientations
   return outputSequence;
 }
 
-export function simulateHomologousRecombination(templateEntity, targetEntity, rois, invertFragment, spacers) {
+export function simulateHomologousRecombination(templateSequence, targetSequence, rois, invertFragment, spacers) {
   const [amplifyRange, insertionRange] = rois;
 
-  const templateSequence = convertToTeselaJson(templateEntity);
   let templateFragment = getSequenceDataBetweenRange(templateSequence, amplifyRange);
   if (invertFragment) {
     templateFragment = getReverseComplementSequenceAndAnnotations(templateFragment);
@@ -81,6 +78,6 @@ export function simulateHomologousRecombination(templateEntity, targetEntity, ro
   if (spacerSequences[1]) {
     templateWithSpacers = insertSequenceDataAtPositionOrRange(spacerSequences[1], templateWithSpacers, templateWithSpacers.sequence.length);
   }
-  const targetSequence = convertToTeselaJson(targetEntity);
+
   return insertSequenceDataAtPositionOrRange(templateWithSpacers, targetSequence, insertionRange);
 }

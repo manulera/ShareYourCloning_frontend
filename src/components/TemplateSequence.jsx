@@ -1,14 +1,16 @@
 import { Tooltip } from '@mui/material';
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-function TemplateSequence({ entity }) {
+function TemplateSequence({ entityId }) {
+  const circular = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId).circular);
   let svgContent = null;
   let tooltipText = null;
 
-  if (entity.circular === true) {
+  if (circular === true) {
     tooltipText = 'Circular sequence expected';
     svgContent = <circle cx="60" cy="60" r="40" stroke="lightgrey" strokeWidth="9" fill="none" />;
-  } else if (entity.circular === false) {
+  } else if (circular === false) {
     svgContent = <line x1="10" y1="60" x2="140" y2="60" stroke="lightgrey" strokeWidth="9" />;
     tooltipText = 'Linear sequence expected';
   } else {

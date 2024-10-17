@@ -1,7 +1,6 @@
 import { flipContainedRange, isRangeWithinRange, translateRange } from '@teselagen/range-utils';
-import { convertToTeselaJson } from './sequenceParsers';
 
-export default function getTransformCoords({ assembly, input, type: sourceType, circular }, inputEntities, productLength) {
+export default function getTransformCoords({ assembly, type: sourceType }, parentSequenceData, productLength) {
   if (!assembly) {
     return () => null;
   }
@@ -20,8 +19,7 @@ export default function getTransformCoords({ assembly, input, type: sourceType, 
   //   concernedFragments[1].reverse_complemented = concernedFragments[0].reverse_complemented;
   // }
   fragments.forEach((f) => {
-    const entity = inputEntities.find((e) => e.id === f.sequence);
-    const sequence = convertToTeselaJson(entity);
+    const sequence = parentSequenceData.find((e) => e.id === f.sequence);
     const { size } = sequence;
     const { left_location: left, right_location: right } = f;
     const leftEdge = count;
