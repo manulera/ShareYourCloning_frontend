@@ -185,13 +185,18 @@ export const loadData = async (newState, isTemplate, dispatch, setLoadedFileErro
     // Validate using the API
     // TODO: for validation, the sequences could be sent empty to reduce size
     try {
+      console.log(newState);
+      console.log(url);
       await axios.post(url, newState);
+      console.log('ok');
     } catch (e) {
+      console.log(e);
       if (e.code === 'ERR_NETWORK') {
         setLoadedFileError('Cannot connect to backend server to validate the JSON file');
       } else { setLoadedFileError('JSON file in wrong format'); }
     }
   }
+  console.log(newState);
   dispatch(loadStateThunk(newState)).catch((e) => {
     // TODO: I don't think this is needed anymore
     dispatch(resetStateThunk());

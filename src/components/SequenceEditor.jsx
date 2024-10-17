@@ -104,7 +104,7 @@ function SequenceEditor({ entityId }) {
         caretPositionUpdate: (a) => updateSelectedRegion(a, true),
       }}
       />
-      <OverhangsDisplay {...{ entity }} />
+      <OverhangsDisplay {...{ sequenceData: seq, entity }} />
       {addSourceButton}
     </div>
   );

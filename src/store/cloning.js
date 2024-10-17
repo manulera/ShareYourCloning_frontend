@@ -280,7 +280,9 @@ const reducer = {
     state.entities = entities;
     state.teselaJsonCache = {};
     entities.forEach((e) => {
-      state.teselaJsonCache[e.id] = convertToTeselaJson(e);
+      if (e.type !== 'TemplateSequence') {
+        state.teselaJsonCache[e.id] = convertToTeselaJson(e);
+      }
     });
     state.network = constructNetwork(entities, sources);
   },
