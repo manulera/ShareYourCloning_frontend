@@ -7,8 +7,10 @@ WORKDIR /app
 COPY . /app
 RUN corepack enable
 RUN yarn install
+# Add build argument for base URL with a default value
+ARG BASE_URL="/"
 # build:docker sets the same config.json as the dev one
-RUN yarn build:docker
+RUN yarn build:docker --base "$BASE_URL"
 
 # Stage 2: Create a lightweight production image
 FROM node:18-alpine
