@@ -39,9 +39,11 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="embl">EMBL</MenuItem>
         </Select>
       </FormControl>
-      <FormControl fullWidth>
-        <FormControlLabel control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
-      </FormControl>
+      { (fileFormat === 'fasta' || fileFormat === '') && (
+        <FormControl fullWidth>
+          <FormControlLabel control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
+        </FormControl>
+      )}
       <SubmitButtonBackendAPI
         component="label"
         requestStatus={requestStatus}
