@@ -6,7 +6,6 @@ import SourceRepositoryId from './SourceRepositoryId';
 import SourceRestriction from './SourceRestriction';
 import SourceAssembly from './SourceAssembly';
 import SourceTypeSelector from './SourceTypeSelector';
-import SourceBox from './SourceBox';
 import SourcePCRorHybridization from './SourcePCRorHybridization';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
@@ -87,12 +86,12 @@ function Source({ sourceId }) {
   }
 
   return (
-    <SourceBox {...{ sourceId }}>
+    <>
       {!templateOnlySources.includes(sourceType) && (<SourceTypeSelector {...{ source }} />)}
       {sourceType && knownErrors[sourceType] && <KnownSourceErrors errors={knownErrors[sourceType]} />}
       {specificSource}
       {sources.length > 1 && (<MultipleOutputsSelector {...{ sources, entities, sourceId, onFragmentChosen: setChosenFragment }} />)}
-    </SourceBox>
+    </>
   );
 }
 
