@@ -23,7 +23,7 @@ function SequenceEditor({ entityId }) {
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === entityId), isEqual);
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
   const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, entityId), isEqual);
-  const seq = { ...useSelector((state) => state.cloning.teselaJsonCache[entityId], isEqual), name: entity.name };
+  const seq = { ...useSelector((state) => state.cloning.teselaJsonCache[entityId], isEqual) };
   // Filter out features of type "source"
   seq.features = seq.features.filter((f) => f.type !== 'source');
 
