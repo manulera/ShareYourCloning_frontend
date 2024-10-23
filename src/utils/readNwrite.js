@@ -79,7 +79,7 @@ export const loadStateThunk = (newState) => async (dispatch, getState) => {
   }
 };
 
-export const mergeStateThunk = (newState) => async (dispatch, getState) => {
+export const mergeStateThunk = (newState, removeSourceId = null) => async (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
@@ -88,11 +88,12 @@ export const mergeStateThunk = (newState) => async (dispatch, getState) => {
       throw new Error('Primer name from loaded file exists in current session');
     }
   }
-  const newState2 = shiftStateIds(newState, oldState);
+  const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
+  const newState2 = shiftStateIds(newState, stateForShifting, removeSourceId);
   batch(() => {
     dispatch(setPrimers([...oldState.primers, ...newState2.primers]));
     dispatch(setCloningState({
-      sources: [...oldState.sources, ...newState2.sources],
+      sources: [...stateForShifting.sources, ...newState2.sources],
       entities: [...oldState.entities, ...newState2.entities],
     }));
   });
@@ -185,16 +186,17 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const addHistory = async (newState, dispatch, setLoadedFileError, url) => {
+export const addHistory = async (newState, dispatch, setLoadedFileError, url, removeSourceId = null) => {
   try {
     await axios.post(url, newState);
   } catch (e) {
     if (e.code === 'ERR_NETWORK') {
       setLoadedFileError('Cannot connect to backend server to validate the JSON file');
     } else { setLoadedFileError('JSON file in wrong format'); }
+    console.error(e);
   }
   try {
-    await dispatch(mergeStateThunk(newState));
+    await dispatch(mergeStateThunk(newState, removeSourceId));
   } catch (e) {
     console.error(e);
     setLoadedFileError(e.message);
