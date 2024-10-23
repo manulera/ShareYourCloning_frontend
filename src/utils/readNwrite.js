@@ -2,6 +2,7 @@ import axios from 'axios';
 import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
 import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
 import { batch } from 'react-redux';
+import { cloneDeep } from 'lodash-es';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
@@ -79,17 +80,20 @@ export const loadStateThunk = (newState) => async (dispatch, getState) => {
   }
 };
 
-export const mergeStateThunk = (newState, removeSourceId = null) => async (dispatch, getState) => {
+export const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = false) => async (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
   if (newState.primers) {
+    if (newState.primers.length > 0 && skipPrimers) {
+      throw new Error('Primers cannot be loaded when skipping primers');
+    }
     if (newState.primers.some((p) => existingPrimerNames.includes(p.name))) {
       throw new Error('Primer name from loaded file exists in current session');
     }
   }
   const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
-  const newState2 = shiftStateIds(newState, stateForShifting, removeSourceId);
+  const newState2 = shiftStateIds(newState, stateForShifting, skipPrimers);
   batch(() => {
     dispatch(setPrimers([...oldState.primers, ...newState2.primers]));
     dispatch(setCloningState({
@@ -97,6 +101,21 @@ export const mergeStateThunk = (newState, removeSourceId = null) => async (dispa
       entities: [...oldState.entities, ...newState2.entities],
     }));
   });
+};
+
+export const copyEntityThunk = (entityId, copySourceId) => async (dispatch, getState) => {
+  const state = getState();
+  const { entities, sources } = state.cloning;
+  const entitiesToCopy = entities.filter((e) => e.id === entityId);
+  const sourcesToCopy = sources.filter((s) => s.output === entityId);
+  collectParentEntitiesAndSources(sourcesToCopy[0], sources, entities, entitiesToCopy, sourcesToCopy);
+  const newState = cloneDeep({
+    sequences: entitiesToCopy,
+    sources: sourcesToCopy,
+    description: '',
+    primers: [],
+  });
+  dispatch(mergeStateThunk(newState, copySourceId, true));
 };
 
 export const resetStateThunk = () => async (dispatch) => {
@@ -208,18 +227,15 @@ export const loadData = async (newState, isTemplate, dispatch, setLoadedFileErro
     // Validate using the API
     // TODO: for validation, the sequences could be sent empty to reduce size
     try {
-      console.log(newState);
-      console.log(url);
       await axios.post(url, newState);
-      console.log('ok');
     } catch (e) {
-      console.log(e);
+      console.error(e);
       if (e.code === 'ERR_NETWORK') {
         setLoadedFileError('Cannot connect to backend server to validate the JSON file');
       } else { setLoadedFileError('JSON file in wrong format'); }
     }
   }
-  console.log(newState);
+
   dispatch(loadStateThunk(newState)).catch((e) => {
     // TODO: I don't think this is needed anymore
     dispatch(resetStateThunk());

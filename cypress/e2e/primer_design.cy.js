@@ -1,4 +1,4 @@
-import { addSource, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
@@ -12,7 +12,7 @@ describe('Test primer designer functionality', () => {
     loadExample('Integration of cassette by homologous recombination');
 
     // Delete the source that says "PCR with primers"
-    cy.contains('li', 'PCR with primers').find('[data-testid="DeleteIcon"]').first().click();
+    deleteSourceByContent('PCR with primers');
     addSource('PCRSource');
 
     // Click on design primers
@@ -154,8 +154,8 @@ describe('Test primer designer functionality', () => {
     loadExample('Gibson assembly');
 
     // Delete both sources that say "PCR with primers"
-    cy.contains('li', 'PCR with primers').find('[data-testid="DeleteIcon"]').first().click();
-    cy.contains('li', 'PCR with primers').find('[data-testid="DeleteIcon"]').first().click();
+    deleteSourceByContent('PCR with primers');
+    deleteSourceByContent('PCR with primers');
     addSource('PCRSource');
 
     // Click on design primers

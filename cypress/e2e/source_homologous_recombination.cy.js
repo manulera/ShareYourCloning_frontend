@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSource, setInputValue, addPrimer, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSourceById, setInputValue, addPrimer, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 const homology1 = 'ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT';
 const homology2 = 'GTTTGCATCATTACTACCTACTGTAAGTTTCGTGACTAAA';
@@ -27,7 +27,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#sequence-6 li#source-5').should('exist');
       cy.get('li#sequence-6').contains('98 bps');
-      deleteSource(5);
+      deleteSourceById(5);
     });
   });
   it('works with multiple options', () => {
@@ -47,7 +47,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       cy.get('li#source-5 .multiple-output-selector', { timeOut: 2000 }).should('exist');
       cy.get('li#source-5 button').contains('Choose product').click();
       cy.get('li#sequence-6 li#source-5').should('exist');
-      deleteSource(5);
+      deleteSourceById(5);
     });
 
     // Shows multiple options
@@ -70,7 +70,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       setInputValue('Minimal homology length (in bp)', '80', 'li#source-5');
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#source-5 .MuiAlert-message', { timeOut: 2000 }).should('exist');
-      deleteSource(5);
+      deleteSourceById(5);
     });
   });
   it('CRISPr shows the right error when RNA doesnt cut or cuts outside', () => {
@@ -115,7 +115,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       cy.intercept('POST', 'http://127.0.0.1:8000/*', { statusCode: 500 }).as('interc2');
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#source-5 .MuiAlert-message').contains('Internal server error');
-      deleteSource(5);
+      deleteSourceById(5);
     });
   });
 });

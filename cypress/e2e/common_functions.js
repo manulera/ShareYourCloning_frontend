@@ -79,8 +79,26 @@ export function loadHistory(filePath) {
   cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile(filePath, { force: true });
 }
 
-export function deleteSource(id) {
+export function deleteSourceById(id) {
   cy.get(`#source-${id} [data-testid="DeleteIcon"]`).first().click();
+  // If a dialog opens, click the delete button
+  cy.get('body').then(($body) => {
+    if ($body.find('.verify-delete-dialog').length > 0) {
+      cy.get('.verify-delete-dialog .MuiButtonBase-root').contains('Delete').click();
+    }
+  });
+}
+
+export function deleteSourceByContent(content) {
+  cy.get('.share-your-cloning').contains(content).closest('div.select-source').find('[data-testid="DeleteIcon"]')
+    .click();
+  // If a dialog opens, click the delete button
+  // Check if the dialog exists before attempting to interact with it
+  cy.get('body').then(($body) => {
+    if ($body.find('.verify-delete-dialog').length > 0) {
+      cy.get('.verify-delete-dialog .MuiButtonBase-root').contains('Delete').click();
+    }
+  });
 }
 
 export function manuallyTypeSequence(seq, circular = false, overhangs = []) {

@@ -214,11 +214,13 @@ export function shiftSource(source, networkShift, primerShift) {
   return newSource;
 }
 
-export function shiftStateIds(newState, oldState) {
+export function shiftStateIds(newState, oldState, skipPrimers = false) {
   const { sources: newSources, sequences: newEntities, primers: newPrimers } = newState;
   const { sources: oldSources, entities: oldEntities, primers: oldPrimers } = oldState;
-  const networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities }) - 1;
-  const primerShift = getNextPrimerId(oldPrimers);
+  let networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities });
+  // Substract the smallest id to minimize the starting id
+  networkShift -= Math.min(...[...newSources.map((s) => s.id), ...newEntities.map((e) => e.id)]);
+  const primerShift = skipPrimers ? 0 : getNextPrimerId(oldPrimers);
   return {
     entities: newEntities.map((e) => ({ ...e, id: e.id + networkShift })),
     primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
