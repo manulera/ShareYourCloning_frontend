@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import SourceBox from './SourceBox';
 import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFunctions';
 
 // TODO refactor this to use common part
@@ -137,9 +136,7 @@ function FinishedSource({ sourceId }) {
     default: message = '';
   }
   return (
-    <SourceBox {...{ sourceId: source.id }}>
-      <div className="finished-source">{message}</div>
-    </SourceBox>
+    <div className="finished-source">{message}</div>
   );
 }
 

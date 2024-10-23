@@ -1,4 +1,4 @@
-import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test copy existing sequence functionality', () => {
   beforeEach(() => {
@@ -13,15 +13,13 @@ describe('Test copy existing sequence functionality', () => {
     addSource('CopyEntity', true);
     clickMultiSelectOption('Sequence to copy', '2', 'li#source-3');
     cy.get('button').contains('Copy sequence').click();
-    cy.get('li#source-4').should('exist');
-    cy.get('li#source-5').should('exist');
+    cy.get('li#source-1').should('exist');
+    cy.get('li#source-3').should('exist');
 
-    // There should be 2 sequence with #sequence-2
-    cy.get('li#sequence-2').should('have.length', 2);
-    cy.get('li#source-1').should('have.length', 2);
-
-    // Deleting either source should delete both
-    cy.get('#source-1 [data-testid="DeleteIcon"]').first().click();
+    // Deleting one does not delete the other
+    deleteSourceByContent('typed');
+    cy.get('li#source-3').should('exist');
+    cy.get('li#sequence-4').should('exist');
     cy.get('li#source-1').should('not.exist');
     cy.get('li#sequence-2').should('not.exist');
   });

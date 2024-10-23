@@ -1,26 +1,17 @@
 import { Button, FormControl } from '@mui/material';
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SingleInputSelector from './SingleInputSelector';
-import { cloningActions } from '../../store/cloning';
+import { copyEntityThunk } from '../../utils/readNwrite';
 
 function SourceCopyEntity({ source }) {
   const [id, setId] = React.useState(null);
-  const { addEmptySource, deleteSourceAndItsChildren } = cloningActions;
   const allEntityIds = useSelector((state) => state.cloning.entities.map((entity) => entity.id), shallowEqual);
   const dispatch = useDispatch();
-  const store = useStore();
 
   const onSubmit = (e) => {
     e.preventDefault();
-    // Check if the entity we want to copy is already input of a
-    // source in the network, if not we add it twice.
-    const { cloning } = store.getState();
-    if (!cloning.sources.some((s) => s.input.includes(id))) {
-      dispatch(addEmptySource([id]));
-    }
-    dispatch(addEmptySource([id]));
-    dispatch(deleteSourceAndItsChildren(source.id));
+    dispatch(copyEntityThunk(id, source.id));
   };
 
   return (

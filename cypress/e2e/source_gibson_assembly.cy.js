@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSource, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Tests Gibson assembly functionality', () => {
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe('Tests Gibson assembly functionality', () => {
     loadHistory('cypress/test_starting_point/source_gibson_assembly.json');
     cy.get('li#sequence-4', { timeOut: 20000 });
     // Remove sequence that allows circularisation
-    deleteSource(1);
+    deleteSourceById(1);
     addSource('GibsonAssemblySource');
     clickMultiSelectOption('Assembly inputs', '6', 'li#source-7');
     // Constrain to circular

@@ -13,6 +13,7 @@ import MainSequenceCheckBox from './MainSequenceCheckBox';
 import TemplateSequence from './TemplateSequence';
 import { isSourceATemplate } from '../store/cloning_utils';
 import { cloningActions } from '../store/cloning';
+import SourceBox from './sources/SourceBox';
 
 const { addToSourcesWithHiddenAncestors, removeFromSourcesWithHiddenAncestors, addSequenceInBetween } = cloningActions;
 
@@ -84,11 +85,13 @@ function NetWorkNode({ sourceId }) {
       <li key={sourceId} id={`source-${sourceId}`} className={`source-node ${ancestorsHidden ? 'hidden-ancestors' : ''}`}>
         <span className="tf-nc">
           <span className="node-text">
-            {(entityId !== null && !sourceIsTemplate) ? (
-              <FinishedSource {...{ sourceId }} />
-            ) : (
-              <Source {...{ sourceId }} />
-            )}
+            <SourceBox {...{ sourceId }}>
+              {(entityId !== null && !sourceIsTemplate) ? (
+                <FinishedSource {...{ sourceId }} />
+              ) : (
+                <Source {...{ sourceId }} />
+              )}
+            </SourceBox>
             <div className="corner-id">
               {sourceId}
             </div>
