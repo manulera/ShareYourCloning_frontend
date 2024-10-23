@@ -217,7 +217,7 @@ export function shiftSource(source, networkShift, primerShift) {
 export function shiftStateIds(newState, oldState) {
   const { sources: newSources, sequences: newEntities, primers: newPrimers } = newState;
   const { sources: oldSources, entities: oldEntities, primers: oldPrimers } = oldState;
-  const networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities });
+  const networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities }) - 1;
   const primerShift = getNextPrimerId(oldPrimers);
   return {
     entities: newEntities.map((e) => ({ ...e, id: e.id + networkShift })),

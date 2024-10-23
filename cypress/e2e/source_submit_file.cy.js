@@ -1,4 +1,4 @@
-import { addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clearPrimers, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('File Source', () => {
   beforeEach(() => {
@@ -44,5 +44,18 @@ describe('File Source', () => {
     clickMultiSelectOption('File format', 'FASTA', 'li#source-1');
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/fasta_file_with_gb_extension.gb', { force: true });
     cy.get('li#source-1', { timeout: 20000 }).contains('Choose product');
+  });
+  it.only('works when loading a history file', () => {
+    clearPrimers();
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/golden_gate.json', { force: true });
+    cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
+    // You can load another history file on top
+    addLane();
+    addSource('UploadedFileSource', true);
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/gibson_assembly.json', { force: true });
+    cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
+    cy.get('li').contains('Gibson');
   });
 });

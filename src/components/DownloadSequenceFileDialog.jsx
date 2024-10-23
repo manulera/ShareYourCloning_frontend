@@ -1,20 +1,22 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import { isEqual } from 'lodash-es';
-import { downloadSequence } from '../utils/readNwrite';
-import { convertToTeselaJson } from '../utils/sequenceParsers';
+import { downloadSequence, exportSubStateThunk } from '../utils/readNwrite';
 
 // You can override the downloadSequence function by passing a downloadCallback that takes the fileName and entity as arguments
 function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCallback }) {
   const [fileName, setFileName] = React.useState('');
   const [extension, setExtension] = React.useState('.gb');
   const entity = useSelector(({ cloning }) => cloning.entities.find((e) => e.id === id), isEqual);
+  const store = useStore();
+  const dispatch = useDispatch();
 
   React.useEffect(() => {
     if (entity) {
-      const seq = convertToTeselaJson(entity);
-      setFileName(seq.name);
+      const { cloning } = store.getState();
+      const sequenceData = cloning.teselaJsonCache[id];
+      setFileName(sequenceData.name);
     }
   }, [entity]);
 
@@ -29,6 +31,8 @@ function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCal
           setDialogOpen(false);
           if (downloadCallback) {
             downloadCallback(fileName + extension, entity);
+          } else if (extension === '.json') {
+            dispatch(exportSubStateThunk(fileName + extension, entity.id));
           } else {
             downloadSequence(fileName + extension, entity);
           }
@@ -57,6 +61,7 @@ function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCal
           >
             <FormControlLabel value=".gb" control={<Radio />} label="genbank" />
             <FormControlLabel value=".fasta" control={<Radio />} label="fasta" />
+            <FormControlLabel value=".json" control={<Radio />} label="json (sequence + history)" />
           </RadioGroup>
         </FormControl>
 

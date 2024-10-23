@@ -18,20 +18,18 @@ export const downloadTextFile = (text, fileName) => {
   document.body.removeChild(link);
 };
 
-export const downloadStateAsJson = async (entities, sources, description, primers) => {
+export const downloadStateAsJson = async (entities, sources, description, primers, fileName = 'history.json') => {
   // from https://stackoverflow.com/a/55613750/5622322
   const output = {
     sequences: entities, sources, description, primers,
   };
-  // json
-  const fileName = 'history';
   // Pretty print json and add a newline at the end
   const json = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([json], { type: 'application/json' });
   const href = await URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = href;
-  link.download = `${fileName}.json`;
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -47,18 +45,41 @@ export const exportStateThunk = () => async (dispatch, getState) => {
   downloadStateAsJson(entities, sources, description, primers);
 };
 
+const collectParentEntitiesAndSources = (source, sources, entities, entitiesToExport, sourcesToExport) => {
+  source.input.forEach((entityId) => {
+    entitiesToExport.push(entities.find((e) => e.id === entityId));
+    const parentSource = sources.find((s) => s.output === entityId);
+    sourcesToExport.push(parentSource);
+    collectParentEntitiesAndSources(parentSource, sources, entities, entitiesToExport, sourcesToExport);
+  });
+};
+
+export const exportSubStateThunk = (fileName, entityId) => async (dispatch, getState) => {
+  // Download the subHistory for a given entity
+  const state = getState();
+  const { entities, sources, primers } = state.cloning;
+  const entitiesToExport = entities.filter((e) => e.id === entityId);
+  const sourcesToExport = sources.filter((s) => s.output === entityId);
+  collectParentEntitiesAndSources(sourcesToExport[0], sources, entities, entitiesToExport, sourcesToExport);
+  downloadStateAsJson(entitiesToExport, sourcesToExport, '', primers, fileName);
+};
+
 export const loadStateThunk = (newState) => async (dispatch, getState) => {
   dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
   if (newState.primers) {
     dispatch(setPrimers(newState.primers));
+  } else {
+    dispatch(setPrimers([]));
   }
   dispatch(setMainSequenceId(null));
   if (newState.description) {
     dispatch(setDescription(newState.description));
+  } else {
+    dispatch(setDescription(''));
   }
 };
 
-export const mergeStateThunk = (newState) => async (dispatch, getState) => {
+export const mergeStateThunk = (newState, removeSourceId = null) => async (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
@@ -67,11 +88,12 @@ export const mergeStateThunk = (newState) => async (dispatch, getState) => {
       throw new Error('Primer name from loaded file exists in current session');
     }
   }
-  const newState2 = shiftStateIds(newState, oldState);
+  const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
+  const newState2 = shiftStateIds(newState, stateForShifting, removeSourceId);
   batch(() => {
     dispatch(setPrimers([...oldState.primers, ...newState2.primers]));
     dispatch(setCloningState({
-      sources: [...oldState.sources, ...newState2.sources],
+      sources: [...stateForShifting.sources, ...newState2.sources],
       entities: [...oldState.entities, ...newState2.entities],
     }));
   });
@@ -164,16 +186,17 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const addHistory = async (newState, dispatch, setLoadedFileError, url) => {
+export const addHistory = async (newState, dispatch, setLoadedFileError, url, removeSourceId = null) => {
   try {
     await axios.post(url, newState);
   } catch (e) {
     if (e.code === 'ERR_NETWORK') {
       setLoadedFileError('Cannot connect to backend server to validate the JSON file');
     } else { setLoadedFileError('JSON file in wrong format'); }
+    console.error(e);
   }
   try {
-    await dispatch(mergeStateThunk(newState));
+    await dispatch(mergeStateThunk(newState, removeSourceId));
   } catch (e) {
     console.error(e);
     setLoadedFileError(e.message);
