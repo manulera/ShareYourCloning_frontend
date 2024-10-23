@@ -25,5 +25,29 @@ describe('Test download sequence file', () => {
     cy.task('readFileMaybe', 'cypress/downloads/example.fasta').then((fileContent) => {
       expect(fileContent).to.include('>pFA6a-5FLAG-hphMX6');
     });
+    // Donwload history as json
+    cy.get('li#sequence-4 svg[data-testid="DownloadIcon"]').first().click();
+    setInputValue('File name', 'example', '.MuiDialogContent-root');
+    cy.get('.MuiDialogContent-root span').contains('json').click();
+    cy.get('.MuiDialogActions-root button').contains('Save file').click();
+    cy.task('readFileMaybe', 'cypress/downloads/example.json').then((fileContent) => {
+      expect(fileContent).to.include('"sequences":');
+      expect(fileContent).to.include('"sources":');
+      expect(fileContent).to.include('"primers":');
+      expect(fileContent).to.include('"description":');
+      // Sources
+      expect(fileContent).to.include('"type": "AddGeneIdSource"');
+      expect(fileContent).to.include('"type": "PCRSource"');
+      expect(fileContent).to.not.include('"type": "GenomeCoordinatesSource"');
+      expect(fileContent).to.not.include('"type": "HomologousRecombinationSource"');
+      // Sequences
+      expect(fileContent).to.include('pFA6a-5FLAG-hphMX6');
+      expect(fileContent).to.include('pcr_product');
+      expect(fileContent).to.not.include('modified_locus');
+      expect(fileContent).to.not.include('CU329670');
+      // Primers
+      expect(fileContent).to.include('"name": "fwd"');
+      expect(fileContent).to.include('"name": "rvs"');
+    });
   });
 });

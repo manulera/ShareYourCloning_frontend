@@ -18,20 +18,18 @@ export const downloadTextFile = (text, fileName) => {
   document.body.removeChild(link);
 };
 
-export const downloadStateAsJson = async (entities, sources, description, primers) => {
+export const downloadStateAsJson = async (entities, sources, description, primers, fileName = 'history.json') => {
   // from https://stackoverflow.com/a/55613750/5622322
   const output = {
     sequences: entities, sources, description, primers,
   };
-  // json
-  const fileName = 'history';
   // Pretty print json and add a newline at the end
   const json = `${JSON.stringify(output, null, 2)}\n`;
   const blob = new Blob([json], { type: 'application/json' });
   const href = await URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = href;
-  link.download = `${fileName}.json`;
+  link.download = fileName;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -47,14 +45,37 @@ export const exportStateThunk = () => async (dispatch, getState) => {
   downloadStateAsJson(entities, sources, description, primers);
 };
 
+const collectParentEntitiesAndSources = (source, sources, entities, entitiesToExport, sourcesToExport) => {
+  source.input.forEach((entityId) => {
+    entitiesToExport.push(entities.find((e) => e.id === entityId));
+    const parentSource = sources.find((s) => s.output === entityId);
+    sourcesToExport.push(parentSource);
+    collectParentEntitiesAndSources(parentSource, sources, entities, entitiesToExport, sourcesToExport);
+  });
+};
+
+export const exportSubStateThunk = (fileName, entityId) => async (dispatch, getState) => {
+  // Download the subHistory for a given entity
+  const state = getState();
+  const { entities, sources, primers } = state.cloning;
+  const entitiesToExport = entities.filter((e) => e.id === entityId);
+  const sourcesToExport = sources.filter((s) => s.output === entityId);
+  collectParentEntitiesAndSources(sourcesToExport[0], sources, entities, entitiesToExport, sourcesToExport);
+  downloadStateAsJson(entitiesToExport, sourcesToExport, '', primers, fileName);
+};
+
 export const loadStateThunk = (newState) => async (dispatch, getState) => {
   dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
   if (newState.primers) {
     dispatch(setPrimers(newState.primers));
+  } else {
+    dispatch(setPrimers([]));
   }
   dispatch(setMainSequenceId(null));
   if (newState.description) {
     dispatch(setDescription(newState.description));
+  } else {
+    dispatch(setDescription(''));
   }
 };
 
