@@ -19,6 +19,7 @@ import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
 import useBackendRoute from '../../hooks/useBackendRoute';
 import HistoryDownloadedDialog from '../HistoryLoadedDialog';
+import VersionDialog from './VersionDialog';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -26,6 +27,7 @@ function MainAppBar() {
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [loadedFileError, setLoadedFileError] = React.useState('');
+  const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const [loadedHistory, setLoadedHistory] = React.useState(null);
 
@@ -75,6 +77,7 @@ function MainAppBar() {
     { display: 'Newsletter', onClick: () => window.open('https://eepurl.com/h9-n71') },
     { display: 'About the project', onClick: () => window.open('https://www.genestorian.org/') },
     { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=n0hedzvpW88') },
+    { display: 'App version', onClick: () => setOpenVersionDialog(true) },
   ];
 
   const onFileChange = (event) => {
@@ -154,6 +157,7 @@ function MainAppBar() {
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
       ) */}
       <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage: setLoadedFileError }} />
+      <VersionDialog open={openVersionDialog} setOpen={setOpenVersionDialog} />
     </AppBar>
   );
 }
