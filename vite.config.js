@@ -38,6 +38,8 @@ export default ({ mode }) => {
           const configPath = resolve(__dirname, 'public', configFileName);
           const destPath = resolve(__dirname, 'build', 'config.json');
           fs.copyFileSync(configPath, destPath);
+          // Write a version.env.json file with the $VERSION and $COMMIT_SHA variables
+          fs.writeFileSync(resolve(__dirname, 'build', 'version.json'), `{ "version": "${process.env.VERSION || ''}", "commit_sha": "${process.env.COMMIT_SHA || ''}" }`);
         },
       },
     ],
