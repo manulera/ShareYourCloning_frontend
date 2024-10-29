@@ -20,6 +20,24 @@ function BenchlingMessage({ source }) {
   );
 }
 
+function SnapGenePlasmidMessage({ source }) {
+  const { repository_id: repositoryId } = source;
+  const [plasmidSet, plasmidName] = repositoryId.split('/');
+  return (
+    <>
+      Plasmid
+      {' '}
+      <strong>
+        <a href={`https://www.snapgene.com/plasmids/${plasmidSet}/${plasmidName}`} target="_blank" rel="noopener noreferrer">
+          {plasmidName}
+        </a>
+      </strong>
+      {' '}
+      from SnapGene
+    </>
+  );
+}
+
 function RepositoryIdMessage({ source }) {
   const { repository_name: repositoryName } = source;
   let url = '';
@@ -83,6 +101,8 @@ function FinishedSource({ sourceId }) {
     case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
       break;
     case 'BenchlingUrlSource': message = <BenchlingMessage source={source} />;
+      break;
+    case 'SnapGenePlasmidSource': message = <SnapGenePlasmidMessage source={source} />;
       break;
     case 'GenomeCoordinatesSource':
       message = (

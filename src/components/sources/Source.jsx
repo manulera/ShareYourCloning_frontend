@@ -52,6 +52,8 @@ function Source({ sourceId }) {
       specificSource = <SourceRepositoryId {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'AddGeneIdSource':
       specificSource = <SourceRepositoryId {...{ source, requestStatus, sendPostRequest, initialSelectedRepository: 'addgene' }} />; break;
+    case 'SnapGenePlasmidSource':
+      specificSource = <SourceRepositoryId {...{ source, requestStatus, sendPostRequest, initialSelectedRepository: 'snapgene' }} />; break;
     case 'LigationSource':
       specificSource = <SourceAssembly {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'GibsonAssemblySource':
