@@ -45,6 +45,47 @@ describe('RepositoryId Source', () => {
     // links to the /edit
     cy.get('li#source-1 a[href="https://benchling.com/siverson/f/lib_B94YxDHhQh-cidar-moclo-library/seq_dh1FrJTc-b0015_dh/edit"]').should('be.visible');
   });
+  it.only('works with SnapGene', () => {
+    clickMultiSelectOption('Select repository', 'SnapGene', 'li#source-1');
+    // When clicking in the input, displays message
+    cy.get('li#source-1').contains('Plasmid name').siblings('div').first()
+      .click();
+    cy.get('div[role="presentation"]').contains('Type at least 3 characters to search').should('be.visible');
+
+    // Click outside
+    cy.get('body').click(0, 0);
+
+    // Cannot submit if nothing selected
+    cy.get('li#source-1 button').contains('Submit').should('not.exist');
+
+    setInputValue('Plasmid name', 'pfa', 'li#source-1');
+    clickMultiSelectOption('Plasmid name', 'pFastBac1', 'li#source-1');
+
+    // Can clear the input
+    cy.get('li#source-1').contains('Plasmid name').siblings('div').children('input')
+      .click();
+    cy.get('li#source-1 button.MuiAutocomplete-clearIndicator').click();
+    cy.get('body').click(0, 0);
+
+    // When clicking in the input, displays message
+    cy.get('li#source-1').contains('Plasmid name').siblings('div').first()
+      .click();
+    cy.get('div[role="presentation"]').contains('Type at least 3 characters to search').should('be.visible');
+    cy.get('body').click(0, 0);
+
+    // Can submit
+    setInputValue('Plasmid name', 'pfa', 'li#source-1');
+    clickMultiSelectOption('Plasmid name', 'pFastBac1', 'li#source-1');
+    cy.get('li#source-1 button').contains('Submit').click();
+
+    // Shows the plasmid name
+    cy.get('li#sequence-2').contains('pFastBac1');
+    cy.get('li#sequence-2').contains('4776 bps');
+
+    // Links to https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1
+    cy.get('li#source-1 a[href="https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1"]').should('be.visible');
+    cy.get('li#source-1').contains('Plasmid pFastBac1 from SnapGene').should('be.visible');
+  });
   it('handles empty value and wrong IDs', () => {
     // AddGene =================================
     clickMultiSelectOption('Select repository', 'AddGene', 'li#source-1');
