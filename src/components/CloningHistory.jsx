@@ -15,7 +15,7 @@ function CloningHistory({ network }) {
   // second div that contains only a scrollbar, and we sync the scroll
   // of the two divs.
 
-  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory } = useDragAndDropFile();
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory, warnings, setWarnings } = useDragAndDropFile();
 
   return (
     <div
@@ -25,7 +25,10 @@ function CloningHistory({ network }) {
       className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
       <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage }} />
-      {errorMessage && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }} onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
+      <div id="global-error-message-wrapper" style={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }}>
+        {errorMessage && (<Alert variant="filled" severity="error" onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
+        {warnings.map((w) => (<Alert key={w} variant="filled" severity="warning" onClose={() => { setWarnings(warnings.filter((w2) => w2 !== w)); }}>{w}</Alert>))}
+      </div>
       {isDragging ? (
         <div className="drag-file-wrapper">
           <div className="drag-file-container">
