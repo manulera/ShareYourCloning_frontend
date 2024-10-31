@@ -58,19 +58,22 @@ function ExternalServicesStatusCheck() {
         severity="error"
         className="service-status-check-alert"
         action={(
-          loading ? (<CircularProgress color="inherit" size="2em" />) : (
-            <Button color="inherit" size="small" onClick={() => setConnectAttemp((prev) => prev + 1)}>
-              RE-CHECK
-            </Button>
-          )
-      )}
+          <div>
+            {loading ? (
+              <CircularProgress color="inherit" size="2em" />
+            ) : (
+              <Button color="inherit" size="small" onClick={() => setConnectAttemp((prev) => prev + 1)}>
+                RE-CHECK
+              </Button>
+            )}
+          </div>
+        )}
       >
         <div>
           {servicesDown.map((service) => (
             <div key={service.message}>{service.message}</div>
           ))}
         </div>
-
       </Alert>
     );
   }

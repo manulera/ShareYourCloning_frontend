@@ -20,6 +20,11 @@ function validateRepositoryId(repositoryId, repository) {
         return 'Use a Benchling URL like https://benchling.com/siverson/f/lib_B94YxDHhQh-cidar-moclo-library/seq_dh1FrJTc-b0015_dh/edit';
       }
       break;
+    case 'euroscarf':
+      if (!repositoryId.match(/^P\d+$/)) {
+        return 'Euroscarf IDs must be P followed by numbers (e.g. P30174)';
+      }
+      break;
     default:
       break;
   }
@@ -30,12 +35,14 @@ const exampleIds = {
   addgene: '39296',
   genbank: 'NM_001018957.2',
   benchling: '',
+  euroscarf: 'P30174',
 };
 
 const inputLabels = {
   addgene: 'AddGene ID',
   genbank: 'GenBank ID',
   benchling: 'Benchling URL',
+  euroscarf: 'Euroscarf ID',
 };
 
 const checkOption = (option, inputValue) => option.name.toLowerCase().includes(inputValue.toLowerCase());
@@ -150,7 +157,7 @@ function SnapGenePlasmidSelector({ setInputValue }) {
 function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [inputValue, setInputValue] = React.useState('');
-  const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || 'snapgene');
+  const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name);
   const [error, setError] = React.useState('');
 
   React.useEffect(() => {
@@ -195,6 +202,7 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="genbank">GenBank</MenuItem>
           <MenuItem value="benchling">Benchling</MenuItem>
           <MenuItem value="snapgene">SnapGene</MenuItem>
+          <MenuItem value="euroscarf">Euroscarf</MenuItem>
         </Select>
       </FormControl>
       {selectedRepository !== '' && (

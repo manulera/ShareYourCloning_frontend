@@ -45,7 +45,7 @@ describe('RepositoryId Source', () => {
     // links to the /edit
     cy.get('li#source-1 a[href="https://benchling.com/siverson/f/lib_B94YxDHhQh-cidar-moclo-library/seq_dh1FrJTc-b0015_dh/edit"]').should('be.visible');
   });
-  it.only('works with SnapGene', () => {
+  it('works with SnapGene', () => {
     clickMultiSelectOption('Select repository', 'SnapGene', 'li#source-1');
     // When clicking in the input, displays message
     cy.get('li#source-1').contains('Plasmid name').siblings('div').first()
@@ -85,6 +85,16 @@ describe('RepositoryId Source', () => {
     // Links to https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1
     cy.get('li#source-1 a[href="https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1"]').should('be.visible');
     cy.get('li#source-1').contains('Plasmid pFastBac1 from SnapGene').should('be.visible');
+  });
+  it('works with Euroscarf', () => {
+    clickMultiSelectOption('Select repository', 'Euroscarf', 'li#source-1');
+    setInputValue('Euroscarf ID', 'P30174', 'li#source-1');
+    cy.get('li#source-1 button').contains('Submit').click();
+    cy.get('li#sequence-2').contains('pKT128');
+    cy.get('li#sequence-2').contains('4738 bps');
+
+    // Links to http://www.euroscarf.de/plasmid_details.php?accno=P30174
+    cy.get('li#source-1 a[href="http://www.euroscarf.de/plasmid_details.php?accno=P30174"]').should('be.visible');
   });
   it('handles empty value and wrong IDs', () => {
     // AddGene =================================
@@ -127,6 +137,18 @@ describe('RepositoryId Source', () => {
 
     // Error when it does not exist
     setInputValue('Benchling URL', 'https://benchling.com/bluh/blah/edit', 'li#source-1');
+    cy.get('li#source-1 button.MuiButtonBase-root').click();
+    cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
+
+    // Euroscarf =================================
+    clickMultiSelectOption('Select repository', 'Euroscarf', 'li#source-1');
+    // Cannot submit empty
+    cy.get('li#source-1 button.MuiButtonBase-root').should('not.exist');
+    // Cannot submit value that does not fit the regex
+    setInputValue('Euroscarf ID', 'X30174', 'li#source-1');
+    cy.get('li#source-1 button.MuiButtonBase-root').should('not.exist');
+    // An id that does not exist returns an error
+    setInputValue('Euroscarf ID', 'P9999999999999', 'li#source-1');
     cy.get('li#source-1 button.MuiButtonBase-root').click();
     cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
   });

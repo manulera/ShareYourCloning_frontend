@@ -44,13 +44,21 @@ jobs:
 
       # Install npm dependencies, cache them correctly
       # and run all Cypress tests
-      - name: Cypress run
+      - name: Cypress run E2E tests
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
           VITE_LOG_LEVEL: "warn"
         with:
           start: yarn start
+      - name: Cypress run component tests
+        uses: cypress-io/github-action@v6
+        env:
+          VITE_COVERAGE: "true"
+          VITE_LOG_LEVEL: "warn"
+        with:
+          component: true
+
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
         if: failure()

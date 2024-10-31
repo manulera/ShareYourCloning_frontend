@@ -5762,6 +5762,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"husky@npm:^9.1.6":
+  version: 9.1.6
+  resolution: "husky@npm:9.1.6"
+  bin:
+    husky: bin.js
+  checksum: 421ccd8850378231aaefd70dbe9e4f1549b84ffe3a6897f93a202242bbc04e48bd498169aef43849411105d9fcf7c192b757d42661e28d06b934a609a4eb8771
+  languageName: node
+  linkType: hard
+
 "iconv-lite@npm:0.6.3, iconv-lite@npm:^0.6.2":
   version: 0.6.3
   resolution: "iconv-lite@npm:0.6.3"
@@ -8276,6 +8285,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"pinst@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 4ae48a6a60f79c37071233af51b4d91bfc85cfa3c12b66ccda60cdb642b4d14a4ab0cb3587afc55b1f6192cea1772a5e4822026a0d0d3528296edef00cc2d61f
+  languageName: node
+  linkType: hard
+
 "pkg-dir@npm:^4.1.0":
   version: 4.2.0
   resolution: "pkg-dir@npm:4.2.0"
@@ -9460,8 +9478,10 @@ __metadata:
     eslint-plugin-import: ^2.28.1
     eslint-plugin-jsx-a11y: ^6.7.1
     eslint-plugin-react: ^7.33.2
+    husky: ^9.1.6
     jsdom: ^22.1.0
     lodash-es: ^4.17.21
+    pinst: ^3.0.0
     react: ^18.2.0
     react-dom: ^18.2.0
     react-draggable: ^4.4.6

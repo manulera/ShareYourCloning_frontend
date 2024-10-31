@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import { Alert, Button, Tooltip } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import './MainAppBar.css';
 import { useDispatch, useStore } from 'react-redux';
 import axios from 'axios';
@@ -20,13 +20,14 @@ import useStoreEditor from '../../hooks/useStoreEditor';
 import useBackendRoute from '../../hooks/useBackendRoute';
 import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 import VersionDialog from './VersionDialog';
+import useAlerts from '../../hooks/useAlerts';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const [openTemplateDialog, setOpenTemplateDialog] = React.useState(false);
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
-  const [loadedFileError, setLoadedFileError] = React.useState('');
+
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
   const [loadedHistory, setLoadedHistory] = React.useState(null);
@@ -35,6 +36,8 @@ function MainAppBar() {
   const { updateStoreEditor } = useStoreEditor();
   const store = useStore();
   const dispatch = useDispatch();
+  const { addAlert } = useAlerts();
+
   const exportData = () => {
     dispatch(exportStateThunk());
   };
@@ -68,7 +71,7 @@ function MainAppBar() {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
       }
-      loadData(data, isTemplate, dispatch, setLoadedFileError, backendRoute('validate'));
+      loadData(data, isTemplate, dispatch, addAlert, backendRoute('validate'));
     }
   };
 
@@ -89,13 +92,16 @@ function MainAppBar() {
       try {
         jsonObject = JSON.parse(eventFileRead.target.result);
       } catch (e) {
-        setLoadedFileError('Input file should be a JSON file with the history');
+        addAlert({
+          message: 'Input file should be a JSON file with the history',
+          severity: 'error',
+        });
         return;
       }
       const { cloning } = store.getState();
       // If no sequences have been loaded yet, simply load the history
       if (cloning.entities.length === 0) {
-        loadData(jsonObject, false, dispatch, setLoadedFileError, backendRoute('validate'));
+        loadData(jsonObject, false, dispatch, addAlert, backendRoute('validate'));
       } else {
         // Else ask the user whether they want to replace or append the history
         setLoadedHistory(jsonObject);
@@ -120,7 +126,6 @@ function MainAppBar() {
 
   return (
     <AppBar position="static" className="app-bar">
-      {loadedFileError && (<Alert variant="filled" severity="error" sx={{ position: 'absolute', zIndex: 999 }} onClose={() => { setLoadedFileError(''); }}>{loadedFileError}</Alert>)}
       <div className="app-name">Share Your Cloning</div>
       <Container maxWidth="s">
         <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50 }}>
@@ -156,7 +161,7 @@ function MainAppBar() {
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
       ) */}
-      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage: setLoadedFileError }} />
+      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
       <VersionDialog open={openVersionDialog} setOpen={setOpenVersionDialog} />
     </AppBar>
   );

@@ -1,7 +1,13 @@
 import React from 'react';
 import EnzymeMultiSelect from './EnzymeMultiSelect';
+import store from '../../store';
+import { cloningActions } from '../../store/cloning';
 
+const { setConfig } = cloningActions;
 describe('<EnzymeMultiSelect />', () => {
+  beforeEach(() => {
+    store.dispatch(setConfig({ backendUrl: 'http://127.0.0.1:8000' }));
+  });
   it('can add and remove enzymes, sets enzymes', () => {
     // see: https://on.cypress.io/mounting-react
     const setEnzymesSpy = cy.spy().as('setEnzymesSpy');
