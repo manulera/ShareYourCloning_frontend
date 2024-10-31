@@ -31,9 +31,7 @@ const initialState = {
   },
   sourcesWithHiddenAncestors: [],
   teselaJsonCache: {},
-  alerts: [
-    { message: 'This is a test alert', severity: 'info' },
-  ],
+  alerts: [],
 };
 
 /* eslint-disable no-param-reassign */
