@@ -8,7 +8,7 @@ describe('<EnzymeMultiSelect />', () => {
   beforeEach(() => {
     store.dispatch(setConfig({ backendUrl: 'http://127.0.0.1:8000' }));
   });
-  it.only('can add and remove enzymes, sets enzymes', () => {
+  it('can add and remove enzymes, sets enzymes', () => {
     // see: https://on.cypress.io/mounting-react
     const setEnzymesSpy = cy.spy().as('setEnzymesSpy');
     cy.mount(<EnzymeMultiSelect setEnzymes={setEnzymesSpy} />);
