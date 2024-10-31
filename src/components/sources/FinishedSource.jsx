@@ -4,6 +4,23 @@ import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFun
 
 // TODO refactor this to use common part
 
+function EuroscarfMessage({ source }) {
+  const { repository_id: repositoryId } = source;
+  return (
+    <>
+      Plasmid
+      {' '}
+      <strong>
+        <a href={`http://www.euroscarf.de/plasmid_details.php?accno=${repositoryId}`} target="_blank" rel="noopener noreferrer">
+          {repositoryId}
+        </a>
+      </strong>
+      {' '}
+      from Euroscarf
+    </>
+  );
+}
+
 function BenchlingMessage({ source }) {
   const { repository_id: repositoryId } = source;
   const editUrl = repositoryId.replace(/\.gb$/, '/edit');
@@ -101,6 +118,8 @@ function FinishedSource({ sourceId }) {
     case 'AddGeneIdSource': message = <RepositoryIdMessage source={source} />;
       break;
     case 'BenchlingUrlSource': message = <BenchlingMessage source={source} />;
+      break;
+    case 'EuroscarfSource': message = <EuroscarfMessage source={source} />;
       break;
     case 'SnapGenePlasmidSource': message = <SnapGenePlasmidMessage source={source} />;
       break;

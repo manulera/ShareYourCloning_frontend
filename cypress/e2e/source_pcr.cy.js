@@ -99,7 +99,7 @@ describe('Tests PCR functionality', () => {
     cy.get('li#sequence-4 li#source-3', { timeout: 20000 }).should('exist');
     cy.get('li#sequence-4').contains('22 bps');
   });
-  it.only('works when there are two possible PCR products', () => {
+  it('works when there are two possible PCR products', () => {
     addPrimer('fwd_test', 'ACGTACGT');
     addPrimer('rvs_test', 'GCGCGCGC');
     manuallyTypeSequence('ACGTACGTTTTTACGTACGTAAAAAAGCGCGCGCTTTTT');

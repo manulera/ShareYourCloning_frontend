@@ -22,6 +22,7 @@ export const classNameToEndPointMap = {
   AddGeneIdSource: 'repository_id',
   BenchlingUrlSource: 'repository_id',
   SnapGenePlasmidSource: 'repository_id',
+  EuroscarfSource: 'repository_id',
   GenomeCoordinatesSource: 'genome_coordinates',
   ManuallyTypedSource: 'manually_typed',
   OligoHybridizationSource: 'oligonucleotide_hybridization',

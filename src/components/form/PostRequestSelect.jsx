@@ -32,7 +32,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
     // Delay the fetch to avoid too many requests
     const timeOutId = setTimeout(() => fetchData(), 500);
     return () => clearTimeout(timeOutId);
-  }, [userInput, connectAttempt]);
+  }, [connectAttempt]);
 
   React.useEffect(() => {
     // Reset the value when the component is re-rendered at the same position
@@ -61,7 +61,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
       <Autocomplete
         onChange={(event, value) => { setValue(value); setUserInput(getOptionLabel(value)); }}
         // Change options only when input changes (not when an option is picked)
-        onInputChange={(event, newInputValue, reason) => (reason === 'input') && setUserInput(newInputValue)}
+        onInputChange={(event, newInputValue, reason) => { if (reason === 'input') { setUserInput(newInputValue); setConnectAttemp(connectAttempt + 1); } }}
         id="tags-standard"
         options={options}
         noOptionsText={noOptionsText || 'Type at least 3 characters to search'}

@@ -52,7 +52,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           displayEmpty
         >
           <MenuItem value="">Guess from extension</MenuItem>
-          <MenuItem value="genbank">Genbank</MenuItem>
+          <MenuItem value="genbank">Genbank / Ape</MenuItem>
           <MenuItem value="fasta">FASTA</MenuItem>
           <MenuItem value="dna">Snapgene</MenuItem>
           <MenuItem value="embl">EMBL</MenuItem>
@@ -76,7 +76,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           onChange={onChange}
         />
       </SubmitButtonBackendAPI>
-      <FormHelperText>Supports .gb, .dna, .embl and fasta</FormHelperText>
+      <FormHelperText>Supports .gb, .dna, .embl, .fasta, .fa, .ape</FormHelperText>
     </form>
   );
 }
