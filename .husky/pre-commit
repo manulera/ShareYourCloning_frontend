@@ -1,3 +1,4 @@
 # Check that none of the tests has it.only( or it.skip(
 bash .husky/no_test_skipping.sh
 
+exit 1;
