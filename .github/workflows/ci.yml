@@ -51,6 +51,7 @@ jobs:
           VITE_LOG_LEVEL: "warn"
         with:
           start: yarn start
+          component: true
       - name: Upload screenshots
         uses: actions/upload-artifact@v3
         if: failure()
