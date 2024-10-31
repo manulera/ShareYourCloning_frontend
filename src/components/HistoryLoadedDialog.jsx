@@ -3,12 +3,13 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { addHistory, loadData } from '../utils/readNwrite';
 import useBackendRoute from '../hooks/useBackendRoute';
+import useAlerts from '../hooks/useAlerts';
 
-function HistoryLoadedDialog({ loadedHistory, setLoadedHistory, setErrorMessage }) {
+function HistoryLoadedDialog({ loadedHistory, setLoadedHistory }) {
   const [selectedOption, setSelectedOption] = React.useState('replace');
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
-
+  const { addAlert } = useAlerts();
   return (
     <Dialog
       open={loadedHistory !== null}
@@ -18,9 +19,9 @@ function HistoryLoadedDialog({ loadedHistory, setLoadedHistory, setErrorMessage 
         onSubmit: (event) => {
           event.preventDefault();
           if (selectedOption === 'replace') {
-            loadData(loadedHistory, false, dispatch, setErrorMessage, backendRoute('validate'));
+            loadData(loadedHistory, false, dispatch, addAlert, backendRoute('validate'));
           } else {
-            addHistory(loadedHistory, dispatch, setErrorMessage, backendRoute('validate'));
+            addHistory(loadedHistory, dispatch, addAlert, backendRoute('validate'));
           }
           setLoadedHistory(null);
         },

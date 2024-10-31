@@ -205,24 +205,35 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const addHistory = async (newState, dispatch, setLoadedFileError, url, removeSourceId = null) => {
+export const addHistory = async (newState, dispatch, addAlert, url, removeSourceId = null) => {
   try {
     await axios.post(url, newState);
   } catch (e) {
     if (e.code === 'ERR_NETWORK') {
-      setLoadedFileError('Cannot connect to backend server to validate the JSON file');
-    } else { setLoadedFileError('JSON file in wrong format'); }
+      addAlert({
+        message: 'Cannot connect to backend server to validate the JSON file',
+        severity: 'error',
+      });
+    } else {
+      addAlert({
+        message: 'JSON file in wrong format',
+        severity: 'error',
+      });
+    }
     console.error(e);
   }
   try {
     await dispatch(mergeStateThunk(newState, removeSourceId));
   } catch (e) {
     console.error(e);
-    setLoadedFileError(e.message);
+    addAlert({
+      message: e.message,
+      severity: 'error',
+    });
   }
 };
 
-export const loadData = async (newState, isTemplate, dispatch, setLoadedFileError, url) => {
+export const loadData = async (newState, isTemplate, dispatch, addAlert, url) => {
   if (isTemplate !== true) {
     // Validate using the API
     // TODO: for validation, the sequences could be sent empty to reduce size
@@ -231,15 +242,26 @@ export const loadData = async (newState, isTemplate, dispatch, setLoadedFileErro
     } catch (e) {
       console.error(e);
       if (e.code === 'ERR_NETWORK') {
-        setLoadedFileError('Cannot connect to backend server to validate the JSON file');
-      } else { setLoadedFileError('JSON file in wrong format'); }
+        addAlert({
+          message: 'Cannot connect to backend server to validate the JSON file',
+          severity: 'error',
+        });
+      } else {
+        addAlert({
+          message: 'JSON file in wrong format',
+          severity: 'error',
+        });
+      }
     }
   }
 
   dispatch(loadStateThunk(newState)).catch((e) => {
     // TODO: I don't think this is needed anymore
     dispatch(resetStateThunk());
-    setLoadedFileError('JSON file in wrong format');
+    addAlert({
+      message: 'JSON file in wrong format',
+      severity: 'error',
+    });
   });
 };
 

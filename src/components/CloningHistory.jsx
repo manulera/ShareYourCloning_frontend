@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Tooltip } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { UploadFile } from '@mui/icons-material';
 import CancelIcon from '@mui/icons-material/Cancel';
 import NetWorkNode from './NetworkNode';
@@ -15,7 +15,7 @@ function CloningHistory({ network }) {
   // second div that contains only a scrollbar, and we sync the scroll
   // of the two divs.
 
-  const { isDragging, handleDragLeave, handleDragOver, handleDrop, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory, warnings, setWarnings } = useDragAndDropFile();
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, loadedHistory, setLoadedHistory } = useDragAndDropFile();
 
   return (
     <div
@@ -24,11 +24,7 @@ function CloningHistory({ network }) {
       onDrop={handleDrop}
       className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
-      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory, setErrorMessage }} />
-      <div id="global-error-message-wrapper" style={{ position: 'absolute', top: 0, margin: 1, zIndex: 999 }}>
-        {errorMessage && (<Alert variant="filled" severity="error" onClose={() => { setErrorMessage(''); }}>{errorMessage}</Alert>)}
-        {warnings.map((w) => (<Alert key={w} variant="filled" severity="warning" onClose={() => { setWarnings(warnings.filter((w2) => w2 !== w)); }}>{w}</Alert>))}
-      </div>
+      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
       {isDragging ? (
         <div className="drag-file-wrapper">
           <div className="drag-file-container">

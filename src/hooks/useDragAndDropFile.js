@@ -4,6 +4,7 @@ import { useDispatch, batch, useStore } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import useBackendRoute from './useBackendRoute';
 import { loadData } from '../utils/readNwrite';
+import useAlerts from './useAlerts';
 
 async function processSequenceFiles(files, backendRoute) {
   const allSources = [];
@@ -26,7 +27,6 @@ async function processSequenceFiles(files, backendRoute) {
     try {
       const { data: { sources, sequences }, headers } = await axios.post(url, formData, config);
       // If there are warnings, add them to the list of warnings
-      console.log('aaa', headers['x-warning']);
       const warnings = headers['x-warning'] ? [`${fileName}: ${headers['x-warning']}`] : [];
       return { sources, sequences, warnings };
     } catch (e) {
@@ -53,8 +53,7 @@ export default function useDragAndDropFile() {
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
   const [isDragging, setIsDragging] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState('');
-  const [warnings, setWarnings] = React.useState([]);
+  const { addAlert } = useAlerts();
   const [loadedHistory, setLoadedHistory] = React.useState(null);
   const store = useStore();
   const { addSourceAndItsOutputEntity } = cloningActions;
@@ -84,7 +83,7 @@ export default function useDragAndDropFile() {
         const { cloning } = store.getState();
         // If no sequences have been loaded yet, simply load the history
         if (cloning.entities.length === 0) {
-          loadData(jsonContent, false, dispatch, setErrorMessage, backendRoute('validate'));
+          loadData(jsonContent, false, dispatch, addAlert, backendRoute('validate'));
         } else {
           // Else ask the user whether they want to replace or append the history
           setLoadedHistory(jsonContent);
@@ -94,7 +93,7 @@ export default function useDragAndDropFile() {
       // If any is a JSON file, give an error
       for (let i = 0; i < e.dataTransfer.files.length; i += 1) {
         if (e.dataTransfer.files[i].name.endsWith('.json')) {
-          setErrorMessage('Drop either a single JSON file or multiple sequence files. Not both.');
+          addAlert({ message: 'Drop either a single JSON file or multiple sequence files. Not both.', severity: 'error' });
           return;
         }
       }
@@ -104,13 +103,13 @@ export default function useDragAndDropFile() {
           for (let i = 0; i < sources.length; i += 1) {
             dispatch(addSourceAndItsOutputEntity({ source: sources[i], entity: entities[i], replaceEmptySource: i === 0 }));
           }
+          newWarnings.forEach((warning) => addAlert({ message: warning, severity: 'warning' }));
         });
-        setWarnings(newWarnings);
       } catch (error) {
-        setErrorMessage(error.message);
+        addAlert({ message: error.message, severity: 'error' });
       }
     }
   }, []);
 
-  return { handleDragLeave, handleDragOver, handleDrop, isDragging, errorMessage, setErrorMessage, loadedHistory, setLoadedHistory, warnings, setWarnings };
+  return { handleDragLeave, handleDragOver, handleDrop, isDragging, loadedHistory, setLoadedHistory };
 }

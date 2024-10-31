@@ -2,12 +2,14 @@ import axios from 'axios';
 import { useState, useCallback } from 'react';
 import error2String from '../utils/error2String';
 import useBackendRoute from './useBackendRoute';
+import useAlerts from './useAlerts';
 
 export default function useBackendAPI() {
   const [requestStatus, setRequestStatus] = useState({ status: null, message: '' });
   const [sources, setSources] = useState([]);
   const [entities, setEntities] = useState([]);
   const backendRoute = useBackendRoute();
+  const { addAlert } = useAlerts();
 
   const sendPostRequest = useCallback(async ({ endpoint, requestData, config = {}, source: { output }, modifySource = (s) => s }) => {
     setRequestStatus({ status: 'loading', message: 'loading' });
@@ -18,7 +20,9 @@ export default function useBackendAPI() {
     const fullConfig = { ...config, paramsSerializer: { indexes: null } };
     try {
       const resp = await axios.post(url, requestData, fullConfig);
-
+      if (resp.headers['x-warning']) {
+        addAlert({ message: resp.headers['x-warning'], severity: 'warning' });
+      }
       setRequestStatus({ status: null, message: '' });
 
       const receivedSources = resp.data.sources.map(modifySource);

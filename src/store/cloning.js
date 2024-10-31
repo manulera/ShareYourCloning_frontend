@@ -31,6 +31,9 @@ const initialState = {
   },
   sourcesWithHiddenAncestors: [],
   teselaJsonCache: {},
+  alerts: [
+    { message: 'This is a test alert', severity: 'info' },
+  ],
 };
 
 /* eslint-disable no-param-reassign */
@@ -387,6 +390,15 @@ const reducer = {
   removeFromSourcesWithHiddenAncestors(state, action) {
     const sourceId = action.payload;
     state.sourcesWithHiddenAncestors = state.sourcesWithHiddenAncestors.filter((id) => id !== sourceId);
+  },
+
+  addAlert(state, action) {
+    state.alerts.push(action.payload);
+  },
+
+  removeAlert(state, action) {
+    const message = action.payload;
+    state.alerts = state.alerts.filter((a) => a.message !== message);
   },
 };
 /* eslint-enable no-param-reassign */

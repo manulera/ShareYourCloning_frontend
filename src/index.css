@@ -269,16 +269,6 @@ body.bp3-overlay-open {
     overflow-y: scroll;
 }
 
-.service-status-check-alert {
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 
 div.pcr-unit.MuiAccordion-root:first-of-type {
     border-radius: 1.2em;
@@ -298,4 +288,21 @@ div.pcr-unit.MuiAccordion-root {
 .pcr-unit div.MuiAccordionSummary-content {
     margin-top: .35em;
     margin-bottom: .35em;
+}
+
+/* Vertical align the content and icon in alert banners */
+div.MuiPaper-root[role=alert] {
+    align-items: center;
+}
+
+div#global-error-message-wrapper {
+    position: absolute;
+    top: 0;
+    margin: 1;
+    z-index: 999;
+    max-width: 25em;
+}
+
+div#global-error-message-wrapper > div {
+    margin: 10px;
 }

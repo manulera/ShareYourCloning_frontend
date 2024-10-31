@@ -9,9 +9,7 @@ import CustomTab from './navigation/CustomTab';
 import DataModelDisplayer from './DataModelDisplayer';
 import CloningHistory from './CloningHistory';
 import SequenceTab from './SequenceTab';
-import ExternalServicesStatusCheck from './ExternalServicesStatusCheck';
-
-// import PrimerDesigner from './primers/primer_design/PrimerDesigner';
+import AppAlerts from './AppAlerts';
 
 function ShareYourCloning() {
   const dispatch = useDispatch();
@@ -26,7 +24,7 @@ function ShareYourCloning() {
 
   return (
     <div className="app-container">
-      <ExternalServicesStatusCheck />
+      <AppAlerts />
       <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3, pt: 1 }} id="shareyourcloning-app-tabs">
         <CustomTab label="Cloning" index={0} />
         <CustomTab label="Primers" index={1} />

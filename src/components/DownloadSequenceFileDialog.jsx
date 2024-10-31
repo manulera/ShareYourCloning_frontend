@@ -65,7 +65,6 @@ function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCal
           </RadioGroup>
         </FormControl>
 
-        {/* {errorMessage && <Alert severity="error" sx={{ mt: 2 }}>{errorMessage}</Alert>} */}
       </DialogContent>
       <DialogActions>
         <Button
