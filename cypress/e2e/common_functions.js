@@ -132,7 +132,7 @@ export function loadExample(name) {
   cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
   cy.get('.load-example-dialog .load-example-item').contains(name).click();
   // This is not always the case, but it will work for several cases
-  cy.get('li#source-1').contains('Import a sequence').should('not.exist');
+  cy.get('.share-your-cloning li').contains('Import a sequence').should('not.exist');
 }
 
 export function skipNcbiCheck() {

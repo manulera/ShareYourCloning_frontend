@@ -30,6 +30,10 @@ const examples = [
     title: 'CRISPR HDR',
     link: 'crispr_hdr.json',
   },
+  {
+    title: 'Gateway cloning',
+    link: 'gateway.json',
+  },
 ];
 
 function SelectExampleDialog({ onClose, open }) {
