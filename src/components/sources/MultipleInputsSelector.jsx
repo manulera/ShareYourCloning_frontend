@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
-import { Box, Chip, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, Chip, InputLabel, MenuItem, Select } from '@mui/material';
 import { getIdsOfEntitiesWithoutChildSource } from '../../store/cloning_utils';
 
 function MultipleInputsSelector({ inputEntityIds, onChange, label }) {
@@ -20,7 +20,7 @@ function MultipleInputsSelector({ inputEntityIds, onChange, label }) {
   };
 
   return (
-    <FormControl fullWidth>
+    <>
       <InputLabel id="demo-multiple-chip-label">{label}</InputLabel>
       <Select
         labelId="demo-multiple-chip-label"
@@ -54,7 +54,7 @@ function MultipleInputsSelector({ inputEntityIds, onChange, label }) {
         ))}
 
       </Select>
-    </FormControl>
+    </>
   );
 }
 

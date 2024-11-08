@@ -35,4 +35,5 @@ export const classNameToEndPointMap = {
   HomologousRecombinationSource: 'homologous_recombination',
   CRISPRSource: 'crispr',
   RestrictionAndLigationSource: 'restriction_and_ligation',
+  GatewaySource: 'gateway',
 };

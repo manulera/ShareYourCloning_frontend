@@ -1,13 +1,28 @@
 import React from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
-import { Checkbox, FormControlLabel, TextField } from '@mui/material';
-import { FormControl } from '@mui/base';
+import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, Tooltip } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 import { cloningActions } from '../../store/cloning';
+
+const helpSingleSite = 'Even if input sequences contain multiple att sites '
+  + '(typically 2), a product could be generated where only one site recombines. '
+  + 'Select this option to get those products.';
+
+function LabelWithTooltip({ label, tooltip }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center' }}>
+      <span>{label}</span>
+      <Tooltip title={<span style={{ fontSize: '1.4em' }}>{tooltip}</span>} arrow placement="right">
+        <InfoIcon fontSize="small" color="primary" sx={{ marginLeft: '0.25em' }} />
+      </Tooltip>
+    </div>
+  );
+}
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ source, requestStatus, sendPostRequest }) {
@@ -18,12 +33,23 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const [allowPartialOverlap, setAllowPartialOverlap] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
   const [bluntLigation, setBluntLigation] = React.useState(false);
+  const [gatewaySettings, setGatewaySettings] = React.useState({ greedy: false, reactionType: null, onlyMultiSite: true });
   const [enzymes, setEnzymes] = React.useState([]);
 
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (assemblyType === 'GatewaySource') {
+      setCircularOnly(true);
+    }
+  }, [assemblyType]);
+
   const { updateSource } = cloningActions;
 
-  const preventSubmit = (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0);
+  const preventSubmit = (
+    (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0)
+    || (assemblyType === 'GatewaySource' && gatewaySettings.reactionType === null)
+  );
 
   const flipAllowPartialOverlap = () => {
     setAllowPartialOverlap(!allowPartialOverlap);
@@ -61,6 +87,11 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
         circular_only: circularOnly,
       } };
       sendPostRequest({ endpoint: 'restriction_and_ligation', requestData, config, source });
+    } else if (assemblyType === 'GatewaySource') {
+      requestData.source.greedy = gatewaySettings.greedy;
+      requestData.source.reaction_type = gatewaySettings.reactionType;
+      const config = { params: { circular_only: circularOnly, only_multi_site: gatewaySettings.onlyMultiSite } };
+      sendPostRequest({ endpoint: 'gateway', requestData, config, source });
     } else {
       const config = { params: {
         allow_partial_overlap: allowPartialOverlap,
@@ -82,7 +113,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   return (
     <div className="assembly">
       <form onSubmit={onSubmit}>
-        <FormControl>
+        <FormControl fullWidth>
           <MultipleInputsSelector {...{
             inputEntityIds, onChange: onChangeInput, label: 'Assembly inputs',
           }}
@@ -104,7 +135,40 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
         { (assemblyType === 'RestrictionAndLigationSource') && (
         <EnzymeMultiSelect setEnzymes={setEnzymes} />
         )}
-        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType) && (
+        { (assemblyType === 'GatewaySource') && (
+          <>
+            <FormControl fullWidth>
+              <InputLabel id="gateway-reaction-type-label">Reaction type</InputLabel>
+              <Select
+                labelId="gateway-reaction-type-label"
+                id="gateway-reaction-type"
+                value={gatewaySettings.reactionType || ''}
+                onChange={(e) => setGatewaySettings({ ...gatewaySettings, reactionType: e.target.value })}
+                label="Reaction type"
+              >
+                <MenuItem value="BP">BP</MenuItem>
+                <MenuItem value="LR">LR</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <FormControlLabel
+                control={<Checkbox checked={gatewaySettings.greedy} onChange={() => setGatewaySettings({ ...gatewaySettings, greedy: !gatewaySettings.greedy })} />}
+                label={(
+                  <LabelWithTooltip label="Greedy attP finder" tooltip="Use a more greedy consensus site to find attP sites (might give false positives)" />
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormControlLabel
+                control={<Checkbox checked={!gatewaySettings.onlyMultiSite} onChange={() => setGatewaySettings({ ...gatewaySettings, onlyMultiSite: !gatewaySettings.onlyMultiSite })} />}
+                label={(
+                  <LabelWithTooltip label="Single-site recombination" tooltip={helpSingleSite} />
+                )}
+              />
+            </FormControl>
+          </>
+        )}
+        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource', 'OverlapExtensionPCRLigationSource', 'GatewaySource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
@@ -119,6 +183,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
           <FormControlLabel control={<Checkbox checked={bluntLigation} onChange={flipBluntLigation} />} label="Blunt ligation" />
         </FormControl>
         )}
+
         {!preventSubmit && <SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>}
       </form>
     </div>
