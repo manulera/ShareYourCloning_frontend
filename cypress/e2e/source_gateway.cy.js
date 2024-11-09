@@ -26,9 +26,35 @@ describe('Tests PCR functionality', () => {
     clickMultiSelectOption('Assembly inputs', 'Select all');
     clickMultiSelectOption('Reaction type', 'LR');
     // Toggle Single-site recombination
-    // cy.get('label').contains('Single-site recombination').siblings('div').children('input').click();
-    // cy.get('.share-your-cloning button.submit-backend-api').click();
+    cy.get('span').contains('Single-site recombination').click({ force: true });
+    cy.get('.share-your-cloning button.submit-backend-api').click();
+    // Multiple options should be shown with 4 options
+    cy.get('.multiple-output-selector-navigate', { timeout: 20000 }).contains('4').should('exist');
 
-    // cy.get('.share-your-cloning li').contains('Gateway BP reaction').should('exist');
+    // Toggle again and resubmit to get 2
+    cy.get('span').contains('Single-site recombination').click({ force: true });
+    cy.get('.share-your-cloning button.submit-backend-api').click();
+    cy.get('.multiple-output-selector-navigate', { timeout: 20000 }).contains('2').should('exist');
+    cy.get('button').contains('Choose product').click();
+    cy.get('.share-your-cloning li').contains('Gateway LR reaction', { timeout: 20000 }).should('exist');
+
+    // Try the wrong reaction type
+    deleteSourceByContent('Gateway LR reaction');
+    addSource('GatewaySource');
+    clickMultiSelectOption('Assembly inputs', 'Select all');
+    clickMultiSelectOption('Reaction type', 'BP');
+    cy.get('.share-your-cloning button.submit-backend-api').click();
+    // There should be an error
+    cy.get('.MuiAlert-message').contains('Inputs are not compatible for BP').should('exist');
+
+    // Test that circular only works with select all
+    deleteSourceByContent('Gateway BP reaction');
+    addSource('GatewaySource');
+    clickMultiSelectOption('Assembly inputs', '8');
+    clickMultiSelectOption('Reaction type', 'BP');
+    cy.get('span').contains('Single-site recombination').click({ force: true });
+    cy.get('span').contains('Circular assemblies').click({ force: true });
+    cy.get('.share-your-cloning button.submit-backend-api').click();
+    cy.get('.multiple-output-selector-navigate', { timeout: 20000 }).contains('3').should('exist');
   });
 });

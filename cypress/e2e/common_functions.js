@@ -29,7 +29,7 @@ export function addPrimer(name, seq) {
   cy.get('button.MuiTab-root').contains('Cloning').click();
 }
 
-export function clickMultiSelectOption(label, option, parentSelector = '', constainsSettings = {}) {
+export function clickMultiSelectOption(label, option, parentSelector = 'div.App', constainsSettings = {}) {
   cy.get(parentSelector).contains(label).siblings('div').first()
     .click();
   cy.get('div[role="presentation"]').contains(option, constainsSettings).click();
