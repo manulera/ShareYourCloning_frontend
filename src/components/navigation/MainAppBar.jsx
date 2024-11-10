@@ -112,9 +112,9 @@ function MainAppBar() {
   // If you want to load a particular example on page load, you can do it here.
   // React.useEffect(() => {
   //   const fetchExample = async () => {
-  //     const { data } = await axios.get('examples/homologous_recombination.json');
-  //     loadData(data, false, dispatch, setLoadedFileError, backendRoute('validate'));
-  //     dispatch(setCurrentTab(3));
+  //     const { data } = await axios.get('examples/gateway.json');
+  //     loadData(data, false, dispatch, addAlert, backendRoute('validate'));
+  //     // dispatch(setCurrentTab(3));
   //     // 500 ms timeout
   //     setTimeout(() => {
   //       dispatch(setMainSequenceId(2));

@@ -49,6 +49,7 @@ function SourceTypeSelector({ source }) {
     options.push(<MenuItem key="CRISPRSource" value="CRISPRSource">CRISPR</MenuItem>);
     options.push(<MenuItem key="RestrictionAndLigationSource" value="RestrictionAndLigationSource">Restriction + ligation / Golden Gate</MenuItem>);
     options.push(<MenuItem key="OverlapExtensionPCRLigationSource" value="OverlapExtensionPCRLigationSource">Join overlap extension PCR fragments</MenuItem>);
+    options.push(<MenuItem key="GatewaySource" value="GatewaySource">Gateway</MenuItem>);
   }
 
   return (

@@ -32,7 +32,7 @@ function MultipleOutputsSelector({ sources, entities, sourceId, onFragmentChosen
 
   return (
     <div className="multiple-output-selector">
-      <div>
+      <div className="multiple-output-selector-navigate">
         <IconButton onClick={decreaseSelectedOutput} type="button" sx={{ height: 'fit-content' }}>
           <ForwardIcon sx={{ rotate: '180deg' }} />
         </IconButton>

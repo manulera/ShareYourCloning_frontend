@@ -76,6 +76,18 @@ function RepositoryIdMessage({ source }) {
   );
 }
 
+function GatewayMessage({ source }) {
+  return (
+    <>
+      Gateway
+      {' '}
+      {source.reaction_type}
+      {' '}
+      reaction
+    </>
+  );
+}
+
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   const primers = useSelector((state) => state.cloning.primers, shallowEqual);
@@ -122,6 +134,8 @@ function FinishedSource({ sourceId }) {
     case 'EuroscarfSource': message = <EuroscarfMessage source={source} />;
       break;
     case 'SnapGenePlasmidSource': message = <SnapGenePlasmidMessage source={source} />;
+      break;
+    case 'GatewaySource': message = <GatewayMessage source={source} />;
       break;
     case 'GenomeCoordinatesSource':
       message = (
