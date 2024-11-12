@@ -46,6 +46,10 @@ export function usePrimerDesign(designType, sequenceIds) {
     return 'Select a region (not a single position) to amplify';
   };
 
+  const setRoi = (index, roi) => {
+    setRois((c) => changeValueAtIndex(c, index, roi));
+  };
+
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue < sequenceIds.length) {
@@ -144,5 +148,5 @@ export function usePrimerDesign(designType, sequenceIds) {
     }
   };
 
-  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion, selectedTab, onTabChange, setSequenceProduct, setSelectedTab };
+  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion, selectedTab, onTabChange, setSequenceProduct, setSelectedTab, setRoi };
 }

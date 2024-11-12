@@ -18,6 +18,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const assemblyType = source.type;
   const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const inputContainsTemplates = inputEntities.some((entity) => entity.type === 'TemplateSequence');
   const [minimalHomology, setMinimalHomology] = React.useState(20);
   const [allowPartialOverlap, setAllowPartialOverlap] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
@@ -33,11 +34,18 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
     }
   }, [assemblyType]);
 
+  React.useEffect(() => {
+    if (assemblyType === 'GatewaySource' && source.reaction_type) {
+      setGatewaySettings({ ...gatewaySettings, reactionType: source.reaction_type });
+    }
+  }, [source]);
+
   const { updateSource } = cloningActions;
 
   const preventSubmit = (
     (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0)
     || (assemblyType === 'GatewaySource' && gatewaySettings.reactionType === null)
+    || inputContainsTemplates
   );
 
   const flipAllowPartialOverlap = () => {
