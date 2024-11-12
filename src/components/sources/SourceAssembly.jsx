@@ -1,34 +1,24 @@
 import React from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
 import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, Tooltip } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 import { cloningActions } from '../../store/cloning';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 
 const helpSingleSite = 'Even if input sequences contain multiple att sites '
   + '(typically 2), a product could be generated where only one site recombines. '
   + 'Select this option to get those products.';
-
-function LabelWithTooltip({ label, tooltip }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <span>{label}</span>
-      <Tooltip title={<span style={{ fontSize: '1.4em' }}>{tooltip}</span>} arrow placement="right">
-        <InfoIcon fontSize="small" color="primary" sx={{ marginLeft: '0.25em' }} />
-      </Tooltip>
-    </div>
-  );
-}
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ source, requestStatus, sendPostRequest }) {
   const assemblyType = source.type;
   const { id: sourceId, input: inputEntityIds } = source;
   const inputEntities = useSelector((state) => getInputEntitiesFromSourceId(state, sourceId), shallowEqual);
+  const inputContainsTemplates = inputEntities.some((entity) => entity.type === 'TemplateSequence');
   const [minimalHomology, setMinimalHomology] = React.useState(20);
   const [allowPartialOverlap, setAllowPartialOverlap] = React.useState(false);
   const [circularOnly, setCircularOnly] = React.useState(false);
@@ -44,11 +34,18 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
     }
   }, [assemblyType]);
 
+  React.useEffect(() => {
+    if (assemblyType === 'GatewaySource' && source.reaction_type) {
+      setGatewaySettings({ ...gatewaySettings, reactionType: source.reaction_type });
+    }
+  }, [source]);
+
   const { updateSource } = cloningActions;
 
   const preventSubmit = (
     (assemblyType === 'RestrictionAndLigationSource' && enzymes.length === 0)
     || (assemblyType === 'GatewaySource' && gatewaySettings.reactionType === null)
+    || inputContainsTemplates
   );
 
   const flipAllowPartialOverlap = () => {
