@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Button, FormControl, TextField } from '@mui/material';
+import { Button, FormControl, InputAdornment, TextField } from '@mui/material';
 
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
@@ -100,10 +100,14 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
         />
         <FormControl fullWidth>
           <TextField
-            label="Minimal annealing length (in bp)"
+            label="Minimal annealing length"
             inputRef={minimalAnnealingRef}
             type="number"
             defaultValue={14}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">bp</InputAdornment>,
+              sx: { '& input': { textAlign: 'center' } },
+            }}
           />
         </FormControl>
         {isPcr && (
@@ -113,6 +117,9 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
               inputRef={allowedMismatchesRef}
               type="number"
               defaultValue={0}
+              InputProps={{
+                sx: { '& input': { textAlign: 'center' } },
+              }}
             />
           </FormControl>
         )}

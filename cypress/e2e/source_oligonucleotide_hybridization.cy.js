@@ -48,7 +48,7 @@ describe('Tests oligo hybridization source', () => {
     cy.get('.MuiAlert-message').contains('No pair of annealing oligos');
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');
-    setInputValue('Minimal annealing length (in bp)', '40', 'li#source-1');
+    setInputValue('Minimal annealing length', '40', 'li#source-1');
     cy.get('button').contains('Perform hybridization').click();
     cy.get('.MuiAlert-message').contains('No pair of annealing oligos');
   });
@@ -59,7 +59,7 @@ describe('Tests oligo hybridization source', () => {
     clickMultiSelectOption('Forward primer', 'fwd-hyb', 'li#source-1');
     clickMultiSelectOption('Reverse primer', 'rvs-hyb', 'li#source-1');
 
-    setInputValue('Minimal annealing length (in bp)', '8', 'li#source-1');
+    setInputValue('Minimal annealing length', '8', 'li#source-1');
     cy.get('button').contains('Perform hybridization').click();
     cy.get('li#source-1').contains('50 bps', { timeout: 20000 });
     clickSequenceOutputArrow('li#source-1');
