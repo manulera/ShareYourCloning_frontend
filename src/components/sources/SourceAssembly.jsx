@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
-import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, Tooltip } from '@mui/material';
+import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, Tooltip, InputAdornment } from '@mui/material';
 import InfoIcon from '@mui/icons-material/Info';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
@@ -121,14 +121,17 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
         </FormControl>
         { ['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType) && (
         // I don't really understand why fullWidth is required here
-        <FormControl>
+        <FormControl fullWidth>
           <TextField
-            fullWidth
-            label="Minimal homology length (in bp)"
+            label="Minimal homology length"
             value={minimalHomology}
             onChange={(e) => { setMinimalHomology(e.target.value); }}
             type="number"
             defaultValue={20}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">bp</InputAdornment>,
+              sx: { '& input': { textAlign: 'center' } },
+            }}
           />
         </FormControl>
         )}

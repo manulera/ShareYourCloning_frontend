@@ -67,7 +67,7 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
       }
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#source-5 .multiple-output-selector', { timeOut: 2000 }).should('exist');
-      setInputValue('Minimal homology length (in bp)', '80', 'li#source-5');
+      setInputValue('Minimal homology length', '80', 'li#source-5');
       cy.get('li#source-5 button.submit-backend-api').click();
       cy.get('li#source-5 .MuiAlert-message', { timeOut: 2000 }).should('exist');
       deleteSourceById(5);

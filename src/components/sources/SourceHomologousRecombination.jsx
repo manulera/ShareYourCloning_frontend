@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { FormControl, TextField } from '@mui/material';
+import { FormControl, InputAdornment, TextField } from '@mui/material';
 import { isEqual } from 'lodash-es';
 import SingleInputSelector from './SingleInputSelector';
 import { cloningActions } from '../../store/cloning';
@@ -83,10 +83,14 @@ function SourceHomologousRecombination({ source, requestStatus, sendPostRequest 
         </FormControl>
         <FormControl fullWidth>
           <TextField
-            label="Minimal homology length (in bp)"
+            label="Minimal homology length"
             inputRef={minimalHomologyRef}
             type="number"
             defaultValue={40}
+            InputProps={{
+              endAdornment: <InputAdornment position="end">bp</InputAdornment>,
+              sx: { '& input': { textAlign: 'center' } },
+            }}
           />
         </FormControl>
         {isCrispr && (<MultiplePrimerSelector {...{ onChange: setSelectedPrimers, label: 'Select gRNAs (from primers)' }} />)}
