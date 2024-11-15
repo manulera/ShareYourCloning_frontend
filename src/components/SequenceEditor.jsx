@@ -24,11 +24,9 @@ function SequenceEditor({ entityId }) {
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, entityId), isEqual);
   const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, entityId), isEqual);
   const seq = { ...useSelector((state) => state.cloning.teselaJsonCache[entityId], isEqual) };
-  // Filter out features of type "source"
-  seq.features = seq.features.filter((f) => f.type !== 'source');
 
   // Make a copy
-  const seqCopy = structuredClone(seq);
+  const seqCopy = React.useMemo(() => structuredClone(seq), [seq]);
   // Filter out features of type "source"
   seqCopy.features = seqCopy.features.filter((f) => f.type !== 'source');
   seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
@@ -95,7 +93,7 @@ function SequenceEditor({ entityId }) {
   return (
     <div>
       <SimpleCircularOrLinearView {...{
-        sequenceData: seq,
+        sequenceData: seqCopy,
         editorName,
         height: seq.circular ? null : 'auto',
         withCaretEnabled: true,
