@@ -47,7 +47,7 @@ jobs:
             manulera/shareyourcloningfrontend:${{ github.ref_name }}-syc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_URL=/syc/
+            BASE_URL=/shareyourcloning/
             COMMIT_SHA=${{ github.sha }}
             VERSION=${{ github.ref_name }}
 
