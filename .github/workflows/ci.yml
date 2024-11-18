@@ -117,5 +117,5 @@ jobs:
           tags: manulera/shareyourcloningfrontend:latest-syc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_URL=/syc/
+            BASE_URL=/shareyourcloning/
             COMMIT_SHA=${{ github.sha }}
