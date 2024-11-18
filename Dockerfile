@@ -18,11 +18,10 @@ RUN yarn build --base "$BASE_URL"
 FROM node:18-alpine
 WORKDIR /build
 COPY --from=builder /app/build .
-RUN npm install http-server -g
+RUN npm install http-server mime@4 -g
 
-# Install curl (get mime.types) and envsubst (to to create config.json from config.env.json)
-RUN apk add --no-cache curl envsubst
-RUN curl https://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types > mime.types
+# Install envsubst (to create config.json from config.env.json)
+RUN apk add --no-cache envsubst
 COPY ./docker_entrypoint.sh /build/docker_entrypoint.sh
 ENV BACKEND_URL=http://127.0.0.1:8000
 CMD ["sh", "docker_entrypoint.sh"]
