@@ -306,3 +306,21 @@ div#global-error-message-wrapper {
 div#global-error-message-wrapper > div {
     margin: 10px;
 }
+
+
+/* TODO:
+ * Until we find a way to stack notification alerts
+ * we use classes with fixed absolute position
+ */
+
+.notification-alert.import-primer-invalid {
+    top: 5em;
+}
+
+.notification-alert.import-primer-existing {
+    top: 9em;
+}
+
+.notification-alert.import-primer-success {
+    top: 13em;
+}

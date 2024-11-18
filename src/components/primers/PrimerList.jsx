@@ -84,11 +84,12 @@ function PrimerList() {
           existingNames={primers.map((p) => p.name)}
         />
         )) || (
-          <div>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <Button
             variant="contained"
             onClick={switchAddingPrimer}
             size="small"
+            style={{ marginBottom: '10px' }} // Add margin for spacing
           >
             Add Primer
           </Button>
