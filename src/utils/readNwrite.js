@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
-import { genbankToJson, jsonToFasta } from '@teselagen/bio-parsers';
+import { genbankToJson, jsonToFasta, jsonToGenbank } from '@teselagen/bio-parsers';
 import { batch } from 'react-redux';
 import { cloneDeep } from 'lodash-es';
 import { cloningActions } from '../store/cloning';
@@ -265,14 +265,14 @@ export const loadData = async (newState, isTemplate, dispatch, addAlert, url) =>
   });
 };
 
-export const downloadSequence = (fileName, entity) => {
-  if (entity === undefined) {
+export const downloadSequence = (fileName, sequenceData) => {
+  if (sequenceData === undefined) {
     return;
   }
   if (fileName.endsWith('.gb')) {
-    downloadTextFile(entity.file_content, fileName);
+    downloadTextFile(jsonToGenbank(sequenceData), fileName);
   } else if (fileName.endsWith('.fasta')) {
-    downloadTextFile(jsonToFasta(genbankToJson(entity.file_content)[0].parsedSequence), fileName);
+    downloadTextFile(jsonToFasta(sequenceData), fileName);
   }
 };
 
