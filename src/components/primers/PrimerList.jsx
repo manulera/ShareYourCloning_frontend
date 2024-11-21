@@ -93,7 +93,7 @@ function PrimerList() {
           >
             Add Primer
           </Button>
-          <ImportPrimersButton/>
+          <ImportPrimersButton addPrimer={addPrimer}/>
           </div>
         )}
       </div>

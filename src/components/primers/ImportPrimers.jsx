@@ -4,16 +4,14 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Alert from '@mui/material/Alert'; // Import Alert component
 import HelpIcon from '@mui/icons-material/Help'; // Import MUI Help icon
-import { primersActions } from '../../store/primers';
-import { stringIsNotDNA } from './validators';
+import { stringIsNotDNA } from '../../store/cloning_utils';
 
 //TODO: refactor handleChange to use functionb primerFromTsv and avoid repetition
 //import { primerFromTsv } from '../../utils/fileParsers';
 
-function ImportPrimersButton() {
-  const primers = useSelector((state) => state.primers.primers, shallowEqual);
+function ImportPrimersButton({ addPrimer }) {
+  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
   const dispatch = useDispatch();
-  const { addPrimer: addAction } = primersActions;
   const existingNames = primers.map((p) => p.name);
 
   // Alert timer handling
@@ -81,7 +79,7 @@ function ImportPrimersButton() {
           errorPrimerNamesInvalid.push(obj.name);
         } else {
           validPrimerNames.push(obj.name);
-          dispatch(addAction(obj));
+          addPrimer(obj); // Use the passed addPrimer function
         }
       });
 

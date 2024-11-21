@@ -313,6 +313,16 @@ div#global-error-message-wrapper > div {
  * we use classes with fixed absolute position
  */
 
+.notification-alert {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .notification-alert.import-primer-invalid {
     top: 5em;
 }
@@ -324,3 +334,4 @@ div#global-error-message-wrapper > div {
 .notification-alert.import-primer-success {
     top: 13em;
 }
+
