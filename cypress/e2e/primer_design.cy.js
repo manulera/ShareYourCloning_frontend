@@ -1,4 +1,4 @@
-import { addSource, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, changeTab, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
@@ -283,6 +283,32 @@ describe('Test primer designer functionality', () => {
     cy.contains('li', 'PCR with primers pREP42-MCS+_fwd and pREP42-MCS+_rvs').should('exist');
     cy.contains('li', 'PCR with primers NC_003424_fwd and NC_003424_rvs').should('exist');
     cy.contains('li', 'Gibson assembly').should('exist');
+  });
+
+  it('In-Fusion primer design', () => {
+    loadExample('Gibson assembly');
+
+    // Delete both sources that say "PCR with primers"
+    deleteSourceByContent('PCR with primers');
+    deleteSourceByContent('PCR with primers');
+    addSource('PCRSource');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'In-Fusion', 'li');
+    clickMultiSelectOption('Input sequences', '4', 'li');
+
+    cy.get('button').contains('Design primers').click();
+
+    // We should be now in the Sequence tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+
+    // There should be three tabs: Seq 2, Seq 4 and Other settings (if we get here, the rest is the same as Gibson assembly)
+    cy.get('.main-sequence-editor button.MuiTab-root').should('have.length', 3);
+
+    // Double-check that the right source was created
+    changeTab('Cloning');
+    cy.get('.share-your-cloning li').contains('In-Fusion').should('exist');
   });
 
   it('Restriction ligation primer design', () => {

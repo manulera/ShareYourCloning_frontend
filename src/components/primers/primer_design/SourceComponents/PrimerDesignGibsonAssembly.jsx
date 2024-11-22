@@ -5,7 +5,7 @@ import MultipleInputsSelector from '../../../sources/MultipleInputsSelector';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 
-function PrimerDesignGibsonAssembly({ source }) {
+function PrimerDesignGibsonAssembly({ source, assemblyType }) {
   const [targets, setTargets] = React.useState(source.input);
 
   const onInputChange = (newInput) => {
@@ -31,7 +31,7 @@ function PrimerDesignGibsonAssembly({ source }) {
     batch(() => {
     // Slice from the second on
       const newPCRTemplates = targets.slice(1);
-      dispatch(addPCRsAndSubsequentSourcesForAssembly({ sourceId: source.id, newEntity, templateIds: newPCRTemplates, sourceType: 'GibsonAssemblySource' }));
+      dispatch(addPCRsAndSubsequentSourcesForAssembly({ sourceId: source.id, newEntity, templateIds: newPCRTemplates, sourceType: assemblyType }));
       dispatch(setMainSequenceId(source.input[0]));
       updateStoreEditor('mainEditor', source.input[0]);
       dispatch(setCurrentTab(3));
