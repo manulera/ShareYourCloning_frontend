@@ -1,24 +1,26 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, TextField } from '@mui/material';
 import React from 'react';
-import { useDispatch, useSelector, useStore } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import { downloadSequence, exportSubStateThunk } from '../utils/readNwrite';
+import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
 
 // You can override the downloadSequence function by passing a downloadCallback that takes the fileName and entity as arguments
 function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCallback }) {
   const [fileName, setFileName] = React.useState('');
   const [extension, setExtension] = React.useState('.gb');
-  const entity = useSelector(({ cloning }) => cloning.entities.find((e) => e.id === id), isEqual);
-  const store = useStore();
+  const sequenceData = useSelector(({ cloning }) => cloning.teselaJsonCache[id], isEqual);
+  const seqCopy = structuredClone(sequenceData);
+  const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, id), isEqual);
+  const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, id), isEqual);
+  seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    if (entity) {
-      const { cloning } = store.getState();
-      const sequenceData = cloning.teselaJsonCache[id];
+    if (sequenceData) {
       setFileName(sequenceData.name);
     }
-  }, [entity]);
+  }, [sequenceData]);
 
   return (
     <Dialog
@@ -30,11 +32,11 @@ function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCal
           event.preventDefault();
           setDialogOpen(false);
           if (downloadCallback) {
-            downloadCallback(fileName + extension, entity);
+            downloadCallback(fileName + extension, seqCopy);
           } else if (extension === '.json') {
-            dispatch(exportSubStateThunk(fileName + extension, entity.id));
+            dispatch(exportSubStateThunk(fileName + extension, id));
           } else {
-            downloadSequence(fileName + extension, entity);
+            downloadSequence(fileName + extension, seqCopy);
           }
         },
       }}

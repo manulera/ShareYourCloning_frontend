@@ -1,7 +1,6 @@
 import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
 import React from 'react';
 
-// You can override the downloadSequence function by passing a downloadCallback that takes the fileName and entity as arguments
 function VerifyDeleteDialog({ dialogOpen, setDialogOpen, onClickDelete }) {
   return (
     <Dialog
