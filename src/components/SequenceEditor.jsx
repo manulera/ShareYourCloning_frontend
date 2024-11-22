@@ -29,7 +29,11 @@ function SequenceEditor({ entityId }) {
   const seqCopy = React.useMemo(() => structuredClone(seq), [seq]);
   // Filter out features of type "source"
   seqCopy.features = seqCopy.features.filter((f) => f.type !== 'source');
-  seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
+  // If the primer has been already added to the template, we don't add it again
+  const pcrPrimers2Include = pcrPrimers.filter((p) => !seqCopy.primers.some(
+    (p2) => p2.name === p.name && p2.start === p.start && p2.end === p.end,
+  ));
+  seqCopy.primers = [...seqCopy.primers, ...pcrPrimers2Include, ...linkedPrimers];
   const parentSource = useSelector((state) => state.cloning.sources.find((source) => source.output === entityId), isEqual);
   const stateSelectedRegion = useSelector((state) => state.cloning.selectedRegions.find((r) => r.id === entityId)?.selectedRegion, isEqual);
   const parentSequenceData = useSelector((state) => parentSource.input.map((id) => state.cloning.teselaJsonCache[id]), isEqual);
