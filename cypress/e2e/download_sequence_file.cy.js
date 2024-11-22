@@ -15,8 +15,25 @@ describe('Test download sequence file', () => {
     // Download file as gb
     cy.get('.MuiDialogActions-root button').contains('Save file').click();
     cy.task('readFileMaybe', 'cypress/downloads/example.gb').then((fileContent) => {
-      expect(fileContent).to.include('LOCUS       pFA6a-5FLAG-hphMX6      4531 bp');
+      expect(fileContent).to.include('LOCUS       pFA6a-5FLAG-hphMX6');
+      expect(fileContent).to.include('4531 bp');
+      // The primers are included in the file
+      expect(fileContent).to.include('/label="fwd"');
+      expect(fileContent).to.include('/label="rvs"');
     });
+    // Also the PCR product contains primers
+    cy.get('li#sequence-4 svg[data-testid="DownloadIcon"]').first().click();
+    setInputValue('File name', 'example2', '.MuiDialogContent-root');
+    // Download file as gb
+    cy.get('.MuiDialogActions-root button').contains('Save file').click();
+    cy.task('readFileMaybe', 'cypress/downloads/example2.gb').then((fileContent) => {
+      expect(fileContent).to.include('LOCUS       pcr_product');
+      expect(fileContent).to.include('2233 bp');
+      // The primers are included in the file
+      expect(fileContent).to.include('/label="fwd"');
+      expect(fileContent).to.include('/label="rvs"');
+    });
+
     // Download file as fasta
     cy.get('li#sequence-2 svg[data-testid="DownloadIcon"]').click();
     setInputValue('File name', 'example', '.MuiDialogContent-root');
