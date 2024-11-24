@@ -5,6 +5,7 @@ import PrimerForm from './PrimerForm';
 import PrimerTableRow from './PrimerTableRow';
 import './PrimerList.css';
 import { cloningActions } from '../../store/cloning';
+import { ImportPrimersButton } from './import_primers';
 
 function getUsedPrimerIds(sources) {
   const forPcr = sources
@@ -19,7 +20,6 @@ function getUsedPrimerIds(sources) {
 
   return forPcr.concat(forHybridization).concat(forCRISPR);
 }
-import ImportPrimersButton from './ImportPrimers';
 
 function PrimerList() {
   const primers = useSelector((state) => state.cloning.primers, shallowEqual);
