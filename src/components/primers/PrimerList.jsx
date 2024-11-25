@@ -5,7 +5,7 @@ import PrimerForm from './PrimerForm';
 import PrimerTableRow from './PrimerTableRow';
 import './PrimerList.css';
 import { cloningActions } from '../../store/cloning';
-import { ImportPrimersButton } from './import_primers';
+import ImportPrimersButton from './import_primers/ImportPrimersButton';
 
 function getUsedPrimerIds(sources) {
   const forPcr = sources
@@ -84,12 +84,10 @@ function PrimerList() {
           existingNames={primers.map((p) => p.name)}
         />
         )) || (
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
             <Button
               variant="contained"
               onClick={switchAddingPrimer}
-              size="small"
-              style={{ marginBottom: '10px' }}
             >
               Add Primer
             </Button>
