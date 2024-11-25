@@ -48,7 +48,7 @@ function PrimerDesignSourceForm({ source }) {
           <MenuItem value="crispr">CRISPR</MenuItem>
           <MenuItem value="GibsonAssemblySource">Gibson Assembly</MenuItem>
           <MenuItem value="InFusionSource">In-Fusion</MenuItem>
-          <MenuItem value="restriction_and_ligation">Restriction and Ligation</MenuItem>
+          <MenuItem value="restriction_ligation">Restriction and Ligation</MenuItem>
         </Select>
       </FormControl>
       {['homologous_recombination', 'crispr'].includes(primerDesignType)
