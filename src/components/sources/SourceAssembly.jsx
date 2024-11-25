@@ -1,28 +1,17 @@
 import React from 'react';
 import { useSelector, shallowEqual, useDispatch } from 'react-redux';
-import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, Tooltip, InputAdornment } from '@mui/material';
-import InfoIcon from '@mui/icons-material/Info';
+import { Checkbox, FormControlLabel, InputLabel, MenuItem, Select, TextField, FormControl, InputAdornment } from '@mui/material';
 import MultipleInputsSelector from './MultipleInputsSelector';
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import EnzymeMultiSelect from '../form/EnzymeMultiSelect';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { classNameToEndPointMap } from '../../utils/sourceFunctions';
 import { cloningActions } from '../../store/cloning';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 
 const helpSingleSite = 'Even if input sequences contain multiple att sites '
   + '(typically 2), a product could be generated where only one site recombines. '
   + 'Select this option to get those products.';
-
-function LabelWithTooltip({ label, tooltip }) {
-  return (
-    <div style={{ display: 'flex', alignItems: 'center' }}>
-      <span>{label}</span>
-      <Tooltip title={<span style={{ fontSize: '1.4em' }}>{tooltip}</span>} arrow placement="right">
-        <InfoIcon fontSize="small" color="primary" sx={{ marginLeft: '0.25em' }} />
-      </Tooltip>
-    </div>
-  );
-}
 
 // A component representing the ligation or gibson assembly of several fragments
 function SourceAssembly({ source, requestStatus, sendPostRequest }) {

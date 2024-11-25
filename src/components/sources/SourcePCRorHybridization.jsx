@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { Button, FormControl, InputAdornment, TextField } from '@mui/material';
+import { Button, Checkbox, FormControl, FormControlLabel, InputAdornment, TextField } from '@mui/material';
 
 import { getInputEntitiesFromSourceId } from '../../store/cloning_utils';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
@@ -8,6 +8,7 @@ import PCRUnitForm from './PCRUnitForm';
 import PrimerDesignSourceForm from '../primers/primer_design/SourceComponents/PrimerDesignSourceForm';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 
 function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   // Represents a PCR if inputs != [], else is a oligo hybridization
@@ -25,6 +26,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
   const [forwardPrimerId, setForwardPrimerId] = React.useState('');
   const [reversePrimerId, setReversePrimerId] = React.useState('');
   const [designingPrimers, setDesigningPrimers] = React.useState(false);
+  const [addPrimerFeatures, setAddPrimerFeatures] = React.useState(false);
 
   const minimalAnnealingRef = React.useRef(null);
   const allowedMismatchesRef = React.useRef(null);
@@ -34,7 +36,8 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
     if (source.reverse_primer) { setReversePrimerId(source.reverse_primer); }
     if (source.forward_oligo) { setForwardPrimerId(source.forward_oligo); }
     if (source.reverse_oligo) { setReversePrimerId(source.reverse_oligo); }
-  }, [source.forward_oligo, source.reverse_oligo, source.forward_primer, source.reverse_primer]);
+    if (source.add_primer_annotations) { setAddPrimerFeatures(source.add_primer_annotations); }
+  }, [source.forward_oligo, source.reverse_oligo, source.forward_primer, source.reverse_primer, source.add_primer_annotations]);
 
   const onSubmit = (event) => {
     event.preventDefault();
@@ -55,6 +58,7 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
         minimal_annealing: minimalAnnealingRef.current.value,
         allowed_mismatches: allowedMismatchesRef.current.value,
       } };
+      requestData.source.add_primer_features = addPrimerFeatures;
       sendPostRequest({ endpoint: 'pcr', requestData, config, source });
     }
   };
@@ -111,17 +115,27 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
           />
         </FormControl>
         {isPcr && (
-          <FormControl fullWidth>
-            <TextField
-              label="Mismatches allowed"
-              inputRef={allowedMismatchesRef}
-              type="number"
-              defaultValue={0}
-              InputProps={{
-                sx: { '& input': { textAlign: 'center' } },
-              }}
-            />
-          </FormControl>
+          <>
+            <FormControl fullWidth>
+              <TextField
+                label="Mismatches allowed"
+                inputRef={allowedMismatchesRef}
+                type="number"
+                defaultValue={0}
+                InputProps={{
+                  sx: { '& input': { textAlign: 'center' } },
+                }}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <FormControlLabel
+                control={<Checkbox checked={addPrimerFeatures} onChange={() => setAddPrimerFeatures(!addPrimerFeatures)} />}
+                label={(
+                  <LabelWithTooltip label="Add primer features" tooltip="Add features representing the primers to the PCR product" />
+            )}
+              />
+            </FormControl>
+          </>
         )}
         {forwardPrimerId && reversePrimerId && (
           <SubmitButtonBackendAPI requestStatus={requestStatus}>

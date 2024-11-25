@@ -8,7 +8,7 @@ import ExternalServicesStatusCheck from './ExternalServicesStatusCheck';
 function AppAlerts() {
   const { alerts } = useSelector((state) => state.cloning, isEqual);
   const { removeAlert } = useAlerts();
-  console.log(alerts);
+
   return (
     <div id="global-error-message-wrapper">
       {alerts.map((alert) => (<Alert key={alert.message} severity={alert.severity} onClose={() => { removeAlert(alert.message); }}>{alert.message}</Alert>))}

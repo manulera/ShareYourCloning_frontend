@@ -154,3 +154,7 @@ export function skipGoogleSheetErrors() {
     body: '',
   }).as('googleSheetErrors');
 }
+
+export function changeTab(tabName) {
+  cy.get('button.MuiTab-root').contains(tabName).click();
+}
