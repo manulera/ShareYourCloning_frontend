@@ -36,6 +36,17 @@
   font-size: 1.2em;
 }
 
+/* This makes the two first columns narrow and the sequence column wider */
+.primers-table td:first-child {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.primers-table td:nth-child(2) {
+  width: 1%;
+  white-space: nowrap;
+}
+
 .sequence-cell {
   font-family: monospace;
 }
