@@ -4,9 +4,8 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import HelpIcon from '@mui/icons-material/Help'; // Import MUI Help icon
 import useAlerts from '../../../hooks/useAlerts';
+import './styles.css';
 
 import { primerFromTsv } from '../../../utils/fileParsers';
 import PrimersImportTable from './ImportPrimersTable';
@@ -15,7 +14,7 @@ function ImportPrimersButton({ addPrimer }) {
   const { addAlert } = useAlerts();
   const primers = useSelector((state) => state.cloning.primers, shallowEqual);
   const existingNames = primers.map((p) => p.name);
-  
+
   // Ref to the hidden file input element
   const hiddenFileInput = React.useRef(null);
   const [openModal, setOpenModal] = useState(false);
@@ -26,10 +25,10 @@ function ImportPrimersButton({ addPrimer }) {
   const handleUploadClick = () => {
     hiddenFileInput.current.click();
   };
-  
+
   // Function to check if primers are valid and update button state
   const updateImportButtonState = (primers) => {
-    const allInvalid = primers.every(primer => primer.error !== '');
+    const allInvalid = primers.every((primer) => primer.error !== '');
     setImportButtonDisabled(allInvalid);
   };
 
@@ -45,7 +44,7 @@ function ImportPrimersButton({ addPrimer }) {
       console.error('Error processing file:', error);
       if (error.missingHeaders) {
         addAlert({
-          message: `Error parsing columns from primer file`,
+          message: 'Error parsing columns from primer file',
           severity: 'error',
         });
       } else if (error.fileError) {
@@ -59,52 +58,44 @@ function ImportPrimersButton({ addPrimer }) {
   };
 
   return (
-    <div className="import-primers-container">
-      <div className="button-container">
-        <Tooltip title="Please upload a .tsv file with headers 'name' and 'sequence'">
-          <Button
-            onClick={handleUploadClick}
-            variant="contained"
-            size="small"
-          >
-            Upload File
-            <span className="help-icon">
-              <HelpIcon />
-            </span>
-          </Button>
-        </Tooltip>
-      </div>
+    <>
+      <Tooltip arrow title={<span style={{ fontSize: '1.4em' }}>Upload a .tsv file with headers &apos;name&apos; and &apos;sequence&apos;</span>}>
+        <Button
+          onClick={handleUploadClick}
+          variant="contained"
+        >
+          Import from file
+        </Button>
+      </Tooltip>
 
       <input
+        style={{ display: 'none' }}
         type="file"
         ref={hiddenFileInput}
         onChange={handleFileUpload}
-        className="hidden-input"
       />
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box className="modal-content">
-          <Typography variant="h6" component="h2" className="modal-title">
-            Import Primers Preview
-          </Typography>
-          
+        <Box className="import-primers-modal-content">
+          <h2 style={{ textAlign: 'center' }}>Import Primers Preview</h2>
+
           <PrimersImportTable importedPrimers={importedPrimers} />
 
-          <Box className="modal-buttons">
-            <Button 
-              variant="outlined" 
-              color="error" 
+          <Box className="import-primers-modal-buttons">
+            <Button
+              variant="outlined"
+              color="error"
               onClick={() => setOpenModal(false)}
             >
               Cancel
             </Button>
-            <Button 
-              variant="contained" 
+            <Button
+              variant="contained"
               color="primary"
               disabled={importButtonDisabled}
               onClick={() => {
                 let invalidPrimerCount = 0;
-                importedPrimers.forEach(primer => {
+                importedPrimers.forEach((primer) => {
                   if (primer.error === '') {
                     addPrimer(primer);
                     console.log(`Adding primer with name ${primer.name}`);
@@ -124,7 +115,7 @@ function ImportPrimersButton({ addPrimer }) {
           </Box>
         </Box>
       </Modal>
-    </div>
+    </>
   );
 }
 

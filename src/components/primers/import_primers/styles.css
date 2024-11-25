@@ -5,22 +5,7 @@
   margin-top: 10px;
 }
 
-.button-container {
-  display: flex;
-  align-items: center;
-}
-
-.help-icon {
-  margin-left: 5px;
-  cursor: pointer;
-  margin-top: 5px;
-}
-
-.hidden-input {
-  display: none;
-}
-
-.modal-content {
+.import-primers-modal-content {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -35,15 +20,10 @@
   overflow: auto;
 }
 
-.modal-title {
-  margin-bottom: 16px;
-  text-align: center;
-}
-
-.modal-buttons {
+.import-primers-modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 16px;
+  gap: 1em;
 }
 
 .primers-table {
@@ -51,18 +31,19 @@
   margin-bottom: 24px;
 }
 
+.primers-table th {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
 .sequence-cell {
   font-family: monospace;
 }
 
-.status-invalid {
-  color: #d32f2f;
+.primer-add-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2em;
 }
 
-.status-valid {
-  color: #2e7d32;
-}
-
-.status-existing {
-  color: #ed6c02;
-} 

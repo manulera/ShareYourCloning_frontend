@@ -84,7 +84,7 @@ function PrimerList() {
           existingNames={primers.map((p) => p.name)}
         />
         )) || (
-          <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+          <div className="primer-add-container">
             <Button
               variant="contained"
               onClick={switchAddingPrimer}
