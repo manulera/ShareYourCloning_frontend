@@ -85,15 +85,15 @@ function PrimerList() {
         />
         )) || (
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Button
-            variant="contained"
-            onClick={switchAddingPrimer}
-            size="small"
-            style={{ marginBottom: '10px' }} // Add margin for spacing
-          >
-            Add Primer
-          </Button>
-          <ImportPrimersButton addPrimer={addPrimer}/>
+            <Button
+              variant="contained"
+              onClick={switchAddingPrimer}
+              size="small"
+              style={{ marginBottom: '10px' }}
+            >
+              Add Primer
+            </Button>
+            <ImportPrimersButton addPrimer={addPrimer} />
           </div>
         )}
       </div>

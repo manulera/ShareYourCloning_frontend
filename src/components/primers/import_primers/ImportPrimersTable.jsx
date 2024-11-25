@@ -18,11 +18,11 @@ function PrimersImportTable({ importedPrimers }) {
             <TableCell>{primer.name}</TableCell>
             <TableCell className="sequence-cell">{primer.sequence}</TableCell>
             <TableCell align="center">
-              {primer.error === "invalid" ? (
+              {primer.error === 'invalid' ? (
                 <Tooltip title="Invalid DNA sequence" placement="top">
                   <span className="status-invalid">❌</span>
                 </Tooltip>
-              ) : primer.error === "existing" ? (
+              ) : primer.error === 'existing' ? (
                 <Tooltip title="Primer already exists" placement="top">
                   <span className="status-existing">⚠️</span>
                 </Tooltip>
@@ -39,4 +39,4 @@ function PrimersImportTable({ importedPrimers }) {
   );
 }
 
-export default PrimersImportTable; 
+export default PrimersImportTable;

@@ -12,7 +12,6 @@ function AppAlerts() {
     <div id="global-error-message-wrapper">
       {alerts.map((alert) => (<Alert key={alert.message} severity={alert.severity} onClose={() => { removeAlert(alert.message); }}>{alert.message}</Alert>))}
       <ExternalServicesStatusCheck />
-      {/*  */}
     </div>
   );
 }
