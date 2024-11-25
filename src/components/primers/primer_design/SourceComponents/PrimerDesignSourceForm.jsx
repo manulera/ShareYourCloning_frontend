@@ -46,7 +46,8 @@ function PrimerDesignSourceForm({ source }) {
           <MenuItem value="simple_pair">Normal PCR</MenuItem>
           <MenuItem value="homologous_recombination">Homologous Recombination</MenuItem>
           <MenuItem value="crispr">CRISPR</MenuItem>
-          <MenuItem value="gibson_assembly">Gibson Assembly</MenuItem>
+          <MenuItem value="GibsonAssemblySource">Gibson Assembly</MenuItem>
+          <MenuItem value="InFusionSource">In-Fusion</MenuItem>
           <MenuItem value="restriction_ligation">Restriction and Ligation</MenuItem>
         </Select>
       </FormControl>
@@ -54,8 +55,8 @@ function PrimerDesignSourceForm({ source }) {
       && (
         <PrimerDesignHomologousRecombination source={source} primerDesignType={primerDesignType} />
       )}
-      {primerDesignType === 'gibson_assembly' && (
-        <PrimerDesignGibsonAssembly source={source} />
+      {['GibsonAssemblySource', 'InFusionSource'].includes(primerDesignType) && (
+        <PrimerDesignGibsonAssembly source={source} assemblyType={primerDesignType} />
       )}
     </>
 

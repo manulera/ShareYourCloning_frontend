@@ -60,7 +60,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
       source: { id: sourceId, input: inputEntities.map((e) => e.id) },
       sequences: inputEntities,
     };
-    if (['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType)) {
+    if (['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource', 'InFusionSource'].includes(assemblyType)) {
       const config = { params: {
         minimal_homology: minimalHomology,
         circular_only: circularOnly,
@@ -108,7 +108,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
           }}
           />
         </FormControl>
-        { ['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource'].includes(assemblyType) && (
+        { ['GibsonAssemblySource', 'OverlapExtensionPCRLigationSource', 'InFusionSource'].includes(assemblyType) && (
         // I don't really understand why fullWidth is required here
         <FormControl fullWidth>
           <TextField
@@ -160,7 +160,7 @@ function SourceAssembly({ source, requestStatus, sendPostRequest }) {
             </FormControl>
           </>
         )}
-        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource', 'OverlapExtensionPCRLigationSource', 'GatewaySource'].includes(assemblyType) && (
+        { ['RestrictionAndLigationSource', 'GibsonAssemblySource', 'LigationSource', 'OverlapExtensionPCRLigationSource', 'GatewaySource', 'InFusionSource'].includes(assemblyType) && (
           <FormControl fullWidth style={{ textAlign: 'left' }}>
             <FormControlLabel control={<Checkbox checked={circularOnly} onChange={() => setCircularOnly(!circularOnly)} />} label="Circular assemblies only" />
           </FormControl>
