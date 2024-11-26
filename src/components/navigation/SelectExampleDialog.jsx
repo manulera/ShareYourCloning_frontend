@@ -34,6 +34,10 @@ const examples = [
     title: 'Gateway cloning',
     link: 'gateway.json',
   },
+  {
+    title: 'Annotate features with pLannotate',
+    link: 'plannotate.json',
+  },
 ];
 
 function SelectExampleDialog({ onClose, open }) {

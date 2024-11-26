@@ -10,6 +10,7 @@ import SourcePCRorHybridization from './SourcePCRorHybridization';
 import SourceHomologousRecombination from './SourceHomologousRecombination';
 import SourceGenomeRegion from './SourceGenomeRegion';
 import SourceManuallyTyped from './SourceManuallyTyped';
+import SourceAnnotation from './SourceAnnotation';
 import ELabFTWSource from './ELabFTWSource';
 import SourcePolymeraseExtension from './SourcePolymeraseExtension';
 import CollectionSource from './CollectionSource';
@@ -88,6 +89,8 @@ function Source({ sourceId }) {
       specificSource = <CollectionSource {...{ source, requestStatus, sendPostRequest }} />; break;
     case 'CopyEntity':
       specificSource = <SourceCopyEntity {...{ source }} />; break;
+    case 'AnnotationSource':
+      specificSource = <SourceAnnotation {...{ source, requestStatus, sendPostRequest }} />; break;
     default:
       break;
     /* eslint-enable */
