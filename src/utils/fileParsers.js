@@ -1,6 +1,6 @@
 import { stringIsNotDNA } from '../store/cloning_utils';
 
-export const primerFromTsv = async (fileUploaded, existingNames) => {
+export const primersFromTsv = async (fileUploaded, existingNames) => {
   const reader = new FileReader();
 
   return new Promise((resolve, reject) => {

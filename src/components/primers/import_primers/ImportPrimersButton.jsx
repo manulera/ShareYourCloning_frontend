@@ -7,7 +7,7 @@ import Box from '@mui/material/Box';
 import useAlerts from '../../../hooks/useAlerts';
 import './styles.css';
 
-import { primerFromTsv } from '../../../utils/fileParsers';
+import { primersFromTsv } from '../../../utils/fileParsers';
 import PrimersImportTable from './ImportPrimersTable';
 
 function ImportPrimersButton({ addPrimer }) {
@@ -29,7 +29,7 @@ function ImportPrimersButton({ addPrimer }) {
   const handleFileUpload = async (event) => {
     const fileUploaded = event.target.files[0];
     try {
-      const uploadedPrimers = await primerFromTsv(fileUploaded, existingNames);
+      const uploadedPrimers = await primersFromTsv(fileUploaded, existingNames);
       setImportedPrimers(uploadedPrimers);
       setOpenModal(true);
     } catch (error) {
