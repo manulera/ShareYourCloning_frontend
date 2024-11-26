@@ -75,10 +75,7 @@ export default function useDragAndDropFile() {
     e.stopPropagation();
     setIsDragging(false);
 
-    if (e.dataTransfer.files && e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].name.endsWith('.tsv')) {
-      console.log("Importing data from tsv is not implemented yet");
-      // TODO: Reuse code from ImportPrimers.jsx to parse tsv and add primers
-    } else if (e.dataTransfer.files && e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].name.endsWith('.json')) {
+    if (e.dataTransfer.files && e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].name.endsWith('.json')) {
       const reader = new FileReader();
       reader.readAsText(e.dataTransfer.files[0], 'UTF-8');
       reader.onload = (event) => {

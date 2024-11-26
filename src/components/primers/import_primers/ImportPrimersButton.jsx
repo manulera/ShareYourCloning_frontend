@@ -12,24 +12,17 @@ import PrimersImportTable from './ImportPrimersTable';
 
 function ImportPrimersButton({ addPrimer }) {
   const { addAlert } = useAlerts();
-  const primers = useSelector((state) => state.cloning.primers, shallowEqual);
-  const existingNames = primers.map((p) => p.name);
+  const existingNames = useSelector((state) => state.cloning.primers.map((p) => p.name), shallowEqual);
 
   // Ref to the hidden file input element
   const hiddenFileInput = React.useRef(null);
   const [openModal, setOpenModal] = useState(false);
   const [importedPrimers, setImportedPrimers] = useState([]);
-  const [importButtonDisabled, setImportButtonDisabled] = useState(false);
+  const importButtonDisabled = importedPrimers.every((primer) => primer.error !== '');
 
   // Function to simulate click on hidden file input
   const handleUploadClick = () => {
     hiddenFileInput.current.click();
-  };
-
-  // Function to check if primers are valid and update button state
-  const updateImportButtonState = (primers) => {
-    const allInvalid = primers.every((primer) => primer.error !== '');
-    setImportButtonDisabled(allInvalid);
   };
 
   // Function to handle file selection
@@ -38,23 +31,23 @@ function ImportPrimersButton({ addPrimer }) {
     try {
       const uploadedPrimers = await primerFromTsv(fileUploaded, existingNames);
       setImportedPrimers(uploadedPrimers);
-      updateImportButtonState(uploadedPrimers);
       setOpenModal(true);
     } catch (error) {
-      console.error('Error processing file:', error);
-      if (error.missingHeaders) {
-        addAlert({
-          message: 'Error parsing columns from primer file',
-          severity: 'error',
-        });
-      } else if (error.fileError) {
-        addAlert({
-          message: 'Failed to read the uploaded file. Please try again.',
-          severity: 'error',
-        });
-      }
+      addAlert({
+        message: error.message,
+        severity: 'error',
+      });
     }
     event.target.value = null;
+  };
+
+  const handleImportClick = () => {
+    importedPrimers.forEach((primer) => {
+      if (primer.error === '') {
+        addPrimer(primer);
+      }
+    });
+    setOpenModal(false);
   };
 
   return (
@@ -93,22 +86,7 @@ function ImportPrimersButton({ addPrimer }) {
               variant="contained"
               color="primary"
               disabled={importButtonDisabled}
-              onClick={() => {
-                let invalidPrimerCount = 0;
-                importedPrimers.forEach((primer) => {
-                  if (primer.error === '') {
-                    addPrimer(primer);
-                    console.log(`Adding primer with name ${primer.name}`);
-                  } else {
-                    console.log(`Skipping primer with name ${primer.name}`);
-                    invalidPrimerCount++;
-                  }
-                });
-                if (invalidPrimerCount === importedPrimers.length) {
-                  console.log('No valid primers to add');
-                }
-                setOpenModal(false);
-              }}
+              onClick={handleImportClick}
             >
               Import Valid Primers
             </Button>
