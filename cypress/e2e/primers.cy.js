@@ -231,4 +231,67 @@ describe('Tests primer functionality', () => {
     cy.get('.primer-table-container tr').contains('fwd').should('exist');
     cy.get('.primer-table-container tr').contains('gatctcgccataaaagacag').should('exist');
   });
+  it('Can import primers from tsv file', () => {
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/valid.tsv', { force: true });
+    // There should be a table with the primers displayed
+    cy.get('.import-primers-modal-content').should('exist');
+    cy.get('.import-primers-modal-content tbody tr').should('have.length', 2);
+    cy.get('.import-primers-modal-content [data-testid="CheckCircleIcon"]').should('have.length', 2);
+    cy.get('.import-primers-modal-content tbody tr').eq(0).contains('oligo1');
+    cy.get('.import-primers-modal-content tbody tr').eq(0).contains('cagctagctac');
+    cy.get('.import-primers-modal-content tbody tr').eq(1).contains('oligo2');
+    cy.get('.import-primers-modal-content tbody tr').eq(1).contains('cggttagct');
+    // Clicking on Cancel should close the modal and primers should not be added
+    cy.get('.import-primers-modal-content .MuiButtonBase-root').contains('Cancel').click();
+    cy.get('.import-primers-modal-content').should('not.exist');
+    cy.get('.primer-table-container tr').contains('oligo1').should('not.exist');
+    cy.get('.primer-table-container tr').contains('oligo2').should('not.exist');
+    // Import them
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/valid.tsv', { force: true });
+    cy.get('.import-primers-modal-content button').contains('Import').click();
+    cy.get('.primer-table-container tr').contains('oligo1').should('exist');
+    cy.get('.primer-table-container tr').contains('oligo2').should('exist');
+
+    // Import wrong file should show error
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/wrong_extension.txt', { force: true });
+    cy.get('#global-error-message-wrapper').contains('Headers should have').should('exist');
+    // Close the error
+    cy.get('#global-error-message-wrapper button').click();
+
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/wrong_format.tsv', { force: true });
+    cy.get('#global-error-message-wrapper').contains('All lines should have').should('exist');
+
+    // Can import from file with inverted headers
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/inverted_headers.tsv', { force: true });
+    cy.get('.import-primers-modal-content tr').contains('oligo5').should('exist');
+    cy.get('.import-primers-modal-content tr').contains('oligo6').should('exist');
+    cy.get('.import-primers-modal-content button').contains('Import').click();
+    cy.get('.primer-table-container tr').contains('oligo5').should('exist');
+    cy.get('.primer-table-container tr').contains('oligo6').should('exist');
+
+    // Importing the same ones again should have the add button disabled
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/valid.tsv', { force: true });
+    cy.get('.import-primers-modal-content [data-testid="WarningIcon"]').should('have.length', 2);
+    cy.get('.import-primers-modal-content button').contains('Import').should('be.disabled');
+    cy.get('.import-primers-modal-content button').contains('Cancel').click();
+
+    // It's possible to load a valid and an invalid oligo in the same file
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/valid_and_invalid.tsv', { force: true });
+    cy.get('.import-primers-modal-content [data-testid="CheckCircleIcon"]').should('have.length', 1);
+    cy.get('.import-primers-modal-content [data-testid="CancelIcon"]').should('have.length', 1);
+    cy.get('.import-primers-modal-content button').contains('Import').click();
+    cy.get('.primer-table-container tr').contains('good_oligo2').should('exist');
+
+    // Should fail with csv file
+    cy.get('.primer-form-container').contains('Import from file').click();
+    cy.get('.primer-form-container input').selectFile('cypress/test_files/import_oligos/valid.csv', { force: true });
+    cy.get('#global-error-message-wrapper').contains('Headers should have').should('exist');
+  });
 });
