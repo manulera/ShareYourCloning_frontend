@@ -37,4 +37,5 @@ export const classNameToEndPointMap = {
   CRISPRSource: 'crispr',
   RestrictionAndLigationSource: 'restriction_and_ligation',
   GatewaySource: 'gateway',
+  AnnotationSource: 'annotate',
 };

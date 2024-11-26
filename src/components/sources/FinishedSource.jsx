@@ -1,6 +1,8 @@
 import React from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
+import { Button } from '@mui/material';
 import { enzymesInRestrictionEnzymeDigestionSource } from '../../utils/sourceFunctions';
+import PlannotateAnnotationReport from '../annotation/PlannotateAnnotationReport';
 
 // TODO refactor this to use common part
 
@@ -84,6 +86,23 @@ function GatewayMessage({ source }) {
       {source.reaction_type}
       {' '}
       reaction
+    </>
+  );
+}
+
+function PlannotateAnnotationMessage({ source }) {
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  return (
+    <>
+      <div>
+        Annotation from
+        {' '}
+        <a href="https://github.com/mmcguffi/pLannotate" target="_blank" rel="noopener noreferrer">pLannotate</a>
+      </div>
+      <Button onClick={() => setDialogOpen(true)}>
+        See report
+      </Button>
+      <PlannotateAnnotationReport dialogOpen={dialogOpen} setDialogOpen={setDialogOpen} report={source.annotation_report} />
     </>
   );
 }
@@ -187,6 +206,7 @@ function FinishedSource({ sourceId }) {
         </>
       );
       break;
+    case 'AnnotationSource': message = <PlannotateAnnotationMessage source={source} />; break;
     default: message = '';
   }
   return (
