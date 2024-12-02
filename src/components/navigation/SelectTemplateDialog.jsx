@@ -7,7 +7,7 @@ function SelectTemplateDialog({ onClose, open }) {
   const [templates, setTemplates] = React.useState(null);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [error, setError] = React.useState(null);
-  const baseUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/main';
+  const baseUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/master';
 
   // const baseUrl = '';
   React.useEffect(() => {
@@ -93,7 +93,7 @@ function SelectTemplateDialog({ onClose, open }) {
 )}
           />
           <IconButton edge="end" aria-label="submit-button">
-            <Button className="button-hyperlink" variant="contained" color="success" href="https://github.com/genestorian/ShareYourCloning-submission/blob/main/docs/index.md" target="_blank" rel="noopener noreferrer">Create templates</Button>
+            <Button className="button-hyperlink" variant="contained" color="success" href="https://github.com/genestorian/ShareYourCloning-submission/blob/master/docs/index.md" target="_blank" rel="noopener noreferrer">Create templates</Button>
           </IconButton>
 
         </ListItem>
