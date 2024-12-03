@@ -305,6 +305,8 @@ div#global-error-message-wrapper {
 
 div#global-error-message-wrapper > div {
     margin: 10px;
+    /* Allow line breaks in very long strings only when necessary */
+    word-break: break-word;
 }
 
 
@@ -335,3 +337,7 @@ div#global-error-message-wrapper > div {
     top: 13em;
 }
 
+.finished-source {
+    /* Allow line breaks in very long strings only when necessary */
+    word-break: break-word;
+}

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { addHistory } from '../../utils/readNwrite';
 import useBackendRoute from '../../hooks/useBackendRoute';
+import LabelWithTooltip from '../form/LabelWithTooltip';
 
 // A component providing an interface to import a file
 function SourceFile({ source, requestStatus, sendPostRequest }) {
@@ -59,11 +60,14 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="json">JSON (history file)</MenuItem>
         </Select>
       </FormControl>
-      { (fileFormat === 'fasta' || fileFormat === '') && (
-        <FormControl fullWidth>
-          <FormControlLabel control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />} label="Circularize (FASTA only)" />
-        </FormControl>
-      )}
+
+      <FormControl fullWidth>
+        <FormControlLabel
+          control={<Checkbox checked={circularize} onChange={() => setCircularize(!circularize)} />}
+          label={<LabelWithTooltip label="Circularize" tooltip="Make the sequence circular (for GenBank or Snapgene files, it will override the topology indicated in the file)" />}
+        />
+      </FormControl>
+
       {errorMessage && (<Alert sx={{ marginTop: '10px' }} severity="error">{errorMessage}</Alert>)}
       <SubmitButtonBackendAPI
         component="label"

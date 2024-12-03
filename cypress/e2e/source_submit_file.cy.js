@@ -27,17 +27,17 @@ describe('File Source', () => {
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/wrong_content.gb', { force: true });
     cy.get('li#source-1 .MuiAlert-message').contains('Biopython cannot process');
   });
-  it('gives the right error when circularize is checked and file is not fasta', () => {
+  it('allows to circularize non-fasta files', () => {
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#source-1').contains('Circularize').click();
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/ase1.gb', { force: true });
-    cy.get('li#source-1 .MuiAlert-message').contains('is only supported');
+    cy.get('li#sequence-2 svg.circularViewSvg', { timeout: 20000 }).should('exist');
   });
-  it('works when circularize is checked and file is fasta', () => {
+  it('works when circularize is checked and file is multi-fasta', () => {
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#source-1').contains('Circularize').click();
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/dummy_multi_fasta.fasta', { force: true });
-    cy.get('li#source-1 .MuiAlert-message').should('not.exist');
+    cy.get('li#source-1 svg.circularViewSvg', { timeout: 20000 }).should('exist');
   });
   it('allows to specify input format', () => {
     cy.get('.select-source > form > .MuiButtonBase-root').click();
