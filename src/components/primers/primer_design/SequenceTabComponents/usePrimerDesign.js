@@ -140,8 +140,6 @@ export function usePrimerDesign(designType, sequenceIds) {
       setPrimers(newPrimers);
       return false;
     } catch (thrownError) {
-      console.log('requestData', requestData);
-      console.log('params', params);
       const errorMessage = error2String(thrownError);
       setError(errorMessage);
       return true;

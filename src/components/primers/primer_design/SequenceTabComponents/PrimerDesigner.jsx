@@ -13,7 +13,7 @@ import PrimerDesignGatewayBP from './PrimerDesignGatewayBP';
 function PrimerDesigner() {
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
-  const { setMainSequenceId, setSelectedTab } = cloningActions;
+  const { setMainSequenceId } = cloningActions;
 
   const { finalSource, otherInputIds, pcrSources, outputSequences } = useSelector((state) => getPrimerDesignObject(state.cloning), isEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
@@ -22,7 +22,6 @@ function PrimerDesigner() {
   const openPrimerDesigner = () => {
     updateStoreEditor('mainEditor', templateSequencesIds[0]);
     dispatch(setMainSequenceId(templateSequencesIds[0]));
-    setSelectedTab(0);
   };
 
   // Nothing to design

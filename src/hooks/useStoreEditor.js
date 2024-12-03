@@ -6,7 +6,6 @@ export default function useStoreEditor() {
   const store = useStore();
 
   const updateStoreEditor = (editorName, id, selectionLayer = {}) => {
-    console.log('selectionLayer', selectionLayer);
     if (id === null) {
       // if id is null and selectionLayer is empty, clear the sequenceData
       if (Object.keys(selectionLayer).length === 0) {

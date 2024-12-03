@@ -3,6 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Tabs, Tab, Alert, Button, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import { parseFeatureLocation } from '@teselagen/bio-parsers';
+import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
 import TabPanel from './TabPanel';
 import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerSettingsForm from './PrimerSettingsForm';
@@ -16,6 +17,23 @@ import useGatewaySites from '../../../../hooks/useGatewaySites';
 import RetryAlert from '../../../form/RetryAlert';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import OrientationPicker from './OrientationPicker';
+
+const gatewayOverlaps = {
+  1: 'tGTACAAAaaa',
+  2: 'tGTACAAGaaa',
+  3: 'tGTATAATaaa',
+  4: 'tGTATAGAaaa',
+  5: 'tGTATACAaaa',
+};
+
+const knownCombinations = [
+  {
+    sites: ['attP1', 'attP2'],
+    spacers: ['ACAAGTTTGTACAAAAAAGCAGGCTNN', 'ACCACTTTGTACAAGAAAGCTGGGTN'],
+    orientation: [true, false],
+    message: 'Spacers from pDONR™221',
+  },
+];
 
 function SiteSelect({ donorSites, site, setSite, label }) {
   return (
@@ -39,14 +57,6 @@ function SiteSelect({ donorSites, site, setSite, label }) {
     </FormControl>
   );
 }
-
-const gatewayOverlaps = {
-  1: 'tGTACAAAaaa',
-  2: 'tGTACAAGaaa',
-  3: 'tGTATAATaaa',
-  4: 'tGTATAGAaaa',
-  5: 'tGTATACAaaa',
-};
 
 function simulateGatewayBP(templateSequence, donorVectorSequence, leftSite, rightSite, insertionOrientation, spacers) {
   const leftSiteNumber = leftSite.siteName.slice(-1);
@@ -121,11 +131,22 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
     setSequenceProduct(null);
   }, [insertionOrientation, rois, templateSequence, donorVectorSequence, spacers, leftSite, rightSite]);
 
+  React.useEffect(() => {
+    if (leftSite && rightSite) {
+      const leftFormatted = { siteName: leftSite.siteName, forward: leftSite.location.includes('(+)') };
+      const rightFormatted = { siteName: rightSite.siteName, forward: rightSite.location.includes('(+)') };
+      const knownCombination = 
+      const knownCombination = knownCombinations.find(({ sites, orientation }) => isEqual(sites[0], leftFormatted) && isEqual(sites[1], rightFormatted) && orientation.includes(insertionOrientation));
+      if (knownCombination) {
+        setSpacers([knownCombination.fwd, getReverseComplementSequenceString(knownCombination.rvs)]);
+      }
+    }
+  }, [leftSite, rightSite]);
+
   const onSiteSelectLeft = React.useCallback((site) => {
     setLeftSite(site);
     if (rightSite === null || isEqual(rightSite, site)) {
       // Find the first different one
-      console.log('donorSites', donorSites);
       const differentSite = donorSites.find(({ location }) => location !== site.location);
       setRightSite(differentSite);
     }
@@ -139,6 +160,8 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
       setLeftSite(differentSite);
     }
   }, [leftSite]);
+
+  console.log(leftSite, rightSite);
 
   const onPrimerDesign = () => {
 
@@ -193,6 +216,7 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
             circularAssembly={false}
             sequenceNames={templateSequenceNames}
             sequenceIds={pcrSource.input}
+            open
           />
           { rois.every((roi) => roi !== null) && insertionOrientation && primerDesignSettings.valid && (
           <FormControl>
