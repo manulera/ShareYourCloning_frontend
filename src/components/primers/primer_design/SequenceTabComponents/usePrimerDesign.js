@@ -120,7 +120,7 @@ export function usePrimerDesign(designType, sequenceIds) {
         spacers,
       };
     } else if (designType === 'simple_pair') {
-      const [pcrTemplateId] = sequenceIds;
+      const pcrTemplateId = sequenceIds[0];
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),

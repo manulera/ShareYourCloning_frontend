@@ -1,6 +1,6 @@
 import { isEqual } from 'lodash-es';
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { batch, useDispatch, useSelector } from 'react-redux';
 import { Box, Tabs, Tab, Alert, Button, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import { parseFeatureLocation } from '@teselagen/bio-parsers';
 import { getReverseComplementSequenceString as reverseComplement } from '@teselagen/sequence-utils';
@@ -18,6 +18,7 @@ import RetryAlert from '../../../form/RetryAlert';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import OrientationPicker from './OrientationPicker';
 import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipulation';
+import { cloningActions } from '../../../../store/cloning';
 
 const knownCombinations = [
   {
@@ -82,9 +83,11 @@ function ComponentWrapper({ children, requestStatus, retry, donorSites }) {
   return null;
 }
 
+const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
+
 function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
   const [donorSites, setDonorSites] = React.useState([]);
-  const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
+  const [amplificationOrientation, setAmplificationOrientation] = React.useState('forward');
   const [knownCombination, setKnownCombination] = React.useState(null);
   const [spacers, setSpacers] = React.useState(['', '']);
   const [leftSite, setLeftSite] = React.useState(null);
@@ -98,10 +101,11 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
   const donorVectorSequence = useSelector((state) => state.cloning.teselaJsonCache[donorVectorId], isEqual);
   const templateSequence = useSelector((state) => state.cloning.teselaJsonCache[templateSequenceId], isEqual);
 
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('gateway_bp', sequenceIds);
-  const primerDesignSettings = usePrimerDesignSettings({ homologyLength: 80, hybridizationLength: 20, targetTm: 55 });
+  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('simple_pair', sequenceIds);
+  const primerDesignSettings = usePrimerDesignSettings({ homologyLength: null, hybridizationLength: 20, targetTm: 55 });
   const { requestStatus, attemptAgain, sites } = useGatewaySites({ target: donorVectorId, greedy });
   const { updateStoreEditor } = useStoreEditor();
+  const dispatch = useDispatch();
 
   // Update the donor sites when they are loaded
   React.useEffect(() => {
@@ -121,8 +125,8 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
   }, [leftSite, rightSite, donorSites]);
 
   React.useEffect(() => {
-    if (rois[0] !== null && insertionOrientation && spacersAreValid && leftSite && rightSite && knownCombination !== null) {
-      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], [rois[0].selectionLayer], [insertionOrientation], [spacers[0], spacers[1]], false, 'primer tail');
+    if (rois[0] !== null && amplificationOrientation && spacersAreValid && leftSite && rightSite && knownCombination !== null) {
+      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], [rois[0].selectionLayer], [amplificationOrientation], [spacers[0], spacers[1]], false, 'primer tail');
       newSequenceProduct.name = 'PCR product';
       const leftFeature = {
         start: knownCombination.translationFrame[0],
@@ -148,7 +152,7 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
       return;
     }
     setSequenceProduct(null);
-  }, [insertionOrientation, rois, templateSequence, donorVectorSequence, spacers, leftSite, rightSite]);
+  }, [amplificationOrientation, rois, templateSequence, donorVectorSequence, spacers, leftSite, rightSite]);
 
   const checkKnownCombination = React.useCallback((newLeftSite, newRightSite) => {
     if (newLeftSite && newRightSite) {
@@ -198,15 +202,35 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
     checkKnownCombination(leftSite, site);
   }, [leftSite, donorSites]);
 
-  const onPrimerDesign = () => {
-
+  const onPrimerDesign = async () => {
+    const params = {
+      minimal_hybridization_length: primerDesignSettings.hybridizationLength,
+      target_tm: primerDesignSettings.targetTm,
+    };
+    const serverError = await designPrimers(rois, params, [amplificationOrientation], spacers);
+    if (!serverError) {
+      onTabChange(null, 3);
+    }
   };
-  const addPrimers = (primers) => {
 
+  const addPrimers = () => {
+    batch(() => {
+      dispatch(addPrimersToPCRSource({
+        fwdPrimer: primers[0],
+        revPrimer: primers[1],
+        sourceId: pcrSource.id,
+      }));
+      dispatch(setMainSequenceId(null));
+      dispatch(setCurrentTab(0));
+    });
+    setPrimers([]);
+    onTabChange(null, 0);
+    document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
+    updateStoreEditor('mainEditor', null);
   };
 
   // This should not happen in the normal flow, but it can happen if loading state from a file:
-
+  const allowSumbission = rois[0] !== null && amplificationOrientation && primerDesignSettings.valid && spacersAreValid && knownCombination !== null;
   return (
     <ComponentWrapper requestStatus={requestStatus} retry={attemptAgain} donorSites={donorSites}>
       <Box>
@@ -240,9 +264,9 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
           <PrimerSettingsForm {...primerDesignSettings} />
           <Box sx={{ pt: 2 }}>
             <OrientationPicker
-              value={insertionOrientation}
-              onChange={(e) => setInsertionOrientation(e.target.value)}
-              label="Orientation of amplification"
+              value={amplificationOrientation}
+              onChange={(e) => setAmplificationOrientation(e.target.value)}
+              label="Amplification orientation"
               index={0}
             />
           </Box>
@@ -255,7 +279,8 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
             sequenceIds={pcrSource.input}
             open
           />
-          { rois.every((roi) => roi !== null) && insertionOrientation && primerDesignSettings.valid && (
+
+          { allowSumbission && (
           <FormControl>
             <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
           </FormControl>
