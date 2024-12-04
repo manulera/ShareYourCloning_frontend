@@ -3,7 +3,7 @@ import { FormControl, TextField, Box } from '@mui/material';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import CollapsableLabel from './CollapsableLabel';
 
-function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds }) {
+function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds, open = false }) {
   const handleSpacerChange = (index, value) => {
     setSpacers((current) => current.map((spacer, i) => (i === index ? value : spacer)));
   };
@@ -30,7 +30,7 @@ function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly
   };
 
   return (
-    <CollapsableLabel label="Spacer sequences" className="primer-spacer-form">
+    <CollapsableLabel label="Spacer sequences" className="primer-spacer-form" open={open}>
       <Box sx={{ pt: 1, width: '80%', margin: 'auto' }}>
         <Box>
           {spacers.map((spacer, index) => {

@@ -1,4 +1,4 @@
-import { addSource, changeTab, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
@@ -66,7 +66,7 @@ describe('Test primer designer functionality', () => {
 
     // We still should not be able to submit
     cy.get('button.MuiTab-root').contains('Other settings').click();
-    cy.contains('button', 'Design primers').should('exist');
+    cy.contains('.primer-design button', 'Design primers').should('not.exist');
 
     // Go to replaced region tab, and select a single position
     cy.get('button.MuiTab-root').contains('Replaced region').click();
@@ -464,5 +464,145 @@ describe('Test primer designer functionality', () => {
 
     // Check that the PCR was successful
     cy.get('li').contains('PCR with primers seq_2_fwd and seq_2_rvs').should('exist');
+  });
+  it('Gateway BP primer design', () => {
+    loadExample('Gateway');
+    deleteSourceByContent('PCR with primers');
+    addSource('PCRSource');
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Gateway BP reaction', 'li');
+    // No alert is visible (Request is not sent)
+    cy.get('.share-your-cloning div.MuiAlert-standardError').should('not.exist');
+    // Select the wrong donor vector
+    clickMultiSelectOption('Donor vector', '6', 'li');
+    cy.get('.share-your-cloning div.MuiAlert-standardError').contains('At least two').should('exist');
+    // Also shows the att sites present in the wrong donor vector
+    cy.get('.share-your-cloning div.MuiAlert-standardError').contains('attR1').should('exist');
+    // Select the correct donor vector
+    clickMultiSelectOption('Donor vector', '4', 'li');
+    cy.get('button').contains('Design primers').click();
+
+    // We should be on the Sequence tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+    // Go back to the Cloning tab
+    changeTab('Cloning');
+    // Check that the right source was created
+    cy.get('.share-your-cloning li').contains('Gateway').should('exist');
+    // Go back to design primers
+    cy.get('.share-your-cloning button').contains('Design primers').click();
+    // We should be on the Sequence tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+
+    // Click before having selected anything, should show an error
+    cy.get('button').contains('Set from selection').click();
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').contains('You have to select a region in the sequence editor');
+
+    // We should not be able to select a single position in the sequence
+    // Click on the name, that should set a single position selection
+    cy.contains('span', 'NC_000913').click({ force: true });
+    cy.get('button').contains('Set from selection').click();
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').contains('Select a region (not a single position) to amplify');
+
+    cy.get('svg.veRowViewAnnotationPosition title').filter(':contains("Feature (CDS) - lacZ")').first().click({ force: true });
+    cy.get('button').contains('Set from selection').click();
+    cy.get('.main-sequence-editor div.MuiAlert-standardError').should('not.exist');
+
+    // We still should not be able to submit
+    cy.get('button.MuiTab-root').contains('Other settings').click();
+    cy.contains('.primer-design button', 'Design primers').should('not.exist');
+
+    // Select the att sites
+    cy.get('button.MuiTab-root').contains('Replaced region').click();
+    clickMultiSelectOption('Left attP site', 'attP2', '.primer-design');
+    // The other site should have been set to attP1
+    checkInputValue('Right attP site', 'attP1-[569:801](+)', '.primer-design');
+    // There should be an error
+    cy.contains('.primer-design div.MuiAlert-standardError', 'No recommended primer tails found').should('exist');
+
+    // Invert the selection
+    clickMultiSelectOption('Right attP site', 'attP2', '.primer-design');
+    checkInputValue('Left attP site', 'attP1-[569:801](+)', '.primer-design');
+
+    // There should be an info message
+    cy.contains('.primer-design div.MuiAlert-standardInfo', 'Primers tails designed based on pDONR™ 221').should('exist');
+
+    // We still should not be able to submit (there should be Ns in the nucleotide sequences)
+    cy.get('button.MuiTab-root').contains('Other settings').click();
+    cy.contains('.primer-design button', 'Design primers').should('not.exist');
+
+    // Check that spacers contain right values
+    cy.get('.primer-spacer-form input').first().should('have.value', 'GGGGACAAGTTTGTACAAAAAAGCAGGCTNN');
+    cy.get('.primer-spacer-form input').eq(1).should('have.value', 'NACCCAGCTTTCTTGTACAAAGTGGTCCCC');
+
+    // Because there are Ns, there should be an error
+    cy.get('.primer-design p').filter(':contains("Invalid DNA sequence")').should('have.length', 2);
+
+    // Replace the Ns with valid sequences
+    setInputValue('Before', 'GGGGACAAGTTTGTACAAAAAAGCAGGCTAA', '.primer-spacer-form');
+    setInputValue('After', 'TACCCAGCTTTCTTGTACAAAGTGGTCCCC', '.primer-spacer-form');
+
+    // We should be able to submit now
+    cy.get('button').contains('Design primers').should('exist');
+
+    // There should be two primer tails and two translation frames features
+    cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 2);
+    cy.get('.veLabelText').filter(':contains("translation frame")').should('have.length', 2);
+
+    // Check that their coordinates are correct
+    cy.get('.veLabel[title*="primer tail - Start: 1 End: 31"]').should('exist');
+    cy.get('.veLabel[title*="translation frame - Start: 5 End: 31"]').should('exist');
+    cy.get('.veLabel[title*="primer tail - Start: 3107 End: 3136"]').should('exist');
+    cy.get('.veLabel[title*="translation frame - Start: 3107 End: 3130"]').should('exist');
+
+    // Adding an out of frame spacer in the before spacer gives an X incomplete aminoacid
+    cy.get('div.veTabSequenceMap').contains('Sequence Map').click();
+    cy.get('div.mainEditor path.X').should('not.exist');
+    setInputValue('Before', 'GGGGACAAGTTTGTACAAAAAAGCAGGCTAAaa', '.primer-spacer-form');
+    cy.get('div.mainEditor path.X').should('exist');
+    cy.get('div.veTabLinearMap').contains('Linear Map').click();
+    cy.get('.veLabel[title*="translation frame - Start: 5 End: 33"]').should('exist');
+    setInputValue('Before', 'GGGGACAAGTTTGTACAAAAAAGCAGGCTAA', '.primer-spacer-form');
+
+    // Adding an out of frame spacer in the after spacer sequence makes a gap
+
+    // Click on the second primer tail to focus sequence map there
+    cy.get('.veLabelText').filter(':contains("primer tail")').eq(1).click({ force: true });
+
+    cy.get('div.veTabSequenceMap').contains('Sequence Map').click();
+    cy.get('.tg-editor-container').contains('path.X').should('not.exist');
+    setInputValue('After', 'aaTACCCAGCTTTCTTGTACAAAGTGGTCCCC', '.primer-spacer-form');
+    cy.get('.tg-editor-container').contains('path.X').should('not.exist');
+
+    cy.get('div.veTabLinearMap').contains('Linear Map').click();
+    cy.get('.veLabel[title*="translation frame - Start: 3109 End: 3132"]').should('exist');
+    setInputValue('After', 'TACCCAGCTTTCTTGTACAAAGTGGTCCCC', '.primer-spacer-form');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+
+    // We should be on the Results tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Results').should('exist');
+
+    // Check that the names are correct
+    cy.get('.primer-design-form input').first().should('have.value', 'NC_000913_fwd');
+    cy.get('.primer-design-form input').eq(2).should('have.value', 'NC_000913_rvs');
+
+    // Save the primers
+    cy.get('button').contains('Save primers').click();
+
+    // This should have sent us to the Cloning tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Cloning').should('exist');
+
+    // Do the PCR
+    cy.get('button').contains('Perform PCR').click();
+
+    // Check that the PCR was successful
+    cy.get('li').contains('PCR with primers NC_000913_fwd and NC_000913_rvs').should('exist');
+
+    // Do the BP reaction
+    cy.get('.share-your-cloning li button').contains('Submit').click();
+
+    // Check that the BP reaction was successful
+    cy.get('li#source-9').contains('Gateway BP reaction').should('exist');
   });
 });

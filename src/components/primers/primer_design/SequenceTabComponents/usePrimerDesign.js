@@ -46,6 +46,10 @@ export function usePrimerDesign(designType, sequenceIds) {
     return 'Select a region (not a single position) to amplify';
   };
 
+  const setRoi = (index, roi) => {
+    setRois((c) => changeValueAtIndex(c, index, roi));
+  };
+
   const onTabChange = (event, newValue) => {
     setSelectedTab(newValue);
     if (newValue < sequenceIds.length) {
@@ -116,7 +120,7 @@ export function usePrimerDesign(designType, sequenceIds) {
         spacers,
       };
     } else if (designType === 'simple_pair') {
-      const [pcrTemplateId] = sequenceIds;
+      const pcrTemplateId = sequenceIds[0];
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
@@ -136,8 +140,6 @@ export function usePrimerDesign(designType, sequenceIds) {
       setPrimers(newPrimers);
       return false;
     } catch (thrownError) {
-      console.log('requestData', requestData);
-      console.log('params', params);
       const errorMessage = error2String(thrownError);
       setError(errorMessage);
       return true;

@@ -231,3 +231,13 @@ export function shiftStateIds(newState, oldState, skipPrimers = false) {
 export function stringIsNotDNA(str) {
   return str.match(/[^agct]/i) !== null;
 }
+
+export function formatGatewaySites(sites) {
+  const foundSites = [];
+  Object.keys(sites).forEach((siteName) => {
+    sites[siteName].forEach((location) => {
+      foundSites.push({ siteName, location });
+    });
+  });
+  return foundSites;
+}

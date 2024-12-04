@@ -6,11 +6,11 @@ import PrimerDesignHomologousRecombination from './PrimerDesignHomologousRecombi
 import PrimerDesignGibsonAssembly from './PrimerDesignGibsonAssembly';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
+import PrimerDesignGatewayBP from './PrimerDesignGatewayBP';
 
 function PrimerDesignSourceForm({ source }) {
   const [primerDesignType, setPrimerDesignType] = React.useState('');
   const { updateStoreEditor } = useStoreEditor();
-
   const { addPCRsAndSubsequentSourcesForAssembly, setMainSequenceId, setCurrentTab } = cloningActions;
   const dispatch = useDispatch();
   React.useEffect(() => {
@@ -49,6 +49,7 @@ function PrimerDesignSourceForm({ source }) {
           <MenuItem value="GibsonAssemblySource">Gibson Assembly</MenuItem>
           <MenuItem value="InFusionSource">In-Fusion</MenuItem>
           <MenuItem value="restriction_ligation">Restriction and Ligation</MenuItem>
+          <MenuItem value="gateway_bp">Gateway BP reaction</MenuItem>
         </Select>
       </FormControl>
       {['homologous_recombination', 'crispr'].includes(primerDesignType)
@@ -58,8 +59,10 @@ function PrimerDesignSourceForm({ source }) {
       {['GibsonAssemblySource', 'InFusionSource'].includes(primerDesignType) && (
         <PrimerDesignGibsonAssembly source={source} assemblyType={primerDesignType} />
       )}
+      {primerDesignType === 'gateway_bp' && (
+        <PrimerDesignGatewayBP source={source} />
+      )}
     </>
-
   );
 }
 

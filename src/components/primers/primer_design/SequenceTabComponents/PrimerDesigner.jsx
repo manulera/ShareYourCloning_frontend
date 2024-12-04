@@ -8,11 +8,12 @@ import useStoreEditor from '../../../../hooks/useStoreEditor';
 import { cloningActions } from '../../../../store/cloning';
 import PrimerDesignGibsonAssembly from './PrimerDesignGibsonAssembly';
 import PrimerDesignSimplePair from './PrimerDesignSimplePair';
+import PrimerDesignGatewayBP from './PrimerDesignGatewayBP';
 
 function PrimerDesigner() {
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
-  const { setMainSequenceId, setSelectedTab } = cloningActions;
+  const { setMainSequenceId } = cloningActions;
 
   const { finalSource, otherInputIds, pcrSources, outputSequences } = useSelector((state) => getPrimerDesignObject(state.cloning), isEqual);
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
@@ -21,7 +22,6 @@ function PrimerDesigner() {
   const openPrimerDesigner = () => {
     updateStoreEditor('mainEditor', templateSequencesIds[0]);
     dispatch(setMainSequenceId(templateSequencesIds[0]));
-    setSelectedTab(0);
   };
 
   // Nothing to design
@@ -56,7 +56,9 @@ function PrimerDesigner() {
       />
     );
   }
-
+  if (finalSource?.type === 'GatewaySource' && otherInputIds.length === 1 && pcrSources.length === 1 && outputSequences[0].primer_design === 'gateway_bp') {
+    component = <PrimerDesignGatewayBP donorVectorId={otherInputIds[0]} pcrSource={pcrSources[0]} />;
+  }
   return (
     <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
       <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
