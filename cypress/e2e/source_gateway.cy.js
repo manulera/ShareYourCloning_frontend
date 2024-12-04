@@ -11,7 +11,7 @@ describe('Tests PCR functionality', () => {
     loadExample('Gateway cloning');
     deleteSourceByContent('Gateway BP reaction');
     addSource('GatewaySource');
-    clickMultiSelectOption('Assembly inputs', '8');
+    clickMultiSelectOption('Assembly inputs', '4');
 
     // Submit icon not visible
     cy.get('.share-your-cloning button.submit-backend-api').should('not.exist');
@@ -49,7 +49,7 @@ describe('Tests PCR functionality', () => {
     // Test that circular only works with select all
     deleteSourceByContent('Gateway BP reaction');
     addSource('GatewaySource');
-    clickMultiSelectOption('Assembly inputs', '8');
+    clickMultiSelectOption('Assembly inputs', '4');
     clickMultiSelectOption('Reaction type', 'BP');
     cy.get('span').contains('Single-site recombination').click({ force: true });
     cy.get('span').contains('Circular assemblies').click({ force: true });
