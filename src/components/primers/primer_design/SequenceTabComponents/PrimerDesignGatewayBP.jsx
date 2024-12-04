@@ -252,8 +252,8 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
           <Box>
 
             <Box sx={{ my: 2, '& > div': { mx: 1 } }}>
-              <SiteSelect donorSites={donorSites} site={leftSite} setSite={onSiteSelectLeft} label="Left AttP site" />
-              <SiteSelect donorSites={donorSites} site={rightSite} setSite={onSiteSelectRight} label="Right AttP site" />
+              <SiteSelect donorSites={donorSites} site={leftSite} setSite={onSiteSelectLeft} label="Left attP site" />
+              <SiteSelect donorSites={donorSites} site={rightSite} setSite={onSiteSelectRight} label="Right attP site" />
             </Box>
             {knownCombination && (<Alert sx={{ width: '80%', margin: 'auto', mb: 2 }} severity="info">{knownCombination.message}</Alert>)}
             {knownCombination === null && (leftSite && rightSite) && (<Alert sx={{ width: '80%', margin: 'auto', mb: 2 }} severity="error">No recommended primer tails found</Alert>)}
