@@ -31,7 +31,9 @@ export default function useGatewaySites({ target, greedy }) {
         setSites([]);
       }
     }
-    getSitesInTarget();
+    if (target) {
+      getSitesInTarget();
+    }
   }, [store, connectAttempt, target, greedy]);
   return { requestStatus, attemptAgain, sites };
 }
