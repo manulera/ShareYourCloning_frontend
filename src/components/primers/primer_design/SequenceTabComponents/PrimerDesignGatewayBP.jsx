@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Box, Tabs, Tab, Alert, Button, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
 import { parseFeatureLocation } from '@teselagen/bio-parsers';
-import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
+import { getReverseComplementSequenceString as reverseComplement } from '@teselagen/sequence-utils';
 import TabPanel from './TabPanel';
 import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerSettingsForm from './PrimerSettingsForm';
@@ -17,21 +17,29 @@ import useGatewaySites from '../../../../hooks/useGatewaySites';
 import RetryAlert from '../../../form/RetryAlert';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import OrientationPicker from './OrientationPicker';
-
-const gatewayOverlaps = {
-  1: 'tGTACAAAaaa',
-  2: 'tGTACAAGaaa',
-  3: 'tGTATAATaaa',
-  4: 'tGTATAGAaaa',
-  5: 'tGTATACAaaa',
-};
+import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipulation';
 
 const knownCombinations = [
   {
-    sites: ['attP1', 'attP2'],
-    spacers: ['ACAAGTTTGTACAAAAAAGCAGGCTNN', 'ACCACTTTGTACAAGAAAGCTGGGTN'],
+    siteNames: ['attP4', 'attP1'],
+    spacers: ['GGGGACAACTTTGTATAGAAAAGTTGNN', reverseComplement('GGGGACTGCTTTTTTGTACAAACTTGN')],
+    orientation: [true, true],
+    message: 'Primers tails designed based on pDONR™ P4-P1R',
+    translationFrame: [4, 6],
+  },
+  {
+    siteNames: ['attP1', 'attP2'],
+    spacers: ['GGGGACAAGTTTGTACAAAAAAGCAGGCTNN', reverseComplement('GGGGACCACTTTGTACAAGAAAGCTGGGTN')],
     orientation: [true, false],
-    message: 'Spacers from pDONR™221',
+    message: 'Primers tails designed based on pDONR™ 221',
+    translationFrame: [4, 6],
+  },
+  {
+    siteNames: ['attP2', 'attP3'],
+    spacers: ['GGGGACAGCTTTCTTGTACAAAGTGGNN', reverseComplement('GGGGACAACTTTGTATAATAAAGTTGN')],
+    orientation: [false, false],
+    message: 'Primers tails designed based on pDONR™ P2R-P3',
+    translationFrame: [4, 6],
   },
 ];
 
@@ -58,15 +66,6 @@ function SiteSelect({ donorSites, site, setSite, label }) {
   );
 }
 
-function simulateGatewayBP(templateSequence, donorVectorSequence, leftSite, rightSite, insertionOrientation, spacers) {
-  const leftSiteNumber = leftSite.siteName.slice(-1);
-  const rightSiteNumber = rightSite.siteName.slice(-1);
-  const leftSiteLocation = parseFeatureLocation(leftSite.location, 0, 0, 0, 1, donorVectorSequence.sequence.length)[0];
-  const rightSiteLocation = parseFeatureLocation(rightSite.location, 0, 0, 0, 1, donorVectorSequence.sequence.length)[0];
-
-  return null;
-}
-
 function ComponentWrapper({ children, requestStatus, retry, donorSites }) {
   if (requestStatus.status === 'success') {
     if (donorSites.length < 2) {
@@ -86,6 +85,7 @@ function ComponentWrapper({ children, requestStatus, retry, donorSites }) {
 function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
   const [donorSites, setDonorSites] = React.useState([]);
   const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
+  const [knownCombination, setKnownCombination] = React.useState(null);
   const [spacers, setSpacers] = React.useState(['', '']);
   const [leftSite, setLeftSite] = React.useState(null);
   const [rightSite, setRightSite] = React.useState(null);
@@ -121,27 +121,58 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
   }, [leftSite, rightSite, donorSites]);
 
   React.useEffect(() => {
-    if (rois[0] !== null && insertionOrientation && spacersAreValid && leftSite && rightSite) {
-      const sequenceProduct = simulateGatewayBP(templateSequence, donorVectorSequence, leftSite, rightSite, insertionOrientation, spacers);
-      setSequenceProduct(null);
+    if (rois[0] !== null && insertionOrientation && spacersAreValid && leftSite && rightSite && knownCombination !== null) {
+      const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], [rois[0].selectionLayer], [insertionOrientation], [spacers[0], spacers[1]], false, 'primer tail');
+      newSequenceProduct.name = 'PCR product';
+      const leftFeature = {
+        start: knownCombination.translationFrame[0],
+        end: spacers[0].length - 1,
+        type: 'CDS',
+        name: 'translation frame',
+        strand: 1,
+        forward: true,
+      };
+      const nbAas = Math.floor((spacers[1].length - knownCombination.translationFrame[1]) / 3);
+      const rightStart = newSequenceProduct.sequence.length - knownCombination.translationFrame[1] - nbAas * 3;
+      const rightFeature = {
+        start: rightStart,
+        end: newSequenceProduct.sequence.length - knownCombination.translationFrame[1] - 1,
+        type: 'CDS',
+        name: 'translation frame',
+        strand: 1,
+        forward: true,
+      };
+      newSequenceProduct.features.push(leftFeature);
+      newSequenceProduct.features.push(rightFeature);
+      setSequenceProduct(newSequenceProduct);
       return;
-      sequenceProduct.name = 'Gateway BP product';
-      setSequenceProduct(sequenceProduct);
     }
     setSequenceProduct(null);
   }, [insertionOrientation, rois, templateSequence, donorVectorSequence, spacers, leftSite, rightSite]);
 
-  React.useEffect(() => {
-    if (leftSite && rightSite) {
-      const leftFormatted = { siteName: leftSite.siteName, forward: leftSite.location.includes('(+)') };
-      const rightFormatted = { siteName: rightSite.siteName, forward: rightSite.location.includes('(+)') };
-      const knownCombination = 
-      const knownCombination = knownCombinations.find(({ sites, orientation }) => isEqual(sites[0], leftFormatted) && isEqual(sites[1], rightFormatted) && orientation.includes(insertionOrientation));
-      if (knownCombination) {
-        setSpacers([knownCombination.fwd, getReverseComplementSequenceString(knownCombination.rvs)]);
+  const checkKnownCombination = React.useCallback((newLeftSite, newRightSite) => {
+    if (newLeftSite && newRightSite) {
+      const siteNames = [newLeftSite.siteName, newRightSite.siteName];
+      const orientation = [newLeftSite.location.includes('(+)'), newRightSite.location.includes('(+)')];
+      const knownCombinationForward = knownCombinations.find(({ siteNames: knownSites, orientation: knownOrientation }) => isEqual(knownSites, siteNames) && isEqual(knownOrientation, orientation));
+      if (knownCombinationForward) {
+        setSpacers(knownCombinationForward.spacers);
+        setKnownCombination(knownCombinationForward);
+        return;
       }
+
+      const siteNamesReverse = [newRightSite.siteName, newLeftSite.siteName];
+      const orientationReverse = [!newRightSite.location.includes('(+)'), !newLeftSite.location.includes('(+)')];
+      const knownCombinationReverse = knownCombinations.find(({ siteNames: knownSites, orientation: knownOrientation }) => isEqual(knownSites, siteNamesReverse) && isEqual(knownOrientation, orientationReverse));
+      if (knownCombinationReverse) {
+        setSpacers(knownCombinationReverse.spacers);
+        setKnownCombination(knownCombinationReverse);
+        return;
+      }
+      setKnownCombination(null);
+      setSpacers(['', '']);
     }
-  }, [leftSite, rightSite]);
+  }, []);
 
   const onSiteSelectLeft = React.useCallback((site) => {
     setLeftSite(site);
@@ -149,8 +180,11 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
       // Find the first different one
       const differentSite = donorSites.find(({ location }) => location !== site.location);
       setRightSite(differentSite);
+      checkKnownCombination(site, differentSite);
+      return;
     }
-  }, [rightSite, leftSite, donorSites]);
+    checkKnownCombination(site, rightSite);
+  }, [rightSite, donorSites]);
 
   const onSiteSelectRight = React.useCallback((site) => {
     setRightSite(site);
@@ -158,10 +192,11 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
       // Find the first different one
       const differentSite = donorSites.find(({ location }) => location !== site.location);
       setLeftSite(differentSite);
+      checkKnownCombination(differentSite, site);
+      return;
     }
-  }, [leftSite]);
-
-  console.log(leftSite, rightSite);
+    checkKnownCombination(leftSite, site);
+  }, [leftSite, donorSites]);
 
   const onPrimerDesign = () => {
 
@@ -196,6 +231,8 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
               <SiteSelect donorSites={donorSites} site={leftSite} setSite={onSiteSelectLeft} label="Left AttP site" />
               <SiteSelect donorSites={donorSites} site={rightSite} setSite={onSiteSelectRight} label="Right AttP site" />
             </Box>
+            {knownCombination && (<Alert sx={{ width: '80%', margin: 'auto', mb: 2 }} severity="info">{knownCombination.message}</Alert>)}
+            {knownCombination === '' && (leftSite && rightSite) && (<Alert sx={{ width: '80%', margin: 'auto', mb: 2 }} severity="error">No recommended primer tails found</Alert>)}
 
           </Box>
         </TabPanel>
@@ -205,7 +242,7 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy }) {
             <OrientationPicker
               value={insertionOrientation}
               onChange={(e) => setInsertionOrientation(e.target.value)}
-              label="Orientation of insert"
+              label="Orientation of amplification"
               index={0}
             />
           </Box>

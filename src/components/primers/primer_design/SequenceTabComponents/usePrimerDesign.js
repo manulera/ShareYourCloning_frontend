@@ -146,5 +146,5 @@ export function usePrimerDesign(designType, sequenceIds) {
     }
   };
 
-  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion, selectedTab, onTabChange, setSequenceProduct, setSelectedTab, setRoi };
+  return { primers, error, rois, designPrimers, setPrimers, onSelectRegion, selectedTab, onTabChange, setSequenceProduct, setSelectedTab };
 }
