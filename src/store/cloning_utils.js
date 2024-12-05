@@ -112,7 +112,7 @@ export function pcrPrimerPositionsInInput(source, sequenceData) {
 
   fwd.end -= 1;
   rvs.end -= 1;
-  if (source.assembly[1].forward_orientation) {
+  if (!source.assembly[1].reverse_complemented) {
     fwd.strand = 1;
     rvs.strand = -1;
     return [fwd, rvs];
