@@ -155,16 +155,18 @@ const reducer = {
     }
     const sourceId = getNextUniqueId(state);
     const entityId = sourceId + 1;
-    sources.push({
+    const newEntity = {
+      ...entity,
+      id: entityId,
+    };
+    const newSource = {
       ...source,
       id: sourceId,
       output: entityId,
-    });
-    entities.push({
-      ...entity,
-      id: entityId,
-    });
-    state.teselaJsonCache[entityId] = convertToTeselaJson(entity);
+    };
+    entities.push(newEntity);
+    sources.push(newSource);
+    state.teselaJsonCache[entityId] = convertToTeselaJson(newEntity);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
