@@ -1,4 +1,4 @@
-import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { loadExample, skipGoogleSheetErrors, skipNcbiCheck, addPrimer, changeTab } from './common_functions';
 
 describe('Tests primer functionality', () => {
   beforeEach(() => {
@@ -8,13 +8,16 @@ describe('Tests primer functionality', () => {
     skipNcbiCheck();
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
-  it('Can delete primers', () => {
-    let examplePrimerNumber = 2;
-    while (examplePrimerNumber > 0) {
-      cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('have.length', examplePrimerNumber);
-      cy.get('.primer-table-container [data-testid="DeleteIcon"]').first().click();
-      examplePrimerNumber -= 1;
-    }
+  it('Can add and delete primers', () => {
+    // Add dummy primer
+    addPrimer('fwd', 'atg');
+    changeTab('Primers');
+    cy.get('.primer-table-container tr').contains('fwd').should('exist');
+    cy.get('form.primer-row').should('not.exist');
+    cy.get('.primer-form-container').contains('Add Primer').should('exist');
+    cy.get('.primer-table-container tr').contains('fwd').should('exist');
+    cy.get('.primer-table-container tr').contains('atg').should('exist');
+    cy.get('.primer-table-container [data-testid="DeleteIcon"]').click();
     cy.get('.primer-table-container [data-testid="DeleteIcon"]').should('not.exist');
   });
   it('Cannot delete primers in use', () => {
@@ -53,18 +56,7 @@ describe('Tests primer functionality', () => {
       }
     });
   });
-  it('Can add primers', () => {
-    // Add two dummy primers
-    cy.get('.primer-form-container').contains('Add Primer').click();
-    cy.get('form.primer-row').should('exist');
-    cy.get('form.primer-row input#name').type('fwd-2');
-    cy.get('form.primer-row input#sequence').type('atg');
-    cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
-    cy.get('form.primer-row').should('not.exist');
-    cy.get('.primer-form-container').contains('Add Primer').should('exist');
-    cy.get('.primer-table-container tr').contains('fwd-2').should('exist');
-    cy.get('.primer-table-container tr').contains('atg').should('exist');
-  });
+
   // it('removes spaces on paste', () => {
   //   cy.get('.primer-form-container').contains('Add Primer').click();
   //   cy.get('form.primer-row').should('exist');
@@ -84,6 +76,8 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row').should('not.exist');
   });
   it('Can edit primers', () => {
+    addPrimer('fwd', 'gatctcgccataaaagacag');
+    changeTab('Primers');
     cy.get('.primer-table-container tr').contains('fwd').should('exist');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
     // The edited primer is not shown in the table
@@ -110,8 +104,7 @@ describe('Tests primer functionality', () => {
       cy.get('form.primer-row').should('exist');
     };
     loadExample('Integration of cassette by homologous recombination');
-    // Wait for the table to load
-    cy.get('.primer-table-container').contains('AGTTTTCATATCTTCCTTTATATTCTATTAATTGAATTTCAA').should('exist');
+    changeTab('Primers');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
 
     // Sequence is not editable
@@ -152,6 +145,10 @@ describe('Tests primer functionality', () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').click();
       cy.get('form.primer-row').should('exist');
     };
+
+    addPrimer('fwd', 'atg');
+    addPrimer('rvs', 'cgt');
+    changeTab('Primers');
     cy.get('.primer-table-container [data-testid="EditIcon"]').first().click();
     // The submit button is not shown until something is typed
     cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('not.exist');
@@ -176,6 +173,9 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row .MuiFormHelperText-root').should('have.text', '');
   });
   it('Applies constrains to new primer', () => {
+    addPrimer('fwd', 'atg');
+    addPrimer('rvs', 'cgt');
+    changeTab('Primers');
     // Useful to check the form is not submitted
     const formNotSubmittable = () => {
       cy.get('form.primer-row [data-testid="CheckCircleIcon"]').should('have.class', 'form-invalid');
@@ -217,6 +217,8 @@ describe('Tests primer functionality', () => {
     cy.get('form.primer-row').should('not.exist');
   });
   it('Edit overrides add', () => {
+    addPrimer('fwd', 'gatctcgccataaaagacag');
+    changeTab('Primers');
     cy.get('.primer-form-container').contains('Add Primer').click();
     cy.get('form.primer-row').should('exist');
     // Type something

@@ -54,6 +54,9 @@ function SourceTypeSelector({ source }) {
     options.push(<MenuItem key="GatewaySource" value="GatewaySource">Gateway</MenuItem>);
   }
 
+  // Sort options by text content
+  options.sort((a, b) => a.props.children.localeCompare(b.props.children));
+
   return (
     <>
       {!sourceType && (<h2 className="empty-source-title">{inputEntities.length === 0 ? 'Import a sequence' : 'Use this sequence'}</h2>)}

@@ -84,14 +84,16 @@ export const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = f
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
-  if (newState.primers) {
-    if (newState.primers.length > 0 && skipPrimers) {
-      throw new Error('Primers cannot be loaded when skipping primers');
-    }
-    if (newState.primers.some((p) => existingPrimerNames.includes(p.name))) {
-      throw new Error('Primer name from loaded file exists in current session');
-    }
+  if (newState.primers === undefined || newState.sequences === undefined || newState.sources === undefined) {
+    throw new Error('JSON file should contain at least keys: primers, sequences and sources');
   }
+  if (newState.primers.length > 0 && skipPrimers) {
+    throw new Error('Primers cannot be loaded when skipping primers');
+  }
+  if (newState.primers.some((p) => existingPrimerNames.includes(p.name))) {
+    throw new Error('Primer name from loaded file exists in current session');
+  }
+
   const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
   const newState2 = shiftStateIds(newState, stateForShifting, skipPrimers);
   batch(() => {

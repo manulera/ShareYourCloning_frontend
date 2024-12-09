@@ -1,4 +1,4 @@
-import { addLane, addSource, clearPrimers, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('File Source', () => {
   beforeEach(() => {
@@ -46,7 +46,6 @@ describe('File Source', () => {
     cy.get('li#source-1', { timeout: 20000 }).contains('Choose product');
   });
   it('works when loading a history file', () => {
-    clearPrimers();
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/golden_gate.json', { force: true });
     cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
@@ -57,5 +56,23 @@ describe('File Source', () => {
     cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/gibson_assembly.json', { force: true });
     cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
     cy.get('li').contains('Gibson');
+    // Cannot submit one with primers with the same names
+    addLane();
+    addSource('UploadedFileSource', true);
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/gibson_assembly.json', { force: true });
+    cy.get('.share-your-cloning li .MuiAlert-message').contains('Primer name from loaded file exists in current session');
+
+    // Loading a history file with invalid JSON gives an error
+    clickMultiSelectOption('File format', 'JSON (history file)', '.share-your-cloning li');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/ase1.gb', { force: true });
+    cy.get('li .MuiAlert-message').contains('Invalid JSON');
+
+    // Loading a valid json file with wrong history gives an error
+    clickMultiSelectOption('File format', 'JSON (history file)', '.share-your-cloning li');
+    cy.get('.select-source > form > .MuiButtonBase-root').click();
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('package.json', { force: true });
+    cy.get('li .MuiAlert-message').contains('JSON file should contain');
   });
 });

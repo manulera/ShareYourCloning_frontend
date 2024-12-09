@@ -30,13 +30,8 @@ function PrimerDesigner() {
   }
 
   // The network supports design of primers, but the current main sequence is not part of it
-  if (![...templateSequencesIds, ...otherInputIds].includes(mainSequenceId)) {
-    return (
-      <div>
-        <Button sx={{ mb: 4 }} variant="contained" color="success" onClick={openPrimerDesigner}>Open primer designer</Button>
-      </div>
-    );
-  }
+  const showPrimerDesigner = [...templateSequencesIds, ...otherInputIds].includes(mainSequenceId);
+
   let component = null;
   // Check conditions for different types of primer design
   if (finalSource === null && pcrSources.length === 1 && outputSequences[0].primer_design === 'restriction_ligation') {
@@ -60,12 +55,19 @@ function PrimerDesigner() {
     component = <PrimerDesignGatewayBP donorVectorId={otherInputIds[0]} pcrSource={pcrSources[0]} />;
   }
   return (
-    <Box className="primer-design" sx={{ width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
-      <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
-        <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
+    <>
+      {!showPrimerDesigner && (
+      <div>
+        <Button sx={{ mb: 4 }} variant="contained" color="success" onClick={openPrimerDesigner}>Open primer designer</Button>
+      </div>
+      )}
+      <Box className="primer-design" sx={{ display: showPrimerDesigner ? 'auto' : 'none', width: '60%', minWidth: '600px', margin: 'auto', border: 1, borderRadius: 2, overflow: 'hidden', borderColor: 'primary.main', marginBottom: 5 }}>
+        <Box sx={{ margin: 'auto', display: 'flex', height: 'auto', borderBottom: 2, borderColor: 'primary.main', backgroundColor: 'primary.main' }}>
+          <Box component="h2" sx={{ margin: 'auto', py: 1, color: 'white' }}>Primer designer</Box>
+        </Box>
+        {component}
       </Box>
-      {component}
-    </Box>
+    </>
   );
 }
 
