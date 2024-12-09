@@ -350,7 +350,7 @@ describe('Test primer designer functionality', () => {
     cy.contains('.primer-design button', 'Design primers').should('exist');
     cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('exist');
     clearAutocompleteValue('Left enzyme', '.primer-design');
-    cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('not.exist');
+    cy.get('.veCutsiteLabel').should('not.exist');
 
     cy.contains('.primer-design button', 'Design primers').should('not.exist');
     setAutocompleteValue('Right enzyme', 'BamHI', '.primer-design');
