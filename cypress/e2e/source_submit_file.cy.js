@@ -1,4 +1,4 @@
-import { addLane, addSource, clearPrimers, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('File Source', () => {
   beforeEach(() => {
@@ -46,7 +46,6 @@ describe('File Source', () => {
     cy.get('li#source-1', { timeout: 20000 }).contains('Choose product');
   });
   it('works when loading a history file', () => {
-    clearPrimers();
     cy.get('.select-source > form > .MuiButtonBase-root').click();
     cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('public/examples/golden_gate.json', { force: true });
     cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
