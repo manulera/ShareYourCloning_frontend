@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { Box, Tab, Tabs, FormControl, Button, Alert, TextField, Tooltip, FormLabel } from '@mui/material';
+import { Box, Tab, Tabs, FormControl, Button, Alert, TextField, Tooltip, FormLabel, FormControlLabel, Checkbox } from '@mui/material';
 import { batch, useDispatch, useSelector, useStore } from 'react-redux';
 import InfoIcon from '@mui/icons-material/Info';
 import { aliasedEnzymesByName, getReverseComplementSequenceString as reverseComplement } from '@teselagen/sequence-utils';
+import { updateEditor } from '@teselagen/ove';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from '../../../navigation/TabPanel';
@@ -31,6 +32,11 @@ function getRecognitionSequence(enzyme) {
   return recognitionSeq.split('').map((base) => (base in ambiguousDnaBases ? ambiguousDnaBases[base] : base)).join('');
 }
 
+function isEnzymePalyndromic(enzyme) {
+  const recognitionSeq = getRecognitionSequence(enzyme);
+  return recognitionSeq === reverseComplement(recognitionSeq);
+}
+
 function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
   const templateSequenceId = pcrSource.input[0];
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
@@ -45,6 +51,8 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
   const primerDesignSettings = usePrimerDesignSettings({ homologyLength: null, hybridizationLength: 20, targetTm: 55 });
   const [leftEnzyme, setLeftEnzyme] = React.useState(null);
   const [rightEnzyme, setRightEnzyme] = React.useState(null);
+  const [leftEnzymeInverted, setLeftEnzymeInverted] = React.useState(false);
+  const [rightEnzymeInverted, setRightEnzymeInverted] = React.useState(false);
   const [spacers, setSpacers] = React.useState(['', '']);
   const [fillerBases, setFillerBases] = React.useState('TTT');
   const [amplificationDirection, setAmplificationDirection] = React.useState('forward');
@@ -61,8 +69,10 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
 
   React.useEffect(() => {
     if (rois.every((region) => region !== null) && spacersAreValid && fillersAreValid) {
-      const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + getRecognitionSequence(leftEnzyme) + spacers[0];
-      const reversePrimerStartingSeq = reverseComplement((rightEnzyme ? fillerBases : '') + getRecognitionSequence(rightEnzyme) + reverseComplement(spacers[1]));
+      const leftEnzymeSeq = leftEnzymeInverted ? reverseComplement(getRecognitionSequence(leftEnzyme)) : getRecognitionSequence(leftEnzyme);
+      const rightEnzymeSeq = rightEnzymeInverted ? reverseComplement(getRecognitionSequence(rightEnzyme)) : getRecognitionSequence(rightEnzyme);
+      const forwardPrimerStartingSeq = (leftEnzyme ? fillerBases : '') + leftEnzymeSeq + spacers[0];
+      const reversePrimerStartingSeq = reverseComplement((rightEnzyme ? fillerBases : '') + rightEnzymeSeq + reverseComplement(spacers[1]));
       const { teselaJsonCache } = store.getState().cloning;
       const templateSequence = teselaJsonCache[templateSequenceId];
       const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], rois.map((s) => s.selectionLayer), [amplificationDirection], [forwardPrimerStartingSeq, reversePrimerStartingSeq], false, 'primer tail');
@@ -71,7 +81,25 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
     } else {
       setSequenceProduct(null);
     }
-  }, [fillerBases, rightEnzyme, leftEnzyme, spacers, rois, spacersAreValid, fillersAreValid, templateSequenceId, store, setSequenceProduct, amplificationDirection]);
+  }, [fillerBases, rightEnzyme, leftEnzyme, spacers, rois, spacersAreValid, fillersAreValid, templateSequenceId, store, setSequenceProduct, amplificationDirection, leftEnzymeInverted, rightEnzymeInverted]);
+
+  // When the user changes enzyme, reset the enzyme inversion state
+  React.useEffect(() => {
+    setLeftEnzymeInverted(false);
+  }, [leftEnzyme]);
+  React.useEffect(() => {
+    setRightEnzymeInverted(false);
+  }, [rightEnzyme]);
+
+  // When enzymes change, update the displayed enzymes in the editor
+  React.useEffect(() => {
+    const allEnzymes = [leftEnzyme, rightEnzyme].filter((enzyme) => enzyme !== null);
+    const filteredRestrictionEnzymes = allEnzymes.map((enzyme) => ({
+      canBeHidden: true,
+      value: enzyme,
+    }));
+    updateEditor(store, 'mainEditor', { annotationVisibility: { cutsites: leftEnzyme || rightEnzyme }, restrictionEnzymes: { filteredRestrictionEnzymes, isEnzymeFilterAnd: false } });
+  }, [leftEnzyme, rightEnzyme]);
 
   const addPrimers = () => {
     batch(() => {
@@ -87,6 +115,7 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
     onTabChange(null, 0);
     document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
+    updateEditor(store, 'mainEditor', { annotationVisibility: { cutsites: false } });
   };
 
   const onPrimerDesign = async () => {
@@ -95,6 +124,8 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
       target_tm: primerDesignSettings.targetTm,
       left_enzyme: leftEnzyme,
       right_enzyme: rightEnzyme,
+      left_enzyme_inverted: leftEnzymeInverted,
+      right_enzyme_inverted: rightEnzymeInverted,
       filler_bases: fillerBases,
     };
     const serverError = await designPrimers(rois, params, [amplificationDirection], spacers);
@@ -119,13 +150,29 @@ function PrimerDesignSimplePair({ pcrSource, restrictionLigation = false }) {
           {restrictionLigation && (
             <>
               <FormLabel>Restriction enzyme sites</FormLabel>
-              <Box>
-                <FormControl sx={{ width: '10em', mt: 1.5, mr: 2 }}>
-                  <EnzymeMultiSelect value={leftEnzyme} setEnzymes={setLeftEnzyme} label="Left enzyme" multiple={false} />
-                </FormControl>
-                <FormControl sx={{ width: '10em', mt: 1.5, mr: 2 }}>
-                  <EnzymeMultiSelect value={rightEnzyme} setEnzymes={setRightEnzyme} label="Right enzyme" multiple={false} />
-                </FormControl>
+              <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <FormControl sx={{ width: '10em', mt: 1.5, mr: 2 }}>
+                    <EnzymeMultiSelect value={leftEnzyme} setEnzymes={setLeftEnzyme} label="Left enzyme" multiple={false} />
+                  </FormControl>
+                  {leftEnzyme && !isEnzymePalyndromic(leftEnzyme) && (
+                    <FormControlLabel
+                      control={<Checkbox checked={leftEnzymeInverted} onChange={(e) => setLeftEnzymeInverted(e.target.checked)} />}
+                      label="Invert site"
+                    />
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                  <FormControl sx={{ width: '10em', mt: 1.5, mr: 2 }}>
+                    <EnzymeMultiSelect value={rightEnzyme} setEnzymes={setRightEnzyme} label="Right enzyme" multiple={false} />
+                  </FormControl>
+                  {rightEnzyme && !isEnzymePalyndromic(rightEnzyme) && (
+                    <FormControlLabel
+                      control={<Checkbox checked={rightEnzymeInverted} onChange={(e) => setRightEnzymeInverted(e.target.checked)} />}
+                      label="Invert site"
+                    />
+                  )}
+                </Box>
                 <FormControl sx={{ width: '10em', mt: 1.5 }}>
                   <TextField
                     label={(

@@ -1,4 +1,4 @@
-import { flipContainedRange, isRangeWithinRange, translateRange } from '@teselagen/range-utils';
+import { flipContainedRange, getRangeLength, isRangeWithinRange, translateRange } from '@teselagen/range-utils';
 
 export default function getTransformCoords({ assembly, type: sourceType }, parentSequenceData, productLength) {
   if (!assembly) {
@@ -9,7 +9,7 @@ export default function getTransformCoords({ assembly, type: sourceType }, paren
 
   let count = 0;
   if (sourceType === 'PCRSource') {
-    count = fragments[0].left_location.start;
+    count = assembly[0].right_location.start;
   }
   // Special case for insertion assemblies
   // else if (fragments[0].sequence === fragments[fragments.length - 1].sequence && !circular) {
@@ -22,15 +22,14 @@ export default function getTransformCoords({ assembly, type: sourceType }, paren
     const sequence = parentSequenceData.find((e) => e.id === f.sequence);
     const { size } = sequence;
     const { left_location: left, right_location: right } = f;
-    const leftEdge = count;
+    const leftStart = left?.start || 0;
     const rightStart = right?.start || 0;
     const rightEnd = right?.end || size;
-    const rightEdge = count + rightEnd - (left?.start || 0);
     // Ranges are 0-based, but [0:0] is not empty, it's the equivalent to python's [0:1]
-    f.rangeInAssembly = translateRange({ start: leftEdge, end: rightEdge - 1 }, 0, productLength);
+    const rangeLength = getRangeLength({ start: leftStart, end: rightEnd - 1 }, size);
+    f.rangeInAssembly = translateRange({ start: 0, end: rangeLength - 1 }, count, productLength);
     f.size = size;
-
-    count += (rightStart - (left?.start || 0));
+    count += getRangeLength({ start: leftStart, end: rightStart - 1 }, size);
   });
   const rangeInParent = (selection, id) => {
     if (selection.start === -1) {
@@ -43,7 +42,7 @@ export default function getTransformCoords({ assembly, type: sourceType }, paren
       const { rangeInAssembly, left_location: left, reverse_complemented, size } = fragment;
       const startInParent = left?.start || 0;
       if (isRangeWithinRange(selection, rangeInAssembly, productLength)) {
-        const selectionShifted = selection.start < selection.end ? selection : { start: selection.start, end: selection.end + productLength };
+        const selectionShifted = selection.start <= selection.end ? selection : { start: selection.start, end: selection.end + productLength };
         const outRange = translateRange(selectionShifted, -rangeInAssembly.start + startInParent, size);
         if (reverse_complemented) {
           return flipContainedRange(outRange, { start: 0, end: size - 1 }, size);
