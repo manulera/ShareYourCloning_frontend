@@ -1,3 +1,5 @@
-# Check that none of the tests has it.only( or it.skip(
+#!/usr/bin/env sh
+bash .husky/intro.sh
+
 bash .husky/no_test_skipping.sh
 
