@@ -1,4 +1,4 @@
-import { addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
@@ -543,6 +543,35 @@ describe('Test primer designer functionality', () => {
 
     // Check that the PCR was successful
     cy.get('li').contains('PCR with primers seq_2_fwd and seq_2_rvs').should('exist');
+  });
+
+  it('Retains primer design info even when displaying another sequence', () => {
+    const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
+    manuallyTypeSequence(sequence);
+    addSource('PCRSource');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Normal PCR', 'li');
+
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+    cy.get('.veAxisTick[data-test="1"]').first().click();
+    cy.get('.veAxisTick[data-test="30"]').first().click({ shiftKey: true });
+    cy.get('button').contains('Set from selection').click();
+    checkInputValue('Amplified region', '2 - 30', '.primer-design');
+    // Go back to cloning tab and change main sequence
+    changeTab('Cloning');
+    addLane();
+    manuallyTypeSequence('ACGT');
+    // Click on the data-testid="VisibilityIcon"
+    cy.get('li#sequence-6 svg[data-testid="VisibilityIcon"]').click();
+    // The sequence should be visible
+    cy.get('.main-sequence-editor').contains('4 bps').should('exist');
+    cy.get('.primer-design').should('not.be.visible');
+    // Click on the Open primer designer button
+    cy.get('button').contains('Open primer designer').click();
+    // The primer design info should be retained
+    checkInputValue('Amplified region', '2 - 30', '.primer-design');
   });
   it('Gateway BP primer design', () => {
     loadExample('Gateway');
