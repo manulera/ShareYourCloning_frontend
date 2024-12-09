@@ -348,16 +348,22 @@ describe('Test primer designer functionality', () => {
     // One enzyme is enough to submit, either one
     setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
     cy.contains('.primer-design button', 'Design primers').should('exist');
+    cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('exist');
     clearAutocompleteValue('Left enzyme', '.primer-design');
+    cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('not.exist');
+
     cy.contains('.primer-design button', 'Design primers').should('not.exist');
     setAutocompleteValue('Right enzyme', 'BamHI', '.primer-design');
     cy.contains('.primer-design button', 'Design primers').should('exist');
+    cy.get('.veCutsiteLabel').filter(':contains("BamHI")').should('exist');
 
     // There should be a single primer tail feature displayed
     cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 1);
     setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
 
     // There should be two now
+    cy.get('.veCutsiteLabel').filter(':contains("BamHI")').should('exist');
+    cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('exist');
     cy.get('.veLabelText').filter(':contains("primer tail")').should('have.length', 2);
     // Go to sequence tab
     cy.get('.veTabSequenceMap').contains('Sequence Map').click();
@@ -377,6 +383,8 @@ describe('Test primer designer functionality', () => {
     cy.wait('@primerDesign').then((interception) => {
       expect(interception.request.query.minimal_hybridization_length).to.equal('10');
       expect(interception.request.query.target_tm).to.equal('40');
+      expect(interception.request.query.left_enzyme_inverted).to.equal('false');
+      expect(interception.request.query.right_enzyme_inverted).to.equal('false');
     });
 
     // We should be on the Results tab
@@ -401,6 +409,59 @@ describe('Test primer designer functionality', () => {
 
     // Check that the PCR was successful
     cy.get('li').contains('PCR with primers seq_2_EcoRI_fwd and seq_2_BamHI_rvs').should('exist');
+  });
+
+  it.only('Restriction ligation primer design - invert site', () => {
+    const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT'.toLowerCase();
+    manuallyTypeSequence(sequence);
+    addSource('PCRSource');
+    const ampSequence = sequence.slice(1, 30);
+    return;
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Restriction and Ligation', 'li');
+
+    // Click on axis tick 1
+    cy.get('.veAxisTick[data-test="1"]').first().click({ force: true });
+
+    // Click on axis tick 30 while holding shift
+    cy.get('.veAxisTick[data-test="30"]').first().click({ shiftKey: true });
+
+    // Set selection
+    cy.get('button').contains('Set from selection').click();
+
+    // Go to other settings tab
+    cy.get('button.MuiTab-root').contains('Other settings').click();
+
+    // Select EcoRI, should not be possible to select inverted
+    setAutocompleteValue('Left enzyme', 'EcoRI', '.primer-design');
+    cy.get('.primer-design').contains('Invert site').should('not.exist');
+
+    // Should be possible to select when BsaI is selected
+    setAutocompleteValue('Left enzyme', 'BsaI', '.primer-design');
+    cy.get('.primer-design').contains('Invert site').should('exist');
+
+    // Go to sequence tab
+    cy.get('.veTabSequenceMap').contains('Sequence Map').click();
+
+    // THere should be the forward sequence displayed:
+    cy.get('svg.rowViewTextContainer text').contains(`TTTggtctc${ampSequence}`);
+
+    // Invert the site, should show the reverse sequence
+    cy.get('.primer-design').contains('Invert site').click();
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}`);
+
+    // Select EcoRI, should not be possible to select inverted
+    setAutocompleteValue('Right enzyme', 'EcoRI', '.primer-design');
+    cy.get('.primer-design').contains('Invert site').should('not.exist');
+    cy.get('.primer-design').filter(':contains("Invert site")').should('have.length', 1);
+
+    // Should be possible to select when BsaI is selected
+    setAutocompleteValue('Right enzyme', 'BsaI', '.primer-design');
+    cy.get('.primer-design').filter(':contains("Invert site")').should('have.length', 2);
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}ggtctcAAA`);
+    cy.get('.primer-design').contains('Invert site').eq(1).click();
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}gagaccAAA`);
   });
 
   it('Simple pair primer design', () => {
