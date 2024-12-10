@@ -23,6 +23,7 @@ export const classNameToEndPointMap = {
   BenchlingUrlSource: 'repository_id',
   SnapGenePlasmidSource: 'repository_id',
   EuroscarfSource: 'repository_id',
+  IGEMSource: 'repository_id',
   GenomeCoordinatesSource: 'genome_coordinates',
   ManuallyTypedSource: 'manually_typed',
   OligoHybridizationSource: 'oligonucleotide_hybridization',
