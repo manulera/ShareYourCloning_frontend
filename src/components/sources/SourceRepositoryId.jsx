@@ -47,21 +47,56 @@ const inputLabels = {
 
 const snapgeneCheckOption = (option, inputValue) => option.name.toLowerCase().includes(inputValue.toLowerCase());
 const snapgeneFormatOption = (option, plasmidSet, plasmidSetName) => ({ name: option.name, path: `${plasmidSet}/${option.subpath}`, plasmidSetName, plasmidSet });
+const snapgeneGetOptions = (data, inputValue) => Object.entries(data)
+  .flatMap(([plasmidSet, category]) => category.plasmids
+    .filter((option) => snapgeneCheckOption(option, inputValue))
+    .map((option) => snapgeneFormatOption(option, plasmidSet, data[plasmidSet].name)));
 function SnapgeneSuccessComponent({ option }) {
   return (
     <Alert severity="info" sx={{ mb: 1 }}>
       Plasmid
       {' '}
-      <a href={`https://www.snapgene.com/plasmids/${option.path}`}>{option.name}</a>
+      <a href={`https://www.snapgene.com/plasmids/${option.path}`} target="_blank" rel="noopener noreferrer">{option.name}</a>
       {' '}
       from set
       {' '}
-      <a href={`https://www.snapgene.com/plasmids/${option.plasmidSet}`}>{option.plasmidSetName}</a>
+      <a href={`https://www.snapgene.com/plasmids/${option.plasmidSet}`} target="_blank" rel="noopener noreferrer">{option.plasmidSetName}</a>
     </Alert>
   );
 }
 
-function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOptionsText, inputLabel, SuccessComponent, requiredInput = 3 }) {
+const iGEMGetOptions = (plasmids, inputValue) => plasmids.map((p) => ({
+  name: `${p['Short Desc / Name']} / ${p['Part Name']} / ${p['Plasmid Backbone']}`,
+  url: `https://raw.githubusercontent.com/manulera/annotated-igem-distribution/master/results/plasmids/${p['Index ID']}.gb`,
+  table_name: p['Short Desc / Name'],
+  part_name: p['Part Name'],
+  part_url: p['Part URL'],
+  backbone: p['Plasmid Backbone'],
+})).filter((p) => p.name.toLowerCase().includes(inputValue.toLowerCase()));
+
+function iGEMSuccessComponent({ option }) {
+  return (
+    <Alert severity="info" sx={{ mb: 1 }}>
+      Plasmid
+      {' '}
+      <a href={option.url} target="_blank" rel="noopener noreferrer">{option.table_name}</a>
+      {' '}
+      containing part
+      {' '}
+      <a href={option.part_url} target="_blank" rel="noopener noreferrer">{option.part_name}</a>
+      {' '}
+      in backbone
+      {' '}
+      {option.backbone}
+      {' '}
+      from
+      {' '}
+      <a href="https://airtable.com/appgWgf6EPX5gpnNU/shrb0c8oYTgpZDRgH/tblNqHsHbNNQP2HCX" target="_blank" rel="noopener noreferrer">2024 iGEM Distribution</a>
+    </Alert>
+  );
+}
+
+function IndexJsonSelector({ url, setInputValue, getOptions, noOptionsText, inputLabel, SuccessComponent, requiredInput = 3 }) {
   const [userInput, setUserInput] = React.useState('');
   const [data, setData] = React.useState(null);
   const [options, setOptions] = React.useState([]);
@@ -70,6 +105,9 @@ function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOp
     const fetchOptions = async () => {
       const resp = await axios.get(url);
       setData(resp.data);
+      if (requiredInput === 0) {
+        setOptions(getOptions(resp.data, ''));
+      }
     };
     fetchOptions();
   }, []);
@@ -77,7 +115,7 @@ function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOp
     if (newInputValue === undefined) {
       // When clearing the input via x button
       setUserInput('');
-      setOptions([]);
+      setOptions(getOptions(data, ''));
       return;
     }
     setUserInput(newInputValue);
@@ -86,10 +124,7 @@ function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOp
       return;
     }
 
-    setOptions(Object.entries(data)
-      .flatMap(([plasmidSet, category]) => category.plasmids
-        .filter((option) => checkOption(option, newInputValue))
-        .map((option) => formatOption(option, plasmidSet, data[plasmidSet].name))));
+    setOptions(getOptions(data, newInputValue));
   };
 
   if (data === null) {
@@ -103,7 +138,14 @@ function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOp
 
       <FormControl fullWidth>
         <Autocomplete
-          onChange={(event, value) => { onInputChange(value?.name); value && setInputValue(value.path); }}
+          onChange={(event, value) => {
+            onInputChange(value?.name);
+            if (value) {
+              setInputValue(value);
+            } else {
+              setInputValue('');
+            }
+          }}
         // Change options only when input changes (not when an option is picked)
           onInputChange={(event, newInputValue, reason) => (reason === 'input') && onInputChange(newInputValue)}
           id="tags-standard"
@@ -130,7 +172,7 @@ function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOp
 function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
   const { id: sourceId } = source;
   const [inputValue, setInputValue] = React.useState('');
-  const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name);
+  const [selectedRepository, setSelectedRepository] = React.useState(source.repository_name || '');
   const [error, setError] = React.useState('');
 
   React.useEffect(() => {
@@ -152,12 +194,19 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
 
   const onSubmit = (event) => {
     event.preventDefault();
-    let repositoryId = inputValue;
+    const extra = { repository_id: inputValue };
     if (selectedRepository === 'benchling') {
       // Remove /edit from the end of the URL and add .gb
-      repositoryId = repositoryId.replace(/\/edit$/, '.gb');
+      extra.repository_id = inputValue.replace(/\/edit$/, '.gb');
     }
-    const requestData = { id: sourceId, repository_id: repositoryId, repository_name: selectedRepository };
+    if (selectedRepository === 'snapgene') {
+      extra.repository_id = inputValue.path;
+    }
+    if (selectedRepository === 'igem') {
+      extra.repository_id = `${inputValue.part_name}-${inputValue.backbone}`;
+      extra.sequence_file_url = inputValue.url;
+    }
+    const requestData = { id: sourceId, ...extra, repository_name: selectedRepository };
     sendPostRequest({ endpoint: `repository_id/${selectedRepository}`, requestData, source });
   };
   const helperText = error || (exampleIds[selectedRepository] && `Example: ${exampleIds[selectedRepository]}`);
@@ -176,11 +225,12 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="benchling">Benchling</MenuItem>
           <MenuItem value="snapgene">SnapGene</MenuItem>
           <MenuItem value="euroscarf">Euroscarf</MenuItem>
+          <MenuItem value="igem">iGEM</MenuItem>
         </Select>
       </FormControl>
       {selectedRepository !== '' && (
         <form onSubmit={onSubmit}>
-          {selectedRepository !== 'snapgene' && (
+          {selectedRepository !== 'snapgene' && selectedRepository !== 'igem' && (
             <>
               <FormControl fullWidth>
                 <TextField
@@ -189,7 +239,7 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
                   value={inputValue}
                   onChange={(event) => setInputValue(event.target.value)}
                   helperText={helperText}
-                  error={error}
+                  error={error !== ''}
                 />
               </FormControl>
               {/* Extra info for benchling case */}
@@ -208,12 +258,22 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
           <IndexJsonSelector
             url="https://raw.githubusercontent.com/manulera/SnapGene_crawler/master/index.json"
             setInputValue={setInputValue}
-            checkOption={snapgeneCheckOption}
-            formatOption={snapgeneFormatOption}
+            getOptions={snapgeneGetOptions}
             noOptionsText="Type at least 3 characters to search, see SnapGene plasmids for options"
             inputLabel="Plasmid name"
             SuccessComponent={SnapgeneSuccessComponent}
             requiredInput={3}
+          />
+          )}
+          {selectedRepository === 'igem' && (
+          <IndexJsonSelector
+            url="https://raw.githubusercontent.com/manulera/annotated-igem-distribution/master/results/index.json"
+            setInputValue={setInputValue}
+            getOptions={iGEMGetOptions}
+            noOptionsText=""
+            inputLabel="Plasmid name"
+            SuccessComponent={iGEMSuccessComponent}
+            requiredInput={0}
           />
           )}
           {inputValue && !error && (<SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>)}

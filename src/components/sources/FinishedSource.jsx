@@ -107,6 +107,63 @@ function PlannotateAnnotationMessage({ source }) {
   );
 }
 
+function IGEMMessage({ source }) {
+  // Split repository_id by the first -, the first part is the part name, the rest is the backbone,
+  // but there may be more than one -
+  const indexOfDash = source.repository_id.indexOf('-');
+  if (indexOfDash === -1) {
+    return (
+      <>
+        iGEM plasmid
+        {' '}
+        {source.repository_id}
+        {' '}
+        from
+        {' '}
+        <a href="https://airtable.com/appgWgf6EPX5gpnNU/shrb0c8oYTgpZDRgH/tblNqHsHbNNQP2HCX" target="_blank" rel="noopener noreferrer">2024 iGEM Distribution</a>
+      </>
+    );
+  }
+  const partName = source.repository_id.substring(0, indexOfDash);
+  const backbone = source.repository_id.substring(indexOfDash + 1);
+  const indexInCollection = source.sequence_file_url.match(/(\d+)\.gb$/)[1];
+  return (
+    <>
+      <div>
+        iGEM
+        {' '}
+        <a href={source.sequence_file_url} target="_blank" rel="noopener noreferrer">
+          plasmid
+        </a>
+        {' '}
+        containing part
+        {' '}
+        <a href={`https://parts.igem.org/Part:${partName}`} target="_blank" rel="noopener noreferrer">{partName}</a>
+        {' '}
+        in backbone
+        {' '}
+        {backbone}
+        {' '}
+        from
+        {' '}
+        <a href="https://airtable.com/appgWgf6EPX5gpnNU/shrb0c8oYTgpZDRgH/tblNqHsHbNNQP2HCX" target="_blank" rel="noopener noreferrer">2024 iGEM Distribution</a>
+      </div>
+      <div style={{ marginTop: '10px' }}>
+        Annotated with
+        {' '}
+        <a href="https://github.com/mmcguffi/pLannotate" target="_blank" rel="noopener noreferrer">
+          pLannotate
+        </a>
+        ,
+        {' '}
+        see report
+        {' '}
+        <a href={`https://github.com/manulera/annotated-igem-distribution/blob/master/results/reports/${indexInCollection}.csv`} target="_blank" rel="noopener noreferrer">here</a>
+      </div>
+    </>
+  );
+}
+
 function FinishedSource({ sourceId }) {
   const source = useSelector((state) => state.cloning.sources.find((s) => s.id === sourceId), shallowEqual);
   const primers = useSelector((state) => state.cloning.primers, shallowEqual);
@@ -207,6 +264,7 @@ function FinishedSource({ sourceId }) {
       );
       break;
     case 'AnnotationSource': message = <PlannotateAnnotationMessage source={source} />; break;
+    case 'IGEMSource': message = <IGEMMessage source={source} />; break;
     default: message = '';
   }
   return (

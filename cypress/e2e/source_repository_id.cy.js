@@ -152,4 +152,38 @@ describe('RepositoryId Source', () => {
     cy.get('li#source-1 button.MuiButtonBase-root').click();
     cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
   });
+  it('works with iGEM', () => {
+    clickMultiSelectOption('Select repository', 'iGEM', 'li#source-1');
+    // Cannot submit if nothing selected
+    cy.get('li#source-1 button').contains('Submit').should('not.exist');
+
+    // When clicking in the input, you can already select
+    clickMultiSelectOption('Plasmid name', 'BBa_B0012', 'li#source-1');
+
+    // Can clear the input
+    cy.get('li#source-1').contains('Plasmid name').siblings('div').children('input')
+      .click();
+    cy.get('li#source-1 button.MuiAutocomplete-clearIndicator').click();
+    cy.get('body').click(0, 0);
+
+    clickMultiSelectOption('Plasmid name', 'BBa_B0012', 'li#source-1');
+
+    // Displays the right links
+    cy.get('li#source-1').contains('Plasmid BBa_B0012 containing part BBa_J428091 in backbone pSB1C5SD from 2024 iGEM Distribution').should('be.visible');
+    cy.get('li#source-1 a[href="https://raw.githubusercontent.com/manulera/annotated-igem-distribution/master/results/plasmids/1.gb"]').should('exist');
+    cy.get('li#source-1 a[href="https://parts.igem.org/Part:BBa_J428091"]').should('exist');
+    cy.get('li#source-1 a[href="https://airtable.com/appgWgf6EPX5gpnNU/shrb0c8oYTgpZDRgH/tblNqHsHbNNQP2HCX"]').should('exist');
+
+    cy.get('li#source-1 button').contains('Submit').click();
+
+    // Shows the plasmid name
+    cy.get('li#sequence-2').contains('BBa_J428091');
+    cy.get('li#sequence-2').contains('2432 bps');
+
+    // Links to https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1
+    cy.get('li#source-1 a[href="https://raw.githubusercontent.com/manulera/annotated-igem-distribution/master/results/plasmids/1.gb"]').should('exist');
+    cy.get('li#source-1 a[href="https://parts.igem.org/Part:BBa_J428091"]').should('exist');
+    cy.get('li#source-1 a[href="https://airtable.com/appgWgf6EPX5gpnNU/shrb0c8oYTgpZDRgH/tblNqHsHbNNQP2HCX"]').should('exist');
+    cy.get('li#source-1 a[href="https://github.com/manulera/annotated-igem-distribution/blob/master/results/reports/1.csv"]').should('exist');
+  });
 });
