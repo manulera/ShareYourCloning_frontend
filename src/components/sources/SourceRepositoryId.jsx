@@ -45,15 +45,26 @@ const inputLabels = {
   euroscarf: 'Euroscarf ID',
 };
 
-const checkOption = (option, inputValue) => option.name.toLowerCase().includes(inputValue.toLowerCase());
-const formatOption = (option, plasmidSet, plasmidSetName) => ({ name: option.name, path: `${plasmidSet}/${option.subpath}`, plasmidSetName, plasmidSet });
+const snapgeneCheckOption = (option, inputValue) => option.name.toLowerCase().includes(inputValue.toLowerCase());
+const snapgeneFormatOption = (option, plasmidSet, plasmidSetName) => ({ name: option.name, path: `${plasmidSet}/${option.subpath}`, plasmidSetName, plasmidSet });
+function SnapgeneSuccessComponent({ option }) {
+  return (
+    <Alert severity="info" sx={{ mb: 1 }}>
+      Plasmid
+      {' '}
+      <a href={`https://www.snapgene.com/plasmids/${option.path}`}>{option.name}</a>
+      {' '}
+      from set
+      {' '}
+      <a href={`https://www.snapgene.com/plasmids/${option.plasmidSet}`}>{option.plasmidSetName}</a>
+    </Alert>
+  );
+}
 
-function SnapGenePlasmidSelector({ setInputValue }) {
-  const url = 'https://raw.githubusercontent.com/manulera/SnapGene_crawler/master/index.json';
+function IndexJsonSelector({ url, setInputValue, checkOption, formatOption, noOptionsText, inputLabel, SuccessComponent, requiredInput = 3 }) {
   const [userInput, setUserInput] = React.useState('');
   const [data, setData] = React.useState(null);
   const [options, setOptions] = React.useState([]);
-  // const [filter, setFilter] = React.useState('');
 
   React.useEffect(() => {
     const fetchOptions = async () => {
@@ -62,7 +73,6 @@ function SnapGenePlasmidSelector({ setInputValue }) {
     };
     fetchOptions();
   }, []);
-
   const onInputChange = (newInputValue) => {
     if (newInputValue === undefined) {
       // When clearing the input via x button
@@ -71,20 +81,15 @@ function SnapGenePlasmidSelector({ setInputValue }) {
       return;
     }
     setUserInput(newInputValue);
-    if (newInputValue.length < 3) {
+    if (newInputValue.length < requiredInput) {
       setOptions([]);
       return;
     }
-    // if (filter !== '') {
-    //   setOptions(data[filter].plasmids
-    //     .filter((option) => checkOption(option, newInputValue))
-    //     .map((option) => formatOption(option, filter, data[filter].name)));
-    // } else {
+
     setOptions(Object.entries(data)
       .flatMap(([plasmidSet, category]) => category.plasmids
         .filter((option) => checkOption(option, newInputValue))
         .map((option) => formatOption(option, plasmidSet, data[plasmidSet].name))));
-    // }
   };
 
   if (data === null) {
@@ -95,20 +100,6 @@ function SnapGenePlasmidSelector({ setInputValue }) {
 
   return (
     <>
-      {/* <FormControl fullWidth>
-        <InputLabel id="plasmid-set-label">Filter by set</InputLabel>
-        <Select
-          value={filter}
-          onChange={(event) => setFilter(event.target.value)}
-          labelId="plasmid-set-label"
-          label="Filter by set"
-        >
-          <MenuItem key="all" value="">All</MenuItem>
-          {Object.keys(data).map((plasmidSet) => (
-            <MenuItem key={plasmidSet} value={plasmidSet}>{data[plasmidSet].name}</MenuItem>
-          ))}
-        </Select>
-      </FormControl> */}
 
       <FormControl fullWidth>
         <Autocomplete
@@ -117,37 +108,19 @@ function SnapGenePlasmidSelector({ setInputValue }) {
           onInputChange={(event, newInputValue, reason) => (reason === 'input') && onInputChange(newInputValue)}
           id="tags-standard"
           options={options}
-          noOptionsText={(
-            <div>
-              Type at least 3 characters to search, see
-              {' '}
-              <a href="https://www.snapgene.com/plasmids" target="_blank" rel="noopener noreferrer">SnapGene plasmids</a>
-              {' '}
-              for options
-            </div>
-)}
+          noOptionsText={noOptionsText}
           getOptionLabel={(o) => o.name}
           isOptionEqualToValue={(o1, o2) => o1.subpath === o2.subpath}
           inputValue={userInput}
           renderInput={(params) => (
             <TextField
               {...params}
-              label="Plasmid name"
+              label={inputLabel}
             />
           )}
         />
       </FormControl>
-      {selectedOption && (
-        <Alert severity="info" sx={{ mb: 1 }}>
-          Plasmid
-          {' '}
-          <a href={`https://www.snapgene.com/plasmids/${selectedOption.path}`}>{selectedOption.name}</a>
-          {' '}
-          from set
-          {' '}
-          <a href={`https://www.snapgene.com/plasmids/${selectedOption.plasmidSet}`}>{selectedOption.plasmidSetName}</a>
-        </Alert>
-      )}
+      {selectedOption && <SuccessComponent option={selectedOption} />}
     </>
   );
 }
@@ -230,7 +203,19 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
               )}
             </>
           )}
-          {selectedRepository === 'snapgene' && <SnapGenePlasmidSelector setInputValue={setInputValue} />}
+          {selectedRepository === 'snapgene'
+          && (
+          <IndexJsonSelector
+            url="https://raw.githubusercontent.com/manulera/SnapGene_crawler/master/index.json"
+            setInputValue={setInputValue}
+            checkOption={snapgeneCheckOption}
+            formatOption={snapgeneFormatOption}
+            noOptionsText="Type at least 3 characters to search, see SnapGene plasmids for options"
+            inputLabel="Plasmid name"
+            SuccessComponent={SnapgeneSuccessComponent}
+            requiredInput={3}
+          />
+          )}
           {inputValue && !error && (<SubmitButtonBackendAPI requestStatus={requestStatus}>Submit</SubmitButtonBackendAPI>)}
 
         </form>
