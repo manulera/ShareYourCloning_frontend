@@ -115,7 +115,11 @@ function IndexJsonSelector({ url, setInputValue, getOptions, noOptionsText, inpu
     if (newInputValue === undefined) {
       // When clearing the input via x button
       setUserInput('');
-      setOptions(getOptions(data, ''));
+      if (requiredInput === 0) {
+        setOptions(getOptions(data, ''));
+      } else {
+        setOptions([]);
+      }
       return;
     }
     setUserInput(newInputValue);
