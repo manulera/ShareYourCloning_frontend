@@ -12,21 +12,21 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   const [circularize, setCircularize] = React.useState(false);
   const [fileFormat, setFileFormat] = React.useState('');
   // Error message for json only
-  const [errorMessage, setErrorMessage] = React.useState('');
+  const [alert, setAlert] = React.useState(null);
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
   const onChange = async (event) => {
-    setErrorMessage('');
+    setAlert(null);
     const files = Array.from(event.target.files);
     if (fileFormat === 'json' || (fileFormat === '' && files[0].name.endsWith('.json'))) {
       let loadedHistory = null;
       try {
         loadedHistory = JSON.parse(await files[0].text());
       } catch (error) {
-        setErrorMessage('Invalid JSON');
+        setAlert({ message: 'Invalid JSON', severity: 'error' });
         return;
       }
-      addHistory(loadedHistory, dispatch, setErrorMessage, backendRoute('validate'), source.id);
+      addHistory(loadedHistory, dispatch, setAlert, backendRoute('validate'), source.id);
       return;
     }
     const requestData = new FormData();
@@ -68,7 +68,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
         />
       </FormControl>
 
-      {errorMessage && (<Alert sx={{ marginTop: '10px' }} severity="error">{errorMessage}</Alert>)}
+      {alert && (<Alert sx={{ marginTop: '10px' }} severity={alert.severity}>{alert.message}</Alert>)}
       <SubmitButtonBackendAPI
         component="label"
         requestStatus={requestStatus}

@@ -1,4 +1,4 @@
-import { addSource, clickMultiSelectOption, setInputValue, addPrimer, clearPrimers, addLane, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Makes all examples', () => {
   beforeEach(() => {
@@ -6,7 +6,6 @@ describe('Makes all examples', () => {
     // Intercepts must be in this order
     skipGoogleSheetErrors();
     skipNcbiCheck();
-    clearPrimers();
   });
   it('Homologous recombination', () => {
     // Load addgene plasmid

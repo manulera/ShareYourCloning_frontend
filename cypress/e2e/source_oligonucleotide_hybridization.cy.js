@@ -1,4 +1,4 @@
-import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, clearPrimers, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {
@@ -8,7 +8,6 @@ describe('Tests oligo hybridization source', () => {
     skipNcbiCheck();
   });
   it('works in the normal case', () => {
-    clearPrimers();
     addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
     addPrimer('rvs-hyb', 'aaGCGGCCGCaccaatgtaaggaagcacataaagttctac');
     addSource('OligoHybridizationSource', true);

@@ -20,10 +20,7 @@ const initialState = {
   description: '',
   selectedRegions: [],
   knownErrors: {},
-  primers: [
-    { id: 1, name: 'fwd', sequence: 'gatctcgccataaaagacag' },
-    { id: 2, name: 'rvs', sequence: 'ttaacaaagcgactataagt' },
-  ],
+  primers: [],
   primer2entityLinks: [],
   config: {
     loaded: false,

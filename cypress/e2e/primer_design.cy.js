@@ -1,4 +1,4 @@
-import { addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
@@ -350,7 +350,7 @@ describe('Test primer designer functionality', () => {
     cy.contains('.primer-design button', 'Design primers').should('exist');
     cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('exist');
     clearAutocompleteValue('Left enzyme', '.primer-design');
-    cy.get('.veCutsiteLabel').filter(':contains("EcoRI")').should('not.exist');
+    cy.get('.veCutsiteLabel').should('not.exist');
 
     cy.contains('.primer-design button', 'Design primers').should('not.exist');
     setAutocompleteValue('Right enzyme', 'BamHI', '.primer-design');
@@ -411,12 +411,12 @@ describe('Test primer designer functionality', () => {
     cy.get('li').contains('PCR with primers seq_2_EcoRI_fwd and seq_2_BamHI_rvs').should('exist');
   });
 
-  it.only('Restriction ligation primer design - invert site', () => {
+  it('Restriction ligation primer design - invert site', () => {
     const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT'.toLowerCase();
     manuallyTypeSequence(sequence);
     addSource('PCRSource');
     const ampSequence = sequence.slice(1, 30);
-    return;
+
     // Click on design primers
     cy.get('button').contains('Design primers').click();
     clickMultiSelectOption('Purpose of primers', 'Restriction and Ligation', 'li');
@@ -453,15 +453,33 @@ describe('Test primer designer functionality', () => {
 
     // Select EcoRI, should not be possible to select inverted
     setAutocompleteValue('Right enzyme', 'EcoRI', '.primer-design');
-    cy.get('.primer-design').contains('Invert site').should('not.exist');
-    cy.get('.primer-design').filter(':contains("Invert site")').should('have.length', 1);
+    cy.get('.primer-design span').filter(':contains("Invert site")').should('have.length', 1);
 
     // Should be possible to select when BsaI is selected
     setAutocompleteValue('Right enzyme', 'BsaI', '.primer-design');
-    cy.get('.primer-design').filter(':contains("Invert site")').should('have.length', 2);
-    cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}ggtctcAAA`);
-    cy.get('.primer-design').contains('Invert site').eq(1).click();
+    cy.get('.primer-design span').filter(':contains("Invert site")').should('have.length', 2);
     cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}gagaccAAA`);
+    cy.get('.primer-design span').filter(':contains("Invert site")').eq(1).click();
+    cy.get('svg.rowViewTextContainer text').contains(`TTTgagacc${ampSequence}ggtctcAAA`);
+
+    // Change PCR settings
+    setInputValue('Min. hybridization length', '1', '.primer-design');
+    setInputValue('Target hybridization Tm', '4', '.primer-design');
+
+    // Submit and check that the right values are being submitted
+    cy.intercept({ method: 'POST', url: 'http://127.0.0.1:8000/primer_design/simple_pair*', times: 2 }).as('primerDesign');
+    cy.get('button').contains('Design primers').click();
+    cy.wait('@primerDesign').then((interception) => {
+      expect(interception.request.query.left_enzyme_inverted).to.equal('true');
+      expect(interception.request.query.right_enzyme_inverted).to.equal('true');
+    });
+
+    // We should be on the Results tab
+    cy.get('button.MuiTab-root.Mui-selected').contains('Results').should('exist');
+
+    // Check that the primers are correct
+    cy.get('.primer-design-form input').eq(1).invoke('val').should('match', /^TTTGAGACC/);
+    cy.get('.primer-design-form input').eq(3).invoke('val').should('match', /^TTTGAGACC/);
   });
 
   it('Simple pair primer design', () => {
@@ -525,6 +543,35 @@ describe('Test primer designer functionality', () => {
 
     // Check that the PCR was successful
     cy.get('li').contains('PCR with primers seq_2_fwd and seq_2_rvs').should('exist');
+  });
+
+  it('Retains primer design info even when displaying another sequence', () => {
+    const sequence = 'ATCTAACTTTACTTGGAAAGCGTTTCACGT';
+    manuallyTypeSequence(sequence);
+    addSource('PCRSource');
+
+    // Click on design primers
+    cy.get('button').contains('Design primers').click();
+    clickMultiSelectOption('Purpose of primers', 'Normal PCR', 'li');
+
+    cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
+    cy.get('.veAxisTick[data-test="1"]').first().click();
+    cy.get('.veAxisTick[data-test="30"]').first().click({ shiftKey: true });
+    cy.get('button').contains('Set from selection').click();
+    checkInputValue('Amplified region', '2 - 30', '.primer-design');
+    // Go back to cloning tab and change main sequence
+    changeTab('Cloning');
+    addLane();
+    manuallyTypeSequence('ACGT');
+    // Click on the data-testid="VisibilityIcon"
+    cy.get('li#sequence-6 svg[data-testid="VisibilityIcon"]').click();
+    // The sequence should be visible
+    cy.get('.main-sequence-editor').contains('4 bps').should('exist');
+    cy.get('.primer-design').should('not.be.visible');
+    // Click on the Open primer designer button
+    cy.get('button').contains('Open primer designer').click();
+    // The primer design info should be retained
+    checkInputValue('Amplified region', '2 - 30', '.primer-design');
   });
   it('Gateway BP primer design', () => {
     loadExample('Gateway');
