@@ -386,6 +386,7 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
     getOptionLabel: ({ annotation }) => (annotation ? `${annotation.symbol} ${annotation.locus_tag === undefined ? '' : annotation.locus_tag} ${annotation.name}` : ''),
     isOptionEqualToValue: (option, value) => option.locus_tag === value.locus_tag,
     textLabel: 'Gene',
+    disableFiltering: true,
   }), [setGene, assemblyId]);
 
   return (

@@ -3,7 +3,11 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { Alert, Button, FormControl } from '@mui/material';
 
-export default function PostRequestSelect({ setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel }) {
+export default function PostRequestSelect({ setValue, getOptions, getOptionLabel, isOptionEqualToValue, textLabel, disableFiltering = true }) {
+  // The reason for disableFiltering is that we allow the server to filter the options,
+  // and whatever matches may not end up in the option label. For instance, when querying
+  // for species, we show the species name + id, but it may be that something else matches
+  // .e.g. "yeast" for "Saccharomyces cerevisiae - 4932"
   const [options, setOptions] = React.useState([]);
   const [connectAttempt, setConnectAttemp] = React.useState(0);
   const [error, setError] = React.useState(false);
@@ -67,6 +71,7 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
         getOptionLabel={getOptionLabel}
         isOptionEqualToValue={isOptionEqualToValue}
         inputValue={userInput}
+        filterOptions={disableFiltering ? (x) => x : undefined}
         renderInput={(params) => (
           <TextField
             {...params}
