@@ -363,6 +363,21 @@ function SourceGenomeRegionSelectGene({ gene, upstreamBasesRef, downstreamBasesR
         // We await the response to catch the error
         return await geneSuggest(assemblyId, userInput);
       } catch (e) {
+        // Connection error
+        if (e.code === 'ERR_NETWORK' || e.response === undefined) {
+          setError('Connection error');
+          return [];
+        }
+        // Bad request
+        if (e.response?.status >= 400 && e.response?.status < 500) {
+          setError(e.response.data.message);
+          return [];
+        }
+        // Server error
+        if (e.response?.status >= 500) {
+          setError('NCBI server error');
+          return [];
+        }
         // Here we are assuming that the assemblyId has been validated
         setError('The assembly has no gene annotations');
         return [];

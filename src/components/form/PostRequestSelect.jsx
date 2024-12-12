@@ -23,7 +23,6 @@ export default function PostRequestSelect({ setValue, getOptions, getOptionLabel
           setError(false);
           if (receivedOptions.length === 0) { setNoOptionsText('No results found'); }
         } catch (e) {
-          console.error(e);
           setErrorMessage('Could not retrieve data');
           setError(true);
         }
