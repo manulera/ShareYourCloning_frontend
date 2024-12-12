@@ -37,7 +37,7 @@ jobs:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
           cd ShareYourCloning_backend
-          poetry run uvicorn main:app &
+          poetry run shareyourcloning.uvicorn main:app &
 
       - name: enable yarn 3
         run: corepack enable
