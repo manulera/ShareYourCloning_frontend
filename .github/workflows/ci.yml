@@ -37,7 +37,20 @@ jobs:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
           cd ShareYourCloning_backend
-          poetry run shareyourcloning.uvicorn main:app &
+          poetry run uvicorn shareyourcloning.main:app &
+
+      - name: check if the server is running
+        run: |
+          for i in {1..3}; do
+            if curl -s http://127.0.0.1:8000 > /dev/null; then
+              echo "Server is up!"
+              exit 0
+            fi
+            echo "Waiting for server... ($i/3)"
+            sleep 1
+          done
+          echo "Server failed to start"
+          exit 1
 
       - name: enable yarn 3
         run: corepack enable
