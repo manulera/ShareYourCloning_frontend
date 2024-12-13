@@ -43,4 +43,28 @@ describe('<PostRequestSelect />', () => {
     // wait for the error message to appear
     cy.contains('Could not retrieve data').should('exist');
   });
+  it('does not filter options when disableFiltering is true', () => {
+    const setValueSpy = cy.spy().as('setValueSpy');
+    const getOptions = (query) => new Promise((resolve) => resolve([{ name: 'AAA-1' }, { name: 'AAA-2' }]));
+    const getOptionLabel = (option) => option.name;
+    const isOptionEqualToValue = (option, value) => option.name === value.name;
+    cy.mount(<PostRequestSelect setValue={setValueSpy} getOptions={getOptions} getOptionLabel={getOptionLabel} isOptionEqualToValue={isOptionEqualToValue} textLabel="Test label" disableFiltering />);
+    cy.get('input').type('BBB');
+    cy.contains('AAA-1').should('exist');
+    cy.contains('AAA-2').should('exist');
+    cy.get('input').clear();
+    cy.get('input').type('AAA');
+    cy.contains('AAA-1').should('exist');
+    cy.contains('AAA-2').should('exist');
+
+    cy.mount(<PostRequestSelect setValue={setValueSpy} getOptions={getOptions} getOptionLabel={getOptionLabel} isOptionEqualToValue={isOptionEqualToValue} textLabel="Test label" disableFiltering={false} />);
+    cy.get('input').clear();
+    cy.get('input').type('BBB');
+    cy.contains('AAA-1').should('not.exist');
+    cy.contains('AAA-2').should('not.exist');
+    cy.get('input').clear();
+    cy.get('input').type('AAA');
+    cy.contains('AAA-1').should('exist');
+    cy.contains('AAA-2').should('exist');
+  });
 });
