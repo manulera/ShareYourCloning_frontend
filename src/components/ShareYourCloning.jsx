@@ -1,6 +1,7 @@
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
+import { isEqual } from 'lodash-es';
 import DescriptionEditor from './DescriptionEditor';
 import PrimerList from './primers/PrimerList';
 import { cloningActions } from '../store/cloning';
@@ -11,15 +12,15 @@ import CloningHistory from './CloningHistory';
 import SequenceTab from './SequenceTab';
 import AppAlerts from './AppAlerts';
 
+const { setCurrentTab } = cloningActions;
+
 function ShareYourCloning() {
   const dispatch = useDispatch();
-  const { setCurrentTab: setCurrentTabAction } = cloningActions;
-  const setCurrentTab = (tab) => dispatch(setCurrentTabAction(tab));
-  const network = useSelector((state) => state.cloning.network, shallowEqual);
+  const network = useSelector((state) => state.cloning.network, isEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);
 
   const changeTab = (event, newValue) => {
-    setCurrentTab(newValue);
+    dispatch(setCurrentTab(newValue));
   };
 
   return (
