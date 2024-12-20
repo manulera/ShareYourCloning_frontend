@@ -13,7 +13,10 @@ function DownloadSequenceFileDialog({ id, dialogOpen, setDialogOpen, downloadCal
   const seqCopy = structuredClone(sequenceData);
   const linkedPrimers = useSelector(({ cloning }) => getPrimerLinks(cloning, id), isEqual);
   const pcrPrimers = useSelector(({ cloning }) => getPCRPrimers(cloning, id), isEqual);
-  seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
+  // To be able to use this function for non-state sequences
+  if (seqCopy) {
+    seqCopy.primers = [...seqCopy.primers, ...linkedPrimers, ...pcrPrimers];
+  }
   const dispatch = useDispatch();
 
   React.useEffect(() => {
