@@ -6,7 +6,7 @@ const ExampleWalkthroughs = () => {
     return (
         <div>
             <SubmitWalkthrough />
-            <ControlledWalkthrough />
+            {/*<ControlledWalkthrough />*/}
         </div>
     );
 };
