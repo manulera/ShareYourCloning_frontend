@@ -8,6 +8,8 @@ import useDragAndDropFile from '../hooks/useDragAndDropFile';
 import HistoryDownloadedDialog from './HistoryLoadedDialog';
 import ScrollSyncWrapper from './utils/ScrollSyncWrapper';
 import DemoWalkthrough from './walkthroughs/DemoWalkthrough';
+import CloningWalkthrough from './walkthroughs/CloningWalkthrough';
+import ExampleWalkthroughs from './walkthroughs/ExampleWalkthroughs';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -26,6 +28,8 @@ function CloningHistory({ network }) {
       className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
       <DemoWalkthrough />
+      <CloningWalkthrough />
+      <ExampleWalkthroughs />
       <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
       {isDragging ? (
         <div className="drag-file-wrapper">

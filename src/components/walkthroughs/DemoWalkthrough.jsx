@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
-import Joyride from 'react-joyride';
+import { useDispatch } from 'react-redux';
+import Joyride, { STATUS } from 'react-joyride';
+import { cloningActions } from '../../store/cloning';
 
 const DemoWalkthrough = () => {
     const [run, setRun] = useState(false);
+    const dispatch = useDispatch();
+    const { setCurrentTab: setCurrentTabAction } = cloningActions;
+    const setCurrentTab = (tab) => dispatch(setCurrentTabAction(tab));
 
     const steps = [
         {
@@ -10,9 +15,7 @@ const DemoWalkthrough = () => {
             content: 'Welcome to ShareYourCloning! This interface helps you design and document molecular cloning experiments.',
             title: 'Welcome',
             disableBeacon: true,
-            disableOverlayClose: true,
-            hideCloseButton: true,
-            hideFooter: true,
+            disableOverlayClose: false,
             placement: 'bottom',
             spotlightClicks: true,
             styles: {
@@ -60,11 +63,32 @@ const DemoWalkthrough = () => {
     ];
 
     const handleJoyrideCallback = (data) => {
-        const { status } = data;
-        if (status === 'finished' || status === 'skipped') {
-            setRun(false);
+        const { status, type } = data;
+        const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
+    
+        if (finishedStatuses.includes(status)) {
+          setRun(false);
         }
-    };
+
+        // Try to navigate the tabs programmatically
+        if (type === 'step:before') {
+            if (data.step.target.startsWith('#tab')) {
+                const newValue = parseInt(data.step.target.split('-')[1], 10);
+                setCurrentTab(newValue);
+            }
+        }
+        // Go back to the first tab after the tour
+        // TODO: may want to have a final step that displays one last tooltip in the main page
+        if (status === STATUS.FINISHED) {
+            setCurrentTab(0);
+        }
+
+
+        // Log step data
+        console.groupCollapsed(type);
+        console.log(data);
+        console.groupEnd();
+      };
 
     return (
         <div>
@@ -77,14 +101,15 @@ const DemoWalkthrough = () => {
                     zIndex: 9999
                 }}
             >
-                Start Tour
+                Overview Tour
             </button>
             <Joyride
-                steps={steps}
-                run={run}
+                callback={handleJoyrideCallback}
                 continuous
-                showSkipButton
+                run={run}
                 showProgress
+                showSkipButton
+                steps={steps}
                 styles={{
                     options: {
                         zIndex: 10000,
@@ -103,7 +128,7 @@ const DemoWalkthrough = () => {
                         marginRight: 10,
                     }
                 }}
-                callback={handleJoyrideCallback}
+                
             />
         </div>
     );
