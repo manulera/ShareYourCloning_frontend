@@ -23,6 +23,17 @@ export default function useBackendAPI() {
       if (resp.headers['x-warning']) {
         addAlert({ message: resp.headers['x-warning'], severity: 'warning' });
       }
+
+      // Most endpoints return an error if no products would be created,
+      // but just in case, we check if response is empty and generate an error
+      // TODO: Unit test here
+      if (resp.data.sources.length === 0) {
+        setSources([]);
+        setEntities([]);
+        setRequestStatus({ status: 'error', message: 'No outputs returned' });
+        return;
+      }
+
       setRequestStatus({ status: null, message: '' });
 
       const receivedSources = resp.data.sources.map(modifySource);
