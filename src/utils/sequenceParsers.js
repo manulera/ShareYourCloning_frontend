@@ -1,4 +1,4 @@
-import { genbankToJson } from '@teselagen/bio-parsers';
+import { genbankToJson, ab1ToJson } from '@teselagen/bio-parsers';
 import { tidyUpSequenceData } from '@teselagen/sequence-utils';
 
 export function convertToTeselaJson(sequence) {
@@ -11,4 +11,15 @@ export function convertToTeselaJson(sequence) {
   }
   parsedSequence.id = sequence.id;
   return tidyUpSequenceData(parsedSequence);
+}
+
+export async function getJsonFromAb1Base64(ab1Base64) {
+  const binaryString = atob(ab1Base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+  const blob = new Blob([bytes]);
+  const results = await ab1ToJson(blob);
+  return results[0].parsedSequence;
 }

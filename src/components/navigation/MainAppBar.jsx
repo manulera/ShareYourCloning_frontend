@@ -110,22 +110,24 @@ function MainAppBar() {
   };
 
   // If you want to load a particular example on page load, you can do it here.
-  // React.useEffect(() => {
-  //   const fetchExample = async () => {
-  //     const { data } = await axios.get('examples/gateway_start.json');
-  //     loadData(data, false, dispatch, addAlert, backendRoute('validate'));
-  //     dispatch(setCurrentTab(3));
-  //     // Wait for the primer designer to be rendered
-  //     setTimeout(() => {
-  //       // Click on button that says Open primer designer
-  //       const primerDesignerButton = document.querySelector('.main-sequence-editor button');
-  //       if (primerDesignerButton) {
-  //         primerDesignerButton.click();
-  //       }
-  //     }, 300);
-  //   };
-  //   fetchExample();
-  // }, []);
+  React.useEffect(() => {
+    const fetchExample = async () => {
+      const { data } = await axios.get('examples/dummy.json');
+      loadData(data, false, dispatch, addAlert, backendRoute('validate'));
+      dispatch(setCurrentTab(3));
+      // Wait for the primer designer to be rendered
+      setTimeout(() => {
+        // Click on button that says Open primer designer
+        const primerDesignerButton = document.querySelector('.main-sequence-editor button');
+        if (primerDesignerButton) {
+          primerDesignerButton.click();
+        }
+        dispatch(setMainSequenceId(2));
+        updateStoreEditor('mainEditor', 2);
+      }, 300);
+    };
+    fetchExample();
+  }, []);
 
   return (
     <AppBar position="static" className="app-bar">
