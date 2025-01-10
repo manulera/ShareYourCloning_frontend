@@ -23,6 +23,9 @@ export default function useStoreEditor() {
       const { cloning } = store.getState();
       const { teselaJsonCache } = cloning;
       const sequenceData = { ...teselaJsonCache[id] };
+      const entity = cloning.entities.find((e) => e.id === id);
+      const entityWithoutSequencing = { ...entity };
+      delete entityWithoutSequencing.sequencing;
       const linkedPrimers = getPrimerLinks(cloning, id);
       const pcrPrimers = getPCRPrimers(cloning, id);
 
@@ -30,8 +33,7 @@ export default function useStoreEditor() {
       let panelsShown = [];
       if (sequencing) {
         const parsedSequence = await getJsonFromAb1Base64(sequencing[0].file_content);
-        console.log(parsedSequence);
-        const resp = await axios.post(backendRoute('align'), [sequenceData.sequence, parsedSequence.sequence]);
+        const resp = await axios.post(backendRoute('align_sanger'), { sequence: entityWithoutSequencing, trace: parsedSequence.sequence });
         const alignment = resp.data;
 
         addAlignment(store, {
