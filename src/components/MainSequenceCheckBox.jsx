@@ -2,16 +2,19 @@ import React from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DownloadIcon from '@mui/icons-material/Download';
 import EditIcon from '@mui/icons-material/Edit';
+import CheckIcon from '@mui/icons-material/Rule';
 import Tooltip from '@mui/material/Tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import useStoreEditor from '../hooks/useStoreEditor';
 import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
 import EditSequenceNameDialog from './EditSequenceNameDialog';
+import VerificationFileDialog from './VerificationFileDialog';
 
 function MainSequenceCheckBox({ id }) {
   const [downloadDialogOpen, setDownloadDialogOpen] = React.useState(false);
   const [editNameDialogOpen, setEditNameDialogOpen] = React.useState(false);
+  const [verificationDialogOpen, setVerificationDialogOpen] = React.useState(false);
   const dispatch = useDispatch();
   const { updateStoreEditor } = useStoreEditor();
   const { setMainSequenceId, setCurrentTab } = cloningActions;
@@ -29,6 +32,10 @@ function MainSequenceCheckBox({ id }) {
     <div className="node-corner">
       {downloadDialogOpen && <DownloadSequenceFileDialog {...{ id, dialogOpen: downloadDialogOpen, setDialogOpen: setDownloadDialogOpen }} />}
       {editNameDialogOpen && <EditSequenceNameDialog {...{ id, dialogOpen: editNameDialogOpen, setDialogOpen: setEditNameDialogOpen }} />}
+      {verificationDialogOpen && <VerificationFileDialog {...{ id, dialogOpen: verificationDialogOpen, setDialogOpen: setVerificationDialogOpen }} />}
+      <Tooltip title="Add verification file" arrow placement="top">
+        <CheckIcon onClick={() => setVerificationDialogOpen(true)} type="button" className="node-corner-icon" sx={{ color: 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
+      </Tooltip>
       <Tooltip title="Change name" arrow placement="top">
         <EditIcon onClick={() => setEditNameDialogOpen(true)} type="button" className="node-corner-icon" sx={{ color: 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
       </Tooltip>
