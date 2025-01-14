@@ -5,7 +5,7 @@ function PlannotateAnnotationReport({ dialogOpen, setDialogOpen, report }) {
   return (
     <Dialog fullWidth maxWidth="lg" open={dialogOpen} onClose={() => setDialogOpen(false)}>
       <DialogContent>
-        <Table>
+        <Table sx={{ textAlign: 'center' }}>
           <TableHead>
             <TableRow>
               <TableCell sx={{ fontWeight: 'bold', textAlign: 'center' }}>Feature</TableCell>
@@ -18,8 +18,8 @@ function PlannotateAnnotationReport({ dialogOpen, setDialogOpen, report }) {
             {report.map((row) => (
               <TableRow key={`${row.Feature}-${row.Description}`}>
                 <TableCell>{row.Feature}</TableCell>
-                <TableCell>{row.percent_identity}</TableCell>
-                <TableCell>{row.percent_match_length}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{Number(row.percent_identity).toFixed(0)}</TableCell>
+                <TableCell sx={{ textAlign: 'center' }}>{Number(row.percent_match_length).toFixed(0)}</TableCell>
                 <TableCell>{row.Description}</TableCell>
               </TableRow>
             ))}
