@@ -1,14 +1,9 @@
 import { useStore } from 'react-redux';
 import { updateEditor, addAlignment } from '@teselagen/ove';
-import axios from 'axios';
 import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
-import { getJsonFromAb1Base64 } from '../utils/sequenceParsers';
-import useBackendRoute from './useBackendRoute';
 
 export default function useStoreEditor() {
   const store = useStore();
-
-  const backendRoute = useBackendRoute();
 
   const updateStoreEditor = async (editorName, id, selectionLayer = {}) => {
     if (id === null) {
@@ -29,13 +24,10 @@ export default function useStoreEditor() {
       const linkedPrimers = getPrimerLinks(cloning, id);
       const pcrPrimers = getPCRPrimers(cloning, id);
 
-      const { sequencing } = cloning.entities.find((e) => e.id === id);
+      const alignmentFiles = cloning.files
+        .filter((e) => e.sequence_id === id && e.file_type === 'Sanger sequencing');
       let panelsShown = [];
-      if (sequencing) {
-        const parsedSequence = await getJsonFromAb1Base64(sequencing[0].file_content);
-        const resp = await axios.post(backendRoute('align_sanger'), { sequence: entityWithoutSequencing, trace: parsedSequence.sequence });
-        const alignment = resp.data;
-
+      if (alignmentFiles) {
         addAlignment(store, {
           id: 'simpleAlignment',
           alignmentType: 'Simple Sequence Alignment',
@@ -46,29 +38,28 @@ export default function useStoreEditor() {
             parts: true,
             translations: true,
           },
-          // set the tracks you'd like to see
           alignmentTracks: [
             {
-              // each track has a sequenceData and an alignmentData property (both are teselagen sequenceData objects)
               sequenceData,
               alignmentData: {
-                // the alignmentData just needs the sequence
-                sequence: alignment[0],
+                // the alignmentData just needs the sequence < TODO this has to be changed to be the largest ---
+                sequence: alignmentFiles[0].alignment[0],
               },
             },
-            //
-            {
+            ...(alignmentFiles.map((aln) => ({
               sequenceData: {
-                sequence: parsedSequence.sequence,
+                name: aln.file_name,
+                sequence: aln.alignment[1].replaceAll('-', ''),
               },
               alignmentData: {
-                sequence: alignment[1],
+                sequence: aln.alignment[1],
               },
-            },
+              chromatogramData: aln.chromatogram.chromatogramData,
+            }))),
           ],
         });
         panelsShown = [[
-          ...store.getState().VectorEditor.mainEditor.panelsShown[0],
+          ...store.getState().VectorEditor.mainEditor.panelsShown[0].filter((p) => p.id !== 'simpleAlignment'),
           {
             id: 'simpleAlignment',
             type: 'alignment',

@@ -29,6 +29,7 @@ const initialState = {
   sourcesWithHiddenAncestors: [],
   teselaJsonCache: {},
   alerts: [],
+  files: [],
 };
 
 /* eslint-disable no-param-reassign */
@@ -396,6 +397,15 @@ const reducer = {
   removeAlert(state, action) {
     const message = action.payload;
     state.alerts = state.alerts.filter((a) => a.message !== message);
+  },
+
+  addFile(state, action) {
+    state.files.push(action.payload);
+  },
+
+  removeFile(state, action) {
+    const { fileName, sequenceId } = action.payload;
+    state.files = state.files.filter((f) => f.file_name !== fileName || f.sequence_id !== sequenceId);
   },
 };
 /* eslint-enable no-param-reassign */

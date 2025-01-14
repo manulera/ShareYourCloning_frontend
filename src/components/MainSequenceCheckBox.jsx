@@ -9,7 +9,7 @@ import { cloningActions } from '../store/cloning';
 import useStoreEditor from '../hooks/useStoreEditor';
 import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
 import EditSequenceNameDialog from './EditSequenceNameDialog';
-import VerificationFileDialog from './VerificationFileDialog';
+import VerificationFileDialog from './verification/VerificationFileDialog';
 
 function MainSequenceCheckBox({ id }) {
   const [downloadDialogOpen, setDownloadDialogOpen] = React.useState(false);
