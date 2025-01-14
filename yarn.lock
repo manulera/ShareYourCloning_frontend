@@ -2494,6 +2494,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@zip.js/zip.js@npm:^2.7.54":
+  version: 2.7.54
+  resolution: "@zip.js/zip.js@npm:2.7.54"
+  checksum: 0d94682ee5d7e06d80edc22cbb87baae2c03162ba2c95857bc017855c16735fb0599cc99b2c1bc80a87dd78adc98b502b175d9b3dd574c390171626e0d77c4a1
+  languageName: node
+  linkType: hard
+
 "abab@npm:^2.0.6":
   version: 2.0.6
   resolution: "abab@npm:2.0.6"
@@ -9469,6 +9476,7 @@ __metadata:
     "@testing-library/react": ^14.0.0
     "@testing-library/user-event": ^14.5.1
     "@vitejs/plugin-react": ^4.0.3
+    "@zip.js/zip.js": ^2.7.54
     axios: ^1.6.8
     cypress: ^13.6.6
     dom-to-svg: ^0.12.2

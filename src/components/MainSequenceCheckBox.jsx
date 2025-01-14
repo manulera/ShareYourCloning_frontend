@@ -19,6 +19,8 @@ function MainSequenceCheckBox({ id }) {
   const { updateStoreEditor } = useStoreEditor();
   const { setMainSequenceId, setCurrentTab } = cloningActions;
   const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
+  const hasVerificationFiles = useSelector((state) => state.cloning.files.some((file) => file.sequence_id === id));
+
   const toggleMain = () => {
     dispatch(setMainSequenceId(id));
     dispatch(setCurrentTab(3));
@@ -33,8 +35,8 @@ function MainSequenceCheckBox({ id }) {
       {downloadDialogOpen && <DownloadSequenceFileDialog {...{ id, dialogOpen: downloadDialogOpen, setDialogOpen: setDownloadDialogOpen }} />}
       {editNameDialogOpen && <EditSequenceNameDialog {...{ id, dialogOpen: editNameDialogOpen, setDialogOpen: setEditNameDialogOpen }} />}
       {verificationDialogOpen && <VerificationFileDialog {...{ id, dialogOpen: verificationDialogOpen, setDialogOpen: setVerificationDialogOpen }} />}
-      <Tooltip title="Add verification file" arrow placement="top">
-        <CheckIcon onClick={() => setVerificationDialogOpen(true)} type="button" className="node-corner-icon" sx={{ color: 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
+      <Tooltip title="Verification files" arrow placement="top">
+        <CheckIcon onClick={() => setVerificationDialogOpen(true)} type="button" className="node-corner-icon" sx={{ color: hasVerificationFiles ? '#2e7d32' : 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />
       </Tooltip>
       <Tooltip title="Change name" arrow placement="top">
         <EditIcon onClick={() => setEditNameDialogOpen(true)} type="button" className="node-corner-icon" sx={{ color: 'gray', cursor: 'pointer', '&:hover': { filter: 'brightness(70%)' } }} />

@@ -13,6 +13,7 @@
         "@teselagen/ove": "^0.5.22",
         "@teselagen/range-utils": "^0.3.8",
         "@teselagen/sequence-utils": "^0.3.25",
+        "@zip.js/zip.js": "^2.7.54",
         "axios": "^1.6.8",
         "dom-to-svg": "^0.12.2",
         "lodash-es": "^4.17.21",

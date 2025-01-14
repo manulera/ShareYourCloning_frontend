@@ -110,6 +110,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
       onClose={() => setDialogOpen(false)}
       maxWidth="md"
       fullWidth
+      sx={{ textAlign: 'center' }}
     >
       <DialogTitle>Verification files</DialogTitle>
       <DialogContent>
