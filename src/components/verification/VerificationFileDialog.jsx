@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -12,6 +12,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Box,
+  CircularProgress,
 } from '@mui/material';
 import axios from 'axios';
 import { batch, shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -26,6 +28,7 @@ const { addFile, removeFile: removeFileAction } = cloningActions;
 export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }) {
   const fileNames = useSelector((state) => state.cloning.files.filter((f) => (f.sequence_id === id)).map((f) => f.file_name), shallowEqual);
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === id), shallowEqual);
+  const [loadingMessage, setLoadingMessage] = useState('');
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
@@ -33,7 +36,10 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
   const backendRoute = useBackendRoute();
 
   const handleFileUpload = async (event) => {
+    setLoadingMessage('Aligning...');
     const newFiles = Array.from(event.target.files);
+    // Clear the input
+    fileInputRef.current.value = '';
     if (newFiles.find((file) => !file.name.endsWith('.ab1'))) {
       addAlert({ message: 'Only ab1 files are accepted', severity: 'error' });
       return;
@@ -76,6 +82,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
     batch(() => {
       alignments.forEach((alignment) => dispatch(addFile(alignment)));
     });
+    setLoadingMessage('');
   };
 
   const removeFile = useCallback((fileName) => {
@@ -122,6 +129,13 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
           style={{ display: 'none' }}
           ref={fileInputRef}
         />
+
+        {loadingMessage && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 2 }}>
+            <CircularProgress />
+            <Box sx={{ ml: 2, fontSize: '1.2rem' }}>{loadingMessage}</Box>
+          </Box>
+        )}
 
         <TableContainer component={Paper}>
           <Table>
