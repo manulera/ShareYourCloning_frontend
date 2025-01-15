@@ -30,7 +30,7 @@ jobs:
         # if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
           cd ShareYourCloning_backend
-          poetry install --no-dev
+          poetry install
 
       - name: run python dev server in background
         env:
