@@ -9,7 +9,7 @@ import './MainAppBar.css';
 import { useDispatch, useStore } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
+import { downloadCloningStrategyAsSvg, readSubmittedTextFile } from '../../utils/readNwrite';
 import { loadData } from '../../utils/thunks';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
@@ -82,30 +82,26 @@ function MainAppBar() {
     { display: 'App version', onClick: () => setOpenVersionDialog(true) },
   ];
 
-  const onFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    reader.onload = (eventFileRead) => {
-      let jsonObject = {};
-      try {
-        jsonObject = JSON.parse(eventFileRead.target.result);
-      } catch (e) {
-        addAlert({
-          message: 'Input file should be a JSON file with the history',
-          severity: 'error',
-        });
-        return;
-      }
-      const { cloning } = store.getState();
-      // If no sequences have been loaded yet, simply load the history
-      if (cloning.entities.length === 0) {
-        loadData(jsonObject, false, dispatch, addAlert, backendRoute('validate'));
-      } else {
-        // Else ask the user whether they want to replace or append the history
-        setLoadedHistory(jsonObject);
-      }
-    };
+  const onFileChange = async (event) => {
+    let jsonObject;
+    try {
+      jsonObject = JSON.parse(await readSubmittedTextFile(event.target.files[0]));
+    } catch (e) {
+      addAlert({
+        message: 'Input file should be a JSON file with the history',
+        severity: 'error',
+      });
+      return;
+    }
+    console.log(jsonObject);
+    const { cloning } = store.getState();
+    // If no sequences have been loaded yet, simply load the history
+    if (cloning.entities.length === 0) {
+      loadData(jsonObject, false, dispatch, addAlert, backendRoute('validate'));
+    } else {
+      // Else ask the user whether they want to replace or append the history
+      setLoadedHistory(jsonObject);
+    }
   };
 
   // If you want to load a particular example on page load, you can do it here.

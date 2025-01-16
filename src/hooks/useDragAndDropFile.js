@@ -5,6 +5,7 @@ import { cloningActions } from '../store/cloning';
 import useBackendRoute from './useBackendRoute';
 import { loadData } from '../utils/thunks';
 import useAlerts from './useAlerts';
+import { readSubmittedTextFile } from '../utils/readNwrite';
 
 async function processSequenceFiles(files, backendRoute) {
   const allSources = [];
@@ -76,19 +77,15 @@ export default function useDragAndDropFile() {
     setIsDragging(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].name.endsWith('.json')) {
-      const reader = new FileReader();
-      reader.readAsText(e.dataTransfer.files[0], 'UTF-8');
-      reader.onload = (event) => {
-        const jsonContent = JSON.parse(event.target.result);
-        const { cloning } = store.getState();
-        // If no sequences have been loaded yet, simply load the history
-        if (cloning.entities.length === 0) {
-          loadData(jsonContent, false, dispatch, addAlert, backendRoute('validate'));
-        } else {
-          // Else ask the user whether they want to replace or append the history
-          setLoadedHistory(jsonContent);
-        }
-      };
+      const jsonContent = JSON.parse(await readSubmittedTextFile(e.dataTransfer.files[0]));
+      const { cloning } = store.getState();
+      // If no sequences have been loaded yet, simply load the history
+      if (cloning.entities.length === 0) {
+        loadData(jsonContent, false, dispatch, addAlert, backendRoute('validate'));
+      } else {
+        // Else ask the user whether they want to replace or append the history
+        setLoadedHistory(jsonContent);
+      }
     } else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       // If any is a JSON file, give an error
       for (let i = 0; i < e.dataTransfer.files.length; i += 1) {

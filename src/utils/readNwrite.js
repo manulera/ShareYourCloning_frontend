@@ -42,6 +42,19 @@ export async function getZipFileBlob(files) {
   return zipWriter.close();
 }
 
+export async function readSubmittedTextFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsText(file, 'UTF-8');
+    reader.onload = (event) => {
+      resolve(event.target.result);
+    };
+    reader.onerror = (error) => {
+      reject(new Error('Error reading text file'));
+    };
+  });
+}
+
 export function formatStateForJsonExport(cloningState) {
   const { entities, sources, description, primers } = cloningState;
   return {
