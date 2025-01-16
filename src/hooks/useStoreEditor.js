@@ -23,7 +23,6 @@ export default function useStoreEditor() {
       delete entityWithoutSequencing.sequencing;
       const linkedPrimers = getPrimerLinks(cloning, id);
       const pcrPrimers = getPCRPrimers(cloning, id);
-
       const alignmentFiles = cloning.files
         .filter((e) => e.sequence_id === id && e.file_type === 'Sanger sequencing');
       let panelsShown = [];
@@ -46,7 +45,7 @@ export default function useStoreEditor() {
                 sequence: alignmentFiles[0].alignment[0],
               },
             },
-            ...(alignmentFiles.map((aln) => ({
+            ...alignmentFiles.map((aln) => ({
               sequenceData: {
                 name: aln.file_name,
                 sequence: aln.alignment[1].replaceAll('-', ''),
@@ -55,7 +54,7 @@ export default function useStoreEditor() {
                 sequence: aln.alignment[1],
               },
               chromatogramData: aln.chromatogram.chromatogramData,
-            }))),
+            })),
           ],
         });
         panelsShown = [[

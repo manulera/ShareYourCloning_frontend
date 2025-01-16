@@ -63,13 +63,14 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
       file_type: 'Sanger sequencing',
     })));
 
-    let alignments = [];
+    const alignments = [];
     try {
-      alignments = await Promise.all(parsedAb1Files.map(async (ab1File) => {
-        const resp = await axios.post(backendRoute('align_sanger'), { sequence: entity, trace: ab1File.chromatogram.sequence });
-        const alignment = resp.data;
-        return { ...ab1File, alignment };
-      }));
+      const traces = parsedAb1Files.map((ab1File) => ab1File.chromatogram.sequence);
+      const resp = await axios.post(backendRoute('align_sanger'), { sequence: entity, traces });
+
+      for (let i = 0; i < parsedAb1Files.length; i++) {
+        alignments.push({ ...parsedAb1Files[i], alignment: [resp.data[0], resp.data[i + 1]] });
+      }
     } catch (error) {
       addAlert({ message: error.message, severity: 'error' });
       return;
