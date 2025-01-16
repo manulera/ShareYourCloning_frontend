@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { addHistory, loadData } from '../utils/readNwrite';
+import { addHistory, loadData } from '../utils/thunks';
 import useBackendRoute from '../hooks/useBackendRoute';
 import useAlerts from '../hooks/useAlerts';
 

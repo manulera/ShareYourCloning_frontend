@@ -9,7 +9,8 @@ import './MainAppBar.css';
 import { useDispatch, useStore } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { downloadCloningStrategyAsSvg, exportStateThunk, loadData } from '../../utils/readNwrite';
+import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
+import { loadData } from '../../utils/thunks';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
@@ -21,12 +22,14 @@ import useBackendRoute from '../../hooks/useBackendRoute';
 import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
+import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const [openTemplateDialog, setOpenTemplateDialog] = React.useState(false);
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
+  const [openCloningStrategyDialog, setOpenCloningStrategyDialog] = React.useState(false);
 
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
@@ -38,16 +41,12 @@ function MainAppBar() {
   const dispatch = useDispatch();
   const { addAlert } = useAlerts();
 
-  const exportData = () => {
-    dispatch(exportStateThunk());
-  };
-
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
   const { setCurrentTab, setMainSequenceId } = cloningActions;
   const fileMenu = [
-    { display: 'Save cloning history to file', onClick: exportData },
+    { display: 'Save cloning history to file', onClick: () => setOpenCloningStrategyDialog(true) },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     { display: 'Print cloning history to svg',
       onClick: async () => {
@@ -162,6 +161,7 @@ function MainAppBar() {
       <FeedbackDialog open={openFeedbackDialog} setOpen={setOpenFeedbackDialog} />
       {/* This one conditionally rendered since it uses hooks etc. */}
       {openMiscDialog && <MiscDialog open={openMiscDialog} setOpen={setOpenMiscDialog} />}
+      {openCloningStrategyDialog && <DownloadCloningStrategyDialog open={openCloningStrategyDialog} setOpen={setOpenCloningStrategyDialog} />}
       {/* elab-demo */}
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}

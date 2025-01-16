@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useDispatch, batch, useStore } from 'react-redux';
 import { cloningActions } from '../store/cloning';
 import useBackendRoute from './useBackendRoute';
-import { loadData } from '../utils/readNwrite';
+import { loadData } from '../utils/thunks';
 import useAlerts from './useAlerts';
 
 async function processSequenceFiles(files, backendRoute) {

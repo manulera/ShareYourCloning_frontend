@@ -1,7 +1,7 @@
 import { Alert, Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, TextField } from '@mui/material';
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { uploadToELabFTWThunk } from '../../../utils/readNwrite';
+import { uploadToELabFTWThunk } from '../../../utils/thunks';
 import ElabFTWCategorySelect from './ElabFTWCategorySelect';
 
 function DialogSubmitToElab({ dialogOpen, setDialogOpen }) {

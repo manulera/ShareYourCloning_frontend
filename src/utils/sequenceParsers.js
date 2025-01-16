@@ -1,5 +1,6 @@
 import { genbankToJson, ab1ToJson } from '@teselagen/bio-parsers';
 import { tidyUpSequenceData } from '@teselagen/sequence-utils';
+import { base64ToBlob } from './readNwrite';
 
 export function convertToTeselaJson(sequence) {
   // TODO: This might have been fixed in more recent versions of the library
@@ -11,15 +12,6 @@ export function convertToTeselaJson(sequence) {
   }
   parsedSequence.id = sequence.id;
   return tidyUpSequenceData(parsedSequence);
-}
-
-export function base64ToBlob(base64) {
-  const binaryString = atob(base64);
-  const bytes = new Uint8Array(binaryString.length);
-  for (let i = 0; i < binaryString.length; i++) {
-    bytes[i] = binaryString.charCodeAt(i);
-  }
-  return new Blob([bytes]);
 }
 
 export async function getJsonFromAb1Base64(ab1Base64) {

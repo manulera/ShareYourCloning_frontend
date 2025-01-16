@@ -2,7 +2,7 @@ import { Button, FormControl } from '@mui/material';
 import React from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SingleInputSelector from './SingleInputSelector';
-import { copyEntityThunk } from '../../utils/readNwrite';
+import { copyEntityThunk } from '../../utils/thunks';
 
 function SourceCopyEntity({ source }) {
   const [id, setId] = React.useState(null);
