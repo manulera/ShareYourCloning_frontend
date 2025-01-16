@@ -168,7 +168,7 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const addHistory = async (newState, dispatch, addAlert, url, removeSourceId = null) => {
+export const validateState = async (newState, url, addAlert) => {
   try {
     await axios.post(url, newState);
   } catch (e) {
@@ -183,8 +183,11 @@ export const addHistory = async (newState, dispatch, addAlert, url, removeSource
         severity: 'error',
       });
     }
-    console.error(e);
   }
+};
+
+export const addHistory = async (newState, dispatch, addAlert, url, removeSourceId = null) => {
+  validateState(newState, url, addAlert);
   try {
     await dispatch(mergeStateThunk(newState, removeSourceId));
   } catch (e) {
@@ -198,24 +201,7 @@ export const addHistory = async (newState, dispatch, addAlert, url, removeSource
 
 export const loadData = async (newState, isTemplate, dispatch, addAlert, url) => {
   if (isTemplate !== true) {
-    // Validate using the API
-    // TODO: for validation, the sequences could be sent empty to reduce size
-    try {
-      await axios.post(url, newState);
-    } catch (e) {
-      console.error(e);
-      if (e.code === 'ERR_NETWORK') {
-        addAlert({
-          message: 'Cannot connect to backend server to validate the JSON file',
-          severity: 'error',
-        });
-      } else {
-        addAlert({
-          message: 'JSON file in wrong format',
-          severity: 'error',
-        });
-      }
-    }
+    validateState(newState, url, addAlert);
   }
 
   dispatch(loadStateThunk(newState)).catch((e) => {

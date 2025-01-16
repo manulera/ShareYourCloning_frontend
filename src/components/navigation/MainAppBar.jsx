@@ -93,7 +93,7 @@ function MainAppBar() {
       });
       return;
     }
-    console.log(jsonObject);
+
     const { cloning } = store.getState();
     // If no sequences have been loaded yet, simply load the history
     if (cloning.entities.length === 0) {
