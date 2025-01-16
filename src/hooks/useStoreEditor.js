@@ -23,10 +23,9 @@ export default function useStoreEditor() {
       delete entityWithoutSequencing.sequencing;
       const linkedPrimers = getPrimerLinks(cloning, id);
       const pcrPrimers = getPCRPrimers(cloning, id);
-      const alignmentFiles = cloning.files
-        .filter((e) => e.sequence_id === id && e.file_type === 'Sanger sequencing');
-      let panelsShown = [];
-      if (alignmentFiles) {
+      const alignmentFiles = cloning.files.filter((e) => e.sequence_id === id && e.file_type === 'Sanger sequencing');
+      let { panelsShown } = store.getState().VectorEditor.mainEditor;
+      if (alignmentFiles.length > 0) {
         addAlignment(store, {
           id: 'simpleAlignment',
           alignmentType: 'Simple Sequence Alignment',
@@ -58,7 +57,7 @@ export default function useStoreEditor() {
           ],
         });
         panelsShown = [[
-          ...store.getState().VectorEditor.mainEditor.panelsShown[0].filter((p) => p.id !== 'simpleAlignment'),
+          ...panelsShown[0].filter((p) => p.id !== 'simpleAlignment'),
           {
             id: 'simpleAlignment',
             type: 'alignment',

@@ -12,7 +12,8 @@ describe('Test download history file', () => {
     cy.get('li span').contains('Integration of cassette by homologous recombination').click();
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
-    cy.task('readFileMaybe', 'cypress/downloads/history.json').then((fileContent) => {
+    cy.get('button').contains('Save file').click();
+    cy.task('readFileMaybe', 'cypress/downloads/cloning_strategy.json').then((fileContent) => {
       expect(fileContent).to.include('"sequences":');
       expect(fileContent).to.include('"sources":');
       expect(fileContent).to.include('"primers":');
