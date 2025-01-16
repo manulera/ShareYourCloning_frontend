@@ -111,8 +111,8 @@ function MainAppBar() {
   // If you want to load a particular example on page load, you can do it here.
   React.useEffect(() => {
     const fetchExample = async () => {
-      // const { data } = await axios.get('examples/dummy.json');
-      // loadData(data, false, dispatch, addAlert, backendRoute('validate'));
+      const { data } = await axios.get('examples/dummy.json');
+      loadData(data, false, dispatch, addAlert, backendRoute('validate'));
       // dispatch(setCurrentTab(3));
       // Wait for the primer designer to be rendered
       // setTimeout(() => {

@@ -52,7 +52,7 @@ export default function useStoreEditor() {
               alignmentData: {
                 sequence: aln.alignment[1],
               },
-              chromatogramData: aln.chromatogram.chromatogramData,
+              chromatogramData: aln.file_content.chromatogramData,
             })),
           ],
         });

@@ -58,20 +58,21 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
     // Read the alignments
     const parsedAb1Files = await Promise.all(base64Files.map(async (base64str, i) => ({
       sequence_id: id,
-      chromatogram: await getJsonFromAb1Base64(base64str),
+      file_content: await getJsonFromAb1Base64(base64str),
       file_name: newFiles[i].name,
       file_type: 'Sanger sequencing',
     })));
 
     const alignments = [];
     try {
-      const traces = parsedAb1Files.map((ab1File) => ab1File.chromatogram.sequence);
+      const traces = parsedAb1Files.map((ab1File) => ab1File.file_content.sequence);
       const resp = await axios.post(backendRoute('align_sanger'), { sequence: entity, traces });
 
       for (let i = 0; i < parsedAb1Files.length; i++) {
         alignments.push({ ...parsedAb1Files[i], alignment: [resp.data[0], resp.data[i + 1]] });
       }
     } catch (error) {
+      console.error(error);
       addAlert({ message: error.message, severity: 'error' });
       return;
     }
