@@ -1,11 +1,26 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { Alert } from '@mui/material';
 import MainSequenceEditor from './MainSequenceEditor';
 import PrimerDesigner from './primers/primer_design/SequenceTabComponents/PrimerDesigner';
 import CreatePrimerDialog from './primers/CreatePrimerDialog';
 
+const knownIssue = (
+  <Alert sx={{ mb: 2, marginX: 'auto', width: '40%' }} severity="warning">
+    <strong>Known issue:</strong>
+    {' '}
+    Chromatogram data from Sanger sequencing traces matching the bottom strand is not correctly displayed.
+  </Alert>
+);
+
 function SequenceTab() {
   const [primerSequence, setPrimerSequence] = React.useState('');
   const [position, setPosition] = React.useState(null);
+  const hasAlignment = useSelector((state) => {
+    const { mainSequenceId } = state.cloning;
+    if (!mainSequenceId) return false;
+    return state.cloning.files.some((f) => f.sequence_id === mainSequenceId && f.alignment !== undefined);
+  });
   const onCreatePrimer = ({ sequence, position: newPos }) => {
     setPrimerSequence(sequence);
     setPosition(newPos);
@@ -13,6 +28,7 @@ function SequenceTab() {
   return (
     <>
       <PrimerDesigner />
+      {hasAlignment && knownIssue}
       <MainSequenceEditor onCreatePrimer={onCreatePrimer} />
       {position && <CreatePrimerDialog {...{ primerSequence, setPrimerSequence, position, setPosition }} />}
     </>
