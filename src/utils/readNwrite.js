@@ -31,6 +31,15 @@ export const downloadBlob = (blob, fileName) => {
   document.body.removeChild(link);
 };
 
+export const file2base64 = (file) => new Promise((resolve) => {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const base64String = reader.result.split(',')[1];
+    resolve(base64String);
+  };
+  reader.readAsDataURL(file);
+});
+
 export const downloadTextFile = (text, fileName, type = 'text/plain') => {
   const blob = new Blob([text], { type });
   downloadBlob(blob, fileName);
@@ -77,6 +86,10 @@ export const downloadStateAsZip = async (cloningState, zipFileName = 'cloning_st
     { name: 'cloning_strategy.json', reader: new TextReader(prettyPrintJson(output)) },
     ...fileNames.map((fileName) => {
       const base64Content = sessionStorage.getItem(fileName);
+      if (!base64Content) {
+        const nameOnly = fileName.split('-')[2];
+        throw new Error(`File ${nameOnly} not found in session storage`);
+      }
       return { name: fileName, reader: new BlobReader(base64ToBlob(base64Content)) };
     }),
   ];

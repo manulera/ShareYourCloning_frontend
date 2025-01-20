@@ -2,6 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
 import React from 'react';
 import { useSelector, useStore } from 'react-redux';
 import { downloadStateAsJson, downloadStateAsZip } from '../utils/readNwrite';
+import useAlerts from '../hooks/useAlerts';
 
 // You can override the downloadSequence function by passing a downloadCallback that takes the fileName and entity as arguments
 function DownloadCloningStrategyDialog({ open, setOpen }) {
@@ -10,6 +11,7 @@ function DownloadCloningStrategyDialog({ open, setOpen }) {
   const hasVerificationFiles = useSelector(({ cloning }) => cloning.files.length > 0);
 
   const store = useStore();
+  const { addAlert } = useAlerts();
 
   return (
     <Dialog
@@ -17,12 +19,17 @@ function DownloadCloningStrategyDialog({ open, setOpen }) {
       onClose={() => setOpen(false)}
       PaperProps={{
         component: 'form',
-        onSubmit: (event) => {
+        onSubmit: async (event) => {
           event.preventDefault();
           setOpen(false);
           const cloningState = store.getState().cloning;
           if (extension === '.zip') {
-            downloadStateAsZip(cloningState, fileName + extension);
+            try {
+              await downloadStateAsZip(cloningState, fileName + extension);
+            } catch (error) {
+              console.error(error);
+              addAlert({ message: error.message, severity: 'error' });
+            }
           } else {
             downloadStateAsJson(cloningState, fileName + extension);
           }

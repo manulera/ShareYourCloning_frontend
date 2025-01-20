@@ -296,7 +296,7 @@ div.MuiPaper-root[role=alert] {
 }
 
 div#global-error-message-wrapper {
-    position: absolute;
+    position: fixed;
     top: 0;
     margin: 1;
     z-index: 999;

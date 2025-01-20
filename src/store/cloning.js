@@ -403,6 +403,10 @@ const reducer = {
     state.files.push(action.payload);
   },
 
+  setFiles(state, action) {
+    state.files = action.payload;
+  },
+
   removeFile(state, action) {
     const { fileName, sequenceId } = action.payload;
     state.files = state.files.filter((f) => f.file_name !== fileName || f.sequence_id !== sequenceId);

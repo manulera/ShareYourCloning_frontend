@@ -1,11 +1,12 @@
 import React from 'react';
 import axios from 'axios';
 import { useDispatch, batch, useStore } from 'react-redux';
+import { BlobReader, BlobWriter, TextWriter, ZipReader } from '@zip.js/zip.js';
 import { cloningActions } from '../store/cloning';
 import useBackendRoute from './useBackendRoute';
 import { loadData } from '../utils/thunks';
 import useAlerts from './useAlerts';
-import { readSubmittedTextFile } from '../utils/readNwrite';
+import { file2base64, readSubmittedTextFile } from '../utils/readNwrite';
 
 async function processSequenceFiles(files, backendRoute) {
   const allSources = [];
@@ -86,6 +87,27 @@ export default function useDragAndDropFile() {
         // Else ask the user whether they want to replace or append the history
         setLoadedHistory(jsonContent);
       }
+    } else if (e.dataTransfer.files && e.dataTransfer.files.length === 1 && e.dataTransfer.files[0].name.endsWith('.zip')) {
+      const zipReader = new ZipReader(new BlobReader(e.dataTransfer.files[0]));
+      const entries = await zipReader.getEntries();
+      const cloningStrategyFile = entries.filter((entry) => entry.filename.endsWith('.json'));
+      if (cloningStrategyFile.length !== 1) {
+        addAlert({ message: 'Zip file must contain exactly one JSON file.', severity: 'error' });
+        return;
+      }
+      let cloningStrategy;
+      try {
+        cloningStrategy = JSON.parse(await cloningStrategyFile[0].getData(new TextWriter()));
+      } catch (error) {
+        addAlert({ message: 'Could not parse the cloning strategy file.', severity: 'error' });
+        return;
+      }
+      const verificationFiles = entries.filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename));
+      await Promise.all(verificationFiles.map(async (file) => {
+        const fileContent = await file2base64(await file.getData(new BlobWriter()));
+        sessionStorage.setItem(file.filename, fileContent);
+      }));
+      loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'));
     } else if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       // If any is a JSON file, give an error
       for (let i = 0; i < e.dataTransfer.files.length; i += 1) {

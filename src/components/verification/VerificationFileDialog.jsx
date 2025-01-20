@@ -97,6 +97,10 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
 
   const downloadFile = (fileName) => {
     const base64Content = sessionStorage.getItem(`verification-${id}-${fileName}`);
+    if (!base64Content) {
+      addAlert({ message: `File ${fileName} not found in session storage`, severity: 'error' });
+      return;
+    }
     const binaryString = atob(base64Content);
     const bytes = new Uint8Array(binaryString.length);
     for (let i = 0; i < binaryString.length; i++) {

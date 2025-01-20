@@ -5,7 +5,7 @@ import { downloadStateAsJson } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
-const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers } = cloningActions;
+const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers, setFiles } = cloningActions;
 
 const collectParentEntitiesAndSources = (source, sources, entities, entitiesToExport, sourcesToExport) => {
   source.input.forEach((entityId) => {
@@ -38,6 +38,12 @@ const loadStateThunk = (newState) => async (dispatch, getState) => {
     dispatch(setDescription(newState.description));
   } else {
     dispatch(setDescription(''));
+  }
+
+  if (newState.files) {
+    dispatch(setFiles(newState.files));
+  } else {
+    dispatch(setFiles([]));
   }
 };
 

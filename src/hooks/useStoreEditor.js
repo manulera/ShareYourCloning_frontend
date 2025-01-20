@@ -2,6 +2,40 @@ import { useStore } from 'react-redux';
 import { updateEditor, addAlignment } from '@teselagen/ove';
 import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
 
+function reverseComplementArray(arr) {
+  return arr.slice().reverse();
+}
+
+export function reverseComplementChromatogramData(chromatogramDataIn) {
+  const chromatogramData = { ...chromatogramDataIn };
+  const complement = { A: 'T', T: 'A', G: 'C', C: 'G', N: 'N' };
+  console.log(chromatogramData);
+  function reverseComplementSequence(seq) {
+    return seq
+      .map((base) => complement[base] || base).reverse();
+  }
+
+  chromatogramData.aTrace = reverseComplementArray(chromatogramData.aTrace);
+  chromatogramData.tTrace = reverseComplementArray(chromatogramData.tTrace);
+  chromatogramData.gTrace = reverseComplementArray(chromatogramData.gTrace);
+  chromatogramData.cTrace = reverseComplementArray(chromatogramData.cTrace);
+  chromatogramData.basePos = reverseComplementArray(chromatogramData.basePos);
+  chromatogramData.baseCalls = reverseComplementSequence(
+    chromatogramData.baseCalls,
+  );
+
+  chromatogramData.baseTraces = reverseComplementArray(
+    chromatogramData.baseTraces,
+  ).map((traceObj) => ({
+    aTrace: reverseComplementArray(traceObj.aTrace),
+    tTrace: reverseComplementArray(traceObj.tTrace),
+    gTrace: reverseComplementArray(traceObj.gTrace),
+    cTrace: reverseComplementArray(traceObj.cTrace),
+  }));
+
+  return chromatogramData;
+}
+
 export default function useStoreEditor() {
   const store = useStore();
 
@@ -52,7 +86,7 @@ export default function useStoreEditor() {
               alignmentData: {
                 sequence: aln.alignment[1],
               },
-              chromatogramData: aln.file_content.chromatogramData,
+              chromatogramData: reverseComplementChromatogramData(aln.file_content.chromatogramData),
             })),
           ],
         });
