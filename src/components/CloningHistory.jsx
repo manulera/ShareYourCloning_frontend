@@ -45,7 +45,7 @@ function CloningHistory({ network }) {
                 <NetWorkNode key={node.source.id} {...{ sourceId: node.source.id }} />
               ))}
               {/* There is always a box on the right side to add a source */}
-              <li key="new_source_box">
+              <li key="new_source_box" className="new_source_box">
                 <span className="tf-nc"><span className="node-text"><NewSourceBox /></span></span>
               </li>
             </ul>
