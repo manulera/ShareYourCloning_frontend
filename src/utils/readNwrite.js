@@ -1,6 +1,6 @@
 import axios from 'axios';
-import { documentToSVG, elementToSVG, inlineResources } from 'dom-to-svg';
-import { genbankToJson, jsonToFasta, jsonToGenbank } from '@teselagen/bio-parsers';
+import { elementToSVG, inlineResources } from 'dom-to-svg';
+import { jsonToFasta, jsonToGenbank } from '@teselagen/bio-parsers';
 import { batch } from 'react-redux';
 import { cloneDeep } from 'lodash-es';
 import { cloningActions } from '../store/cloning';
@@ -280,18 +280,35 @@ export const downloadSequence = (fileName, sequenceData) => {
 
 export const downloadCloningStrategyAsSvg = async (fileName) => {
   const container = document.querySelector('div.share-your-cloning');
-  const content = document.querySelector('div.tf-tree.tf-ancestor-tree div');
-  // // Get the widths
-  // const containerWidth = container.clientWidth;
-  // const contentWidth = content.scrollWidth;
+  // Clone the container to avoid modifying the original
+  const containerCopy = container.cloneNode(true);
+  containerCopy.id = 'temp-div-svg-print';
 
-  // // Calculate the scale factor
-  // const scaleFactor = containerWidth / contentWidth;
+  // Make sure the entire element is displayed
+  containerCopy.style.overflow = 'visible';
+  containerCopy.style.width = 'fit-content';
+  containerCopy.style.height = 'fit-content';
+  containerCopy.style.position = 'absolute';
+  containerCopy.style.left = '-9999px';
 
-  // content.style.transform = `scale(${scaleFactor})`;
-  // content.style.fontsize = '8px';
-  const svgDocument = elementToSVG(container);
-  // const svgDocument = documentToSVG(document);
+  // Remove all MUI icons from the copy before converting to SVG
+  const muiIcons = containerCopy.querySelectorAll('.MuiSvgIcon-root');
+  muiIcons.forEach((icon) => icon.remove());
+
+  // Remove all "Add" buttons
+  const addButtons = containerCopy.querySelectorAll('.hang-from-node');
+  addButtons.forEach((button) => button.remove());
+
+  // Remove all "New source box"
+  const newSourceBoxes = containerCopy.querySelectorAll('.new_source_box');
+  newSourceBoxes.forEach((box) => box.remove());
+
+  container.appendChild(containerCopy);
+  const node2print = document.getElementById('temp-div-svg-print');
+
+  const svgDocument = elementToSVG(node2print);
+  container.removeChild(node2print);
+
   await inlineResources(svgDocument.documentElement);
   const svgString = new XMLSerializer().serializeToString(svgDocument);
   downloadTextFile(svgString, fileName);

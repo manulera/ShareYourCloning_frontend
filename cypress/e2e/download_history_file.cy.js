@@ -18,6 +18,8 @@ describe('Test download history file', () => {
       expect(fileContent).to.include('"primers":');
       expect(fileContent).to.include('"description":');
     });
+    // Add a small delay to ensure file is downloaded
+    cy.wait(3000);
     // Print cloning history to svg (works from another tab)
     cy.get('button.MuiTab-root').contains('Primers').click();
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
