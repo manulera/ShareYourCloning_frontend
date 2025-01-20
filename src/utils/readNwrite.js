@@ -1,10 +1,5 @@
-import axios from 'axios';
 import { elementToSVG, inlineResources } from 'dom-to-svg';
 import { jsonToFasta, jsonToGenbank } from '@teselagen/bio-parsers';
-import { batch } from 'react-redux';
-import { cloneDeep } from 'lodash-es';
-import { cloningActions } from '../store/cloning';
-import { shiftStateIds } from '../store/cloning_utils';
 import {
   BlobWriter,
   ZipWriter,
