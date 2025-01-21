@@ -1,11 +1,14 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
 import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
 import { addHistory } from '../../utils/thunks';
 import useBackendRoute from '../../hooks/useBackendRoute';
 import LabelWithTooltip from '../form/LabelWithTooltip';
+import { cloningActions } from '../../store/cloning';
+
+const { deleteSourceAndItsChildren } = cloningActions;
 
 // A component providing an interface to import a file
 function SourceFile({ source, requestStatus, sendPostRequest }) {
@@ -26,7 +29,10 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
         setAlert({ message: 'Invalid JSON', severity: 'error' });
         return;
       }
-      addHistory(loadedHistory, dispatch, setAlert, backendRoute('validate'), source.id);
+      batch(() => {
+        dispatch(deleteSourceAndItsChildren(source.id));
+        addHistory(loadedHistory, dispatch, setAlert, backendRoute('validate'));
+      });
       return;
     }
     const requestData = new FormData();

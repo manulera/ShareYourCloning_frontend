@@ -5,25 +5,26 @@ import { addHistory, loadData } from '../utils/thunks';
 import useBackendRoute from '../hooks/useBackendRoute';
 import useAlerts from '../hooks/useAlerts';
 
-function HistoryLoadedDialog({ loadedHistory, setLoadedHistory }) {
+function HistoryLoadedDialog({ loadedContent, setLoadedContent }) {
   const [selectedOption, setSelectedOption] = React.useState('replace');
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
   const { addAlert } = useAlerts();
   return (
     <Dialog
-      open={loadedHistory !== null}
-      onClose={() => setLoadedHistory(null)}
+      open={loadedContent !== null}
+      onClose={() => setLoadedContent(null)}
       PaperProps={{
         component: 'form',
         onSubmit: (event) => {
           event.preventDefault();
+          const { cloningStrategy, files } = loadedContent;
           if (selectedOption === 'replace') {
-            loadData(loadedHistory, false, dispatch, addAlert, backendRoute('validate'));
+            loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), files);
           } else {
-            addHistory(loadedHistory, dispatch, addAlert, backendRoute('validate'));
+            addHistory(cloningStrategy, dispatch, addAlert, backendRoute('validate'), files);
           }
-          setLoadedHistory(null);
+          setLoadedContent(null);
         },
       }}
       className="history-loaded-dialog"
@@ -43,7 +44,7 @@ function HistoryLoadedDialog({ loadedHistory, setLoadedHistory }) {
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => { setLoadedHistory(null); }}>
+        <Button onClick={() => { setLoadedContent(null); }}>
           Cancel
         </Button>
         <Button type="submit">Select</Button>

@@ -6,10 +6,10 @@ import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button, Tooltip } from '@mui/material';
 import './MainAppBar.css';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { downloadCloningStrategyAsSvg, readSubmittedTextFile } from '../../utils/readNwrite';
+import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
 import { loadData } from '../../utils/thunks';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
@@ -19,7 +19,6 @@ import MiscDialog from './MiscDialog';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
 import useBackendRoute from '../../hooks/useBackendRoute';
-import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
 import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
@@ -34,14 +33,11 @@ function MainAppBar() {
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [openCloningStrategyDialog, setOpenCloningStrategyDialog] = React.useState(false);
   const [files, setFiles] = React.useState(null);
-
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
-  const [loadedHistory, setLoadedHistory] = React.useState(null);
 
   const backendRoute = useBackendRoute();
   const { updateStoreEditor } = useStoreEditor();
-  const store = useStore();
   const dispatch = useDispatch();
   const { addAlert } = useAlerts();
 
@@ -149,7 +145,6 @@ function MainAppBar() {
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
       ) */}
-      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
       <VersionDialog open={openVersionDialog} setOpen={setOpenVersionDialog} />
     </AppBar>
   );

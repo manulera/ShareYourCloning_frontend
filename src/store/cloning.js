@@ -146,11 +146,9 @@ const reducer = {
   },
 
   addSourceAndItsOutputEntity(state, action) {
-    const { source, entity, replaceEmptySource } = action.payload;
+    const { source, entity } = action.payload;
     const { sources, entities } = state;
-    if (replaceEmptySource && sources.length === 1 && sources[0].type === null) {
-      sources.pop();
-    }
+
     const sourceId = getNextUniqueId(state);
     const entityId = sourceId + 1;
     const newEntity = {

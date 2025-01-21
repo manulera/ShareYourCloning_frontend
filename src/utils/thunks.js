@@ -1,11 +1,11 @@
 import axios from 'axios';
-import { batch } from 'react-redux';
 import { cloneDeep } from 'lodash-es';
-import { downloadStateAsJson, readSubmittedTextFile } from './readNwrite';
+import { BlobWriter } from '@zip.js/zip.js';
+import { downloadStateAsJson, file2base64 } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
-const { setState: setCloningState, setMainSequenceId, setDescription, revertToInitialState, setPrimers, setFiles } = cloningActions;
+const { setState: setCloningState, revertToInitialState } = cloningActions;
 
 const collectParentEntitiesAndSources = (source, sources, entities, entitiesToExport, sourcesToExport) => {
   source.input.forEach((entityId) => {
@@ -26,7 +26,7 @@ export const exportSubStateThunk = (fileName, entityId) => async (dispatch, getS
   downloadStateAsJson({ entities: entitiesToExport, sources: sourcesToExport, description: '', primers }, fileName);
 };
 
-const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = false) => async (dispatch, getState) => {
+const mergeStateThunk = (newState, skipPrimers = false, files = []) => (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
@@ -40,18 +40,25 @@ const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = false) =
     throw new Error('Primer name from loaded file exists in current session');
   }
 
-  const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
-  const newState2 = shiftStateIds(newState, stateForShifting, skipPrimers);
-  batch(() => {
-    dispatch(setCloningState({
-      sources: [...stateForShifting.sources, ...newState2.sources],
-      entities: [...oldState.entities, ...newState2.entities],
-      primers: [...oldState.primers, ...newState2.primers],
+  const { newState2, networkShift } = shiftStateIds(newState, oldState, skipPrimers);
+  dispatch(setCloningState({
+    sources: [...oldState.sources, ...newState2.sources],
+    entities: [...oldState.entities, ...newState2.entities],
+    primers: [...oldState.primers, ...newState2.primers],
+    files: [...oldState.files, ...newState2.files],
+  }));
+
+  const loadFilesToSessionStorage = async () => {
+    await Promise.all(files.map(async (file) => {
+      const fileContent = await file2base64(await file.getData(new BlobWriter()));
+      const filename = file.filename.replace(/verification-(\d+)-/, (match, num) => `verification-${parseInt(num, 10) + networkShift}-`);
+      sessionStorage.setItem(filename, fileContent);
     }));
-  });
+  };
+  loadFilesToSessionStorage();
 };
 
-export const copyEntityThunk = (entityId, copySourceId) => async (dispatch, getState) => {
+export const copyEntityThunk = (entityId) => async (dispatch, getState) => {
   const state = getState();
   const { entities, sources } = state.cloning;
   const entitiesToCopy = entities.filter((e) => e.id === entityId);
@@ -63,7 +70,7 @@ export const copyEntityThunk = (entityId, copySourceId) => async (dispatch, getS
     description: '',
     primers: [],
   });
-  dispatch(mergeStateThunk(newState, copySourceId, true));
+  dispatch(mergeStateThunk(newState, true));
 };
 
 export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispatch, getState) => {
@@ -167,10 +174,10 @@ export const validateState = async (newState, url, addAlert) => {
   }
 };
 
-export const addHistory = async (newState, dispatch, addAlert, url, removeSourceId = null) => {
+export const addHistory = (newState, dispatch, addAlert, url, files = []) => {
   validateState(newState, url, addAlert);
   try {
-    await dispatch(mergeStateThunk(newState, removeSourceId));
+    dispatch(mergeStateThunk(newState, false, files));
   } catch (e) {
     console.error(e);
     addAlert({
@@ -180,15 +187,23 @@ export const addHistory = async (newState, dispatch, addAlert, url, removeSource
   }
 };
 
-export const loadData = async (newState, isTemplate, dispatch, addAlert, url) => {
+export const loadData = (newState, isTemplate, dispatch, addAlert, url, files = []) => {
   if (isTemplate !== true) {
     validateState(newState, url, addAlert);
   }
   const newState2 = { ...newState, entities: newState.sequences };
   delete newState2.sequences;
 
+  const loadFilesToSessionStorage = async () => {
+    await Promise.all(files.map(async (file) => {
+      const fileContent = await file2base64(await file.getData(new BlobWriter()));
+      sessionStorage.setItem(`${file.filename}`, fileContent);
+    }));
+  };
+
   try {
     dispatch(setCloningState(newState2));
+    loadFilesToSessionStorage();
   } catch (e) {
     // TODO: I don't think this is needed anymore
     dispatch(revertToInitialState());
