@@ -5,8 +5,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
 import useDragAndDropFile from '../hooks/useDragAndDropFile';
-import HistoryDownloadedDialog from './HistoryLoadedDialog';
 import ScrollSyncWrapper from './utils/ScrollSyncWrapper';
+import SequenceOrHistoryFileLoader from './SequenceOrHistoryFileLoader';
 
 function CloningHistory({ network }) {
   // Because the cloning history is often very wide, we don't want the
@@ -15,7 +15,7 @@ function CloningHistory({ network }) {
   // second div that contains only a scrollbar, and we sync the scroll
   // of the two divs.
 
-  const { isDragging, handleDragLeave, handleDragOver, handleDrop, loadedHistory, setLoadedHistory } = useDragAndDropFile();
+  const { isDragging, handleDragLeave, handleDragOver, handleDrop, files } = useDragAndDropFile();
 
   return (
     <div
@@ -24,7 +24,7 @@ function CloningHistory({ network }) {
       onDrop={handleDrop}
       className={`${isDragging ? 'dragging-file' : ''} cloning-history`}
     >
-      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
+      <SequenceOrHistoryFileLoader files={files} />
       {isDragging ? (
         <div className="drag-file-wrapper">
           <div className="drag-file-container">

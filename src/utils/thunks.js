@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { batch } from 'react-redux';
 import { cloneDeep } from 'lodash-es';
-import { downloadStateAsJson } from './readNwrite';
+import { downloadStateAsJson, readSubmittedTextFile } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
@@ -26,27 +26,6 @@ export const exportSubStateThunk = (fileName, entityId) => async (dispatch, getS
   downloadStateAsJson({ entities: entitiesToExport, sources: sourcesToExport, description: '', primers }, fileName);
 };
 
-const loadStateThunk = (newState) => async (dispatch, getState) => {
-  dispatch(setCloningState({ sources: newState.sources, entities: newState.sequences }));
-  if (newState.primers) {
-    dispatch(setPrimers(newState.primers));
-  } else {
-    dispatch(setPrimers([]));
-  }
-  dispatch(setMainSequenceId(null));
-  if (newState.description) {
-    dispatch(setDescription(newState.description));
-  } else {
-    dispatch(setDescription(''));
-  }
-
-  if (newState.files) {
-    dispatch(setFiles(newState.files));
-  } else {
-    dispatch(setFiles([]));
-  }
-};
-
 const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = false) => async (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
@@ -64,10 +43,10 @@ const mergeStateThunk = (newState, removeSourceId = null, skipPrimers = false) =
   const stateForShifting = !removeSourceId ? oldState : { ...oldState, sources: oldState.sources.filter((s) => s.id !== removeSourceId) };
   const newState2 = shiftStateIds(newState, stateForShifting, skipPrimers);
   batch(() => {
-    dispatch(setPrimers([...oldState.primers, ...newState2.primers]));
     dispatch(setCloningState({
       sources: [...stateForShifting.sources, ...newState2.sources],
       entities: [...oldState.entities, ...newState2.entities],
+      primers: [...oldState.primers, ...newState2.primers],
     }));
   });
 };
@@ -85,10 +64,6 @@ export const copyEntityThunk = (entityId, copySourceId) => async (dispatch, getS
     primers: [],
   });
   dispatch(mergeStateThunk(newState, copySourceId, true));
-};
-
-const resetStateThunk = () => async (dispatch) => {
-  dispatch(revertToInitialState());
 };
 
 export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispatch, getState) => {
@@ -209,13 +184,17 @@ export const loadData = async (newState, isTemplate, dispatch, addAlert, url) =>
   if (isTemplate !== true) {
     validateState(newState, url, addAlert);
   }
+  const newState2 = { ...newState, entities: newState.sequences };
+  delete newState2.sequences;
 
-  dispatch(loadStateThunk(newState)).catch((e) => {
+  try {
+    dispatch(setCloningState(newState2));
+  } catch (e) {
     // TODO: I don't think this is needed anymore
-    dispatch(resetStateThunk());
+    dispatch(revertToInitialState());
     addAlert({
-      message: 'JSON file in wrong format',
+      message: 'JSON file is not from ShareYourCloning',
       severity: 'error',
     });
-  });
+  }
 };

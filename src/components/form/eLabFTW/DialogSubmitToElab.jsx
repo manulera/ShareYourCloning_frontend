@@ -31,6 +31,7 @@ function DialogSubmitToElab({ dialogOpen, setDialogOpen }) {
           event.preventDefault();
           setDialogOpen(false);
           setErrorMessage('');
+          // TODO: dispatch does not return a promise
           dispatch(uploadToELabFTWThunk(title, category.id, apiKey)).catch((error) => setErrorMessage(error.message));
         },
       }}

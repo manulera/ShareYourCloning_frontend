@@ -267,7 +267,7 @@ const reducer = {
   },
 
   setState(state, action) {
-    const { sources, entities } = action.payload;
+    const { sources, entities, primers, description, files } = action.payload;
     const ids = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
     // They should all be positive integers
     if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
@@ -280,6 +280,9 @@ const reducer = {
     state.sources = sources;
     state.entities = entities;
     state.teselaJsonCache = {};
+    state.primers = primers || [];
+    state.description = description || '';
+    state.files = files || [];
     entities.forEach((e) => {
       if (e.type !== 'TemplateSequence') {
         state.teselaJsonCache[e.id] = convertToTeselaJson(e);

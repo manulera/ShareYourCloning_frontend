@@ -23,6 +23,9 @@ import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
 import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
+import SequenceOrHistoryFileLoader from '../SequenceOrHistoryFileLoader';
+
+const { setCurrentTab, setMainSequenceId } = cloningActions;
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -30,6 +33,7 @@ function MainAppBar() {
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [openCloningStrategyDialog, setOpenCloningStrategyDialog] = React.useState(false);
+  const [files, setFiles] = React.useState(null);
 
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
@@ -44,7 +48,7 @@ function MainAppBar() {
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
-  const { setCurrentTab, setMainSequenceId } = cloningActions;
+
   const fileMenu = [
     { display: 'Save cloning history to file', onClick: () => setOpenCloningStrategyDialog(true) },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
@@ -83,25 +87,7 @@ function MainAppBar() {
   ];
 
   const onFileChange = async (event) => {
-    let jsonObject;
-    try {
-      jsonObject = JSON.parse(await readSubmittedTextFile(event.target.files[0]));
-    } catch (e) {
-      addAlert({
-        message: 'Input file should be a JSON file with the history',
-        severity: 'error',
-      });
-      return;
-    }
-
-    const { cloning } = store.getState();
-    // If no sequences have been loaded yet, simply load the history
-    if (cloning.entities.length === 0) {
-      loadData(jsonObject, false, dispatch, addAlert, backendRoute('validate'));
-    } else {
-      // Else ask the user whether they want to replace or append the history
-      setLoadedHistory(jsonObject);
-    }
+    setFiles(event.target.files);
   };
 
   // If you want to load a particular example on page load, you can do it here.
@@ -137,7 +123,8 @@ function MainAppBar() {
             }}
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
-            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} />
+            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json" />
+            {files && <SequenceOrHistoryFileLoader files={files} />}
             <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>
