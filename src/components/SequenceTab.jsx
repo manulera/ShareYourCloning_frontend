@@ -6,10 +6,12 @@ import PrimerDesigner from './primers/primer_design/SequenceTabComponents/Primer
 import CreatePrimerDialog from './primers/CreatePrimerDialog';
 
 const knownIssue = (
-  <Alert sx={{ mb: 2, marginX: 'auto', width: '40%' }} severity="warning">
-    <strong>Known issue:</strong>
-    {' '}
-    Chromatogram data from Sanger sequencing traces matching the bottom strand is not correctly displayed.
+  <Alert sx={{ mb: 2, marginX: 'auto', width: '50%' }} severity="warning" icon={false}>
+    <p><strong>Known issues:</strong></p>
+
+    <p>Chromatogram data from Sanger sequencing traces matching the bottom strand is not correctly displayed.</p>
+    <p>When displaying too many Sanger sequencing traces, you cannot scroll down to see all of them. I suggest to hide the chromatogram lane.</p>
+
   </Alert>
 );
 
