@@ -1,6 +1,3 @@
-import store from '../../src/store';
-import { loadData } from '../../src/utils/thunks';
-
 export function addSource(sourceType, isFirst = false) {
   if (!isFirst) {
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
@@ -168,7 +165,7 @@ export function changeTab(tabName) {
  * @param {Function} mountCallback - Callback that mounts the component
  * @returns {Cypress.Chainable} - A chainable promise for further assertions
  */
-export function loadDataAndMount(jsonPath, mountCallback) {
+export function loadDataAndMount(jsonPath, store, loadData, mountCallback) {
   // Set up the dummy route intercept
   cy.intercept('POST', 'dummy-route', {
     statusCode: 200,

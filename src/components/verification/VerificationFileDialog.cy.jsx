@@ -3,6 +3,7 @@ import VerificationFileDialog from './VerificationFileDialog';
 import store from '../../store';
 import { cloningActions } from '../../store/cloning';
 import { loadDataAndMount } from '../../../cypress/e2e/common_functions';
+import { loadData } from '../../utils/thunks';
 
 const { setFiles, setConfig } = cloningActions;
 
@@ -67,6 +68,8 @@ describe('<VerificationFileDialog />', () => {
 
     loadDataAndMount(
       'cypress/test_files/sequencing/cloning_strategy_linear.json',
+      store,
+      loadData,
       () => {
         cy.mount(<VerificationFileDialog id={2} dialogOpen setDialogOpen={() => {}} />);
       },
@@ -119,6 +122,8 @@ describe('<VerificationFileDialog />', () => {
     store.dispatch(setConfig({ backendUrl: 'http://127.0.0.1:8000' }));
     loadDataAndMount(
       'cypress/test_files/sequencing/cloning_strategy_linear.json',
+      store,
+      loadData,
       () => {
         cy.mount(<VerificationFileDialog id={2} dialogOpen setDialogOpen={() => {}} />);
       },

@@ -83,7 +83,13 @@ function MainAppBar() {
   ];
 
   const onFileChange = async (event) => {
-    setFiles(event.target.files);
+    console.log(event.target.files[0].name);
+    if (event.target.files[0].name.endsWith('.json') || event.target.files[0].name.endsWith('.zip')) {
+      setFiles(event.target.files);
+    } else {
+      addAlert({ message: 'Only JSON and zip files are accepted', severity: 'error' });
+      event.target.value = '';
+    }
   };
 
   // If you want to load a particular example on page load, you can do it here.

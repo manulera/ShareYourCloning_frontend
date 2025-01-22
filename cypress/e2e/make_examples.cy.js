@@ -41,7 +41,7 @@ describe('Makes all examples', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
     // Rename downloaded file
-    cy.readFile('cypress/downloads/history.json').then((file) => {
+    cy.readFile('cypress/downloads/cloning_strategy.json').then((file) => {
       cy.writeFile('cypress/downloads/homologous_recombination.json', JSON.stringify(file, null, 2));
     });
   });
@@ -87,7 +87,7 @@ describe('Makes all examples', () => {
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
 
     // Rename downloaded file
-    cy.readFile('cypress/downloads/history.json').then((file) => {
+    cy.readFile('cypress/downloads/cloning_strategy.json').then((file) => {
       cy.writeFile('cypress/downloads/restriction_ligation_assembly.json', JSON.stringify(file, null, 2));
     });
   });

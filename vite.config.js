@@ -44,6 +44,13 @@ export default ({ mode }) => {
       },
     ],
     optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-redux',
+        '@mui/material',
+
+      ],
       esbuildOptions: {
         loader: {
           '.js': 'jsx',

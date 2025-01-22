@@ -42,7 +42,7 @@ describe('Test upload history from file', () => {
   });
   it('Gives an error message for an incorrect type of file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/ase1.gb', { force: true });
-    cy.get('.MuiAlert-message').contains('should be a JSON');
+    cy.get('.MuiAlert-message').contains('Only JSON and zip files are accepted');
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/wrong_history.json', { force: true });
     cy.get('.MuiAlert-message').contains('JSON file in wrong format');
   });
