@@ -26,12 +26,17 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   React.useEffect(() => {
     if (loadedContent) {
       batch(() => {
+        // TODO: The issue here is that if there is an error raised in addHistory, the
+        // deleteSourceAndItsChildren has been called, and the source is deleted.
+        // Perhaps turn addHistory into a thunk and call it with dispatch.
         dispatch(deleteSourceAndItsChildren(source.id));
         addHistory(loadedContent.cloningStrategy, dispatch, setAlert, backendRoute('validate'), loadedContent.files);
         setLoadedContent(null);
       });
     }
   }, [loadedContent]);
+
+  console.log(alert);
 
   const onChange = async (event) => {
     setAlert(null);
