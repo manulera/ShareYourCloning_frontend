@@ -7,6 +7,7 @@ import { addHistory } from '../../utils/thunks';
 import useBackendRoute from '../../hooks/useBackendRoute';
 import LabelWithTooltip from '../form/LabelWithTooltip';
 import { cloningActions } from '../../store/cloning';
+import useLoadSequenceOrHistoryFile from '../../hooks/useLoadSequenceOrHistoryFile';
 
 const { deleteSourceAndItsChildren } = cloningActions;
 
@@ -16,23 +17,30 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   const [fileFormat, setFileFormat] = React.useState('');
   // Error message for json only
   const [alert, setAlert] = React.useState(null);
+  const [loadedFiles, setLoadedFiles] = React.useState([]);
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
+
+  const { loadedContent, setLoadedContent } = useLoadSequenceOrHistoryFile(loadedFiles);
+
+  React.useEffect(() => {
+    if (loadedContent) {
+      batch(() => {
+        dispatch(deleteSourceAndItsChildren(source.id));
+        addHistory(loadedContent.cloningStrategy, dispatch, setAlert, backendRoute('validate'), loadedContent.files);
+      });
+    }
+  }, [loadedContent]);
+
   const onChange = async (event) => {
     setAlert(null);
     const files = Array.from(event.target.files);
-    if (fileFormat === 'json' || (fileFormat === '' && files[0].name.endsWith('.json'))) {
-      let loadedHistory = null;
-      try {
-        loadedHistory = JSON.parse(await files[0].text());
-      } catch (error) {
-        setAlert({ message: 'Invalid JSON', severity: 'error' });
-        return;
-      }
-      batch(() => {
-        dispatch(deleteSourceAndItsChildren(source.id));
-        addHistory(loadedHistory, dispatch, setAlert, backendRoute('validate'));
-      });
+    // If the file is a history file, we load it
+    if (
+      fileFormat === 'json' || fileFormat === 'zip'
+      || (fileFormat === '' && (files[0].name.endsWith('.json') || files[0].name.endsWith('.zip')))
+    ) {
+      setLoadedFiles(files);
       return;
     }
     const requestData = new FormData();
@@ -64,6 +72,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="dna">Snapgene</MenuItem>
           <MenuItem value="embl">EMBL</MenuItem>
           <MenuItem value="json">JSON (history file)</MenuItem>
+          <MenuItem value="zip">Zip (history folder)</MenuItem>
         </Select>
       </FormControl>
 

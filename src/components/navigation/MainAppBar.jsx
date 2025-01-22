@@ -119,7 +119,7 @@ function MainAppBar() {
             }}
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
-            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json" />
+            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json,.zip" />
             {files && <SequenceOrHistoryFileLoader files={files} />}
             <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
