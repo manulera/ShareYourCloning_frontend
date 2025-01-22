@@ -75,7 +75,6 @@ export const downloadStateAsJson = async (cloningState, fileName = 'cloning_stra
 
 export const downloadStateAsZip = async (cloningState, zipFileName = 'cloning_strategy.zip') => {
   const output = formatStateForJsonExport(cloningState);
-  output.files = cloningState.files.map(({ file_content, ...rest }) => rest);
   const fileNames = cloningState.files.map((file) => `verification-${file.sequence_id}-${file.file_name}`);
   const files2write = [
     { name: 'cloning_strategy.json', reader: new TextReader(prettyPrintJson(output)) },

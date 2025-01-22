@@ -1,6 +1,7 @@
 import { useStore } from 'react-redux';
 import { updateEditor, addAlignment } from '@teselagen/ove';
 import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
+import { getJsonFromAb1Base64 } from '../utils/sequenceParsers';
 
 function reverseComplementArray(arr) {
   return arr.slice().reverse();
@@ -78,15 +79,18 @@ export default function useStoreEditor() {
                 sequence: alignmentFiles[0].alignment[0],
               },
             },
-            ...alignmentFiles.map((aln) => ({
-              sequenceData: {
-                name: aln.file_name,
-                sequence: aln.alignment[1].replaceAll('-', ''),
-              },
-              alignmentData: {
-                sequence: aln.alignment[1],
-              },
-              chromatogramData: reverseComplementChromatogramData(aln.file_content.chromatogramData),
+            ...await Promise.all(alignmentFiles.map(async (aln) => {
+              const { chromatogramData } = await getJsonFromAb1Base64(sessionStorage.getItem(`verification-${id}-${aln.file_name}`));
+              return {
+                sequenceData: {
+                  name: aln.file_name,
+                  sequence: aln.alignment[1].replaceAll('-', ''),
+                },
+                alignmentData: {
+                  sequence: aln.alignment[1],
+                },
+                chromatogramData,
+              };
             })),
           ],
         });

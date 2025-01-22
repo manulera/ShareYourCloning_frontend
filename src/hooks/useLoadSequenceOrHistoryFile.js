@@ -1,8 +1,8 @@
 import React from 'react';
 import { batch, useDispatch, useStore } from 'react-redux';
-import { BlobReader, BlobWriter, TextWriter, ZipReader } from '@zip.js/zip.js';
+import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
 import axios from 'axios';
-import { file2base64, readSubmittedTextFile } from '../utils/readNwrite';
+import { readSubmittedTextFile } from '../utils/readNwrite';
 import { loadData } from '../utils/thunks';
 import useBackendRoute from './useBackendRoute';
 import useAlerts from './useAlerts';
