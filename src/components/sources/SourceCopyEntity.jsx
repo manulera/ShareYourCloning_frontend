@@ -1,8 +1,11 @@
 import { Button, FormControl } from '@mui/material';
 import React from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { batch, shallowEqual, useDispatch, useSelector } from 'react-redux';
 import SingleInputSelector from './SingleInputSelector';
 import { copyEntityThunk } from '../../utils/thunks';
+import { cloningActions } from '../../store/cloning';
+
+const { deleteSourceAndItsChildren } = cloningActions;
 
 function SourceCopyEntity({ source }) {
   const [id, setId] = React.useState(null);
@@ -11,7 +14,10 @@ function SourceCopyEntity({ source }) {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(copyEntityThunk(id, source.id));
+    batch(() => {
+      dispatch(deleteSourceAndItsChildren(source.id));
+      dispatch(copyEntityThunk(id, source.id));
+    });
   };
 
   return (

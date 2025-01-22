@@ -14,8 +14,13 @@ export function convertToTeselaJson(sequence) {
   return tidyUpSequenceData(parsedSequence);
 }
 
-export async function getJsonFromAb1Base64(ab1Base64) {
-  const blob = base64ToBlob(ab1Base64);
-  const results = await ab1ToJson(blob);
-  return results[0].parsedSequence;
+export async function getJsonFromAb1Base64(ab1Base64, fileName = null) {
+  try {
+    const blob = base64ToBlob(ab1Base64);
+    const results = await ab1ToJson(blob);
+    return results[0].parsedSequence;
+  } catch (error) {
+    const fileNameError = fileName || 'ab1 file';
+    throw new Error(`Error parsing ${fileNameError}: ${error.message}`);
+  }
 }

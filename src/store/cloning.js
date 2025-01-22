@@ -3,6 +3,17 @@ import { constructNetwork } from '../utils/network';
 import { getNextPrimerId, getNextUniqueId } from './cloning_utils';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 
+function deleteFilesFromSessionStorage(sequenceId, fileName = null) {
+  Object.keys(sessionStorage)
+    .filter((key) => {
+      let query = `verification-${sequenceId}-`;
+      if (fileName) {
+        query += fileName;
+      }
+      return key.startsWith(query);
+    }).forEach((key) => sessionStorage.removeItem(key));
+}
+
 const initialState = {
   mainSequenceId: null,
   mainSequenceSelection: {},
@@ -258,10 +269,12 @@ const reducer = {
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
+    state.network = constructNetwork(state.entities, state.sources);
+    state.files = state.files.filter((f) => !entities2delete.includes(f.sequence_id));
     entities2delete.forEach((e) => {
       delete state.teselaJsonCache[e];
+      deleteFilesFromSessionStorage(e);
     });
-    state.network = constructNetwork(state.entities, state.sources);
   },
 
   setState(state, action) {
@@ -411,6 +424,12 @@ const reducer = {
   removeFile(state, action) {
     const { fileName, sequenceId } = action.payload;
     state.files = state.files.filter((f) => f.file_name !== fileName || f.sequence_id !== sequenceId);
+  },
+
+  removeFilesAssociatedToSequence(state, action) {
+    const sequenceId = action.payload;
+    state.files = state.files.filter((f) => f.sequence_id !== sequenceId);
+    deleteFilesFromSessionStorage(sequenceId);
   },
 };
 /* eslint-enable no-param-reassign */

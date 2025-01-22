@@ -14,78 +14,101 @@ import {
   Paper,
   Box,
   CircularProgress,
+  Alert,
 } from '@mui/material';
 import axios from 'axios';
-import { batch, shallowEqual, useDispatch, useSelector } from 'react-redux';
-import useAlerts from '../../hooks/useAlerts';
+import { batch, shallowEqual, useDispatch, useSelector, useStore } from 'react-redux';
 import { getJsonFromAb1Base64 } from '../../utils/sequenceParsers';
 import SequencingFileRow from './SequencingFileRow';
 import { cloningActions } from '../../store/cloning';
 import useBackendRoute from '../../hooks/useBackendRoute';
+import { file2base64 } from '../../utils/readNwrite';
 
-const { addFile, removeFile: removeFileAction } = cloningActions;
+const { addFile, removeFile: removeFileAction, removeFilesAssociatedToSequence } = cloningActions;
 
 export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }) {
   const fileNames = useSelector((state) => state.cloning.files.filter((f) => (f.sequence_id === id)).map((f) => f.file_name), shallowEqual);
   const entity = useSelector((state) => state.cloning.entities.find((e) => e.id === id), shallowEqual);
   const [loadingMessage, setLoadingMessage] = useState('');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const fileInputRef = useRef(null);
 
-  const { addAlert } = useAlerts();
   const backendRoute = useBackendRoute();
+  const store = useStore();
 
-  const handleFileUpload = async (event) => {
-    setLoadingMessage('Aligning...');
-    const newFiles = Array.from(event.target.files);
+  const handleFileUpload = async (newFiles) => {
     // Clear the input
     fileInputRef.current.value = '';
     if (newFiles.find((file) => !file.name.endsWith('.ab1'))) {
-      addAlert({ message: 'Only ab1 files are accepted', severity: 'error' });
+      setError('Only ab1 files are accepted');
+      setLoadingMessage('');
       return;
     }
 
-    // Read the files to an array of base64 files
-    const base64Files = await Promise.all(newFiles.map((file) => new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        const base64String = reader.result.split(',')[1];
-        resolve(base64String);
+    // Read the new ab1 files
+    const parsedAb1Files = await Promise.all(newFiles.map(async (newFile) => {
+      const base64str = await file2base64(newFile);
+      return {
+        sequence_id: id,
+        trace: (await getJsonFromAb1Base64(base64str, newFile.name)).sequence,
+        base64str,
+        file_name: newFile.name,
+        file_type: 'Sanger sequencing',
       };
-      reader.readAsDataURL(file);
-    })));
+    }));
 
-    // Read the alignments
-    const parsedAb1Files = await Promise.all(base64Files.map(async (base64str, i) => ({
-      sequence_id: id,
-      file_content: await getJsonFromAb1Base64(base64str),
-      file_name: newFiles[i].name,
-      file_type: 'Sanger sequencing',
-    })));
+    // Read the existing ab1 files
+    const existingAb1FilesInState = await Promise.all(store.getState().cloning.files
+      .filter((f) => f.sequence_id === id && f.file_type === 'Sanger sequencing')
+      .map(async (f) => {
+        const base64str = sessionStorage.getItem(`verification-${id}-${f.file_name}`);
+        const trace = (await getJsonFromAb1Base64(base64str, f.file_name)).sequence;
+        return { ...f, base64str, trace };
+      }));
 
-    const alignments = [];
-    try {
-      const traces = parsedAb1Files.map((ab1File) => ab1File.file_content.sequence);
-      const resp = await axios.post(backendRoute('align_sanger'), { sequence: entity, traces });
-
-      for (let i = 0; i < parsedAb1Files.length; i++) {
-        alignments.push({ ...parsedAb1Files[i], alignment: [resp.data[0], resp.data[i + 1]] });
-      }
-    } catch (error) {
-      console.error(error);
-      addAlert({ message: error.message, severity: 'error' });
+    // Throw an error if repeated files are found
+    const existingAb1FilesInStateNames = existingAb1FilesInState.map((f) => f.file_name);
+    const repeatedFile = parsedAb1Files.find((f) => existingAb1FilesInStateNames.includes(f.file_name));
+    if (repeatedFile) {
+      setError(`A file named ${repeatedFile.file_name} is already associated to this sequence`);
+      setLoadingMessage('');
       return;
     }
 
-    // Store the base64 strings in the sessionStorage
-    base64Files.forEach((base64String, i) => { sessionStorage.setItem(`verification-${id}-${newFiles[i].name}`, base64String); });
+    // We have to align all again to have a common reference
+    const allAb1Files = [...existingAb1FilesInState, ...parsedAb1Files];
+    const alignments = [];
+    const traces = allAb1Files.map((ab1File) => ab1File.trace);
+    const resp = await axios.post(backendRoute('align_sanger'), { sequence: entity, traces });
+
+    for (let i = 0; i < allAb1Files.length; i++) {
+      alignments.push({ ...allAb1Files[i], alignment: [resp.data[0], resp.data[i + 1]] });
+    }
 
     // Add the files to the store
     batch(() => {
-      alignments.forEach((alignment) => dispatch(addFile(alignment)));
+      dispatch(removeFilesAssociatedToSequence(id));
+      alignments.forEach((alignment) => {
+        const { trace, base64str, ...rest } = alignment;
+        dispatch(addFile(rest));
+      });
+      alignments.forEach(({ base64str, file_name }) => { sessionStorage.setItem(`verification-${id}-${file_name}`, base64str); });
     });
     setLoadingMessage('');
   };
+
+  const onFileChange = useCallback(async (event) => {
+    setLoadingMessage('Aligning...');
+    setError('');
+    try {
+      await handleFileUpload(Array.from(event.target.files));
+      setLoadingMessage('');
+    } catch (error) {
+      setError(error.message);
+      setLoadingMessage('');
+    }
+  }, [handleFileUpload]);
 
   const removeFile = useCallback((fileName) => {
     dispatch(removeFileAction({ fileName, sequenceId: id }));
@@ -98,7 +121,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
   const downloadFile = (fileName) => {
     const base64Content = sessionStorage.getItem(`verification-${id}-${fileName}`);
     if (!base64Content) {
-      addAlert({ message: `File ${fileName} not found in session storage`, severity: 'error' });
+      setError(`File ${fileName} not found in session storage`);
       return;
     }
     const binaryString = atob(base64Content);
@@ -131,7 +154,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
           type="file"
           accept=".ab1"
           multiple
-          onChange={handleFileUpload}
+          onChange={onFileChange}
           style={{ display: 'none' }}
           ref={fileInputRef}
         />
@@ -164,6 +187,14 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
             </TableBody>
           </Table>
         </TableContainer>
+
+        {error && (
+          <Box sx={{ mt: 2 }}>
+            <Alert severity="error">
+              {error}
+            </Alert>
+          </Box>
+        )}
 
         <Button
           variant="contained"

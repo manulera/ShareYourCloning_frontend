@@ -1,6 +1,6 @@
 import React from 'react';
 import { batch, useDispatch, useStore } from 'react-redux';
-import { BlobReader, TextWriter, ZipReader } from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, TextWriter, ZipReader } from '@zip.js/zip.js';
 import axios from 'axios';
 import { readSubmittedTextFile } from '../utils/readNwrite';
 import { loadData } from '../utils/thunks';
@@ -88,10 +88,11 @@ export default function useLoadSequenceOrHistoryFile(files) {
           addAlert({ message: 'Could not parse the cloning strategy file.', severity: 'error' });
           return;
         }
-        // Clear all sessionStorate fields that start with temp-
-        Object.keys(sessionStorage).filter((key) => key.startsWith('temp-')).forEach((key) => sessionStorage.removeItem(key));
 
-        const verificationFiles = entries.filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename));
+        const verificationFiles = await Promise.all(entries
+          .filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename))
+          .map((entry) => entry.getData(new BlobWriter())));
+
         if (cloningState.entities.length === 0) {
           loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), verificationFiles);
         } else {

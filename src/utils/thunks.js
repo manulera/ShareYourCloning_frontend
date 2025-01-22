@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { cloneDeep } from 'lodash-es';
-import { BlobWriter } from '@zip.js/zip.js';
-import { downloadStateAsJson, file2base64 } from './readNwrite';
+import { base64ToBlob, downloadStateAsJson, file2base64 } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
@@ -50,8 +49,8 @@ const mergeStateThunk = (newState, skipPrimers = false, files = []) => (dispatch
 
   const loadFilesToSessionStorage = async () => {
     await Promise.all(files.map(async (file) => {
-      const fileContent = await file2base64(await file.getData(new BlobWriter()));
-      const filename = file.filename.replace(/verification-(\d+)-/, (match, num) => `verification-${parseInt(num, 10) + networkShift}-`);
+      const fileContent = await file2base64(file);
+      const filename = file.name.replace(/verification-(\d+)-/, (match, num) => `verification-${parseInt(num, 10) + networkShift}-`);
       sessionStorage.setItem(filename, fileContent);
     }));
   };
@@ -64,13 +63,20 @@ export const copyEntityThunk = (entityId) => async (dispatch, getState) => {
   const entitiesToCopy = entities.filter((e) => e.id === entityId);
   const sourcesToCopy = sources.filter((s) => s.output === entityId);
   collectParentEntitiesAndSources(sourcesToCopy[0], sources, entities, entitiesToCopy, sourcesToCopy);
+  const entityIds = entitiesToCopy.map((e) => e.id);
+  const filesToCopy = state.cloning.files.filter((f) => entityIds.includes(f.sequence_id));
   const newState = cloneDeep({
     sequences: entitiesToCopy,
     sources: sourcesToCopy,
-    description: '',
     primers: [],
+    files: filesToCopy,
   });
-  dispatch(mergeStateThunk(newState, true));
+  const files = filesToCopy.map((f) => new File(
+    [base64ToBlob(sessionStorage.getItem(`verification-${f.sequence_id}-${f.file_name}`))],
+    `verification-${f.sequence_id}-${f.file_name}`,
+    { type: 'application/octet-stream' },
+  ));
+  dispatch(mergeStateThunk(newState, true, files));
 };
 
 export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispatch, getState) => {
@@ -196,8 +202,8 @@ export const loadData = (newState, isTemplate, dispatch, addAlert, url, files = 
 
   const loadFilesToSessionStorage = async () => {
     await Promise.all(files.map(async (file) => {
-      const fileContent = await file2base64(await file.getData(new BlobWriter()));
-      sessionStorage.setItem(`${file.filename}`, fileContent);
+      const fileContent = await file2base64(file);
+      sessionStorage.setItem(`${file.name}`, fileContent);
     }));
   };
 

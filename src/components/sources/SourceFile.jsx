@@ -28,6 +28,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
       batch(() => {
         dispatch(deleteSourceAndItsChildren(source.id));
         addHistory(loadedContent.cloningStrategy, dispatch, setAlert, backendRoute('validate'), loadedContent.files);
+        setLoadedContent(null);
       });
     }
   }, [loadedContent]);

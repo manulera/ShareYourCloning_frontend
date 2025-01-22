@@ -81,7 +81,7 @@ export const downloadStateAsZip = async (cloningState, zipFileName = 'cloning_st
     ...fileNames.map((fileName) => {
       const base64Content = sessionStorage.getItem(fileName);
       if (!base64Content) {
-        const nameOnly = fileName.split('-')[2];
+        const nameOnly = fileName.replace(/verification-\d+-/, '');
         throw new Error(`File ${nameOnly} not found in session storage`);
       }
       return { name: fileName, reader: new BlobReader(base64ToBlob(base64Content)) };
