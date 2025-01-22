@@ -41,9 +41,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
     // Clear the input
     fileInputRef.current.value = '';
     if (newFiles.find((file) => !file.name.endsWith('.ab1'))) {
-      setError('Only ab1 files are accepted');
-      setLoadingMessage('');
-      return;
+      throw new Error('Only ab1 files are accepted');
     }
 
     // Read the new ab1 files
@@ -71,9 +69,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
     const existingAb1FilesInStateNames = existingAb1FilesInState.map((f) => f.file_name);
     const repeatedFile = parsedAb1Files.find((f) => existingAb1FilesInStateNames.includes(f.file_name));
     if (repeatedFile) {
-      setError(`A file named ${repeatedFile.file_name} is already associated to this sequence`);
-      setLoadingMessage('');
-      return;
+      throw new Error(`A file named ${repeatedFile.file_name} is already associated to this sequence`);
     }
 
     // We have to align all again to have a common reference
@@ -112,6 +108,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
 
   const removeFile = useCallback((fileName) => {
     dispatch(removeFileAction({ fileName, sequenceId: id }));
+    sessionStorage.removeItem(`verification-${id}-${fileName}`);
   }, [id]);
 
   const handleClickUpload = () => {
@@ -179,6 +176,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
               {fileNames.map((fileName) => (
                 <SequencingFileRow
                   key={fileName}
+                  id={id}
                   fileName={fileName}
                   removeFile={removeFile}
                   downloadFile={downloadFile}

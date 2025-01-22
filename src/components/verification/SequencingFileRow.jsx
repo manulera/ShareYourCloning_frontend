@@ -5,17 +5,11 @@ import {
   TableCell,
   TableRow,
   IconButton,
-  CircularProgress,
-  Tooltip,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { isEqual } from 'lodash-es';
 
-function SequencingFileRow({ fileName, removeFile, downloadFile }) {
-  const { hasAlignment, fileType } = useSelector((state) => {
-    const file = state.cloning.files.find((f) => f.file_name === fileName);
-    return { hasAlignment: file.alignment !== undefined, fileType: file?.file_type };
-  }, isEqual);
+function SequencingFileRow({ id, fileName, removeFile, downloadFile }) {
+  const fileType = useSelector((state) => state.cloning.files.find((f) => f.file_name === fileName && f.sequence_id === id).file_type);
 
   return (
     <TableRow>
@@ -26,13 +20,6 @@ function SequencingFileRow({ fileName, removeFile, downloadFile }) {
         <IconButton onClick={() => downloadFile(fileName)} color="primary">
           <DownloadIcon />
         </IconButton>
-        {!hasAlignment && (
-          <Tooltip arrow title="Aligning">
-            <IconButton>
-              <CircularProgress size="1rem" />
-            </IconButton>
-          </Tooltip>
-        )}
       </TableCell>
       <TableCell>
         {fileName}

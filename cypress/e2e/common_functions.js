@@ -1,3 +1,6 @@
+import store from '../../src/store';
+import { loadData } from '../../src/utils/thunks';
+
 export function addSource(sourceType, isFirst = false) {
   if (!isFirst) {
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
@@ -157,4 +160,32 @@ export function skipGoogleSheetErrors() {
 
 export function changeTab(tabName) {
   cy.get('button.MuiTab-root').contains(tabName).click();
+}
+
+/**
+ * Loads test data and mounts a component for verification testing
+ * @param {string} jsonPath - Path to the JSON test file
+ * @param {Function} mountCallback - Callback that mounts the component
+ * @returns {Cypress.Chainable} - A chainable promise for further assertions
+ */
+export function loadDataAndMount(jsonPath, mountCallback) {
+  // Set up the dummy route intercept
+  cy.intercept('POST', 'dummy-route', {
+    statusCode: 200,
+  });
+
+  // Create a promise to handle the async dispatch
+  const loadDataPromise = (data) => new Promise((resolve) => {
+    store.dispatch(async (dispatch) => {
+      await loadData(data, false, dispatch, () => {}, 'dummy-route');
+      resolve();
+    });
+  });
+
+  // Return the chainable promise
+  return cy.readFile(jsonPath)
+    .then(loadDataPromise)
+    .then(() => {
+      mountCallback();
+    });
 }

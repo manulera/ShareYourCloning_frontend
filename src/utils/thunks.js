@@ -193,7 +193,7 @@ export const addHistory = (newState, dispatch, addAlert, url, files = []) => {
   }
 };
 
-export const loadData = (newState, isTemplate, dispatch, addAlert, url, files = []) => {
+export const loadData = async (newState, isTemplate, dispatch, addAlert, url, files = []) => {
   if (isTemplate !== true) {
     validateState(newState, url, addAlert);
   }
@@ -209,7 +209,7 @@ export const loadData = (newState, isTemplate, dispatch, addAlert, url, files = 
 
   try {
     dispatch(setCloningState(newState2));
-    loadFilesToSessionStorage();
+    await loadFilesToSessionStorage();
   } catch (e) {
     // TODO: I don't think this is needed anymore
     dispatch(revertToInitialState());
