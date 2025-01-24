@@ -1,6 +1,6 @@
 import React from 'react';
 import SubmitWalkthrough from './SubmitWalkthrough';
-import ControlledWalkthrough from './ControlledWalkthrough';
+// import ControlledWalkthrough from './ControlledWalkthrough';
 
 const ExampleWalkthroughs = () => {
     return (
