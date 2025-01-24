@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import Joyride, { STATUS } from 'react-joyride';
+import Joyride, { ACTIONS, EVENTS } from 'react-joyride';
 
 function CloningWalkthrough() {
   const [run, setRun] = useState(false);
+  const [stepIndex, setStepIndex] = useState(0);
 
   const steps = [
     {
@@ -35,51 +36,62 @@ function CloningWalkthrough() {
       title: 'Select source type',
       target: '#source-1 .select-source .MuiFormControl-root',
       content: 'You can select the origin of your source using this dropdown menu.',
+      placement: 'left',
     },
     {
       title: 'Select source type (II)',
-      target: 'li[data-value="ManuallyTypedSource"]',
-      content: 'You can select the origin of your source using this dropdown menu.',
+      target: 'li[data-value="GenomeCoordinatesSource"]',
+      content: 'Let\'s select a genome region.',
+      placement: 'left',
+    },
+    {
+      title: 'Select type of genome region',
+      target: '#source-1 form',
+      content: 'You can choose from blah blah blah.',
+      placement: 'left',
     },
 
   ];
 
   const handleJoyrideCallback = (data) => {
-    const { status, type } = data;
-    // console.log(data);
-    const finishedStatuses = [STATUS.FINISHED, STATUS.SKIPPED];
+    const { type, index } = data;
 
-    // console.log(data.step.title, data.action, data.status);
-    console.log(data.step.title, data.action);
-    if (data.step.title === 'Select source type' && data.action === 'next') {
+    const nextStepIndex = index + (data.action === ACTIONS.PREV ? -1 : 1);
+    console.log(index, data.step.title, data.action, data.status);
+
+    // Here we open the dropdown menu before the step (fast so we don't need to await, but probably better to wait anyway)
+    if (data.step.title === 'Select source type' && data.type === 'step:before') {
       const select = document.querySelector('#source-1 .select-source .MuiSelect-select');
       select?.dispatchEvent(new MouseEvent('mousedown', {
         bubbles: true,
         cancelable: true,
         view: window,
       }));
-    }
-    if (data.step.title === 'Select source type (II)' && data.action === 'next') {
-      const menuItem = document.querySelector('li[data-value="ManuallyTypedSource"]');
-      menuItem?.dispatchEvent(new MouseEvent('mousedown', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      }));
+    // Here we click on an option, and wait 300ms before showing the next step so that the element
+    // is visible to the user. Probably it could be switched to a better approach that actually waits
+    // for a given element to be visible.
+    } else if (data.step.title === 'Select source type (II)' && data.type === 'step:after') {
+      setRun(false);
+      const menuItem = document.querySelector('li[data-value="GenomeCoordinatesSource"]');
       menuItem?.dispatchEvent(new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
         view: window,
       }));
-    }
-    if (finishedStatuses.includes(status)) {
-      setRun(false);
+      setTimeout(() => {
+        setStepIndex(nextStepIndex);
+        setRun(true);
+      }, 300);
+    // In all other cases, we just move to the next step.
+    } else if (([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND]).includes(type)) {
+      setStepIndex(nextStepIndex);
     }
   };
 
   return (
     <div>
       <button
+        type="button"
         onClick={() => setRun(true)}
         style={{
           position: 'fixed',
@@ -94,6 +106,7 @@ function CloningWalkthrough() {
         callback={handleJoyrideCallback}
         continuous
         run={run}
+        stepIndex={stepIndex}
         showProgress
         showSkipButton
         steps={steps}
