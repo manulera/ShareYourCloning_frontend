@@ -56,7 +56,7 @@ const SubmitWalkthrough = () => {
     
         if (finishedStatuses.includes(status)) {
           setRun(false);
-        }
+        } 
 
         // Step 1
         if (type === 'step:before' && data.step.target === '#source-1') {
