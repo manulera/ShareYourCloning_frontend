@@ -104,6 +104,7 @@ function CloningWalkthrough() {
       </button>
       <Joyride
         callback={handleJoyrideCallback}
+        hideBackButton
         continuous
         run={run}
         stepIndex={stepIndex}
