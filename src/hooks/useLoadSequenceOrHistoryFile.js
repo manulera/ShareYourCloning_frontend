@@ -1,12 +1,16 @@
 import React from 'react';
 import { batch, useDispatch, useStore } from 'react-redux';
-import { BlobReader, BlobWriter, TextWriter, ZipReader } from '@zip.js/zip.js';
+import { BlobReader, BlobWriter, TextWriter, ZipReader, configure } from '@zip.js/zip.js';
 import axios from 'axios';
 import { readSubmittedTextFile } from '../utils/readNwrite';
 import { loadData } from '../utils/thunks';
 import useBackendRoute from './useBackendRoute';
 import useAlerts from './useAlerts';
 import { cloningActions } from '../store/cloning';
+
+configure({
+  useWebWorkers: false,
+});
 
 const { addSourceAndItsOutputEntity, deleteSourceAndItsChildren } = cloningActions;
 
