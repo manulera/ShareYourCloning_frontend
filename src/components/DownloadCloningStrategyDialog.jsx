@@ -16,6 +16,7 @@ function DownloadCloningStrategyDialog({ open, setOpen }) {
   return (
     <Dialog
       open={open}
+      className="download-cloning-strategy-dialog"
       onClose={() => setOpen(false)}
       PaperProps={{
         component: 'form',

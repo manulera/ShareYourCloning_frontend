@@ -83,7 +83,6 @@ function MainAppBar() {
   ];
 
   const onFileChange = async (event) => {
-    console.log(event.target.files[0].name);
     if (event.target.files[0].name.endsWith('.json') || event.target.files[0].name.endsWith('.zip')) {
       setFiles(event.target.files);
     } else {

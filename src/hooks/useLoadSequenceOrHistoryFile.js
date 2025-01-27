@@ -95,7 +95,10 @@ export default function useLoadSequenceOrHistoryFile(files, allowReplace = true)
 
         const verificationFiles = await Promise.all(entries
           .filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename))
-          .map((entry) => entry.getData(new BlobWriter())));
+          .map((entry) => {
+            const blob = entry.getData(new BlobWriter());
+            return new File([blob], entry.filename, { type: blob.type });
+          }));
 
         if (allowReplace && cloningState.entities.length === 0) {
           loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), verificationFiles);

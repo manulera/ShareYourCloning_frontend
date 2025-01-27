@@ -10,7 +10,6 @@ function reverseComplementArray(arr) {
 export function reverseComplementChromatogramData(chromatogramDataIn) {
   const chromatogramData = { ...chromatogramDataIn };
   const complement = { A: 'T', T: 'A', G: 'C', C: 'G', N: 'N' };
-  console.log(chromatogramData);
   function reverseComplementSequence(seq) {
     return seq
       .map((base) => complement[base] || base).reverse();
