@@ -25,7 +25,7 @@ export const exportSubStateThunk = (fileName, entityId) => async (dispatch, getS
   downloadStateAsJson({ entities: entitiesToExport, sources: sourcesToExport, description: '', primers }, fileName);
 };
 
-const mergeStateThunk = (newState, skipPrimers = false, files = []) => (dispatch, getState) => {
+export const mergeStateThunk = (newState, skipPrimers = false, files = []) => (dispatch, getState) => {
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
@@ -177,19 +177,6 @@ export const validateState = async (newState, url, addAlert) => {
         severity: 'error',
       });
     }
-  }
-};
-
-export const addHistory = (newState, dispatch, addAlert, url, files = []) => {
-  validateState(newState, url, addAlert);
-  try {
-    dispatch(mergeStateThunk(newState, false, files));
-  } catch (e) {
-    console.error(e);
-    addAlert({
-      message: e.message,
-      severity: 'error',
-    });
   }
 };
 

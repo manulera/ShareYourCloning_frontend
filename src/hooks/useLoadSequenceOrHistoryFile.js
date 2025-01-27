@@ -54,7 +54,7 @@ async function processSequenceFiles(files, backendRoute) {
   return { sources: allSources, entities: allEntities, warnings: allWarnings };
 }
 
-export default function useLoadSequenceOrHistoryFile(files) {
+export default function useLoadSequenceOrHistoryFile(files, allowReplace = true) {
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
   const { addAlert } = useAlerts();
@@ -68,7 +68,7 @@ export default function useLoadSequenceOrHistoryFile(files) {
       // Single json file
       if (files.length === 1 && files[0].name.endsWith('.json')) {
         const jsonContent = JSON.parse(await readSubmittedTextFile(files[0]));
-        if (cloningState.entities.length === 0) {
+        if (allowReplace && cloningState.entities.length === 0) {
           loadData(jsonContent, false, dispatch, addAlert, backendRoute('validate'));
         } else {
           setLoadedContent({ cloningStrategy: jsonContent, files: [] });
@@ -93,7 +93,7 @@ export default function useLoadSequenceOrHistoryFile(files) {
           .filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename))
           .map((entry) => entry.getData(new BlobWriter())));
 
-        if (cloningState.entities.length === 0) {
+        if (allowReplace && cloningState.entities.length === 0) {
           loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), verificationFiles);
         } else {
           setLoadedContent({ cloningStrategy, files: verificationFiles });

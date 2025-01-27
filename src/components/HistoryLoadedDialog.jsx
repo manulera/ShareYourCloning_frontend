@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { addHistory, loadData } from '../utils/thunks';
+import { loadData, mergeStateThunk, validateState } from '../utils/thunks';
 import useBackendRoute from '../hooks/useBackendRoute';
 import useAlerts from '../hooks/useAlerts';
 
@@ -22,7 +22,15 @@ function HistoryLoadedDialog({ loadedContent, setLoadedContent }) {
           if (selectedOption === 'replace') {
             loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), files);
           } else {
-            addHistory(cloningStrategy, dispatch, addAlert, backendRoute('validate'), files);
+            validateState(cloningStrategy, backendRoute('validate'), addAlert);
+            try {
+              dispatch(mergeStateThunk(cloningStrategy, false, files));
+            } catch (e) {
+              addAlert({
+                message: e.message,
+                severity: 'error',
+              });
+            }
           }
           setLoadedContent(null);
         },

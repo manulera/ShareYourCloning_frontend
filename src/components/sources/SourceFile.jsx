@@ -3,13 +3,14 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
 import { useDispatch, batch } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
-import { addHistory } from '../../utils/thunks';
+import { mergeStateThunk, validateState } from '../../utils/thunks';
 import useBackendRoute from '../../hooks/useBackendRoute';
 import LabelWithTooltip from '../form/LabelWithTooltip';
 import { cloningActions } from '../../store/cloning';
 import useLoadSequenceOrHistoryFile from '../../hooks/useLoadSequenceOrHistoryFile';
+import useAlerts from '../../hooks/useAlerts';
 
-const { deleteSourceAndItsChildren } = cloningActions;
+const { deleteSourceAndItsChildren, restoreSource } = cloningActions;
 
 // A component providing an interface to import a file
 function SourceFile({ source, requestStatus, sendPostRequest }) {
@@ -20,23 +21,27 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   const [loadedFiles, setLoadedFiles] = React.useState([]);
   const dispatch = useDispatch();
   const backendRoute = useBackendRoute();
+  const { addAlert } = useAlerts();
 
-  const { loadedContent, setLoadedContent } = useLoadSequenceOrHistoryFile(loadedFiles);
+  const { loadedContent, setLoadedContent } = useLoadSequenceOrHistoryFile(loadedFiles, false);
 
   React.useEffect(() => {
     if (loadedContent) {
+      validateState(loadedContent.cloningStrategy, backendRoute('validate'), addAlert);
       batch(() => {
-        // TODO: The issue here is that if there is an error raised in addHistory, the
-        // deleteSourceAndItsChildren has been called, and the source is deleted.
-        // Perhaps turn addHistory into a thunk and call it with dispatch.
+        // Replace the source with the new one
         dispatch(deleteSourceAndItsChildren(source.id));
-        addHistory(loadedContent.cloningStrategy, dispatch, setAlert, backendRoute('validate'), loadedContent.files);
+        try {
+          dispatch(mergeStateThunk(loadedContent.cloningStrategy, false, loadedContent.files));
+        } catch (e) {
+          // If an error occurs, restore the old source
+          setAlert({ message: e.message, severity: 'error' });
+          dispatch(restoreSource({ ...source, type: 'UploadedFileSource' }));
+        }
         setLoadedContent(null);
       });
     }
   }, [loadedContent]);
-
-  console.log(alert);
 
   const onChange = async (event) => {
     setAlert(null);

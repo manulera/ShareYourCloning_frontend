@@ -72,6 +72,14 @@ const reducer = {
     state.network = constructNetwork(state.entities, state.sources);
   },
 
+  restoreSource(state, action) {
+    // This is used to roll back a source that was deleted
+    const source = action.payload;
+    const { sources } = state;
+    sources.push(source);
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
   addTemplateChildAndSubsequentSource(state, action) {
     // This is used by the Hom. Rec. primer design. You pass a
     // sourceId for which you want to add a template sequence as
