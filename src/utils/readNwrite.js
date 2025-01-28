@@ -154,8 +154,10 @@ export async function loadHistoryFile(file) {
 
   if (isZipFile) {
     const zipReader = new ZipReader(new BlobReader(file));
-    const entries = await zipReader.getEntries();
+    // Only in the root directory (e.g. Mac sometimes add __MACOSX/.. to the zip)
+    const entries = (await zipReader.getEntries()).filter((entry) => !entry.filename.includes('/'));
     const jsonFilesInZip = entries.filter((entry) => entry.filename.endsWith('.json'));
+
     if (jsonFilesInZip.length !== 1) {
       throw new Error('Zip file must contain exactly one JSON file.');
     }
@@ -176,9 +178,34 @@ export async function loadHistoryFile(file) {
   } catch (error) {
     throw new Error('Invalid JSON file.');
   }
-
   const newCloningStrategy = { ...cloningStrategy, entities: cloningStrategy.sequences };
   delete newCloningStrategy.sequences;
+
+  // Drop the files if loading only json
+  if (isJsonFile) {
+    newCloningStrategy.files = [];
+  }
+
+  // Check files
+  if (isZipFile) {
+    if (!newCloningStrategy.files) {
+      newCloningStrategy.files = [];
+    }
+    // Missing files in zip
+    const stateFileNames = newCloningStrategy.files.map((f) => `verification-${f.sequence_id}-${f.file_name}`);
+    const verificationFileNames = verificationFiles.map((f) => f.name);
+
+    const missingFile = stateFileNames.find((name) => !verificationFileNames.includes(name));
+    if (missingFile) {
+      throw new Error(`File ${missingFile} not found in zip.`);
+    }
+
+    // Excess file in zip
+    const excessFile = verificationFileNames.find((name) => !stateFileNames.includes(name));
+    if (excessFile) {
+      throw new Error(`File ${excessFile} found in zip but not in cloning strategy.`);
+    }
+  }
 
   return { cloningStrategy: newCloningStrategy, verificationFiles };
 }

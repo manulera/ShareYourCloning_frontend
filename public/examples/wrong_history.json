@@ -1,7 +1,7 @@
 {
     "sequences": [
         {
-            "id": 3,
+            "id": 2,
             "type": "TextFileSequence",
             "sequence_file_format": "genbank",
             "sequence": {
@@ -59,6 +59,16 @@
                 "overhang_crick_3prime": 0,
                 "overhang_watson_3prime": 0
             }
+        }
+    ],
+    "files": [
+        {
+            "sequence_id": 2,
+            "file_name": "BZO903_13409037_13409037.ab1"
+        },
+        {
+            "sequence_id": 2,
+            "file_name": "BZO902_13409020_13409020.ab1"
         }
     ]
 }

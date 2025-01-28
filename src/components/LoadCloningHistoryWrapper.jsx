@@ -76,7 +76,16 @@ function LoadCloningHistoryWrapper({ fileList, clearFiles, children }) {
       const isJsonFile = files.length === 1 && files[0].name.endsWith('.json');
       // If the file is a zip or json file, load the history file
       if (isZipFile || isJsonFile) {
-        const { cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]);
+        let cloningStrategy;
+        let verificationFiles;
+        try {
+          ({ cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]));
+        } catch (e) {
+          console.error(e);
+          addAlert({ message: e.message, severity: 'error' });
+          return;
+        }
+
         const replaceState = async () => {
           try {
             dispatch(setCloningState(cloningStrategy));

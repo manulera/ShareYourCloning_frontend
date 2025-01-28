@@ -39,6 +39,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
       try {
         ({ cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]));
       } catch (e) {
+        console.error(e);
         setAlert({ message: 'Invalid JSON file', severity: 'error' });
         return;
       }

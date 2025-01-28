@@ -186,3 +186,9 @@ export function loadDataAndMount(jsonPath, store, loadData, mountCallback) {
       mountCallback();
     });
 }
+
+export function closeAlerts() {
+  cy.get('div#global-error-message-wrapper .MuiAlert-root button').each((el) => {
+    cy.get('div#global-error-message-wrapper .MuiAlert-root button').first().click();
+  });
+}
