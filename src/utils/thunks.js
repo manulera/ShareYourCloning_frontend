@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { cloneDeep } from 'lodash-es';
-import { base64ToBlob, downloadStateAsJson, file2base64 } from './readNwrite';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { base64ToBlob, downloadStateAsJson, file2base64, loadFilesToSessionStorage } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
@@ -29,7 +30,7 @@ export const mergeStateThunk = (newState, skipPrimers = false, files = []) => (d
   const { cloning: oldState } = getState();
   const existingPrimerNames = oldState.primers.map((p) => p.name);
 
-  if (newState.primers === undefined || newState.sequences === undefined || newState.sources === undefined) {
+  if (newState.primers === undefined || newState.entities === undefined || newState.sources === undefined) {
     throw new Error('JSON file should contain at least keys: primers, sequences and sources');
   }
   if (newState.primers.length > 0 && skipPrimers) {
@@ -40,21 +41,18 @@ export const mergeStateThunk = (newState, skipPrimers = false, files = []) => (d
   }
 
   const { newState2, networkShift } = shiftStateIds(newState, oldState, skipPrimers);
-  dispatch(setCloningState({
-    sources: [...oldState.sources, ...newState2.sources],
-    entities: [...oldState.entities, ...newState2.entities],
-    primers: [...oldState.primers, ...newState2.primers],
-    files: [...oldState.files, ...newState2.files],
-  }));
-
-  const loadFilesToSessionStorage = async () => {
-    await Promise.all(files.map(async (file) => {
-      const fileContent = await file2base64(file);
-      const filename = file.name.replace(/verification-(\d+)-/, (match, num) => `verification-${parseInt(num, 10) + networkShift}-`);
-      sessionStorage.setItem(filename, fileContent);
+  try {
+    dispatch(setCloningState({
+      sources: [...oldState.sources, ...newState2.sources],
+      entities: [...oldState.entities, ...newState2.entities],
+      primers: [...oldState.primers, ...newState2.primers],
+      files: [...oldState.files, ...newState2.files],
     }));
-  };
-  loadFilesToSessionStorage();
+  } catch (e) {
+    throw new Error('Failed to merge state');
+  }
+
+  loadFilesToSessionStorage(files, networkShift);
 };
 
 export const copyEntityThunk = (entityId) => async (dispatch, getState) => {
@@ -66,7 +64,7 @@ export const copyEntityThunk = (entityId) => async (dispatch, getState) => {
   const entityIds = entitiesToCopy.map((e) => e.id);
   const filesToCopy = state.cloning.files.filter((f) => entityIds.includes(f.sequence_id));
   const newState = cloneDeep({
-    sequences: entitiesToCopy,
+    entities: entitiesToCopy,
     sources: sourcesToCopy,
     primers: [],
     files: filesToCopy,
@@ -162,47 +160,20 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
   );
 };
 
-export const validateState = async (newState, url, addAlert) => {
-  try {
-    await axios.post(url, newState);
-  } catch (e) {
-    if (e.code === 'ERR_NETWORK') {
-      addAlert({
-        message: 'Cannot connect to backend server to validate the JSON file',
-        severity: 'error',
-      });
-    } else {
-      addAlert({
-        message: 'JSON file in wrong format',
-        severity: 'error',
-      });
-    }
-  }
-};
+export const loadData = createAsyncThunk(
+  'cloning/loadData',
+  async ({ newState, files = [] }, { dispatch }) => {
+    const newState2 = { ...newState, entities: newState.sequences };
+    delete newState2.sequences;
 
-export const loadData = async (newState, isTemplate, dispatch, addAlert, url, files = []) => {
-  if (isTemplate !== true) {
-    validateState(newState, url, addAlert);
-  }
-  const newState2 = { ...newState, entities: newState.sequences };
-  delete newState2.sequences;
+    const loadFilesToSessionStorage = async () => {
+      await Promise.all(files.map(async (file) => {
+        const fileContent = await file2base64(file);
+        sessionStorage.setItem(`${file.name}`, fileContent);
+      }));
+    };
 
-  const loadFilesToSessionStorage = async () => {
-    await Promise.all(files.map(async (file) => {
-      const fileContent = await file2base64(file);
-      sessionStorage.setItem(`${file.name}`, fileContent);
-    }));
-  };
-
-  try {
     dispatch(setCloningState(newState2));
     await loadFilesToSessionStorage();
-  } catch (e) {
-    // TODO: I don't think this is needed anymore
-    dispatch(revertToInitialState());
-    addAlert({
-      message: 'JSON file is not from ShareYourCloning',
-      severity: 'error',
-    });
-  }
-};
+  },
+);

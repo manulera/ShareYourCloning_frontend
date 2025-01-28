@@ -1,38 +1,23 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { loadData, mergeStateThunk, validateState } from '../utils/thunks';
-import useBackendRoute from '../hooks/useBackendRoute';
-import useAlerts from '../hooks/useAlerts';
 
-function HistoryLoadedDialog({ loadedContent, setLoadedContent }) {
+function HistoryLoadedDialog({ fileLoaderFunctions }) {
   const [selectedOption, setSelectedOption] = React.useState('replace');
-  const dispatch = useDispatch();
-  const backendRoute = useBackendRoute();
-  const { addAlert } = useAlerts();
+  const { addState, replaceState, clear } = fileLoaderFunctions;
   return (
     <Dialog
-      open={loadedContent !== null}
-      onClose={() => setLoadedContent(null)}
+      open
+      onClose={clear}
       PaperProps={{
         component: 'form',
-        onSubmit: (event) => {
+        onSubmit: async (event) => {
           event.preventDefault();
-          const { cloningStrategy, files } = loadedContent;
           if (selectedOption === 'replace') {
-            loadData(cloningStrategy, false, dispatch, addAlert, backendRoute('validate'), files);
+            replaceState();
           } else {
-            validateState(cloningStrategy, backendRoute('validate'), addAlert);
-            try {
-              dispatch(mergeStateThunk(cloningStrategy, false, files));
-            } catch (e) {
-              addAlert({
-                message: e.message,
-                severity: 'error',
-              });
-            }
+            addState();
           }
-          setLoadedContent(null);
+          clear();
         },
       }}
       className="history-loaded-dialog"
@@ -52,7 +37,7 @@ function HistoryLoadedDialog({ loadedContent, setLoadedContent }) {
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => { setLoadedContent(null); }}>
+        <Button onClick={clear}>
           Cancel
         </Button>
         <Button type="submit">Select</Button>

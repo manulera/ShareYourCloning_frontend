@@ -22,7 +22,7 @@ import useBackendRoute from '../../hooks/useBackendRoute';
 import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
 import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
-import SequenceOrHistoryFileLoader from '../SequenceOrHistoryFileLoader';
+import LoadCloningHistoryWrapper from '../LoadCloningHistoryWrapper';
 
 const { setCurrentTab, setMainSequenceId } = cloningActions;
 
@@ -32,7 +32,7 @@ function MainAppBar() {
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
   const [openCloningStrategyDialog, setOpenCloningStrategyDialog] = React.useState(false);
-  const [files, setFiles] = React.useState(null);
+  const [fileList, setFileList] = React.useState([]);
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
 
@@ -83,12 +83,14 @@ function MainAppBar() {
   ];
 
   const onFileChange = async (event) => {
-    if (event.target.files[0].name.endsWith('.json') || event.target.files[0].name.endsWith('.zip')) {
-      setFiles(event.target.files);
+    const { files } = event.target;
+    if (files[0].name.endsWith('.json') || files[0].name.endsWith('.zip')) {
+      setFileList([...files]);
     } else {
+      setFileList([]);
       addAlert({ message: 'Only JSON and zip files are accepted', severity: 'error' });
-      event.target.value = '';
     }
+    event.target.value = '';
   };
 
   // If you want to load a particular example on page load, you can do it here.
@@ -125,7 +127,7 @@ function MainAppBar() {
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
             <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json,.zip" />
-            {files && <SequenceOrHistoryFileLoader files={files} />}
+            {fileList && <LoadCloningHistoryWrapper fileList={fileList} clearFiles={() => setFileList([])} />}
             <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>

@@ -3,12 +3,11 @@ import FormHelperText from '@mui/material/FormHelperText';
 import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
 import { useDispatch, batch } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
-import { mergeStateThunk, validateState } from '../../utils/thunks';
-import useBackendRoute from '../../hooks/useBackendRoute';
 import LabelWithTooltip from '../form/LabelWithTooltip';
 import { cloningActions } from '../../store/cloning';
-import useLoadSequenceOrHistoryFile from '../../hooks/useLoadSequenceOrHistoryFile';
-import useAlerts from '../../hooks/useAlerts';
+import { loadHistoryFile } from '../../utils/readNwrite';
+import useValidateState from '../../hooks/useValidateState';
+import { mergeStateThunk } from '../../utils/thunks';
 
 const { deleteSourceAndItsChildren, restoreSource } = cloningActions;
 
@@ -18,30 +17,8 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   const [fileFormat, setFileFormat] = React.useState('');
   // Error message for json only
   const [alert, setAlert] = React.useState(null);
-  const [loadedFiles, setLoadedFiles] = React.useState([]);
   const dispatch = useDispatch();
-  const backendRoute = useBackendRoute();
-  const { addAlert } = useAlerts();
-
-  const { loadedContent, setLoadedContent } = useLoadSequenceOrHistoryFile(loadedFiles, false);
-
-  React.useEffect(() => {
-    if (loadedContent) {
-      validateState(loadedContent.cloningStrategy, backendRoute('validate'), addAlert);
-      batch(() => {
-        // Replace the source with the new one
-        dispatch(deleteSourceAndItsChildren(source.id));
-        try {
-          dispatch(mergeStateThunk(loadedContent.cloningStrategy, false, loadedContent.files));
-        } catch (e) {
-          // If an error occurs, restore the old source
-          setAlert({ message: e.message, severity: 'error' });
-          dispatch(restoreSource({ ...source, type: 'UploadedFileSource' }));
-        }
-        setLoadedContent(null);
-      });
-    }
-  }, [loadedContent]);
+  const validateState = useValidateState();
 
   const onChange = async (event) => {
     setAlert(null);
@@ -51,7 +28,24 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
       fileFormat === 'json' || fileFormat === 'zip'
       || (fileFormat === '' && (files[0].name.endsWith('.json') || files[0].name.endsWith('.zip')))
     ) {
-      setLoadedFiles(files);
+      // If file format is explicitly set, rename file to match that extension
+      if (fileFormat) {
+        files[0] = new File([files[0]], files[0].name.replace(/\.[^/.]+$/, `.${fileFormat}`), {
+          type: fileFormat === 'json' ? 'application/json' : files[0].type,
+        });
+      }
+      const { cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]);
+      batch(() => {
+        // Replace the source with the new one
+        dispatch(deleteSourceAndItsChildren(source.id));
+        try {
+          dispatch(mergeStateThunk(cloningStrategy, false, verificationFiles));
+          validateState(cloningStrategy);
+        } catch (e) {
+          setAlert({ message: e.message, severity: 'error' });
+          dispatch(restoreSource({ ...source, type: 'UploadedFileSource' }));
+        }
+      });
       return;
     }
     const requestData = new FormData();

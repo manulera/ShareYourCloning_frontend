@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function useDragAndDropFile() {
   const [isDragging, setIsDragging] = React.useState(false);
-  const [files, setFiles] = React.useState(null);
+  const [files, setFiles] = React.useState([]);
 
   const handleDragOver = React.useCallback((e) => {
     e.preventDefault();
@@ -23,5 +23,9 @@ export default function useDragAndDropFile() {
     setFiles(e.dataTransfer.files);
   }, []);
 
-  return { handleDragLeave, handleDragOver, handleDrop, isDragging, files };
+  const clearFiles = React.useCallback(() => {
+    setFiles([]);
+  }, []);
+
+  return { handleDragLeave, handleDragOver, handleDrop, isDragging, files, clearFiles };
 }

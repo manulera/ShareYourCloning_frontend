@@ -215,7 +215,7 @@ export function shiftSource(source, networkShift, primerShift) {
 }
 
 export function shiftStateIds(newState, oldState, skipPrimers = false) {
-  const { sources: newSources, sequences: newEntities, primers: newPrimers, files: newFiles } = newState;
+  const { sources: newSources, entities: newEntities, primers: newPrimers, files: newFiles } = newState;
   const { sources: oldSources, entities: oldEntities, primers: oldPrimers } = oldState;
   let networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities });
   // Substract the smallest id to minimize the starting id

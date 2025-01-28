@@ -160,6 +160,11 @@ describe('<VerificationFileDialog />', () => {
       cy.get('button').contains('Add Files').click();
       cy.get('input[type="file"]').selectFile('cypress/test_files/sequencing/BZO902-13409020-13409020.ab1', { force: true });
       cy.contains('Request failed');
+      // It has not been added
+      cy.get('table').contains('BZO902-13409020-13409020.ab1').should('not.exist');
+      cy.window().its('sessionStorage')
+        .invoke('getItem', 'verification-2-BZO902-13409020-13409020.ab1')
+        .should('be.null');
 
       // Connection error
       cy.intercept('POST', 'http://127.0.0.1:8000/align_sanger*', {

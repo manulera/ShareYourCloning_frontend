@@ -13,7 +13,9 @@ module.exports = defineConfig({
           return null;
         },
       });
-      require('@cypress/code-coverage/task')(on, config);
+      if (process.env.VITE_COVERAGE) {
+        require('@cypress/code-coverage/task')(on, config);
+      }
 
       return config;
     },

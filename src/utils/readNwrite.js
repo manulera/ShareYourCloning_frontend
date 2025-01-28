@@ -5,7 +5,13 @@ import {
   ZipWriter,
   TextReader,
   BlobReader,
+  ZipReader,
+  configure,
 } from '@zip.js/zip.js';
+
+configure({
+  useWebWorkers: false,
+});
 
 export function base64ToBlob(base64) {
   const binaryString = atob(base64);
@@ -137,4 +143,50 @@ export const downloadCloningStrategyAsSvg = async (fileName) => {
   await inlineResources(svgDocument.documentElement);
   const svgString = new XMLSerializer().serializeToString(svgDocument);
   downloadTextFile(svgString, fileName);
+};
+
+export async function loadHistoryFile(file) {
+  const isZipFile = file.name.endsWith('.zip');
+  const isJsonFile = file.name.endsWith('.json');
+
+  let cloningStrategyFile;
+  let verificationFiles = [];
+
+  if (isZipFile) {
+    const zipReader = new ZipReader(new BlobReader(file));
+    const entries = await zipReader.getEntries();
+    const jsonFilesInZip = entries.filter((entry) => entry.filename.endsWith('.json'));
+    if (jsonFilesInZip.length !== 1) {
+      throw new Error('Zip file must contain exactly one JSON file.');
+    }
+    cloningStrategyFile = await jsonFilesInZip[0].getData(new BlobWriter());
+    verificationFiles = await Promise.all(entries
+      .filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename))
+      .map((entry) => {
+        const blob = entry.getData(new BlobWriter());
+        return new File([blob], entry.filename, { type: blob.type });
+      }));
+  } else if (isJsonFile) {
+    cloningStrategyFile = file;
+  }
+
+  let cloningStrategy;
+  try {
+    cloningStrategy = JSON.parse(await readSubmittedTextFile(cloningStrategyFile));
+  } catch (error) {
+    throw new Error('Invalid JSON file.');
+  }
+
+  const newCloningStrategy = { ...cloningStrategy, entities: cloningStrategy.sequences };
+  delete newCloningStrategy.sequences;
+
+  return { cloningStrategy: newCloningStrategy, verificationFiles };
+}
+
+export const loadFilesToSessionStorage = async (files, networkShift = 0) => {
+  await Promise.all(files.map(async (file) => {
+    const fileContent = await file2base64(file);
+    const filename = file.name.replace(/verification-(\d+)-/, (match, num) => `verification-${parseInt(num, 10) + networkShift}-`);
+    sessionStorage.setItem(filename, fileContent);
+  }));
 };
