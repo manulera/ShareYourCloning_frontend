@@ -141,6 +141,7 @@ export default function VerificationFileDialog({ id, dialogOpen, setDialogOpen }
     <Dialog
       open={dialogOpen}
       onClose={() => setDialogOpen(false)}
+      className="verification-file-dialog"
       maxWidth="md"
       fullWidth
       sx={{ textAlign: 'center' }}

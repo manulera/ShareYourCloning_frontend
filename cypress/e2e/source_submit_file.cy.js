@@ -48,6 +48,19 @@ describe('File Source', () => {
     cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/gibson_assembly.json', { force: true });
     cy.get('li', { timeout: 20000 }).contains('Restriction with BsaI');
     cy.get('li').contains('Gibson');
+
+    // Can add a JSON file with files, and they are dropped
+    addLane();
+    addSource('UploadedFileSource', true);
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/cloning_strategy_with_sequencing.json', { force: true });
+    cy.get('li#source-37').contains('final_product.gb').then(() => {
+      cy.window().its('sessionStorage').its('length').should('eq', 0);
+    });
+    // No verification files are listed either
+    cy.get('li#sequence-38 [data-testid="RuleIcon"]').click();
+    cy.get('.verification-file-dialog table td').should('not.exist');
+    cy.get('.verification-file-dialog button').contains('Close').click();
+
     // Cannot submit one with primers with the same names
     addLane();
     addSource('UploadedFileSource', true);
@@ -63,5 +76,45 @@ describe('File Source', () => {
     clickMultiSelectOption('File format', 'JSON (history file)', '.share-your-cloning li');
     cy.get('form.submit-sequence-file input').eq(2).selectFile('package.json', { force: true });
     cy.get('li .MuiAlert-message').contains('JSON file should contain');
+  });
+  it('works when loading a zip file', () => {
+    // Load normal zip file
+    cy.get('li#source-1 form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/zip_with_primer.zip', { force: true });
+    cy.get('li#source-1').contains('final_product.gb').then(() => {
+      cy.window().its('sessionStorage').its('length').should('eq', 3);
+    });
+    cy.get('li#sequence-2 [data-testid="RuleIcon"]').click();
+    cy.get('.verification-file-dialog table tr').should('have.length', 4);
+    cy.get('.verification-file-dialog button').contains('Close').click();
+
+    // Load another one on top
+    addLane();
+    addSource('UploadedFileSource', true);
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('public/examples/cloning_strategy_with_sequencing.zip', { force: true });
+    cy.get('li#source-1').contains('final_product.gb');
+    cy.get('li#source-3').contains('final_product.gb').then(() => {
+      cy.window().its('sessionStorage').its('length').should('eq', 6);
+    });
+    cy.get('li#sequence-4 [data-testid="RuleIcon"]').click();
+    cy.get('.verification-file-dialog table tr').should('have.length', 4);
+    cy.get('.verification-file-dialog button').contains('Close').click();
+
+    // Error handling
+    addLane();
+    addSource('UploadedFileSource', true);
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/zip_with_primer.zip', { force: true });
+    cy.get('.share-your-cloning .MuiAlert-message').contains('Primer name from loaded file exists in current session');
+
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/wrong_json_in_zip.zip', { force: true });
+    cy.get('.share-your-cloning .MuiAlert-message').contains('should contain');
+
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/zip_missing_files.zip', { force: true });
+    cy.get('.share-your-cloning .MuiAlert-message').contains('File verification-2-BZO904_13409044_13409044.ab1 not found in zip.');
+
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/zip_extra_files.zip', { force: true });
+    cy.get('.share-your-cloning .MuiAlert-message').contains('File verification-2-BZO902_13409020_13409020.ab1 found in zip but not in cloning strategy.');
+
+    cy.get('form.submit-sequence-file input').eq(2).selectFile('cypress/test_files/zip_no_json.zip', { force: true });
+    cy.get('.share-your-cloning .MuiAlert-message').contains('Zip file must contain');
   });
 });
