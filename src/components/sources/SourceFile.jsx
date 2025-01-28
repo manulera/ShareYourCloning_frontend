@@ -34,7 +34,14 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           type: fileFormat === 'json' ? 'application/json' : files[0].type,
         });
       }
-      const { cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]);
+      let cloningStrategy;
+      let verificationFiles;
+      try {
+        ({ cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]));
+      } catch (e) {
+        setAlert({ message: 'Invalid JSON file', severity: 'error' });
+        return;
+      }
       batch(() => {
         // Replace the source with the new one
         dispatch(deleteSourceAndItsChildren(source.id));

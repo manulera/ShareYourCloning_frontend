@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { cloneDeep } from 'lodash-es';
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { base64ToBlob, downloadStateAsJson, file2base64, loadFilesToSessionStorage } from './readNwrite';
+import { base64ToBlob, downloadStateAsJson, loadFilesToSessionStorage } from './readNwrite';
 import { cloningActions } from '../store/cloning';
 import { shiftStateIds } from '../store/cloning_utils';
 
-const { setState: setCloningState, revertToInitialState } = cloningActions;
+const { setState: setCloningState } = cloningActions;
 
 const collectParentEntitiesAndSources = (source, sources, entities, entitiesToExport, sourcesToExport) => {
   source.input.forEach((entityId) => {
@@ -159,21 +158,3 @@ export const uploadToELabFTWThunk = (title, categoryId, apiKey) => async (dispat
     { headers: { Authorization: apiKey, 'content-type': 'multipart/form-data' } },
   );
 };
-
-export const loadData = createAsyncThunk(
-  'cloning/loadData',
-  async ({ newState, files = [] }, { dispatch }) => {
-    const newState2 = { ...newState, entities: newState.sequences };
-    delete newState2.sequences;
-
-    const loadFilesToSessionStorage = async () => {
-      await Promise.all(files.map(async (file) => {
-        const fileContent = await file2base64(file);
-        sessionStorage.setItem(`${file.name}`, fileContent);
-      }));
-    };
-
-    dispatch(setCloningState(newState2));
-    await loadFilesToSessionStorage();
-  },
-);

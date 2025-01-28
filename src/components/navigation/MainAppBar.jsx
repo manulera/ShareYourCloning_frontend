@@ -10,7 +10,6 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
 import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
-import { loadData } from '../../utils/thunks';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
@@ -23,8 +22,9 @@ import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
 import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
 import LoadCloningHistoryWrapper from '../LoadCloningHistoryWrapper';
+import useValidateState from '../../hooks/useValidateState';
 
-const { setCurrentTab, setMainSequenceId } = cloningActions;
+const { setCurrentTab, setState: setCloningState } = cloningActions;
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
@@ -40,6 +40,7 @@ function MainAppBar() {
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
   const { addAlert } = useAlerts();
+  const validateState = useValidateState();
 
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
@@ -70,7 +71,12 @@ function MainAppBar() {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
       }
-      loadData(data, isTemplate, dispatch, addAlert, backendRoute('validate'));
+      const newState = { ...data, entities: data.sequences };
+      delete newState.sequences;
+      dispatch(setCloningState(newState));
+      if (!newState.entities.some((e) => e.type === 'TemplateSequence')) {
+        validateState(newState);
+      }
     }
   };
 
