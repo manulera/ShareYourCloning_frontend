@@ -46,7 +46,6 @@ jobs:
 
   install-python-dependencies:
     needs: [check-cache, get-backend-sha]
-    if: needs.check-cache.outputs.cache-hit != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
