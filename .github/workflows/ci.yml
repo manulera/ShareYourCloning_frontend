@@ -223,6 +223,8 @@ jobs:
       - name: Merge coverage reports
         run: |
           for folder in coverage/coverage-*; do
+            ls $folder  
+            cat $folder/coverage-final.json
             mv $folder/coverage-final.json $folder.json
             rmdir $folder
           done
