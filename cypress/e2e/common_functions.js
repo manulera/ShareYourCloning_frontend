@@ -1,3 +1,7 @@
+import { cloningActions } from '../../src/store/cloning';
+
+const { setState: setCloningState } = cloningActions;
+
 export function addSource(sourceType, isFirst = false) {
   if (!isFirst) {
     cy.get('svg[data-testid="AddCircleIcon"]').first().click();
@@ -165,16 +169,13 @@ export function changeTab(tabName) {
  * @param {Function} mountCallback - Callback that mounts the component
  * @returns {Cypress.Chainable} - A chainable promise for further assertions
  */
-export function loadDataAndMount(jsonPath, store, loadData, mountCallback) {
-  // Set up the dummy route intercept
-  cy.intercept('POST', 'dummy-route', {
-    statusCode: 200,
-  });
-
+export function loadDataAndMount(jsonPath, store, mountCallback) {
   // Create a promise to handle the async dispatch
   const loadDataPromise = (data) => new Promise((resolve) => {
     store.dispatch(async (dispatch) => {
-      await loadData(data, false, dispatch, () => {}, 'dummy-route');
+      const data2 = { ...data, entities: data.sequences };
+      delete data2.sequences;
+      dispatch(setCloningState(data2));
       resolve();
     });
   });
