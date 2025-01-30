@@ -222,11 +222,12 @@ jobs:
 
       - name: Merge coverage reports
         run: |
-          mkdir .nyc_output
           for folder in coverage/coverage-*; do
-            mv $folder/coverage-final.json .nyc_output/$folder.json
+            mv $folder/coverage-final.json $folder.json
             rmdir $folder
           done
+          mkdir .nyc_output
+          mv coverage/*.json .nyc_output
           rm -rf coverage
           npx nyc report --reporter json --report-dir coverage
 
