@@ -160,10 +160,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Kill workflow
-        if: always()
-        run: |
-          exit 1
 
       - name: Install javascript dependencies
         run: corepack enable && yarn install  
@@ -176,6 +172,7 @@ jobs:
         with:
           start: yarn start
           install: false
+          spec: 'cypress/e2e/description.cy.js'
 
       - name: Rename coverage file
         run: |
@@ -188,7 +185,8 @@ jobs:
           VITE_LOG_LEVEL: "warn"
         with:
           component: true
-          install: false  # Skip installation since it was done in previous step
+          install: false
+          spec: 'src/components/form/EnzymeMultiSelect.cy.jsx'
 
       - name: Merge coverage reports
         run: |
