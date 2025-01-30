@@ -197,7 +197,7 @@ jobs:
       - name: Upload coverage file
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: coverage-${{ matrix.group }}.json
+          name: coverage-${{ matrix.group }}
           path: coverage/coverage-final.json
 
       - name: Upload screenshots
