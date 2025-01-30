@@ -1,4 +1,4 @@
-import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests primer functionality', () => {
   beforeEach(() => {

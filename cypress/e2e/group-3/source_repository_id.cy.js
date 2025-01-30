@@ -1,4 +1,4 @@
-import { addSource, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('RepositoryId Source', () => {
   beforeEach(() => {

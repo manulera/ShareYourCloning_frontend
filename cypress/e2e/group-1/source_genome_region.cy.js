@@ -1,4 +1,4 @@
-import { clearInputValue, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { clearInputValue, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('GenomeRegion Source', () => {
   beforeEach(() => {

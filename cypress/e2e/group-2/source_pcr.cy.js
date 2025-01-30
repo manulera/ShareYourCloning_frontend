@@ -1,5 +1,5 @@
 import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
-import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue, addLane, skipGoogleSheetErrors, skipNcbiCheck, deleteSourceById, deleteSourceByContent } from './common_functions';
+import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue, addLane, skipGoogleSheetErrors, skipNcbiCheck, deleteSourceById, deleteSourceByContent } from '../common_functions';
 
 describe('Tests PCR functionality', () => {
   beforeEach(() => {

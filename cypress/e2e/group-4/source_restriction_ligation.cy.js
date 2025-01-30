@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, addLane, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, addLane, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests restriction-ligation functionality', () => {
   beforeEach(() => {

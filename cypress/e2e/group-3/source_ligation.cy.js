@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests ligation assembly functionality', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Makes all examples', () => {
   beforeEach(() => {

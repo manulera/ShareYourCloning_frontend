@@ -1,4 +1,4 @@
-import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {

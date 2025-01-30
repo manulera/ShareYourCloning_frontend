@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests Gibson assembly functionality', () => {
   beforeEach(() => {

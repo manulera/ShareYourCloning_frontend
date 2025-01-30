@@ -1,4 +1,4 @@
-import { loadHistory, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { loadHistory, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Tests template functionality', () => {
   beforeEach(() => {

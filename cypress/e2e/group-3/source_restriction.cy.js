@@ -1,4 +1,4 @@
-import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test restriction component', () => {
   beforeEach(() => {

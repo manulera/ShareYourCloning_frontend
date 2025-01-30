@@ -1,4 +1,4 @@
-import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {

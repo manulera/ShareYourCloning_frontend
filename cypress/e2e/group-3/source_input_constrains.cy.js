@@ -1,4 +1,4 @@
-import { clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 const singleInputOptions = ['RestrictionEnzymeDigestionSource', 'PCRSource', 'PolymeraseExtensionSource', 'AnnotationSource'];
 const multiInputOptions = ['LigationSource', 'GibsonAssemblySource', 'HomologousRecombinationSource', 'RestrictionAndLigationSource', 'CRISPRSource', 'OverlapExtensionPCRLigationSource', 'GatewaySource', 'InFusionSource'];

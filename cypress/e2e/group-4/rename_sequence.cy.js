@@ -1,4 +1,4 @@
-import { clearInputValue, manuallyTypeSequence, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { clearInputValue, manuallyTypeSequence, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Can rename a sequence', () => {
   beforeEach(() => {

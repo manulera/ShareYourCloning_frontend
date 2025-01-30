@@ -1,4 +1,4 @@
-import { closeAlerts, loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { closeAlerts, loadExample, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test upload history from file', () => {
   beforeEach(() => {

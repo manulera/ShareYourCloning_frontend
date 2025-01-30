@@ -1,4 +1,4 @@
-import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manuallyTypeSequence, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test copy existing sequence functionality', () => {
   beforeEach(() => {

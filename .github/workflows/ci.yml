@@ -178,6 +178,7 @@ jobs:
         env:
           VITE_COVERAGE: "true"
           VITE_LOG_LEVEL: "warn"
+          CYPRESS_TEST_GROUP: ${{ matrix.group }}
         with:
           start: yarn start
           install: false

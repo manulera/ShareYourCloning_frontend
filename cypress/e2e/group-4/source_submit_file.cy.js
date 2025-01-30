@@ -1,4 +1,4 @@
-import { addLane, addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addLane, addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('File Source', () => {
   beforeEach(() => {

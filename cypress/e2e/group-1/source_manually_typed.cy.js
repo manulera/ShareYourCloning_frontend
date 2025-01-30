@@ -1,4 +1,4 @@
-import { checkInputValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { checkInputValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('ManuallyTyped Source', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test download sequence file', () => {
   beforeEach(() => {

@@ -1,4 +1,4 @@
-import { deleteSourceByContent, loadExample, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { deleteSourceByContent, loadExample, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 describe('Test delete source functionality', () => {
   beforeEach(() => {

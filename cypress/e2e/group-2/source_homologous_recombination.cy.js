@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSourceById, setInputValue, addPrimer, skipGoogleSheetErrors, skipNcbiCheck } from './common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSourceById, setInputValue, addPrimer, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
 
 const homology1 = 'ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT';
 const homology2 = 'GTTTGCATCATTACTACCTACTGTAAGTTTCGTGACTAAA';

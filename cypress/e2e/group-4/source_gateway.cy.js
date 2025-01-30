@@ -1,4 +1,4 @@
-import { addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck, loadExample, deleteSourceByContent } from './common_functions';
+import { addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck, loadExample, deleteSourceByContent } from '../common_functions';
 
 describe('Tests PCR functionality', () => {
   beforeEach(() => {
