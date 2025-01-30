@@ -98,113 +98,115 @@ jobs:
         run: corepack enable && yarn install
 
 
-  # cypress-tests:
-  #   needs: [install-python-dependencies, get-backend-sha]
-  #   runs-on: ubuntu-latest
-  #   steps:
+  cypress-tests:
+    needs: [install-python-dependencies, install-frontend-dependencies]
+    runs-on: ubuntu-latest
+    steps:
 
-  #     - name: Checkout
-  #       uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-  #     - name: Checkout submodules
-  #       run: git submodule update --init --recursive
+      - name: install mafft
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mafft
 
-  #     - name: install mafft
-  #       run: |
-  #         sudo apt-get update
-  #         sudo apt-get install -y mafft
+      - name: Download MARS executable
+        run: |
+          wget https://github.com/manulera/MARS/releases/download/v0.2/mars-Linux
+          chmod +x mars-Linux
+          sudo mv mars-Linux /usr/local/bin/mars
 
-  #     - name: Download MARS executable
-  #       run: |
-  #         wget https://github.com/manulera/MARS/releases/download/v0.2/mars-Linux
-  #         chmod +x mars-Linux
-  #         sudo mv mars-Linux /usr/local/bin/mars
+      - name: Install Python
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: 3.11.
 
-  #     - name: Install Python
-  #       uses: actions/setup-python@v5.4.0
-  #       with:
-  #         python-version: 3.11.
+      - name: Restore cached venv
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.local/lib/python3.11/site-packages
+          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
-  #     - name: Restore cached venv
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: |
-  #           ~/.cache/pip
-  #           ~/.local/lib/python3.11/site-packages
-  #         key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
+      - name: run python dev server in background
+        env:
+          NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
+        run: |
+          uvicorn shareyourcloning.main:app &
 
+      - name: check if the server is running
+        run: |
+          for i in {1..3}; do
+            if curl -s http://127.0.0.1:8000 > /dev/null; then
+              echo "Server is up!"
+              exit 0
+            fi
+            echo "Waiting for server... ($i/3)"
+            sleep 2
+          done
+          echo "Server failed to start"
+          exit 1
 
-  #     - name: run python dev server in background
-  #       env:
-  #         NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
-  #       run: |
-  #         uvicorn shareyourcloning.main:app &
+      - name: Restore cached node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-  #     - name: check if the server is running
-  #       run: |
-  #         for i in {1..3}; do
-  #           if curl -s http://127.0.0.1:8000 > /dev/null; then
-  #             echo "Server is up!"
-  #             exit 0
-  #           fi
-  #           echo "Waiting for server... ($i/3)"
-  #           sleep 2
-  #         done
-  #         echo "Server failed to start"
-  #         exit 1
+      - name: Kill workflow
+        if: always()
+        run: |
+          exit 1
 
-  #     - name: Kill workflow
-  #       if: always()
-  #       run: |
-  #         exit 1
+      - name: Install javascript dependencies
+        run: corepack enable && yarn install  
 
-  #     - name: Install javascript dependencies
-  #       run: corepack enable && yarn install  
+      - name: Cypress run E2E tests
+        uses: cypress-io/github-action@v6
+        env:
+          VITE_COVERAGE: "true"
+          VITE_LOG_LEVEL: "warn"
+        with:
+          start: yarn start
+          install: false
 
-  #     - name: Cypress run E2E tests
-  #       uses: cypress-io/github-action@v6
-  #       env:
-  #         VITE_COVERAGE: "true"
-  #         VITE_LOG_LEVEL: "warn"
-  #       with:
-  #         start: yarn start
-  #         install: false
+      - name: Rename coverage file
+        run: |
+          mv coverage/coverage-final.json coverage-e2e.json
 
-  #     - name: Rename coverage file
-  #       run: |
-  #         mv coverage/coverage-final.json coverage-e2e.json
+      - name: Cypress run component tests
+        uses: cypress-io/github-action@v6
+        env:
+          VITE_COVERAGE: "true"
+          VITE_LOG_LEVEL: "warn"
+        with:
+          component: true
+          install: false  # Skip installation since it was done in previous step
 
-  #     - name: Cypress run component tests
-  #       uses: cypress-io/github-action@v6
-  #       env:
-  #         VITE_COVERAGE: "true"
-  #         VITE_LOG_LEVEL: "warn"
-  #       with:
-  #         component: true
-  #         install: false  # Skip installation since it was done in previous step
+      - name: Merge coverage reports
+        run: |
+          npx nyc report --reporter json --report-dir coverage
 
-  #     - name: Merge coverage reports
-  #       run: |
-  #         npx nyc report --reporter json --report-dir coverage
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: cypress-coverage
+          path: coverage
 
-  #     - name: Upload coverage
-  #       uses: actions/upload-artifact@v4.6.0
-  #       with:
-  #         name: cypress-coverage
-  #         path: coverage
+      - name: Upload screenshots
+        uses: actions/upload-artifact@v4.6.0
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
 
-  #     - name: Upload screenshots
-  #       uses: actions/upload-artifact@v4.6.0
-  #       if: failure()
-  #       with:
-  #         name: cypress-screenshots
-  #         path: cypress/screenshots
-
-  #     - name: Upload results to Codecov
-  #       uses: codecov/codecov-action@v4
-  #       with:
-  #         token: ${{ secrets.CODECOV_TOKEN }}
-  #         file: coverage/coverage-final.json
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/coverage-final.json
 
   # # Update docker image when committing to master branch if tests pass
   # push_to_registry:
