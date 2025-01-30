@@ -34,10 +34,10 @@ jobs:
           path: |
             ~/.cache/pip
             ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ env.backend_sha }}
+          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
   install-python-dependencies:
-    needs: get-backend-sha
+    needs: [check-cache, get-backend-sha]
     if: needs.check-cache.outputs.cache-hit != 'true'
     runs-on: ubuntu-latest
     steps:
@@ -54,7 +54,7 @@ jobs:
 
       - name: Install python dependencies
         run: |
-          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ env.backend_sha }}
+          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
 
       # The same cache action is used here to save the newly created .venv
       # Since we know there was no cache hit (due to the if condition),
@@ -65,7 +65,7 @@ jobs:
           path: |
             ~/.cache/pip
             ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ env.backend_sha }}
+          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
 
   # cypress-setup:
@@ -96,7 +96,7 @@ jobs:
 
 
   cypress-tests:
-    needs: install-python-dependencies
+    needs: [install-python-dependencies, get-backend-sha]
     runs-on: ubuntu-latest
     steps:
 
@@ -128,7 +128,7 @@ jobs:
           path: |
             ~/.cache/pip
             ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ env.backend_sha }}
+          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
 
       - name: run python dev server in background
