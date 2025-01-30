@@ -90,7 +90,9 @@ jobs:
         uses: actions/cache@v3
         id: yarn-cache
         with:
-          path: node_modules
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress 
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Setup Node.js
@@ -162,7 +164,9 @@ jobs:
       - name: Restore cached node_modules
         uses: actions/cache@v3
         with:
-          path: node_modules
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Cypress run E2E tests
@@ -197,14 +201,31 @@ jobs:
         uses: actions/upload-artifact@v4.6.0
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{ matrix.group }}
           path: cypress/screenshots
 
-      - name: Upload results to Codecov
-        uses: codecov/codecov-action@v4
+  cypress-gather-coverage:
+    needs: cypress-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage files
+        uses: actions/download-artifact@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage/coverage-final.json
+          path: coverage
+          pattern: coverage*
+      - name: list coverage files
+        run: |
+          ls coverage
+
+      # - name: Merge coverage reports
+      #   run: |
+      #     npx nyc report --reporter json --report-dir coverage
+
+      #     - name: Upload results to Codecov
+      #     uses: codecov/codecov-action@v4
+      #     with:
+      #       token: ${{ secrets.CODECOV_TOKEN }}
+      #       file: coverage/coverage-final.json
 
   # # Update docker image when committing to master branch if tests pass
   # push_to_registry:
