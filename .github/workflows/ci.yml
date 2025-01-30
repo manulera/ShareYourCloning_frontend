@@ -55,18 +55,6 @@ jobs:
       - name: Checkout submodules
         run: git submodule update --init --recursive
 
-      - name: Install Python
-        uses: actions/setup-python@v5.4.0
-        with:
-          python-version: 3.11
-
-      - name: Install python dependencies
-        run: |
-          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
-
-      # The same cache action is used here to save the newly created .venv
-      # Since we know there was no cache hit (due to the if condition),
-      # this step will save the .venv directory at the end of the job
       - name: Save venv to cache
         uses: actions/cache@v3
         with:
@@ -75,16 +63,23 @@ jobs:
             ~/.local/lib/python3.11/site-packages
           key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
+      - name: Install Python
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: 3.11
+
+      - name: Install python dependencies
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        run: |
+          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
+      
+
   install-frontend-dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.18'
 
       - name: Cache yarn dependencies
         uses: actions/cache@v3
@@ -93,13 +88,19 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
+      - name: Setup Node.js
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.18'
+
       - name: Install frontend dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
         run: corepack enable && yarn install
 
 
   cypress-tests:
-    needs: [install-python-dependencies, install-frontend-dependencies]
+    needs: [install-python-dependencies, install-frontend-dependencies, get-backend-sha]
     runs-on: ubuntu-latest
     steps:
 
