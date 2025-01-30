@@ -133,11 +133,15 @@ jobs:
             ~/.local/lib/python3.11/site-packages
           key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
+      - name: list python packages
+        run: |
+          pip list
+
       - name: run python dev server in background
         env:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
-          uvicorn shareyourcloning.main:app &
+          python -m uvicorn shareyourcloning.main:app &
 
       - name: check if the server is running
         run: |
