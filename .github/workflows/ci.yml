@@ -169,6 +169,9 @@ jobs:
             /home/runner/.cache/Cypress
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
+      - name: enable corepack
+        run: corepack enable
+
       - name: Cypress run E2E tests
         if: matrix.group != 'component'
         uses: cypress-io/github-action@v6
