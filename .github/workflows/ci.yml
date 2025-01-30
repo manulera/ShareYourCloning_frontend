@@ -14,6 +14,7 @@ jobs:
         run: git submodule update --init --recursive
 
       - name: Get backend sha
+        id: get-sha
         run: |
           echo "backend_sha=$(git rev-parse @:ShareYourCloning_backend)" >> $GITHUB_OUTPUT
 
