@@ -32,6 +32,8 @@ function App() {
         dispatch(setKnownErrors(knownErrors));
       })
       .catch(((e) => { console.error(e); }));
+    // Clear session storage
+    sessionStorage.clear();
   }, []);
 
   const stateLoaded = useSelector((state) => state.cloning.config.loaded);

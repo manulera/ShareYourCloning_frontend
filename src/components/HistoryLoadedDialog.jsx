@@ -1,29 +1,23 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup } from '@mui/material';
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { addHistory, loadData } from '../utils/readNwrite';
-import useBackendRoute from '../hooks/useBackendRoute';
-import useAlerts from '../hooks/useAlerts';
 
-function HistoryLoadedDialog({ loadedHistory, setLoadedHistory }) {
+function HistoryLoadedDialog({ fileLoaderFunctions }) {
   const [selectedOption, setSelectedOption] = React.useState('replace');
-  const dispatch = useDispatch();
-  const backendRoute = useBackendRoute();
-  const { addAlert } = useAlerts();
+  const { addState, replaceState, clear } = fileLoaderFunctions;
   return (
     <Dialog
-      open={loadedHistory !== null}
-      onClose={() => setLoadedHistory(null)}
+      open
+      onClose={clear}
       PaperProps={{
         component: 'form',
-        onSubmit: (event) => {
+        onSubmit: async (event) => {
           event.preventDefault();
           if (selectedOption === 'replace') {
-            loadData(loadedHistory, false, dispatch, addAlert, backendRoute('validate'));
+            replaceState();
           } else {
-            addHistory(loadedHistory, dispatch, addAlert, backendRoute('validate'));
+            addState();
           }
-          setLoadedHistory(null);
+          clear();
         },
       }}
       className="history-loaded-dialog"
@@ -43,7 +37,7 @@ function HistoryLoadedDialog({ loadedHistory, setLoadedHistory }) {
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => { setLoadedHistory(null); }}>
+        <Button onClick={clear}>
           Cancel
         </Button>
         <Button type="submit">Select</Button>

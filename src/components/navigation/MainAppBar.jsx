@@ -6,10 +6,10 @@ import Container from '@mui/material/Container';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import { Button, Tooltip } from '@mui/material';
 import './MainAppBar.css';
-import { useDispatch, useStore } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import ButtonWithMenu from './ButtonWithMenu';
-import { downloadCloningStrategyAsSvg, exportStateThunk, loadData } from '../../utils/readNwrite';
+import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
 import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
 import SelectTemplateDialog from './SelectTemplateDialog';
@@ -18,36 +18,36 @@ import MiscDialog from './MiscDialog';
 import { cloningActions } from '../../store/cloning';
 import useStoreEditor from '../../hooks/useStoreEditor';
 import useBackendRoute from '../../hooks/useBackendRoute';
-import HistoryDownloadedDialog from '../HistoryLoadedDialog';
 import VersionDialog from './VersionDialog';
 import useAlerts from '../../hooks/useAlerts';
+import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
+import LoadCloningHistoryWrapper from '../LoadCloningHistoryWrapper';
+import useValidateState from '../../hooks/useValidateState';
+
+const { setCurrentTab, setState: setCloningState } = cloningActions;
 
 function MainAppBar() {
   const [openExampleDialog, setOpenExampleDialog] = React.useState(false);
   const [openTemplateDialog, setOpenTemplateDialog] = React.useState(false);
   const [openFeedbackDialog, setOpenFeedbackDialog] = React.useState(false);
   const [openMiscDialog, setOpenMiscDialog] = React.useState(false);
-
+  const [openCloningStrategyDialog, setOpenCloningStrategyDialog] = React.useState(false);
+  const [fileList, setFileList] = React.useState([]);
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
-  const [loadedHistory, setLoadedHistory] = React.useState(null);
 
   const backendRoute = useBackendRoute();
   const { updateStoreEditor } = useStoreEditor();
-  const store = useStore();
   const dispatch = useDispatch();
   const { addAlert } = useAlerts();
-
-  const exportData = () => {
-    dispatch(exportStateThunk());
-  };
+  const validateState = useValidateState();
 
   const tooltipText = <div className="tooltip-text">See in GitHub</div>;
   // Hidden input field, used to load files.
   const fileInputRef = React.useRef(null);
-  const { setCurrentTab, setMainSequenceId } = cloningActions;
+
   const fileMenu = [
-    { display: 'Save cloning history to file', onClick: exportData },
+    { display: 'Save cloning history to file', onClick: () => setOpenCloningStrategyDialog(true) },
     { display: 'Load cloning history from file', onClick: () => { fileInputRef.current.click(); fileInputRef.current.value = ''; } },
     { display: 'Print cloning history to svg',
       onClick: async () => {
@@ -71,7 +71,12 @@ function MainAppBar() {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
       }
-      loadData(data, isTemplate, dispatch, addAlert, backendRoute('validate'));
+      const newState = { ...data, entities: data.sequences };
+      delete newState.sequences;
+      dispatch(setCloningState(newState));
+      if (!newState.entities.some((e) => e.type === 'TemplateSequence')) {
+        validateState(newState);
+      }
     }
   };
 
@@ -79,53 +84,40 @@ function MainAppBar() {
   const helpMenu = [
     { display: 'Newsletter', onClick: () => window.open('https://eepurl.com/h9-n71') },
     { display: 'About the project', onClick: () => window.open('https://www.genestorian.org/') },
-    { display: 'Demo video', onClick: () => window.open('https://www.youtube.com/watch?v=n0hedzvpW88') },
+    { display: 'Demo videos', onClick: () => window.open('https://www.youtube.com/watch?v=n0hedzvpW88&list=PLpv3x-ensLZkJToD2E6ejefADmHcUPYSJ&index=1') },
     { display: 'App version', onClick: () => setOpenVersionDialog(true) },
   ];
 
-  const onFileChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.readAsText(file, 'UTF-8');
-    reader.onload = (eventFileRead) => {
-      let jsonObject = {};
-      try {
-        jsonObject = JSON.parse(eventFileRead.target.result);
-      } catch (e) {
-        addAlert({
-          message: 'Input file should be a JSON file with the history',
-          severity: 'error',
-        });
-        return;
-      }
-      const { cloning } = store.getState();
-      // If no sequences have been loaded yet, simply load the history
-      if (cloning.entities.length === 0) {
-        loadData(jsonObject, false, dispatch, addAlert, backendRoute('validate'));
-      } else {
-        // Else ask the user whether they want to replace or append the history
-        setLoadedHistory(jsonObject);
-      }
-    };
+  const onFileChange = async (event) => {
+    const { files } = event.target;
+    if (files[0].name.endsWith('.json') || files[0].name.endsWith('.zip')) {
+      setFileList([...files]);
+    } else {
+      setFileList([]);
+      addAlert({ message: 'Only JSON and zip files are accepted', severity: 'error' });
+    }
+    event.target.value = '';
   };
 
   // If you want to load a particular example on page load, you can do it here.
-  // React.useEffect(() => {
-  //   const fetchExample = async () => {
-  //     const { data } = await axios.get('examples/gateway_start.json');
-  //     loadData(data, false, dispatch, addAlert, backendRoute('validate'));
-  //     dispatch(setCurrentTab(3));
-  //     // Wait for the primer designer to be rendered
-  //     setTimeout(() => {
-  //       // Click on button that says Open primer designer
-  //       const primerDesignerButton = document.querySelector('.main-sequence-editor button');
-  //       if (primerDesignerButton) {
-  //         primerDesignerButton.click();
-  //       }
-  //     }, 300);
-  //   };
-  //   fetchExample();
-  // }, []);
+  React.useEffect(() => {
+    const fetchExample = async () => {
+      // const { data } = await axios.get('examples/dummy.json');
+      // loadData(data, false, dispatch, addAlert, backendRoute('validate'));
+      // dispatch(setCurrentTab(3));
+      // Wait for the primer designer to be rendered
+      // setTimeout(() => {
+      //   // Click on button that says Open primer designer
+      //   const primerDesignerButton = document.querySelector('.main-sequence-editor button');
+      //   if (primerDesignerButton) {
+      //     primerDesignerButton.click();
+      //   }
+      //   dispatch(setMainSequenceId(2));
+      //   updateStoreEditor('mainEditor', 2);
+      // }, 300);
+    };
+    fetchExample();
+  }, []);
 
   return (
     <AppBar position="static" className="app-bar">
@@ -140,7 +132,8 @@ function MainAppBar() {
             }}
           >
             <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
-            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} />
+            <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json,.zip" />
+            {fileList && <LoadCloningHistoryWrapper fileList={fileList} clearFiles={() => setFileList([])} />}
             <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>
@@ -160,11 +153,11 @@ function MainAppBar() {
       <FeedbackDialog open={openFeedbackDialog} setOpen={setOpenFeedbackDialog} />
       {/* This one conditionally rendered since it uses hooks etc. */}
       {openMiscDialog && <MiscDialog open={openMiscDialog} setOpen={setOpenMiscDialog} />}
+      {openCloningStrategyDialog && <DownloadCloningStrategyDialog open={openCloningStrategyDialog} setOpen={setOpenCloningStrategyDialog} />}
       {/* elab-demo */}
       {/* (
       {eLabDialogOpen && (<DialogSubmitToElab dialogOpen={eLabDialogOpen} setDialogOpen={setELabDialogOpen} />)}
       ) */}
-      <HistoryDownloadedDialog {...{ loadedHistory, setLoadedHistory }} />
       <VersionDialog open={openVersionDialog} setOpen={setOpenVersionDialog} />
     </AppBar>
   );

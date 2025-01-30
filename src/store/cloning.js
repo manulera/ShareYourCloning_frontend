@@ -3,6 +3,17 @@ import { constructNetwork } from '../utils/network';
 import { getNextPrimerId, getNextUniqueId } from './cloning_utils';
 import { convertToTeselaJson } from '../utils/sequenceParsers';
 
+function deleteFilesFromSessionStorage(sequenceId, fileName = null) {
+  Object.keys(sessionStorage)
+    .filter((key) => {
+      let query = `verification-${sequenceId}-`;
+      if (fileName) {
+        query += fileName;
+      }
+      return key.startsWith(query);
+    }).forEach((key) => sessionStorage.removeItem(key));
+}
+
 const initialState = {
   mainSequenceId: null,
   mainSequenceSelection: {},
@@ -29,6 +40,7 @@ const initialState = {
   sourcesWithHiddenAncestors: [],
   teselaJsonCache: {},
   alerts: [],
+  files: [],
 };
 
 /* eslint-disable no-param-reassign */
@@ -57,6 +69,14 @@ const reducer = {
       output: null,
       type: null,
     });
+    state.network = constructNetwork(state.entities, state.sources);
+  },
+
+  restoreSource(state, action) {
+    // This is used to roll back a source that was deleted
+    const source = action.payload;
+    const { sources } = state;
+    sources.push(source);
     state.network = constructNetwork(state.entities, state.sources);
   },
 
@@ -145,11 +165,9 @@ const reducer = {
   },
 
   addSourceAndItsOutputEntity(state, action) {
-    const { source, entity, replaceEmptySource } = action.payload;
+    const { source, entity } = action.payload;
     const { sources, entities } = state;
-    if (replaceEmptySource && sources.length === 1 && sources[0].type === null) {
-      sources.pop();
-    }
+
     const sourceId = getNextUniqueId(state);
     const entityId = sourceId + 1;
     const newEntity = {
@@ -259,14 +277,16 @@ const reducer = {
     }
     state.sources = sources.filter((s) => !sources2delete.includes(s.id));
     state.entities = entities.filter((e) => !entities2delete.includes(e.id));
+    state.network = constructNetwork(state.entities, state.sources);
+    state.files = state.files.filter((f) => !entities2delete.includes(f.sequence_id));
     entities2delete.forEach((e) => {
       delete state.teselaJsonCache[e];
+      deleteFilesFromSessionStorage(e);
     });
-    state.network = constructNetwork(state.entities, state.sources);
   },
 
   setState(state, action) {
-    const { sources, entities } = action.payload;
+    const { sources, entities, primers, description, files } = action.payload;
     const ids = [...sources.map((s) => s.id), ...entities.map((e) => e.id)];
     // They should all be positive integers
     if (ids.some((id) => id < 1 || !Number.isInteger(id))) {
@@ -279,6 +299,9 @@ const reducer = {
     state.sources = sources;
     state.entities = entities;
     state.teselaJsonCache = {};
+    state.primers = primers || [];
+    state.description = description || '';
+    state.files = files || [];
     entities.forEach((e) => {
       if (e.type !== 'TemplateSequence') {
         state.teselaJsonCache[e.id] = convertToTeselaJson(e);
@@ -289,14 +312,6 @@ const reducer = {
 
   setDescription(state, action) {
     state.description = action.payload;
-  },
-
-  revertToInitialState(state) {
-    // Revert but keep the config
-    const { config } = state;
-    Object.assign(state, initialState);
-    state.config = config;
-    state.network = constructNetwork(initialState.entities, initialState.sources);
   },
 
   setSelectedRegions(state, action) {
@@ -396,6 +411,25 @@ const reducer = {
   removeAlert(state, action) {
     const message = action.payload;
     state.alerts = state.alerts.filter((a) => a.message !== message);
+  },
+
+  addFile(state, action) {
+    state.files.push(action.payload);
+  },
+
+  setFiles(state, action) {
+    state.files = action.payload;
+  },
+
+  removeFile(state, action) {
+    const { fileName, sequenceId } = action.payload;
+    state.files = state.files.filter((f) => f.file_name !== fileName || f.sequence_id !== sequenceId);
+  },
+
+  removeFilesAssociatedToSequence(state, action) {
+    const sequenceId = action.payload;
+    state.files = state.files.filter((f) => f.sequence_id !== sequenceId);
+    deleteFilesFromSessionStorage(sequenceId);
   },
 };
 /* eslint-enable no-param-reassign */

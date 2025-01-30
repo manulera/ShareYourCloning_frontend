@@ -136,3 +136,26 @@ CYPRESS_NO_COMMAND_LOG=1 yarn cypress run --spec cypress/e2e/source_genome_regio
 ### eLabFTW
 
 The API keys should be in the ignored file `.env.development.local`
+
+### Running scripts
+
+> There is probably a better way to do this, but this is what I have found for now.
+
+It can be useful to run scripts to test a few things without running the whole frontend. The only way I have found to do this is running the script as a test.
+
+* Create file with pattern `script.test.js`
+* Run `yarn vitest run script.test.js`
+
+The file content should be something like this:
+
+```javascript
+import { ab1ToJson } from '@teselagen/bio-parsers';
+import fs from 'fs';
+
+describe('ab1ToJson', () => {
+  it('should convert an AB1 file to JSON', () => {
+    const a = 1;
+    console.log(a);
+  });
+});
+```

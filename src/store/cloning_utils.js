@@ -215,17 +215,20 @@ export function shiftSource(source, networkShift, primerShift) {
 }
 
 export function shiftStateIds(newState, oldState, skipPrimers = false) {
-  const { sources: newSources, sequences: newEntities, primers: newPrimers } = newState;
+  const { sources: newSources, entities: newEntities, primers: newPrimers, files: newFiles } = newState;
   const { sources: oldSources, entities: oldEntities, primers: oldPrimers } = oldState;
   let networkShift = getNextUniqueId({ sources: oldSources, entities: oldEntities });
   // Substract the smallest id to minimize the starting id
   networkShift -= Math.min(...[...newSources.map((s) => s.id), ...newEntities.map((e) => e.id)]);
   const primerShift = skipPrimers ? 0 : getNextPrimerId(oldPrimers);
   return {
-    entities: newEntities.map((e) => ({ ...e, id: e.id + networkShift })),
-    primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
-    sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
-  };
+    newState2: {
+      entities: newEntities.map((e) => ({ ...e, id: e.id + networkShift })),
+      primers: newPrimers.map((p) => ({ ...p, id: p.id + primerShift })),
+      sources: newSources.map((s) => shiftSource(s, networkShift, primerShift)),
+      files: newFiles ? newFiles.map((f) => ({ ...f, sequence_id: f.sequence_id + networkShift })) : [],
+    },
+    networkShift };
 }
 
 export function stringIsNotDNA(str) {

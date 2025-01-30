@@ -42,11 +42,11 @@ describe('Test drag and drop functionality', () => {
   it('Shows the right errors when dropping wrong files', () => {
     // JSON file + something else
     cy.get('div.cloning-history').selectFile(['public/examples/homologous_recombination.json', 'public/examples/ase1.gb'], { action: 'drag-drop' });
-    cy.get('div.MuiAlert-message').contains('Drop either a single JSON file or multiple sequence files. Not both.');
+    cy.get('div.MuiAlert-message').contains('Drop either');
 
     // JSON file with wrong content
     cy.get('div.cloning-history').selectFile('public/examples/wrong_history.json', { action: 'drag-drop' });
-    cy.get('div.MuiAlert-message').contains('JSON file in wrong format');
+    cy.get('div.MuiAlert-message').contains('Cloning strategy not valid');
 
     // Files which are not sequences
     cy.get('div.cloning-history').selectFile('public/favicon.ico', { action: 'drag-drop' });

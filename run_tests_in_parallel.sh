@@ -3,6 +3,7 @@
 # Delete all screenshots and run all tests in parallel
 rm -f cypress/screenshots/*/*.png
 rmdir cypress/screenshots/*
+rm -rf coverage
 
 # Default value for FILTER_OUT
 FILTER_OUT=""
@@ -22,8 +23,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Run tests, filtering out based on pattern if provided
-if [ -z "$FILTER_OUT" ]; then
-  find cypress/e2e -name '*.cy.js' | parallel --group -j4 yarn cypress run --config trashAssetsBeforeRuns=false --spec {}
+if [ -n "$FILTER_OUT" ]; then
+  TEST_FILES=$(find cypress/e2e -name '*.cy.js' | grep -v "$FILTER_OUT")
 else
-  find cypress/e2e -name '*.cy.js' | grep -v "$FILTER_OUT" | parallel --group -j4 yarn cypress run --config trashAssetsBeforeRuns=false --spec {}
+  TEST_FILES=$(find cypress/e2e -name '*.cy.js')
 fi
+
+echo "$TEST_FILES" | parallel --group -j4 'yarn cypress run --config trashAssetsBeforeRuns=false --spec {}'

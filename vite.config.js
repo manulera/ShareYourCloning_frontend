@@ -14,7 +14,7 @@ export default ({ mode }) => {
     logLevel: env.VITE_LOG_LEVEL,
     plugins: [
       react(),
-      istanbul({
+      (env.VITE_COVERAGE) && istanbul({
         include: 'src/*',
         exclude: ['node_modules', 'tests/'],
         extension: ['.js', '.jsx'],
@@ -44,6 +44,13 @@ export default ({ mode }) => {
       },
     ],
     optimizeDeps: {
+      include: [
+        'react',
+        'react-dom',
+        'react-redux',
+        '@mui/material',
+
+      ],
       esbuildOptions: {
         loader: {
           '.js': 'jsx',

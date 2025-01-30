@@ -2,7 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl,
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual } from 'lodash-es';
-import { downloadSequence, exportSubStateThunk } from '../utils/readNwrite';
+import { downloadSequence } from '../utils/readNwrite';
+import { exportSubStateThunk } from '../utils/thunks';
 import { getPCRPrimers, getPrimerLinks } from '../store/cloning_utils';
 
 // You can override the downloadSequence function by passing a downloadCallback that takes the fileName and entity as arguments

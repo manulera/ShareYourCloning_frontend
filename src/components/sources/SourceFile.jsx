@@ -1,11 +1,15 @@
 import React from 'react';
 import FormHelperText from '@mui/material/FormHelperText';
 import { Alert, Checkbox, FormControl, FormControlLabel, InputLabel, MenuItem, Select } from '@mui/material';
-import { useDispatch } from 'react-redux';
+import { useDispatch, batch } from 'react-redux';
 import SubmitButtonBackendAPI from '../form/SubmitButtonBackendAPI';
-import { addHistory } from '../../utils/readNwrite';
-import useBackendRoute from '../../hooks/useBackendRoute';
 import LabelWithTooltip from '../form/LabelWithTooltip';
+import { cloningActions } from '../../store/cloning';
+import { loadHistoryFile } from '../../utils/readNwrite';
+import useValidateState from '../../hooks/useValidateState';
+import { mergeStateThunk } from '../../utils/thunks';
+
+const { deleteSourceAndItsChildren, restoreSource } = cloningActions;
 
 // A component providing an interface to import a file
 function SourceFile({ source, requestStatus, sendPostRequest }) {
@@ -14,19 +18,42 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
   // Error message for json only
   const [alert, setAlert] = React.useState(null);
   const dispatch = useDispatch();
-  const backendRoute = useBackendRoute();
+  const validateState = useValidateState();
+
   const onChange = async (event) => {
     setAlert(null);
     const files = Array.from(event.target.files);
-    if (fileFormat === 'json' || (fileFormat === '' && files[0].name.endsWith('.json'))) {
-      let loadedHistory = null;
+    // If the file is a history file, we load it
+    if (
+      fileFormat === 'json' || fileFormat === 'zip'
+      || (fileFormat === '' && (files[0].name.endsWith('.json') || files[0].name.endsWith('.zip')))
+    ) {
+      // If file format is explicitly set, rename file to match that extension
+      if (fileFormat) {
+        files[0] = new File([files[0]], files[0].name.replace(/\.[^/.]+$/, `.${fileFormat}`), {
+          type: fileFormat === 'json' ? 'application/json' : files[0].type,
+        });
+      }
+      let cloningStrategy;
+      let verificationFiles;
       try {
-        loadedHistory = JSON.parse(await files[0].text());
-      } catch (error) {
-        setAlert({ message: 'Invalid JSON', severity: 'error' });
+        ({ cloningStrategy, verificationFiles } = await loadHistoryFile(files[0]));
+      } catch (e) {
+        console.error(e);
+        setAlert({ message: e.message, severity: 'error' });
         return;
       }
-      addHistory(loadedHistory, dispatch, setAlert, backendRoute('validate'), source.id);
+      batch(() => {
+        // Replace the source with the new one
+        dispatch(deleteSourceAndItsChildren(source.id));
+        try {
+          dispatch(mergeStateThunk(cloningStrategy, false, verificationFiles));
+          validateState(cloningStrategy);
+        } catch (e) {
+          setAlert({ message: e.message, severity: 'error' });
+          dispatch(restoreSource({ ...source, type: 'UploadedFileSource' }));
+        }
+      });
       return;
     }
     const requestData = new FormData();
@@ -58,6 +85,7 @@ function SourceFile({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="dna">Snapgene</MenuItem>
           <MenuItem value="embl">EMBL</MenuItem>
           <MenuItem value="json">JSON (history file)</MenuItem>
+          <MenuItem value="zip">Zip (history folder)</MenuItem>
         </Select>
       </FormControl>
 
