@@ -40,6 +40,7 @@ describe('Makes all examples', () => {
     cy.get('li#source-7 button.submit-backend-api').click();
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
+    cy.get('button').contains('Save file').click();
     // Rename downloaded file
     cy.readFile('cypress/downloads/cloning_strategy.json').then((file) => {
       cy.writeFile('cypress/downloads/homologous_recombination.json', JSON.stringify(file, null, 2));
@@ -85,6 +86,7 @@ describe('Makes all examples', () => {
     cy.get('li#sequence-8').contains('kanMX').should('exist');
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').click();
     cy.get('[role="menuitem"]').contains('Save cloning history to file').click();
+    cy.get('button').contains('Save file').click();
 
     // Rename downloaded file
     cy.readFile('cypress/downloads/cloning_strategy.json').then((file) => {
