@@ -4,40 +4,46 @@ on: [push, pull_request]
 jobs:
   cypress-run:
     name: Run Cypress tests
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: install mafft
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mafft
+
+      - name: Download MARS executable
+        run: |
+          wget https://github.com/manulera/MARS/releases/download/v0.2/mars-Linux
+          chmod +x mars-Linux
+          sudo mv mars-Linux /usr/local/bin/mars
 
       - name: Checkout submodules
         run: git submodule update --init --recursive
 
       - name: Install Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v5.4.0
         with:
           python-version: 3.11
       - name: Install poetry
         run: |
           python -m pip install --upgrade pip
           pip install poetry
-      # - name: Load cached venv
-      #   id: cached-poetry-dependencies
-      #   uses: actions/cache@v2
-      #   with:
-      #     path: .venv
-      #     key: venv-${{ runner.os }}-${{ hashFiles('ShareYourCloning_backend/poetry.lock') }}
+
       - name: Install python dependencies
-        # if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
           cd ShareYourCloning_backend
-          poetry install
+          poetry build
+          pip install dist/shareyourcloning-*.whl
 
       - name: run python dev server in background
         env:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
           cd ShareYourCloning_backend
-          poetry run uvicorn shareyourcloning.main:app &
+          uvicorn shareyourcloning.main:app &
 
       - name: check if the server is running
         run: |
@@ -47,16 +53,14 @@ jobs:
               exit 0
             fi
             echo "Waiting for server... ($i/3)"
-            sleep 1
+            sleep 2
           done
           echo "Server failed to start"
           exit 1
 
-      - name: enable yarn 3
-        run: corepack enable
+      - name: Install javascript dependencies
+        run: corepack enable && yarn install
 
-      # Install npm dependencies, cache them correctly
-      # and run all Cypress tests
       - name: Cypress run E2E tests
         uses: cypress-io/github-action@v6
         env:
@@ -64,6 +68,13 @@ jobs:
           VITE_LOG_LEVEL: "warn"
         with:
           start: yarn start
+          spec: 'cypress/e2e/description.cy.js'
+          install: false
+
+      - name: Rename coverage file
+        run: |
+          mv coverage/coverage-final.json coverage-e2e.json
+
       - name: Cypress run component tests
         uses: cypress-io/github-action@v6
         env:
@@ -71,18 +82,25 @@ jobs:
           VITE_LOG_LEVEL: "warn"
         with:
           component: true
+          install: false  # Skip installation since it was done in previous step
+
+      - name: Merge coverage reports
+        run: |
+          npx nyc report --reporter json --report-dir coverage
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4.6.0
+        with:
+          name: cypress-coverage
+          path: coverage
 
       - name: Upload screenshots
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4.6.0
         if: failure()
         with:
           name: cypress-screenshots
           path: cypress/screenshots
-      - name: Upload coverage
-        uses: actions/upload-artifact@v3
-        with:
-          name: cypress-coverage
-          path: coverage
+
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:

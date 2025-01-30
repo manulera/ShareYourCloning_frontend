@@ -22,6 +22,7 @@ import React from 'react';
 import { mount } from 'cypress/react18';
 import { Provider } from 'react-redux';
 import store from '../../src/store';
+import '@cypress/code-coverage/support';
 
 Cypress.Commands.add('mount', (component, options = {}) => {
   const { reduxStore = store, ...mountOptions } = options;

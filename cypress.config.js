@@ -1,5 +1,6 @@
 const { defineConfig } = require('cypress');
 const fs = require('fs');
+const istanbul = require('vite-plugin-istanbul');
 
 module.exports = defineConfig({
   e2e: {
@@ -28,6 +29,22 @@ module.exports = defineConfig({
     devServer: {
       framework: 'react',
       bundler: 'vite',
+      viteConfig: {
+        plugins: [
+          (process.env.VITE_COVERAGE) && istanbul({
+            include: 'src/*',
+            exclude: ['node_modules', 'tests/'],
+            extension: ['.js', '.jsx'],
+            requireEnv: true,
+          }),
+        ],
+      },
+    },
+    setupNodeEvents(on, config) {
+      if (process.env.VITE_COVERAGE) {
+        require('@cypress/code-coverage/task')(on, config);
+      }
+      return config;
     },
   },
 
