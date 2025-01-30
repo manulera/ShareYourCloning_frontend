@@ -50,12 +50,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+        if: needs.check-cache.outputs.cache-hit != 'true'
         uses: actions/checkout@v4
 
       - name: Checkout submodules
+        if: needs.check-cache.outputs.cache-hit != 'true'
         run: git submodule update --init --recursive
 
       - name: Save venv to cache
+        if: needs.check-cache.outputs.cache-hit != 'true'  
         uses: actions/cache@v3
         with:
           path: |
@@ -73,7 +76,7 @@ jobs:
         if: needs.check-cache.outputs.cache-hit != 'true'
         run: |
           pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
-      
+
 
   install-frontend-dependencies:
     runs-on: ubuntu-latest
