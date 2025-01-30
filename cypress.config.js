@@ -18,6 +18,11 @@ module.exports = defineConfig({
         require('@cypress/code-coverage/task')(on, config);
       }
 
+      // Filter specs by test group if specified
+      if (process.env.CYPRESS_TEST_GROUP) {
+        config.specPattern = `cypress/e2e/group-${process.env.CYPRESS_TEST_GROUP}/**/*.cy.{js,jsx}`;
+      }
+
       return config;
     },
     baseUrl: 'http://localhost:3000',

@@ -2,10 +2,120 @@ name: CI / CD
 on: [push, pull_request]
 
 jobs:
-  cypress-run:
-    name: Run Cypress tests
+  get-backend-sha:
+    runs-on: ubuntu-latest
+    outputs:
+      backend_sha: ${{ steps.get-sha.outputs.backend_sha }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Get backend sha
+        id: get-sha
+        run: |
+          echo "backend_sha=$(git rev-parse @:ShareYourCloning_backend)" >> $GITHUB_OUTPUT
+
+
+  check-cache:
+    runs-on: ubuntu-latest
+    needs: get-backend-sha
+    outputs:
+      cache-hit: ${{ steps.cache-check.outputs.cache-hit }}
+    steps:
+      - name: Verify backend SHA is not empty
+        run: |
+          if [ -z "${{ needs.get-backend-sha.outputs.backend_sha }}" ]; then
+            echo "Error: backend_sha is empty"
+            exit 1
+          fi
+      # This step both checks AND saves the cache
+      # If there's a cache hit: it restores it
+      # If there's no cache hit: it will save any files matching the path at the end of the job
+      - name: Check cached venv
+        id: cache-check
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
+
+
+  install-python-dependencies:
+    needs: [check-cache, get-backend-sha]
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        uses: actions/checkout@v4
+
+      - name: Checkout submodules
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        run: git submodule update --init --recursive
+
+      - name: Install Python
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: 3.11
+
+      - name: Create and activate virtual environment
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+
+      - name: Install python dependencies
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        run: |
+          source .venv/bin/activate
+          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
+
+      - name: Save venv to cache
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
+
+
+  install-frontend-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Setup Node.js
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.18'
+
+      - name: Install frontend dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: corepack enable && yarn install
+
+
+  cypress-tests:
+    name: Run Cypress tests
+    needs: [install-python-dependencies, install-frontend-dependencies, get-backend-sha]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [1, 2, 3, 4,  "component"]
+    steps:
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -20,29 +130,22 @@ jobs:
           chmod +x mars-Linux
           sudo mv mars-Linux /usr/local/bin/mars
 
-      - name: Checkout submodules
-        run: git submodule update --init --recursive
-
       - name: Install Python
         uses: actions/setup-python@v5.4.0
         with:
           python-version: 3.11
-      - name: Install poetry
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
 
-      - name: Install python dependencies
-        run: |
-          cd ShareYourCloning_backend
-          poetry build
-          pip install dist/shareyourcloning-*.whl
+      - name: Restore cached venv
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
       - name: run python dev server in background
         env:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
-          cd ShareYourCloning_backend
+          source .venv/bin/activate
           uvicorn shareyourcloning.main:app &
 
       - name: check if the server is running
@@ -58,47 +161,74 @@ jobs:
           echo "Server failed to start"
           exit 1
 
-      - name: Install javascript dependencies
-        run: corepack enable && yarn install
+      - name: Restore cached node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            node_modules
+            /home/runner/.cache/Cypress
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+
+      - name: enable corepack
+        run: corepack enable
 
       - name: Cypress run E2E tests
+        if: matrix.group != 'component'
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
           VITE_LOG_LEVEL: "warn"
+          CYPRESS_TEST_GROUP: ${{ matrix.group }}
         with:
           start: yarn start
           install: false
 
-      - name: Rename coverage file
-        run: |
-          mv coverage/coverage-final.json coverage-e2e.json
-
       - name: Cypress run component tests
+        if: matrix.group == 'component'
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
           VITE_LOG_LEVEL: "warn"
         with:
           component: true
-          install: false  # Skip installation since it was done in previous step
+          install: false
 
-      - name: Merge coverage reports
-        run: |
-          npx nyc report --reporter json --report-dir coverage
-
-      - name: Upload coverage
+      - name: Upload coverage file
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: cypress-coverage
-          path: coverage
+          name: coverage-${{ matrix.group }}
+          path: coverage/coverage-final.json
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4.6.0
         if: failure()
         with:
-          name: cypress-screenshots
+          name: cypress-screenshots-${{ matrix.group }}
           path: cypress/screenshots
+
+  cypress-gather-coverage:
+    needs: cypress-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage files
+        uses: actions/download-artifact@v4
+        with:
+          path: coverage
+          pattern: coverage*
+      - name: list coverage files
+        run: |
+          ls coverage
+
+      - name: Merge coverage reports
+        run: |
+          for folder in coverage/coverage-*; do
+            mv $folder/coverage-final.json $folder.json
+            rmdir $folder
+          done
+          mkdir .nyc_output
+          mv coverage/*.json .nyc_output
+          rm -rf coverage
+          npx nyc report --reporter json --report-dir coverage
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
@@ -110,7 +240,7 @@ jobs:
   push_to_registry:
     name: Push Docker image to Docker Hub
     # Only run if tests pass
-    needs: cypress-run
+    needs: [cypress-tests, cypress-gather-coverage]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
