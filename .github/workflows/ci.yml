@@ -222,7 +222,12 @@ jobs:
 
       - name: Merge coverage reports
         run: |
+          for folder in coverage/coverage-*; do
+            mv $folder/coverage-final.json $folder.json
+            rmdir $folder
+          done
           npx nyc merge coverage coverage-merged.json
+          rm -rf coverage
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
