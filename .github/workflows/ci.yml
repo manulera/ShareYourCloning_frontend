@@ -38,10 +38,8 @@ jobs:
         id: cache-check
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.cache/pip
-            ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
 
   install-python-dependencies:
@@ -56,25 +54,30 @@ jobs:
         if: needs.check-cache.outputs.cache-hit != 'true'
         run: git submodule update --init --recursive
 
-      - name: Save venv to cache
-        if: needs.check-cache.outputs.cache-hit != 'true'  
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/pip
-            ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
-
       - name: Install Python
         if: needs.check-cache.outputs.cache-hit != 'true'
         uses: actions/setup-python@v5.4.0
         with:
           python-version: 3.11
 
+      - name: Create and activate virtual environment
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+
       - name: Install python dependencies
         if: needs.check-cache.outputs.cache-hit != 'true'
         run: |
+          source .venv/bin/activate
           pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
+
+      - name: Save venv to cache
+        if: needs.check-cache.outputs.cache-hit != 'true'
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
 
   install-frontend-dependencies:
@@ -128,20 +131,15 @@ jobs:
       - name: Restore cached venv
         uses: actions/cache@v3
         with:
-          path: |
-            ~/.cache/pip
-            ~/.local/lib/python3.11/site-packages
-          key: venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
-
-      - name: list python packages
-        run: |
-          pip list
+          path: .venv
+          key: python-venv-${{ runner.os }}-${{ needs.get-backend-sha.outputs.backend_sha }}
 
       - name: run python dev server in background
         env:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
-          python -m uvicorn shareyourcloning.main:app &
+          source .venv/bin/activate
+          uvicorn shareyourcloning.main:app &
 
       - name: check if the server is running
         run: |
