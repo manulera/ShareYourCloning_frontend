@@ -92,7 +92,7 @@ jobs:
         with:
           path: |
             node_modules
-            /home/runner/.cache/Cypress 
+            /home/runner/.cache/Cypress
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
       - name: Setup Node.js
@@ -113,7 +113,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        group: [1, 2, "component"]
+        group: [1, 2, 3, 4,  "component"]
     steps:
 
       - name: Checkout
@@ -181,7 +181,6 @@ jobs:
         with:
           start: yarn start
           install: false
-          spec: 'cypress/e2e/description.cy.js'
 
       - name: Cypress run component tests
         if: matrix.group == 'component'
@@ -192,7 +191,6 @@ jobs:
         with:
           component: true
           install: false
-          spec: 'src/components/form/EnzymeMultiSelect.cy.jsx'
 
       - name: Upload coverage file
         uses: actions/upload-artifact@v4.6.0
