@@ -223,19 +223,20 @@ jobs:
       - name: Merge coverage reports
         run: |
           for folder in coverage/coverage-*; do
-            ls $folder  
-            cat $folder/coverage-final.json
             mv $folder/coverage-final.json $folder.json
             rmdir $folder
           done
-          npx nyc merge coverage coverage-merged.json
+          mkdir .nyc_output
+          npx nyc merge coverage .nyc_output/coverage-merged.json
           rm -rf coverage
+          cat .nyc_output/coverage-merged.json
+          npx nyc report --reporter json --report-dir coverage
 
       - name: Upload results to Codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage-merged.json
+          file: coverage/coverage-final.json
 
   # Update docker image when committing to master branch if tests pass
   push_to_registry:
