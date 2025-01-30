@@ -105,8 +105,13 @@ jobs:
 
 
   cypress-tests:
+    name: Run Cypress tests
     needs: [install-python-dependencies, install-frontend-dependencies, get-backend-sha]
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [1, 2, "component"]
     steps:
 
       - name: Checkout
@@ -160,11 +165,8 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
 
-
-      - name: Install javascript dependencies
-        run: corepack enable && yarn install  
-
       - name: Cypress run E2E tests
+        if: matrix.group != 'component'
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
@@ -174,11 +176,8 @@ jobs:
           install: false
           spec: 'cypress/e2e/description.cy.js'
 
-      - name: Rename coverage file
-        run: |
-          mv coverage/coverage-final.json coverage-e2e.json
-
       - name: Cypress run component tests
+        if: matrix.group == 'component'
         uses: cypress-io/github-action@v6
         env:
           VITE_COVERAGE: "true"
@@ -188,15 +187,11 @@ jobs:
           install: false
           spec: 'src/components/form/EnzymeMultiSelect.cy.jsx'
 
-      - name: Merge coverage reports
-        run: |
-          npx nyc report --reporter json --report-dir coverage
-
-      - name: Upload coverage
+      - name: Upload coverage file
         uses: actions/upload-artifact@v4.6.0
         with:
-          name: cypress-coverage
-          path: coverage
+          name: coverage-${{ matrix.group }}
+          path: coverage/coverage-final.json
 
       - name: Upload screenshots
         uses: actions/upload-artifact@v4.6.0
