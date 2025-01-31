@@ -54,7 +54,7 @@ describe('Test upload history from file', () => {
   it('Gives an error message for an incorrect type of file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/ase1.gb', { force: true });
     cy.get('.MuiAlert-message').contains('Only JSON and zip files are accepted');
-    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('public/examples/wrong_history.json', { force: true });
+    cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('File').siblings('input').selectFile('cypress/test_files/wrong_history.json', { force: true });
     cy.get('.MuiAlert-message').contains('Cloning strategy not valid');
   });
   it('Zip: Can upload a correct zip file', () => {
