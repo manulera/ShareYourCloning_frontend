@@ -44,7 +44,7 @@ function ImportPrimersButton({ addPrimer }) {
   const handleImportClick = () => {
     importedPrimers.forEach((primer) => {
       if (primer.error === '') {
-        addPrimer(primer);
+        addPrimer({ name: primer.name, sequence: primer.sequence });
       }
     });
     setOpenModal(false);
