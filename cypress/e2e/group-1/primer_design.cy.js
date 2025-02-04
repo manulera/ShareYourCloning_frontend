@@ -308,7 +308,7 @@ describe('Test primer designer functionality', () => {
 
     // Double-check that the right source was created
     changeTab('Cloning');
-    cy.get('.share-your-cloning li').contains('In-Fusion').should('exist');
+    cy.get('.open-cloning li').contains('In-Fusion').should('exist');
   });
 
   it('Restriction ligation primer design', () => {
@@ -404,7 +404,7 @@ describe('Test primer designer functionality', () => {
 
     // Do the PCR
     // Set minimal annealing to 10
-    setInputValue('Minimal annealing', '10', '.share-your-cloning');
+    setInputValue('Minimal annealing', '10', '.open-cloning');
     cy.get('button').contains('Perform PCR').click();
 
     // Check that the PCR was successful
@@ -538,7 +538,7 @@ describe('Test primer designer functionality', () => {
 
     // Do the PCR
     // Set minimal annealing to 10
-    setInputValue('Minimal annealing', '10', '.share-your-cloning');
+    setInputValue('Minimal annealing', '10', '.open-cloning');
     cy.get('button').contains('Perform PCR').click();
 
     // Check that the PCR was successful
@@ -580,12 +580,12 @@ describe('Test primer designer functionality', () => {
     cy.get('button').contains('Design primers').click();
     clickMultiSelectOption('Purpose of primers', 'Gateway BP reaction', 'li');
     // No alert is visible (Request is not sent)
-    cy.get('.share-your-cloning div.MuiAlert-standardError').should('not.exist');
+    cy.get('.open-cloning div.MuiAlert-standardError').should('not.exist');
     // Select the wrong donor vector
     clickMultiSelectOption('Donor vector', '6', 'li');
-    cy.get('.share-your-cloning div.MuiAlert-standardError').contains('At least two').should('exist');
+    cy.get('.open-cloning div.MuiAlert-standardError').contains('At least two').should('exist');
     // Also shows the att sites present in the wrong donor vector
-    cy.get('.share-your-cloning div.MuiAlert-standardError').contains('attR1').should('exist');
+    cy.get('.open-cloning div.MuiAlert-standardError').contains('attR1').should('exist');
     // Select the correct donor vector
     clickMultiSelectOption('Donor vector', '4', 'li');
     cy.get('button').contains('Design primers').click();
@@ -595,9 +595,9 @@ describe('Test primer designer functionality', () => {
     // Go back to the Cloning tab
     changeTab('Cloning');
     // Check that the right source was created
-    cy.get('.share-your-cloning li').contains('Gateway').should('exist');
+    cy.get('.open-cloning li').contains('Gateway').should('exist');
     // Go back to design primers
-    cy.get('.share-your-cloning button').contains('Design primers').click();
+    cy.get('.open-cloning button').contains('Design primers').click();
     // We should be on the Sequence tab
     cy.get('button.MuiTab-root.Mui-selected').contains('Sequence').should('exist');
 
@@ -708,7 +708,7 @@ describe('Test primer designer functionality', () => {
     cy.get('li').contains('PCR with primers NC_000913_fwd and NC_000913_rvs').should('exist');
 
     // Do the BP reaction
-    cy.get('.share-your-cloning li button').contains('Submit').click();
+    cy.get('.open-cloning li button').contains('Submit').click();
 
     // Check that the BP reaction was successful
     cy.get('li#source-9').contains('Gateway BP reaction').should('exist');

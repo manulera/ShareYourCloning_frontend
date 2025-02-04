@@ -7,7 +7,7 @@ function FeedbackDialog({ open, setOpen }) {
       <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large' }}> 😊 Give feedback 😭 </DialogTitle>
       <DialogContent sx={{ fontSize: 'large' }}>
         <p>
-          🙏 Thanks for using ShareYourCloning!
+          🙏 Thanks for using OpenCloning!
         </p>
         <p>
           {' '}

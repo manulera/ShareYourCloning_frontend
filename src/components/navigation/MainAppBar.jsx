@@ -121,7 +121,7 @@ function MainAppBar() {
 
   return (
     <AppBar position="static" className="app-bar">
-      <div className="app-name">Share Your Cloning</div>
+      <div className="app-name">OpenCloning</div>
       <Container maxWidth="s">
         <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50 }}>
           <Box

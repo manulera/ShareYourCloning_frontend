@@ -27,7 +27,7 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
   };
   const clearDummyPrimer = () => {
     const editorState = store.getState().VectorEditor.mainEditor;
-    delete editorState.sequenceData.primers.shareyourcloningDummyPrimer;
+    delete editorState.sequenceData.primers.opencloningDummyPrimer;
     updateEditor(store, 'mainEditor', editorState);
   };
 
@@ -47,7 +47,7 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
       editorState.selectionLayer = { start: -1, end: -1 };
 
       const dummyPrimer = {
-        id: 'shareyourcloningDummyPrimer',
+        id: 'opencloningDummyPrimer',
         name,
         ...primerPosition,
         type: 'primer_bind',
@@ -55,7 +55,7 @@ function CreatePrimerDialog({ primerSequence, setPrimerSequence, position, setPo
         forward,
         bases,
       };
-      editorState.sequenceData.primers.shareyourcloningDummyPrimer = dummyPrimer;
+      editorState.sequenceData.primers.opencloningDummyPrimer = dummyPrimer;
       editorState.panelsShown[0].forEach((p) => {
         if (p.id === 'sequence') {
           p.active = true;

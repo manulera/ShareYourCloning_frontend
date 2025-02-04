@@ -110,7 +110,7 @@ export const downloadSequence = (fileName, sequenceData) => {
 };
 
 export const downloadCloningStrategyAsSvg = async (fileName) => {
-  const container = document.querySelector('div.share-your-cloning');
+  const container = document.querySelector('div.open-cloning');
   // Clone the container to avoid modifying the original
   const containerCopy = container.cloneNode(true);
   containerCopy.id = 'temp-div-svg-print';

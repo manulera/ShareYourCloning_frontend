@@ -94,7 +94,7 @@ export function deleteSourceById(id) {
 }
 
 export function deleteSourceByContent(content) {
-  cy.get('.share-your-cloning').contains(content).closest('div.select-source').find('[data-testid="DeleteIcon"]')
+  cy.get('.open-cloning').contains(content).closest('div.select-source').find('[data-testid="DeleteIcon"]')
     .click();
   // If a dialog opens, click the delete button
   // Check if the dialog exists before attempting to interact with it
@@ -136,7 +136,7 @@ export function loadExample(name) {
   cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();
   cy.get('.load-example-dialog .load-example-item').contains(name).click();
   // This is not always the case, but it will work for several cases
-  cy.get('.share-your-cloning li').contains('Import a sequence').should('not.exist');
+  cy.get('.open-cloning li').contains('Import a sequence').should('not.exist');
 }
 
 export function skipNcbiCheck() {

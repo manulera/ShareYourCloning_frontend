@@ -36,7 +36,7 @@ function PrimerDesignGibsonAssembly({ source, assemblyType }) {
       updateStoreEditor('mainEditor', source.input[0]);
       dispatch(setCurrentTab(3));
       // Scroll to the top of the page
-      document.getElementById('shareyourcloning-app-tabs')?.scrollIntoView();
+      document.getElementById('opencloning-app-tabs')?.scrollIntoView();
     });
   };
 

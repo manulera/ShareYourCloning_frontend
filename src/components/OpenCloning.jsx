@@ -14,7 +14,7 @@ import AppAlerts from './AppAlerts';
 
 const { setCurrentTab } = cloningActions;
 
-function ShareYourCloning() {
+function OpenCloning() {
   const dispatch = useDispatch();
   const network = useSelector((state) => state.cloning.network, isEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);
@@ -26,7 +26,7 @@ function ShareYourCloning() {
   return (
     <div className="app-container">
       <AppAlerts />
-      <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3, pt: 1 }} id="shareyourcloning-app-tabs">
+      <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3, pt: 1 }} id="opencloning-app-tabs">
         <CustomTab label="Cloning" index={0} />
         <CustomTab label="Primers" index={1} />
         <CustomTab label="Description" index={2} />
@@ -50,7 +50,7 @@ function ShareYourCloning() {
         </div>
       </TabPanel>
       <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="share-your-cloning">
+        <div className="open-cloning">
           <CloningHistory network={network} />
         </div>
       </TabPanel>
@@ -61,4 +61,4 @@ function ShareYourCloning() {
   );
 }
 
-export default ShareYourCloning;
+export default OpenCloning;
