@@ -7,7 +7,7 @@ import DragAndDropCloningHistoryWrapper from './DragAndDropCloningHistoryWrapper
 function CloningHistory({ network }) {
   return (
     <DragAndDropCloningHistoryWrapper>
-      <ScrollSyncWrapper className="tf-tree tf-ancestor-tree">
+      <div className="tf-tree tf-ancestor-tree">
         <div>
           <ul>
             {network.map((node) => (
@@ -19,7 +19,7 @@ function CloningHistory({ network }) {
             </li>
           </ul>
         </div>
-      </ScrollSyncWrapper>
+      </div>
     </DragAndDropCloningHistoryWrapper>
 
   );

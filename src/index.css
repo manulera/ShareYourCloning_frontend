@@ -99,8 +99,6 @@ div.hang-from-node::before {
 
 /* TODO: handle these */
 div.tf-tree.tf-ancestor-tree {
-    overflow-x: hidden;
-    /* overflow: unset; */
     padding-bottom: 150px;
 }
 
@@ -150,7 +148,10 @@ span.node-text > div:first-child {
 body {
     margin: 0px;
     padding: 0px;
-    overflow-y: scroll;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
 }
 
 div.select-source div.MuiFormControl-root {
@@ -340,4 +341,11 @@ div#global-error-message-wrapper > div {
 .finished-source {
     /* Allow line breaks in very long strings only when necessary */
     word-break: break-word;
+}
+
+.open-cloning {
+    overflow-x: scroll;
+    flex: 1 1 auto;
+    position: relative;
+    overflow: auto;
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-bar {
+            width: 100%;
+            padding: 1rem;
+            background: repeating-linear-gradient(90deg,
+                    #1e90ff 0px,
+                    #1e90ff 50px,
+                    #0000cd 50px,
+                    #0000cd 100px);
+            flex-shrink: 0;
+        }
+
+        .wide-content {
+            flex: 1 1 auto;
+            position: relative;
+            overflow: auto;
+        }
+
+        .content-inner {
+            width: 1500px;
+            height: 1500px;
+            background: repeating-linear-gradient(90deg,
+                    #333 0px,
+                    #333 50px,
+                    #444 50px,
+                    #444 100px);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="nav-bar"></nav>
+    <div class="wide-content">
+        <div class="content-inner">aaaaaaaaaaaaa</div>
+    </div>
+</body>
+
+</html>
