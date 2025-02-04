@@ -1,11 +1,11 @@
-import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors} from '../common_functions';
 
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
   });
   it('works in the normal case', () => {
     addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');

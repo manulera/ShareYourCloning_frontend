@@ -18,11 +18,6 @@ function ExternalServicesStatusCheck() {
           url: backendRoute(''),
           check: (resp) => resp.status === 200,
         },
-        {
-          message: 'NCBI server is down',
-          url: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761',
-          check: (resp) => (resp.status === 200) && (resp.data.result['22258761']),
-        },
       ];
       const downServices = [];
       await Promise.all(

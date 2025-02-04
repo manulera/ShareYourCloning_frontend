@@ -1,11 +1,11 @@
-import { skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { skipGoogleSheetErrors} from '../common_functions';
 
 describe('Test tab navigation functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
   });
   it('Can navigate the tabs', () => {
     // Starts on cloning tab

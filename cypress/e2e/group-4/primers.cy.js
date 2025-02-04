@@ -5,7 +5,7 @@ describe('Tests primer functionality', () => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
   it('Can add and delete primers', () => {

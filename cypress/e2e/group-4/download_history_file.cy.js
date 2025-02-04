@@ -6,7 +6,7 @@ describe('Test download history file', () => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
   });
   it('Can download the json, svg files', () => {
     loadExample('Integration of cassette by homologous recombination');

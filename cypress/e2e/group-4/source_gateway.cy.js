@@ -5,7 +5,7 @@ describe('Tests PCR functionality', () => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
   });
   it('works in the normal case', () => {
     loadExample('Gateway cloning');

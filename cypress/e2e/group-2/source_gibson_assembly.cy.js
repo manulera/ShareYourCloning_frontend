@@ -1,11 +1,11 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors} from '../common_functions';
 
 describe('Tests Gibson assembly functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
     skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
   });
   it('works in the normal case', () => {
     loadHistory('cypress/test_starting_point/source_gibson_assembly.json');
