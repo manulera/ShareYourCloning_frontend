@@ -97,8 +97,8 @@ describe('Tests restriction-ligation functionality', () => {
     addLane();
     manuallyTypeSequence('aaGCGGCCGCaaGCGGCCGCaaGCGGCCGCaaGCGGCCGC', true);
     addSource('RestrictionAndLigationSource');
-    clickMultiSelectOption('Enzymes used', 'NotI', '.share-your-cloning');
-    clickMultiSelectOption('Assembly inputs', 'Select all', '.share-your-cloning');
+    clickMultiSelectOption('Enzymes used', 'NotI', '.open-cloning');
+    clickMultiSelectOption('Assembly inputs', 'Select all', '.open-cloning');
     cy.get('li#source-7 button').contains('Submit').click();
     cy.get('.submit-backend-api .loading-progress').should('not.exist', { timeout: 20000 });
     cy.get('.MuiAlert-message').contains('Too many assemblies');

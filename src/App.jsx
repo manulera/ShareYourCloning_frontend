@@ -3,7 +3,7 @@ import './App.css';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import MainAppBar from './components/navigation/MainAppBar';
-import ShareYourCloning from './components/ShareYourCloning';
+import OpenCloning from './components/OpenCloning';
 import { cloningActions } from './store/cloning';
 
 function App() {
@@ -48,7 +48,7 @@ function App() {
           <MainAppBar />
         </div>
       </header>
-      <ShareYourCloning />
+      <OpenCloning />
     </div>
   );
 }

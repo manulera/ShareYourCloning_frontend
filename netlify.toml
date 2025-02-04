@@ -11,4 +11,11 @@ YARN_VERSION = "3.6.4"
 force = true
 from = "https://shareyourcloning.netlify.app/*"
 status = 301
-to = "https://shareyourcloning.org/:splat"
+to = "https://opencloning.org/:splat"
+
+[[redirects]]
+force = true
+from = "https://opencloning.netlify.app/*"
+status = 301
+to = "https://opencloning.org/:splat"
+

@@ -66,7 +66,7 @@ function MainAppBar() {
       if (isTemplate) {
         const segments = url.split('/');
         const kitUrl = segments[segments.length - 3];
-        const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/master/submissions';
+        const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/OpenCloning-submission/master/submissions';
         data.sources = data.sources.map((s) => ((s.image === undefined || s.image[0] === null) ? s : {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
@@ -121,7 +121,7 @@ function MainAppBar() {
 
   return (
     <AppBar position="static" className="app-bar">
-      <div className="app-name">Share Your Cloning</div>
+      <div className="app-name">OpenCloning</div>
       <Container maxWidth="s">
         <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50 }}>
           <Box
@@ -140,7 +140,7 @@ function MainAppBar() {
             <Button onClick={() => setOpenFeedbackDialog(true)}>Feedback</Button>
             <Button onClick={() => setOpenMiscDialog(true)}>Misc</Button>
             <Tooltip title={tooltipText} arrow placement="right">
-              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
+              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/OpenCloning')}>
                 <GitHubIcon />
               </Button>
             </Tooltip>

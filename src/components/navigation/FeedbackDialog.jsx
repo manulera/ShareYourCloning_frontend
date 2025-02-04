@@ -7,7 +7,7 @@ function FeedbackDialog({ open, setOpen }) {
       <DialogTitle sx={{ textAlign: 'center', fontSize: 'x-large' }}> 😊 Give feedback 😭 </DialogTitle>
       <DialogContent sx={{ fontSize: 'large' }}>
         <p>
-          🙏 Thanks for using ShareYourCloning!
+          🙏 Thanks for using OpenCloning!
         </p>
         <p>
           {' '}
@@ -16,7 +16,7 @@ function FeedbackDialog({ open, setOpen }) {
             <li style={{ marginBottom: 10 }}>
               If you use GitHub,
               {' '}
-              <a href="https://github.com/manulera/ShareYourCloning/issues/new" target="_blank" rel="noopener noreferrer">create an issue</a>
+              <a href="https://github.com/manulera/OpenCloning/issues/new" target="_blank" rel="noopener noreferrer">create an issue</a>
             </li>
             <li>
               Otherwise, send an email to
