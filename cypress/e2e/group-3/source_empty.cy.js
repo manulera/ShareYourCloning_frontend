@@ -4,7 +4,7 @@ describe('Test empty source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Creates / deletes empty sources', () => {

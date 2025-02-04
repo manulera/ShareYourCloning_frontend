@@ -139,13 +139,6 @@ export function loadExample(name) {
   cy.get('.open-cloning li').contains('Import a sequence').should('not.exist');
 }
 
-export function skipGoogleSheetErrors() {
-  cy.intercept('GET', 'https://docs.google.com/spreadsheets/d/11mQzwX9nUepHsOrjoGadvfQrYQwSumvsfq5lcjTDZuU/export?format=tsv', {
-    statusCode: 200,
-    body: '',
-  }).as('googleSheetErrors');
-}
-
 export function changeTab(tabName) {
   cy.get('button.MuiTab-root').contains(tabName).click();
 }

@@ -1,10 +1,10 @@
-import { addSource, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors} from '../common_functions';
+import { addSource, clickMultiSelectOption, setInputValue} from '../common_functions';
 
 describe('RepositoryId Source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
     addSource('RepositoryIdSource', true);
   });

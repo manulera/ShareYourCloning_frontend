@@ -4,7 +4,7 @@ describe('Test load template functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Can load template', () => {

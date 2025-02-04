@@ -4,7 +4,7 @@ describe('Test description', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('works', () => {

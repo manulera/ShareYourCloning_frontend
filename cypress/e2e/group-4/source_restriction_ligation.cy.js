@@ -1,10 +1,10 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, addLane, skipGoogleSheetErrors} from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, addLane} from '../common_functions';
 
 describe('Tests restriction-ligation functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('works in the normal case', () => {

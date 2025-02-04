@@ -1,10 +1,10 @@
-import { deleteSourceByContent, loadExample, skipGoogleSheetErrors} from '../common_functions';
+import { deleteSourceByContent, loadExample} from '../common_functions';
 
 describe('Test delete source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Has the correct delete chain', () => {

@@ -1,10 +1,10 @@
-import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow, skipGoogleSheetErrors} from '../common_functions';
+import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSequenceOutputArrow} from '../common_functions';
 
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('works in the normal case', () => {

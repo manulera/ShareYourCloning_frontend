@@ -1,10 +1,10 @@
-import { addLane, addSource, clickMultiSelectOption, skipGoogleSheetErrors} from '../common_functions';
+import { addLane, addSource, clickMultiSelectOption} from '../common_functions';
 
 describe('File Source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
     addSource('UploadedFileSource', 1);
   });

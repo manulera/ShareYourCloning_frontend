@@ -1,10 +1,9 @@
-import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manuallyTypeSequence, skipGoogleSheetErrors } from '../common_functions';
+import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manuallyTypeSequence } from '../common_functions';
 
 describe('Test copy existing sequence functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
   });
   it('Copies the correct sequence', () => {
     manuallyTypeSequence('ACGT');

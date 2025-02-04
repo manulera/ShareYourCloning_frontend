@@ -16,22 +16,11 @@ function App() {
       dispatch(setConfig(data));
     });
     // Load known errors from google sheet
-    axios.get('https://docs.google.com/spreadsheets/d/11mQzwX9nUepHsOrjoGadvfQrYQwSumvsfq5lcjTDZuU/export?format=tsv')
-      .then(({ data }) => {
-        // Parse tsv file, split with any new line
-        const rows = data.split(/\r\n|\n/);
-        const knownErrors = {};
-        rows.forEach((row) => {
-          const [key, value] = row.split('\t');
-          if (knownErrors[key]) {
-            knownErrors[key].push(value);
-          } else {
-            knownErrors[key] = [value];
-          }
-        });
-        dispatch(setKnownErrors(knownErrors));
-      })
-      .catch(((e) => { console.error(e); }));
+    axios.get(`${import.meta.env.BASE_URL}known_errors.json`)
+      .then(({ data }) => { dispatch(setKnownErrors(data || {})); })
+      .catch(() => {
+        dispatch(setKnownErrors({}));
+      });
     // Clear session storage
     sessionStorage.clear();
   }, []);

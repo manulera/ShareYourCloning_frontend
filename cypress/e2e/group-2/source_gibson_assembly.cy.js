@@ -1,10 +1,10 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById, skipGoogleSheetErrors} from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById} from '../common_functions';
 
 describe('Tests Gibson assembly functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('works in the normal case', () => {

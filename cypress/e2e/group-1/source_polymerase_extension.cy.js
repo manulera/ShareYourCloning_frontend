@@ -1,9 +1,9 @@
-import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence, skipGoogleSheetErrors} from '../common_functions';
+import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence} from '../common_functions';
 
 describe('Test polymerase extension functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    skipGoogleSheetErrors();
+    
     
   });
 

@@ -1,10 +1,10 @@
-import { loadExample, skipGoogleSheetErrors, skipNcbiCheck, addPrimer, changeTab } from '../common_functions';
+import { loadExample, skipNcbiCheck, addPrimer, changeTab } from '../common_functions';
 
 describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
     cy.get('button.MuiTab-root').contains('Primers').click();
   });

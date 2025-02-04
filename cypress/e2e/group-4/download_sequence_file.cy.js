@@ -1,10 +1,10 @@
-import { setInputValue, skipGoogleSheetErrors} from '../common_functions';
+import { setInputValue} from '../common_functions';
 
 describe('Test download sequence file', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Can download the file', () => {

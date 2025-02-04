@@ -5,7 +5,7 @@ describe('Test download history file', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Can download the json, svg files', () => {

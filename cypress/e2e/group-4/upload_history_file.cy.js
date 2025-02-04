@@ -1,10 +1,10 @@
-import { closeAlerts, loadExample, skipGoogleSheetErrors} from '../common_functions';
+import { closeAlerts, loadExample} from '../common_functions';
 
 describe('Test upload history from file', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('JSON: Can upload a correct json file', () => {

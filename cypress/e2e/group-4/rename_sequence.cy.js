@@ -1,10 +1,10 @@
-import { clearInputValue, manuallyTypeSequence, setInputValue, skipGoogleSheetErrors} from '../common_functions';
+import { clearInputValue, manuallyTypeSequence, setInputValue} from '../common_functions';
 
 describe('Can rename a sequence', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Works as expected', () => {

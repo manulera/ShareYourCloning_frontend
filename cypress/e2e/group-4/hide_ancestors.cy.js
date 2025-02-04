@@ -1,10 +1,10 @@
-import { loadExample, skipGoogleSheetErrors} from '../common_functions';
+import { loadExample} from '../common_functions';
 
 describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Hides ancestors', () => {

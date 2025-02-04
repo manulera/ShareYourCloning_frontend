@@ -4,7 +4,7 @@ describe('Test tab navigation functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Can navigate the tabs', () => {

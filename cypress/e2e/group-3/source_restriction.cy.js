@@ -1,10 +1,10 @@
-import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes, skipGoogleSheetErrors} from '../common_functions';
+import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes} from '../common_functions';
 
 describe('Test restriction component', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
+    
     
   });
   it('Works with single enzyme', () => {
