@@ -66,7 +66,7 @@ function MainAppBar() {
       if (isTemplate) {
         const segments = url.split('/');
         const kitUrl = segments[segments.length - 3];
-        const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/ShareYourCloning-submission/master/submissions';
+        const rootGithubUrl = 'https://raw.githubusercontent.com/genestorian/OpenCloning-submission/master/submissions';
         data.sources = data.sources.map((s) => ((s.image === undefined || s.image[0] === null) ? s : {
           ...s, image: [`${rootGithubUrl}/${kitUrl}/${s.image[0]}`, s.image[1]],
         }));
