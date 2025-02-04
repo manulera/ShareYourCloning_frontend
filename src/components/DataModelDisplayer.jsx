@@ -15,7 +15,7 @@ function DataModelDisplayer() {
       <p>
         Visit the
         {' '}
-        <a href="https://genestorian.github.io/OpenCloning_LinkML" target="_blank" rel="noopener noreferrer">data model documentation</a>
+        <a href="https://opencloning.github.io/OpenCloning_LinkML" target="_blank" rel="noopener noreferrer">data model documentation</a>
         .
       </p>
 
