@@ -16,7 +16,7 @@ jobs:
       - name: Get backend sha
         id: get-sha
         run: |
-          echo "backend_sha=$(git rev-parse @:ShareYourCloning_backend)" >> $GITHUB_OUTPUT
+          echo "backend_sha=$(git rev-parse @:OpenCloning_backend)" >> $GITHUB_OUTPUT
 
 
   check-cache:
@@ -146,7 +146,7 @@ jobs:
           NCBI_API_KEY: ${{ secrets.NCBI_API_KEY }}
         run: |
           source .venv/bin/activate
-          uvicorn shareyourcloning.main:app &
+          uvicorn opencloning.main:app &
 
       - name: check if the server is running
         run: |
@@ -274,8 +274,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: manulera/opencloningfrontend:latest-syc-base
+          tags: manulera/opencloningfrontend:latest-oc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_URL=/shareyourcloning/
+            BASE_URL=/opencloning/
             COMMIT_SHA=${{ github.sha }}

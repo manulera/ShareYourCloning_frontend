@@ -2,7 +2,7 @@
 
 This frontend is part of a bigger application, before going further, please go to the [main project README](https://github.com/manulera/OpenCloning?tab=readme-ov-file#readme), where you can find an introduction.
 
-A hosted version of this application can be found at [https://shareyourcloning.org/](https://shareyourcloning.org/).
+A hosted version of this application can be found at [https://opencloning.org/](https://opencloning.org/).
 
 ## Getting started
 
@@ -94,7 +94,7 @@ bash run_tests_in_parallel.sh
 
 ### Actions and submodule
 
-The tests run with cypress in github actions require the submodule ShareYourCloning_backend to be included. If you want to include it locally:
+The tests run with cypress in github actions require the submodule OpenCloning_backend to be included. If you want to include it locally:
 
 ```bash
 git submodule update --init
@@ -103,7 +103,7 @@ git submodule update --init
 If you want to change the commit of the submodule:
 
 ```bash
-cd ShareYourCloning_backend
+cd OpenCloning_backend
 git checkout -b the-branch
 git pull origin the-branch
 cd ..

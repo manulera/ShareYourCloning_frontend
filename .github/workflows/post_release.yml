@@ -42,12 +42,12 @@ jobs:
           context: .
           push: true
           tags: |
-            manulera/opencloningfrontend:latest-syc-base
-            manulera/opencloningfrontend:prod-syc-base
-            manulera/opencloningfrontend:${{ github.ref_name }}-syc-base
+            manulera/opencloningfrontend:latest-oc-base
+            manulera/opencloningfrontend:prod-oc-base
+            manulera/opencloningfrontend:${{ github.ref_name }}-oc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            BASE_URL=/shareyourcloning/
+            BASE_URL=/opencloning/
             COMMIT_SHA=${{ github.sha }}
             VERSION=${{ github.ref_name }}
 

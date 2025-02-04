@@ -1,4 +1,4 @@
-# Frontend for ShareYourCloning
+# Frontend for OpenCloning
 # https://github.com/manulera/OpenCloning_frontend
 
 # Stage 1: Build the application
