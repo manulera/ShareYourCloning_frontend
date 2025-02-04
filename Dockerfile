@@ -1,5 +1,5 @@
 # Frontend for ShareYourCloning
-# https://github.com/manulera/ShareYourCloning_frontend
+# https://github.com/manulera/OpenCloning_frontend
 
 # Stage 1: Build the application
 FROM node:18-alpine AS builder

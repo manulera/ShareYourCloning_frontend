@@ -26,7 +26,7 @@ function VersionDialog({ open, setOpen }) {
       Version: &nbsp;
       {(backendVersion && backendVersion.version)
         ? (
-          <a href={`https://github.com/manulera/ShareYourCloning_backend/releases/tag/${backendVersion.version}`}>
+          <a href={`https://github.com/manulera/OpenCloning_backend/releases/tag/${backendVersion.version}`}>
             {backendVersion.version}
           </a>
         ) : 'N.A.'}
@@ -34,7 +34,7 @@ function VersionDialog({ open, setOpen }) {
       Commit: &nbsp;
       {(backendVersion && backendVersion.commitSha)
         ? (
-          <a href={`https://github.com/manulera/ShareYourCloning_backend/commit/${backendVersion.commitSha}`}>
+          <a href={`https://github.com/manulera/OpenCloning_backend/commit/${backendVersion.commitSha}`}>
             {backendVersion.commitSha}
           </a>
         ) : 'N.A.'}
@@ -46,7 +46,7 @@ function VersionDialog({ open, setOpen }) {
       Version: &nbsp;
       {frontendVersion && frontendVersion.version
         ? (
-          <a href={`https://github.com/manulera/ShareYourCloning_frontend/releases/tag/${frontendVersion.version}`}>
+          <a href={`https://github.com/manulera/OpenCloning_frontend/releases/tag/${frontendVersion.version}`}>
             {frontendVersion.version}
           </a>
         ) : 'N.A.'}
@@ -54,7 +54,7 @@ function VersionDialog({ open, setOpen }) {
       Commit: &nbsp;
       {(frontendVersion && frontendVersion.commitSha)
         ? (
-          <a href={`https://github.com/manulera/ShareYourCloning_frontend/commit/${frontendVersion.commitSha}`}>
+          <a href={`https://github.com/manulera/OpenCloning_frontend/commit/${frontendVersion.commitSha}`}>
             {frontendVersion.commitSha}
           </a>
         ) : 'N.A.'}

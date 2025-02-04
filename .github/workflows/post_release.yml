@@ -20,7 +20,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: manulera/shareyourcloningfrontend
+          images: manulera/opencloningfrontend
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.9.0
@@ -28,9 +28,9 @@ jobs:
           context: .
           push: true
           tags: |
-            manulera/shareyourcloningfrontend:latest
-            manulera/shareyourcloningfrontend:prod
-            manulera/shareyourcloningfrontend:${{ github.ref_name }}
+            manulera/opencloningfrontend:latest
+            manulera/opencloningfrontend:prod
+            manulera/opencloningfrontend:${{ github.ref_name }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
@@ -42,9 +42,9 @@ jobs:
           context: .
           push: true
           tags: |
-            manulera/shareyourcloningfrontend:latest-syc-base
-            manulera/shareyourcloningfrontend:prod-syc-base
-            manulera/shareyourcloningfrontend:${{ github.ref_name }}-syc-base
+            manulera/opencloningfrontend:latest-syc-base
+            manulera/opencloningfrontend:prod-syc-base
+            manulera/opencloningfrontend:${{ github.ref_name }}-syc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BASE_URL=/shareyourcloning/

@@ -140,7 +140,7 @@ function MainAppBar() {
             <Button onClick={() => setOpenFeedbackDialog(true)}>Feedback</Button>
             <Button onClick={() => setOpenMiscDialog(true)}>Misc</Button>
             <Tooltip title={tooltipText} arrow placement="right">
-              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/ShareYourCloning')}>
+              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/OpenCloning')}>
                 <GitHubIcon />
               </Button>
             </Tooltip>

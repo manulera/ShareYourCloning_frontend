@@ -37,7 +37,7 @@ function SourceTypeSelector({ source }) {
       options.push(<MenuItem key="CopyEntity" value="CopyEntity">Use an existing sequence</MenuItem>);
     }
   } else {
-    // See https://github.com/manulera/ShareYourCloning_frontend/issues/101
+    // See https://github.com/manulera/OpenCloning_frontend/issues/101
     if (inputEntities.length < 2) {
       options.push(<MenuItem key="RestrictionEnzymeDigestionSource" value="RestrictionEnzymeDigestionSource">Restriction</MenuItem>);
       options.push(<MenuItem key="PCRSource" value="PCRSource">PCR</MenuItem>);

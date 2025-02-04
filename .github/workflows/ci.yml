@@ -70,7 +70,7 @@ jobs:
         if: needs.check-cache.outputs.cache-hit != 'true'
         run: |
           source .venv/bin/activate
-          pip install git+https://github.com/manulera/ShareYourCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
+          pip install git+https://github.com/manulera/OpenCloning_backend.git@${{ needs.get-backend-sha.outputs.backend_sha }}
 
       - name: Save venv to cache
         if: needs.check-cache.outputs.cache-hit != 'true'
@@ -257,14 +257,14 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: manulera/shareyourcloningfrontend
+          images: manulera/opencloningfrontend
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6.9.0
         with:
           context: .
           push: true
-          tags: manulera/shareyourcloningfrontend:latest
+          tags: manulera/opencloningfrontend:latest
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             COMMIT_SHA=${{ github.sha }}
@@ -274,7 +274,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: manulera/shareyourcloningfrontend:latest-syc-base
+          tags: manulera/opencloningfrontend:latest-syc-base
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             BASE_URL=/shareyourcloning/
