@@ -1,11 +1,8 @@
-import { deleteSourceByContent, loadExample} from '../common_functions';
+import { addLane, changeTab, deleteSourceByContent, deleteSourceById, loadExample, manuallyTypeSequence } from '../common_functions';
 
 describe('Test delete source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    
-    
-    
   });
   it('Has the correct delete chain', () => {
     // Deletes the right children
@@ -47,5 +44,28 @@ describe('Test delete source functionality', () => {
 
     cy.get('li#sequence-4').should('exist');
     cy.get('li#sequence-6').should('exist');
+  });
+  it('Unsets main sequence and removes it from the editor', () => {
+    manuallyTypeSequence('ATGC');
+    addLane();
+    manuallyTypeSequence('ATGC');
+    cy.get('li#sequence-2 svg[data-testid="VisibilityIcon"]').should('have.css', 'color', 'rgb(128, 128, 128)');
+    cy.get('li#sequence-2 svg[data-testid="VisibilityIcon"]').click();
+    cy.get('li#sequence-2 svg[data-testid="VisibilityIcon"]').should('not.have.css', 'color', 'rgb(128, 128, 128)');
+    changeTab('Sequence');
+    cy.get('.main-sequence-editor').contains('4 bps').should('be.visible');
+    changeTab('Cloning');
+    deleteSourceById(3);
+    changeTab('Sequence');
+    cy.get('.main-sequence-editor').contains('4 bps').should('be.visible');
+    changeTab('Cloning');
+    deleteSourceById(1);
+    changeTab('Sequence');
+    cy.get('.main-sequence-editor').contains('4 bps').should('not.exist');
+    // Create a new sequence and check that the main sequence is not set
+    changeTab('Cloning');
+    addLane();
+    manuallyTypeSequence('ATGC');
+    cy.get('li#sequence-2 svg[data-testid="VisibilityIcon"]').should('have.css', 'color', 'rgb(128, 128, 128)');
   });
 });
