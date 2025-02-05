@@ -3,9 +3,6 @@ import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane} f
 describe('Makes all examples', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Homologous recombination', () => {
     // Load addgene plasmid

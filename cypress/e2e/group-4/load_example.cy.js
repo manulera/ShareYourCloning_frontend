@@ -3,9 +3,6 @@ import { skipGoogleSheetErrors} from '../common_functions';
 describe('Test load example functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Can load examples', () => {
     cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();

@@ -1,10 +1,8 @@
-import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence} from '../common_functions';
+import { addLane, addSource, clickMultiSelectOption, manuallyTypeSequence } from '../common_functions';
 
 describe('Test polymerase extension functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    
-    
   });
 
   it('performs polymerase extension correctly and applies the right constraints', () => {

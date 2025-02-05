@@ -3,9 +3,6 @@ import { clearInputValue, manuallyTypeSequence, setInputValue} from '../common_f
 describe('Can rename a sequence', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Works as expected', () => {
     manuallyTypeSequence('atata');

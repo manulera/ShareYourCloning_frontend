@@ -3,9 +3,6 @@ import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceO
 describe('Tests ligation assembly functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('works with blunt ends', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');

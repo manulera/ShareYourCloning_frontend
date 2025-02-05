@@ -19,9 +19,6 @@ function checkMultiInputOptions(sourceId) {
 describe('Test Source input constrains', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
 
   it('Empty source displays the right options', () => {

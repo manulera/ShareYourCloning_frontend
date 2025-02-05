@@ -3,9 +3,6 @@ import { addPrimer, addSource, clickMultiSelectOption, setInputValue, clickSeque
 describe('Tests oligo hybridization source', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('works in the normal case', () => {
     addPrimer('fwd-hyb', 'aaGCGGCCGCgtagaactttatgtgcttccttacattggt');
