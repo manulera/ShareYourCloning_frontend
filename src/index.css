@@ -259,12 +259,6 @@ div.primer-designer {
     width: 60%;
 }
 
-body.bp3-overlay-open {
-    /* Prevents snapping when right-clicking the main editor */
-    overflow-y: scroll;
-    overflow-y: scroll;
-}
-
 
 div.pcr-unit.MuiAccordion-root:first-of-type {
     border-radius: 1.2em;
@@ -302,34 +296,6 @@ div#global-error-message-wrapper > div {
     margin: 10px;
     /* Allow line breaks in very long strings only when necessary */
     word-break: break-word;
-}
-
-
-/* TODO:
- * Until we find a way to stack notification alerts
- * we use classes with fixed absolute position
- */
-
-.notification-alert {
-    position: absolute;
-    top: 1em;
-    left: 1em;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.notification-alert.import-primer-invalid {
-    top: 5em;
-}
-
-.notification-alert.import-primer-existing {
-    top: 9em;
-}
-
-.notification-alert.import-primer-success {
-    top: 13em;
 }
 
 .finished-source {
