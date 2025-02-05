@@ -3,9 +3,6 @@ import { skipGoogleSheetErrors} from '../common_functions';
 describe('Test empty source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Creates / deletes empty sources', () => {
     cy.get('svg[data-testid="AddCircleIcon"]').parent().click();

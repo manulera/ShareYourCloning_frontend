@@ -1,11 +1,8 @@
-import { skipGoogleSheetErrors} from '../common_functions';
+import { skipGoogleSheetErrors } from '../common_functions';
 
 describe('Test load template functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Can load template', () => {
     // Open the template menu

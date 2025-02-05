@@ -4,9 +4,6 @@ import { skipGoogleSheetErrors, skipNcbiCheck, setInputValue, deleteSourceByCont
 describe('Test download history file', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Can download the json, svg files', () => {
     loadExample('Integration of cassette by homologous recombination');

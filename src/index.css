@@ -17,11 +17,14 @@ li.hidden-ancestors {
 }
 
 .app-container {
-    text-align: center;
-    width: 100%;
-    margin: 0px;
-    padding: 0px;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 114px - 10px); /* Adjust based on your app bar height */
+}
+
+.tab-panels-container {
+    height: 100%;
+    overflow: auto;
 }
 
 .main-sequence-editor {
@@ -99,8 +102,6 @@ div.hang-from-node::before {
 
 /* TODO: handle these */
 div.tf-tree.tf-ancestor-tree {
-    overflow-x: hidden;
-    /* overflow: unset; */
     padding-bottom: 150px;
 }
 
@@ -150,7 +151,14 @@ span.node-text > div:first-child {
 body {
     margin: 0px;
     padding: 0px;
-    overflow-y: scroll;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+html {
+    overflow: hidden;
 }
 
 div.select-source div.MuiFormControl-root {
@@ -199,24 +207,12 @@ code {
     max-width: 50%;
 }
 
-.data-model-displayer p {
-    font-size: large;
+.data-model-displayer {
+    text-align: center;
 }
 
-
-.horizontal-scrollbar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 20px; /* Height of the custom scrollbar */
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-.horizontal-scrollbar div {
-width: 110%; /* Set a width that exceeds the container */
-height: 1px; /* Just for occupying space */
+.data-model-displayer p {
+    font-size: large;
 }
 
 a.button-hyperlink {
@@ -298,7 +294,6 @@ div.MuiPaper-root[role=alert] {
 div#global-error-message-wrapper {
     position: fixed;
     top: 0;
-    margin: 1;
     z-index: 999;
     max-width: 25em;
 }
@@ -340,4 +335,8 @@ div#global-error-message-wrapper > div {
 .finished-source {
     /* Allow line breaks in very long strings only when necessary */
     word-break: break-word;
+}
+
+.tab-panels-container {
+    text-align: center;
 }

@@ -3,9 +3,6 @@ import { setInputValue} from '../common_functions';
 describe('Test download sequence file', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Can download the file', () => {
     cy.get('.MuiToolbar-root .MuiButtonBase-root').contains('Examples').click();

@@ -72,6 +72,11 @@ function SourcePCRorHybridization({ source, requestStatus, sendPostRequest }) {
       dispatch(setCurrentTab(3));
       dispatch(setMainSequenceId(source.input[0]));
       updateStoreEditor('mainEditor', source.input[0]);
+      // Scroll to the top of the tab panels container
+      document.querySelector('.tab-panels-container')?.scrollTo({
+        top: 0,
+        behavior: 'instant',
+      });
     };
     return (
       <Button variant="contained" color="success" sx={{ mt: 1 }} onClick={goToPrimerDesign}>

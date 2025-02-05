@@ -3,9 +3,6 @@ import { skipGoogleSheetErrors} from '../common_functions';
 describe('Test tab navigation functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Can navigate the tabs', () => {
     // Starts on cloning tab

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import { isEqual } from 'lodash-es';
@@ -18,9 +18,16 @@ function OpenCloning() {
   const dispatch = useDispatch();
   const network = useSelector((state) => state.cloning.network, isEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);
+  const tabPanelsRef = useRef(null);
 
   const changeTab = (event, newValue) => {
     dispatch(setCurrentTab(newValue));
+    if (tabPanelsRef.current) {
+      tabPanelsRef.current.scrollTo({
+        top: 0,
+        behavior: 'instant',
+      });
+    }
   };
 
   return (
@@ -33,30 +40,32 @@ function OpenCloning() {
         <CustomTab label="Sequence" index={3} />
         <CustomTab label="Data model" index={4} />
       </Tabs>
-      <TabPanel index={1} value={currentTab} className="primer-tab-pannel">
-        <div className="primer-list-container">
-          <PrimerList />
-        </div>
-      </TabPanel>
-      <TabPanel index={2} value={currentTab} className="description-tab-pannel">
-        <div className="description-editor">
-          <DescriptionEditor />
-        </div>
-      </TabPanel>
-      {/* For some reason, putting this here is required for primer.color to work */}
-      <TabPanel index={3} value={currentTab} className="main-editor-tab-pannel">
-        <div className="main-sequence-editor">
-          <SequenceTab />
-        </div>
-      </TabPanel>
-      <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="open-cloning">
-          <CloningHistory network={network} />
-        </div>
-      </TabPanel>
-      <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">
-        <DataModelDisplayer />
-      </TabPanel>
+      <div className="tab-panels-container" ref={tabPanelsRef}>
+        <TabPanel index={1} value={currentTab} className="primer-tab-pannel">
+          <div className="primer-list-container">
+            <PrimerList />
+          </div>
+        </TabPanel>
+        <TabPanel index={2} value={currentTab} className="description-tab-pannel">
+          <div className="description-editor">
+            <DescriptionEditor />
+          </div>
+        </TabPanel>
+        {/* For some reason, putting this here is required for primer.color to work */}
+        <TabPanel index={3} value={currentTab} className="main-editor-tab-pannel">
+          <div className="main-sequence-editor">
+            <SequenceTab />
+          </div>
+        </TabPanel>
+        <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
+          <div className="open-cloning">
+            <CloningHistory network={network} />
+          </div>
+        </TabPanel>
+        <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">
+          <DataModelDisplayer />
+        </TabPanel>
+      </div>
     </div>
   );
 }

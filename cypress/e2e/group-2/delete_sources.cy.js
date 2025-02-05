@@ -3,7 +3,7 @@ import { deleteSourceByContent, loadExample} from '../common_functions';
 describe('Test delete source functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
+    
     
     
   });

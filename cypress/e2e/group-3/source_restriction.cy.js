@@ -3,9 +3,6 @@ import { manuallyTypeSequence, addSource, clickMultiSelectOption, waitForEnzymes
 describe('Test restriction component', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('Works with single enzyme', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');

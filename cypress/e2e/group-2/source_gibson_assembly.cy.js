@@ -1,11 +1,8 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById} from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, loadHistory, deleteSourceById } from '../common_functions';
 
 describe('Tests Gibson assembly functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('works in the normal case', () => {
     loadHistory('cypress/test_starting_point/source_gibson_assembly.json');

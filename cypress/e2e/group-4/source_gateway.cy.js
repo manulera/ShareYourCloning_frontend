@@ -3,9 +3,6 @@ import { addSource, clickMultiSelectOption, skipNcbiCheck, loadExample, deleteSo
 describe('Tests PCR functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('works in the normal case', () => {
     loadExample('Gateway cloning');

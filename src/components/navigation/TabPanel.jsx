@@ -1,7 +1,16 @@
 import React from 'react';
 
 const TabPanel = React.forwardRef(({ children, value, index, ...other }, ref) => {
-  const style = (value === index) ? { visibility: 'visible' } : { visibility: 'hidden', height: 0, overflowY: 'hidden' };
+  const style = value === index ? {
+    visibility: 'visible',
+
+  } : {
+    visibility: 'hidden',
+    position: 'absolute',
+    width: '1px',
+    height: '0px',
+    overflow: 'hidden',
+  };
 
   return (
     <div

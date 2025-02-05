@@ -3,9 +3,6 @@ import { loadExample, skipNcbiCheck, addPrimer, changeTab } from '../common_func
 describe('Tests primer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
     cy.get('button.MuiTab-root').contains('Primers').click();
   });
   it('Can add and delete primers', () => {

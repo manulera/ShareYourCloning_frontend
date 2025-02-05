@@ -3,9 +3,6 @@ import { skipGoogleSheetErrors} from '../common_functions';
 describe('Test description', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
   });
   it('works', () => {
     // Type a new description

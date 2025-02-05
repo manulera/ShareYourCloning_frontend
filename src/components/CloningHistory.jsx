@@ -1,13 +1,12 @@
 import React from 'react';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
-import ScrollSyncWrapper from './utils/ScrollSyncWrapper';
 import DragAndDropCloningHistoryWrapper from './DragAndDropCloningHistoryWrapper';
 
 function CloningHistory({ network }) {
   return (
     <DragAndDropCloningHistoryWrapper>
-      <ScrollSyncWrapper className="tf-tree tf-ancestor-tree">
+      <div className="tf-tree tf-ancestor-tree">
         <div>
           <ul>
             {network.map((node) => (
@@ -19,7 +18,7 @@ function CloningHistory({ network }) {
             </li>
           </ul>
         </div>
-      </ScrollSyncWrapper>
+      </div>
     </DragAndDropCloningHistoryWrapper>
 
   );

@@ -3,7 +3,6 @@ import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue,
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
   });
 
   it('Homologous recombination primer design', () => {

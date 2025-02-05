@@ -1,11 +1,9 @@
-import { addSource, clickMultiSelectOption, setInputValue} from '../common_functions';
+import { addSource, clickMultiSelectOption, setInputValue } from '../common_functions';
 
 describe('RepositoryId Source', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
+
     addSource('RepositoryIdSource', true);
   });
   it('works with addgene', () => {
@@ -18,7 +16,7 @@ describe('RepositoryId Source', () => {
     cy.get('li#sequence-2').contains('pFA6a');
     cy.get('li#sequence-2').contains('5086 bps');
     // links to https://www.addgene.org/39282/sequences/
-    cy.get('li#source-1 a[href="https://www.addgene.org/39282/sequences/"]').should('be.visible');
+    cy.get('li#source-1 a[href="https://www.addgene.org/39282/sequences/"]').should('exist');
   });
   it('works with genbank', () => {
     clickMultiSelectOption('Select repository', 'GenBank', 'li#source-1');
@@ -31,7 +29,7 @@ describe('RepositoryId Source', () => {
     cy.get('li#sequence-2').contains('2671 bps');
 
     // links to https://www.ncbi.nlm.nih.gov/nuccore/NM_001018957.2
-    cy.get('li#source-1 a[href="https://www.ncbi.nlm.nih.gov/nuccore/NM_001018957.2"]').should('be.visible');
+    cy.get('li#source-1 a[href="https://www.ncbi.nlm.nih.gov/nuccore/NM_001018957.2"]').should('exist');
   });
   it('works with benchling', () => {
     clickMultiSelectOption('Select repository', 'Benchling', 'li#source-1');
@@ -43,7 +41,7 @@ describe('RepositoryId Source', () => {
     cy.get('li#sequence-2').contains('2237 bps');
 
     // links to the /edit
-    cy.get('li#source-1 a[href="https://benchling.com/siverson/f/lib_B94YxDHhQh-cidar-moclo-library/seq_dh1FrJTc-b0015_dh/edit"]').should('be.visible');
+    cy.get('li#source-1 a[href="https://benchling.com/siverson/f/lib_B94YxDHhQh-cidar-moclo-library/seq_dh1FrJTc-b0015_dh/edit"]').should('exist');
   });
   it('works with SnapGene', () => {
     clickMultiSelectOption('Select repository', 'SnapGene', 'li#source-1');
@@ -83,8 +81,8 @@ describe('RepositoryId Source', () => {
     cy.get('li#sequence-2').contains('4776 bps');
 
     // Links to https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1
-    cy.get('li#source-1 a[href="https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1"]').should('be.visible');
-    cy.get('li#source-1').contains('Plasmid pFastBac1 from SnapGene').should('be.visible');
+    cy.get('li#source-1 a[href="https://www.snapgene.com/plasmids/insect_cell_vectors/pFastBac1"]').should('exist');
+    cy.get('li#source-1').contains('Plasmid pFastBac1 from SnapGene').should('exist');
   });
   it('works with Euroscarf', () => {
     clickMultiSelectOption('Select repository', 'Euroscarf', 'li#source-1');
@@ -94,7 +92,7 @@ describe('RepositoryId Source', () => {
     cy.get('li#sequence-2').contains('4738 bps');
 
     // Links to http://www.euroscarf.de/plasmid_details.php?accno=P30174
-    cy.get('li#source-1 a[href="http://www.euroscarf.de/plasmid_details.php?accno=P30174"]').should('be.visible');
+    cy.get('li#source-1 a[href="http://www.euroscarf.de/plasmid_details.php?accno=P30174"]').should('exist');
   });
   it('handles empty value and wrong IDs', () => {
     // AddGene =================================

@@ -3,9 +3,6 @@ import { checkInputValue, setInputValue} from '../common_functions';
 describe('ManuallyTyped Source', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
-    
-    
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="ManuallyTypedSource"]').click();
   });

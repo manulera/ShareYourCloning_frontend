@@ -3,7 +3,6 @@ import { addLane, addSource, clickMultiSelectOption, deleteSourceByContent, manu
 describe('Test copy existing sequence functionality', () => {
   beforeEach(() => {
     cy.visit('/');
-    // Intercepts must be in this order
   });
   it('Copies the correct sequence', () => {
     manuallyTypeSequence('ACGT');

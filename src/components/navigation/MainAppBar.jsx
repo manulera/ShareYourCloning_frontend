@@ -8,6 +8,10 @@ import { Button, Tooltip } from '@mui/material';
 import './MainAppBar.css';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import MenuIcon from '@mui/icons-material/Menu';
 import ButtonWithMenu from './ButtonWithMenu';
 import { downloadCloningStrategyAsSvg } from '../../utils/readNwrite';
 import SelectExampleDialog from './SelectExampleDialog';
@@ -23,6 +27,7 @@ import useAlerts from '../../hooks/useAlerts';
 import DownloadCloningStrategyDialog from '../DownloadCloningStrategyDialog';
 import LoadCloningHistoryWrapper from '../LoadCloningHistoryWrapper';
 import useValidateState from '../../hooks/useValidateState';
+import GithubCornerRight from './GithubCornerRight';
 
 const { setCurrentTab, setState: setCloningState } = cloningActions;
 
@@ -35,6 +40,8 @@ function MainAppBar() {
   const [fileList, setFileList] = React.useState([]);
   const [openVersionDialog, setOpenVersionDialog] = React.useState(false);
   const [eLabDialogOpen, setELabDialogOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const openMenu = Boolean(anchorEl);
 
   const backendRoute = useBackendRoute();
   const { updateStoreEditor } = useStoreEditor();
@@ -83,7 +90,8 @@ function MainAppBar() {
   // TODO: turn these into <a> elements.
   const helpMenu = [
     { display: 'Newsletter', onClick: () => window.open('https://eepurl.com/h9-n71') },
-    { display: 'About the project', onClick: () => window.open('https://www.genestorian.org/') },
+    { display: 'About the project', onClick: () => window.open('https://github.com/manulera/OpenCloning') },
+    { display: 'GitHub repository', onClick: () => window.open('https://github.com/manulera/OpenCloning_frontend') },
     { display: 'Demo videos', onClick: () => window.open('https://www.youtube.com/watch?v=n0hedzvpW88&list=PLpv3x-ensLZkJToD2E6ejefADmHcUPYSJ&index=1') },
     { display: 'App version', onClick: () => setOpenVersionDialog(true) },
   ];
@@ -102,8 +110,9 @@ function MainAppBar() {
   // If you want to load a particular example on page load, you can do it here.
   React.useEffect(() => {
     const fetchExample = async () => {
-      // const { data } = await axios.get('examples/dummy.json');
-      // loadData(data, false, dispatch, addAlert, backendRoute('validate'));
+      // const { data } = await axios.get('examples/golden_gate.json');
+      // data.entities = data.sequences;
+      // dispatch(setCloningState(data));
       // dispatch(setCurrentTab(3));
       // Wait for the primer designer to be rendered
       // setTimeout(() => {
@@ -119,32 +128,78 @@ function MainAppBar() {
     fetchExample();
   }, []);
 
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <AppBar position="static" className="app-bar">
       <div className="app-name">OpenCloning</div>
-      <Container maxWidth="s">
-        <Toolbar disableGutters variant="dense" sx={{ justifyContent: 'center', minHeight: 50 }}>
-          <Box
-            sx={{
-              display: { md: 'flex', xs: 'flex' },
-              flexDirection: { md: 'row', xs: 'column' },
-              height: '100%',
-            }}
+      <Tooltip title="View source code on GitHub" placement="left" componentsProps={{ tooltip: { sx: { fontSize: '1rem' } } }}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Button
+            className="github-corner"
+            onClick={() => window.open('https://github.com/manulera/OpenCloning')}
+            aria-label="GitHub repository"
           >
-            <ButtonWithMenu menuItems={fileMenu}> File </ButtonWithMenu>
+            <GithubCornerRight />
+          </Button>
+        </Box>
+      </Tooltip>
+      <Container className="app-bar-container">
+        <Toolbar variant="dense" sx={{ minHeight: 50, justifyContent: 'center' }}>
+          {/* Mobile menu button and dropdown */}
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              onClick={handleMenuOpen}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Menu
+              anchorEl={anchorEl}
+              open={openMenu}
+              onClose={handleMenuClose}
+              sx={{ display: { xs: 'block', md: 'none' } }}
+            >
+              {/* File menu items */}
+              {fileMenu.map((item) => (
+                <MenuItem key={item.display} onClick={() => { item.onClick(); handleMenuClose(); }}>
+                  {item.display}
+                </MenuItem>
+              ))}
+              {/* Help menu items */}
+              {helpMenu.map((item) => (
+                <MenuItem key={item.display} onClick={() => { item.onClick(); handleMenuClose(); }}>
+                  {item.display}
+                </MenuItem>
+              ))}
+              <MenuItem onClick={() => { setOpenExampleDialog(true); handleMenuClose(); }}>Examples</MenuItem>
+              <MenuItem onClick={() => { setOpenTemplateDialog(true); handleMenuClose(); }}>Templates</MenuItem>
+              <MenuItem onClick={() => { setOpenFeedbackDialog(true); handleMenuClose(); }}>Feedback</MenuItem>
+              <MenuItem onClick={() => { setOpenMiscDialog(true); handleMenuClose(); }}>Misc</MenuItem>
+            </Menu>
+          </Box>
+
+          {/* Desktop buttons - hidden on mobile */}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 1 }}>
+            <ButtonWithMenu menuItems={fileMenu}>File</ButtonWithMenu>
             <input type="file" ref={fileInputRef} style={{ display: 'none' }} onChange={onFileChange} accept=".json,.zip" />
             {fileList && <LoadCloningHistoryWrapper fileList={fileList} clearFiles={() => setFileList([])} />}
-            <ButtonWithMenu menuItems={helpMenu}> About </ButtonWithMenu>
+            <ButtonWithMenu menuItems={helpMenu}>About</ButtonWithMenu>
             <Button onClick={() => setOpenExampleDialog(true)}>Examples</Button>
             <Button onClick={() => setOpenTemplateDialog(true)}>Templates</Button>
             <Button onClick={() => setOpenFeedbackDialog(true)}>Feedback</Button>
             <Button onClick={() => setOpenMiscDialog(true)}>Misc</Button>
-            <Tooltip title={tooltipText} arrow placement="right">
-              <Button className="github-icon" onClick={() => window.open('https://github.com/manulera/OpenCloning')}>
-                <GitHubIcon />
-              </Button>
-            </Tooltip>
           </Box>
+
         </Toolbar>
       </Container>
       <SelectExampleDialog onClose={handleCloseDialog} open={openExampleDialog} />
