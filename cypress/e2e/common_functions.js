@@ -139,26 +139,6 @@ export function loadExample(name) {
   cy.get('.open-cloning li').contains('Import a sequence').should('not.exist');
 }
 
-export function skipNcbiCheck() {
-  cy.intercept('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', {
-    statusCode: 200,
-    body: {
-      result: {
-        22258761: {
-          assemblyaccession: 'GCF_000002945.1',
-        },
-      },
-    },
-  }).as('ncbiCheck');
-}
-
-export function skipGoogleSheetErrors() {
-  cy.intercept('GET', 'https://docs.google.com/spreadsheets/d/11mQzwX9nUepHsOrjoGadvfQrYQwSumvsfq5lcjTDZuU/export?format=tsv', {
-    statusCode: 200,
-    body: '',
-  }).as('googleSheetErrors');
-}
-
 export function changeTab(tabName) {
   cy.get('button.MuiTab-root').contains(tabName).click();
 }

@@ -1,11 +1,11 @@
-import { clearInputValue, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { clearInputValue, clickMultiSelectOption, setInputValue} from '../common_functions';
 
 describe('GenomeRegion Source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
     cy.get('#tab-panel-0 .MuiInputBase-root').click();
     cy.get('li[data-value="GenomeCoordinatesSource"]').click();
   });

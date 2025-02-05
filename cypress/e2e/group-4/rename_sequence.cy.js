@@ -1,11 +1,11 @@
-import { clearInputValue, manuallyTypeSequence, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { clearInputValue, manuallyTypeSequence, setInputValue} from '../common_functions';
 
 describe('Can rename a sequence', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('Works as expected', () => {
     manuallyTypeSequence('atata');

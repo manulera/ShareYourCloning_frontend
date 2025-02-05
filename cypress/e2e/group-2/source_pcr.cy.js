@@ -1,12 +1,12 @@
 import { getReverseComplementSequenceString } from '@teselagen/sequence-utils';
-import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue, addLane, skipGoogleSheetErrors, skipNcbiCheck, deleteSourceById, deleteSourceByContent } from '../common_functions';
+import { addPrimer, addSource, manuallyTypeSequence, clickMultiSelectOption, setInputValue, addLane, skipNcbiCheck, deleteSourceById, deleteSourceByContent } from '../common_functions';
 
 describe('Tests PCR functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('works in the normal case', () => {
     addPrimer('fwd_test', 'ACGTACGT');

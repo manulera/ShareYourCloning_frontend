@@ -1,11 +1,11 @@
-import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addSource, clickMultiSelectOption, setInputValue, addPrimer, addLane} from '../common_functions';
 
 describe('Makes all examples', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('Homologous recombination', () => {
     // Load addgene plasmid

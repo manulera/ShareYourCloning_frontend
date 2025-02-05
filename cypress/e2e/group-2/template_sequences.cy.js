@@ -1,11 +1,11 @@
-import { loadHistory, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { loadHistory} from '../common_functions';
 
 describe('Tests template functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('can add sequence in between for templates', () => {
     loadHistory('cypress/test_files/template_example.json');

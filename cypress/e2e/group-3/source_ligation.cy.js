@@ -1,11 +1,11 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, clickSequenceOutputArrow} from '../common_functions';
 
 describe('Tests ligation assembly functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('works with blunt ends', () => {
     manuallyTypeSequence('aagaattcaaaagaattcaa');

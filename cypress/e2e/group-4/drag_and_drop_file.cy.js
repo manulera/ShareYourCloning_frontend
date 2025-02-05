@@ -1,11 +1,11 @@
-import { loadExample, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { loadExample} from '../common_functions';
 
 describe('Test drag and drop functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
     cy.get('li#source-1').should('exist');
   });
   it('Shows the drop area when dragging a file', () => {

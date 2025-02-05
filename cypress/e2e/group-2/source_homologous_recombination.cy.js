@@ -1,4 +1,4 @@
-import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSourceById, setInputValue, addPrimer, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addSource, manuallyTypeSequence, clickMultiSelectOption, deleteSourceById, setInputValue, addPrimer} from '../common_functions';
 
 const homology1 = 'ATGCAAACAGTAATGATGGATGACATTCAAAGCACTGATT';
 const homology2 = 'GTTTGCATCATTACTACCTACTGTAAGTTTCGTGACTAAA';
@@ -8,8 +8,8 @@ describe('Tests homologous recombination and CRISPR functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('works in the normal case', () => {
     manuallyTypeSequence(`aaaaaa${homology1}aattggaa${homology2}tttttttt`);

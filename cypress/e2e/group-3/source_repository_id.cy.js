@@ -1,11 +1,11 @@
-import { addSource, clickMultiSelectOption, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addSource, clickMultiSelectOption, setInputValue} from '../common_functions';
 
 describe('RepositoryId Source', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
     addSource('RepositoryIdSource', true);
   });
   it('works with addgene', () => {

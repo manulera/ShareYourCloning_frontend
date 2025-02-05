@@ -1,11 +1,9 @@
-import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue, skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { addLane, addSource, changeTab, checkInputValue, clearAutocompleteValue, clearInputValue, clickMultiSelectOption, deleteSourceByContent, loadExample, manuallyTypeSequence, setAutocompleteValue, setInputValue } from '../common_functions';
 
 describe('Test primer designer functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
   });
 
   it('Homologous recombination primer design', () => {

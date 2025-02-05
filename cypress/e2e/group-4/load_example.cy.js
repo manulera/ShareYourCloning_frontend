@@ -1,11 +1,11 @@
-import { skipGoogleSheetErrors, skipNcbiCheck } from '../common_functions';
+import { skipGoogleSheetErrors} from '../common_functions';
 
 describe('Test load example functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('Can load examples', () => {
     cy.get('.MuiToolbar-root button.MuiButtonBase-root').contains('Examples').click();

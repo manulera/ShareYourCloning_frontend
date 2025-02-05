@@ -1,11 +1,11 @@
-import { addSource, clickMultiSelectOption, skipGoogleSheetErrors, skipNcbiCheck, loadExample, deleteSourceByContent } from '../common_functions';
+import { addSource, clickMultiSelectOption, skipNcbiCheck, loadExample, deleteSourceByContent } from '../common_functions';
 
 describe('Tests PCR functionality', () => {
   beforeEach(() => {
     cy.visit('/');
     // Intercepts must be in this order
-    skipGoogleSheetErrors();
-    skipNcbiCheck();
+    
+    
   });
   it('works in the normal case', () => {
     loadExample('Gateway cloning');

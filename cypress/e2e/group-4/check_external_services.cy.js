@@ -1,19 +1,18 @@
+import { addSource, clickMultiSelectOption } from '../common_functions';
+
 describe('Test delete source functionality', () => {
-  it('Gives the right error if the backend server is down', () => {
-    cy.visit('/');
+  it('Gives the right error if the backend server is down or if there are known errors', () => {
     cy.intercept('GET', 'http://127.0.0.1:8000/', {
       statusCode: 500,
     }).as('localCheck');
-    cy.intercept('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', {
+    // Check if known errors are displayed
+    cy.intercept('GET', 'http://localhost:3000/known_errors.json', {
       statusCode: 200,
       body: {
-        result: {
-          22258761: {
-            assemblyaccession: 'GCF_000002945.1',
-          },
-        },
+        ManuallyTypedSource: ['hello1', 'hello2'],
       },
-    }).as('ncbiCheck');
+    }).as('knownErrors');
+    cy.visit('/');
 
     cy.get('.service-status-check-alert').should('contain', 'Backend server is down');
     cy.intercept('GET', 'http://127.0.0.1:8000/', {
@@ -23,22 +22,17 @@ describe('Test delete source functionality', () => {
     cy.get('.service-status-check-alert').should('contain', 'All services are up and running!');
     cy.get('.service-status-check-alert button').click();
     cy.get('.service-status-check-alert').should('not.exist');
-  });
-  it('Gives the right error if ncbi is down', () => {
-    cy.visit('/');
-    cy.intercept('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', {
-      statusCode: 503,
-    }).as('ncbiCheck');
 
-    cy.get('.service-status-check-alert').should('contain', 'NCBI server is down');
-    cy.intercept('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=assembly&retmode=json&id=22258761', {
-      statusCode: 503,
-    }).as('ncbiCheck2');
-    cy.intercept('GET', 'http://127.0.0.1:8000/', {
-      statusCode: 500,
-    }).as('localCheck');
-    cy.get('.service-status-check-alert button').click();
-    cy.get('.service-status-check-alert').should('contain', 'Backend server is down');
-    cy.get('.service-status-check-alert').should('contain', 'NCBI server is down');
+    // Check if known errors are displayed
+    addSource('ManuallyTypedSource', true);
+    cy.get('.open-cloning li#source-1').contains('Affected by external errors');
+    cy.get('.open-cloning li#source-1 button').contains('See how').click();
+    cy.get('.MuiDialog-container li').contains('hello1');
+    cy.get('.MuiDialog-container li').contains('hello2');
+    cy.get('.MuiDialog-container button').contains('Close').click();
+
+    // Change to a different type of source
+    clickMultiSelectOption('Source type', 'Repository ID', '.open-cloning');
+    cy.get('.open-cloning li#source-1').contains('Affected by external errors').should('not.exist');
   });
 });
