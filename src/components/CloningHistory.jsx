@@ -1,7 +1,6 @@
 import React from 'react';
 import NetWorkNode from './NetworkNode';
 import NewSourceBox from './sources/NewSourceBox';
-import ScrollSyncWrapper from './utils/ScrollSyncWrapper';
 import DragAndDropCloningHistoryWrapper from './DragAndDropCloningHistoryWrapper';
 
 function CloningHistory({ network }) {

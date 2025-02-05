@@ -33,30 +33,34 @@ function OpenCloning() {
         <CustomTab label="Sequence" index={3} />
         <CustomTab label="Data model" index={4} />
       </Tabs>
-      <TabPanel index={1} value={currentTab} className="primer-tab-pannel">
-        <div className="primer-list-container">
-          <PrimerList />
-        </div>
-      </TabPanel>
-      <TabPanel index={2} value={currentTab} className="description-tab-pannel">
-        <div className="description-editor">
-          <DescriptionEditor />
-        </div>
-      </TabPanel>
-      {/* For some reason, putting this here is required for primer.color to work */}
-      <TabPanel index={3} value={currentTab} className="main-editor-tab-pannel">
-        <div className="main-sequence-editor">
-          <SequenceTab />
-        </div>
-      </TabPanel>
-      <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
-        <div className="open-cloning">
-          <CloningHistory network={network} />
-        </div>
-      </TabPanel>
-      <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">
-        <DataModelDisplayer />
-      </TabPanel>
+      <div className="tab-panels-container">
+        <TabPanel index={1} value={currentTab} className="primer-tab-pannel">
+          <div className="primer-list-container">
+            <PrimerList />
+          </div>
+        </TabPanel>
+        <TabPanel index={2} value={currentTab} className="description-tab-pannel">
+          <div className="description-editor">
+            <DescriptionEditor />
+          </div>
+        </TabPanel>
+        {/* For some reason, putting this here is required for primer.color to work */}
+        <TabPanel index={3} value={currentTab} className="main-editor-tab-pannel">
+          <div className="main-sequence-editor">
+            <SequenceTab />
+          </div>
+        </TabPanel>
+        <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
+          <div className="open-cloning-wrapper">
+            <div className="open-cloning">
+              <CloningHistory network={network} />
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">
+          <DataModelDisplayer />
+        </TabPanel>
+      </div>
     </div>
   );
 }

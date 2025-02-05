@@ -6,18 +6,10 @@ header.app-bar button[type="button"] {
     color: white;
 }
 
-header.app-bar div.MuiToolbar-root {
-    margin: auto;
-}
-
 .app-name {
     font-size: 4em;
     font-weight: 200;
     text-align: center;
 }
 
-
-.app-title h1:drop {
-    background-color: #32ADCC;
-}
 
