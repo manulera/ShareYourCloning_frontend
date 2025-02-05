@@ -1,5 +1,16 @@
+.app-bar {
+    position: relative;
+}
 
-header.app-bar button[type="button"] {
+.github-corner {
+    position: fixed !important;
+    top: 0px !important;
+    right: 0px !important;
+    padding: 0px !important;
+}
+
+
+.app-bar-container button[type="button"] {
     font-size: large;
     margin-left: 20px;
     margin-right: 20px;
