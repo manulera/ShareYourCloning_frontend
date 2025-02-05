@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Tabs from '@mui/material/Tabs';
 import { isEqual } from 'lodash-es';
@@ -19,6 +19,15 @@ function OpenCloning() {
   const network = useSelector((state) => state.cloning.network, isEqual);
   const currentTab = useSelector((state) => state.cloning.currentTab);
   const tabPanelsRef = useRef(null);
+  const [smallDevice, setSmallDevice] = useState(window.innerWidth < 600);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setSmallDevice(window.innerWidth < 600);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const changeTab = (event, newValue) => {
     dispatch(setCurrentTab(newValue));
@@ -33,7 +42,16 @@ function OpenCloning() {
   return (
     <div className="app-container">
       <AppAlerts />
-      <Tabs value={currentTab} onChange={changeTab} aria-label="app-tabs" centered sx={{ mb: 3, pt: 1 }} id="opencloning-app-tabs">
+      <Tabs
+        variant={smallDevice ? 'scrollable' : 'standard'}
+        scrollButtons={smallDevice ? 'auto' : false}
+        allowScrollButtonsMobile
+        centered={!smallDevice}
+        value={currentTab}
+        onChange={changeTab}
+        sx={{ pb: 3, pt: 1 }}
+        id="opencloning-app-tabs"
+      >
         <CustomTab label="Cloning" index={0} />
         <CustomTab label="Primers" index={1} />
         <CustomTab label="Description" index={2} />
