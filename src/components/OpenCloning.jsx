@@ -51,10 +51,8 @@ function OpenCloning() {
           </div>
         </TabPanel>
         <TabPanel index={0} value={currentTab} className="cloning-tab-pannel">
-          <div className="open-cloning-wrapper">
-            <div className="open-cloning">
-              <CloningHistory network={network} />
-            </div>
+          <div className="open-cloning">
+            <CloningHistory network={network} />
           </div>
         </TabPanel>
         <TabPanel index={4} value={currentTab} className="data-model-tab-pannel">

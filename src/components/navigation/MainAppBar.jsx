@@ -110,9 +110,9 @@ function MainAppBar() {
   // If you want to load a particular example on page load, you can do it here.
   React.useEffect(() => {
     const fetchExample = async () => {
-      const { data } = await axios.get('examples/golden_gate.json');
-      data.entities = data.sequences;
-      dispatch(setCloningState(data));
+      // const { data } = await axios.get('examples/golden_gate.json');
+      // data.entities = data.sequences;
+      // dispatch(setCloningState(data));
       // dispatch(setCurrentTab(3));
       // Wait for the primer designer to be rendered
       // setTimeout(() => {

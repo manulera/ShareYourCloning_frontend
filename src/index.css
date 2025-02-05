@@ -336,3 +336,7 @@ div#global-error-message-wrapper > div {
     /* Allow line breaks in very long strings only when necessary */
     word-break: break-word;
 }
+
+.open-cloning {
+    text-align: center;
+}
