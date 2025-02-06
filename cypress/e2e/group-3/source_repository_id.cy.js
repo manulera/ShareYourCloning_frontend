@@ -94,6 +94,16 @@ describe('RepositoryId Source', () => {
     // Links to http://www.euroscarf.de/plasmid_details.php?accno=P30174
     cy.get('li#source-1 a[href="http://www.euroscarf.de/plasmid_details.php?accno=P30174"]').should('exist');
   });
+  it('works with WekWikGene', () => {
+    clickMultiSelectOption('Select repository', 'WekWikGene', 'li#source-1');
+    setInputValue('WekWikGene ID', '0000304', 'li#source-1');
+    cy.get('li#source-1 button').contains('Submit').click();
+    cy.get('li#sequence-2', { timeout: 20000 }).contains('planarian');
+    cy.get('li#sequence-2').contains('3900 bps');
+
+    // Links to https://wekwikgene.wllsb.edu.cn/plasmids/0000304
+    cy.get('li#source-1 a[href="https://wekwikgene.wllsb.edu.cn/plasmids/0000304"]').should('exist');
+  });
   it('handles empty value and wrong IDs', () => {
     // AddGene =================================
     clickMultiSelectOption('Select repository', 'AddGene', 'li#source-1');
@@ -147,6 +157,18 @@ describe('RepositoryId Source', () => {
     cy.get('li#source-1 button.MuiButtonBase-root').should('not.exist');
     // An id that does not exist returns an error
     setInputValue('Euroscarf ID', 'P9999999999999', 'li#source-1');
+    cy.get('li#source-1 button.MuiButtonBase-root').click();
+    cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
+
+    // WekWikGene =================================
+    clickMultiSelectOption('Select repository', 'WekWikGene', 'li#source-1');
+    // Cannot submit empty
+    cy.get('li#source-1 button.MuiButtonBase-root').should('not.exist');
+    // Cannot submit value that does not fit the regex
+    setInputValue('WekWikGene ID', 'blah', 'li#source-1');
+    cy.get('li#source-1 button.MuiButtonBase-root').should('not.exist');
+    // An id that does not exist returns an error
+    setInputValue('WekWikGene ID', '999999999999999', 'li#source-1');
     cy.get('li#source-1 button.MuiButtonBase-root').click();
     cy.get('.MuiAlert-message', { timeout: 20000 }).should('be.visible');
   });
