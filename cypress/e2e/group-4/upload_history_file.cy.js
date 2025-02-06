@@ -1,4 +1,4 @@
-import { closeAlerts, loadExample} from '../common_functions';
+import { closeAlerts, loadExample } from '../common_functions';
 
 describe('Test upload history from file', () => {
   beforeEach(() => {
@@ -60,13 +60,16 @@ describe('Test upload history from file', () => {
     // Check that the files are in the session storage
       cy.window().its('sessionStorage')
         .invoke('getItem', 'verification-2-BZO904_13409044_13409044.ab1')
-        .should('not.be.null');
+        .should('not.be.null')
+        .and('have.length.gt', 1000); // Ensure it's not just a tiny value
       cy.window().its('sessionStorage')
         .invoke('getItem', 'verification-2-BZO903_13409037_13409037.ab1')
-        .should('not.be.null');
+        .should('not.be.null')
+        .and('have.length.gt', 1000);
       cy.window().its('sessionStorage')
         .invoke('getItem', 'verification-2-BZO902_13409020_13409020.ab1')
-        .should('not.be.null');
+        .should('not.be.null')
+        .and('have.length.gt', 1000);
     });
     // Clicking on the data-testid="RuleIcon" should open the verification file dialog
     cy.get('li#sequence-2 [data-testid="RuleIcon"]').click();
