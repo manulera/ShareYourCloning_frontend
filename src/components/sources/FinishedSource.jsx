@@ -23,6 +23,24 @@ function EuroscarfMessage({ source }) {
   );
 }
 
+function WekWikGeneMessage({ source }) {
+  console.log(source);
+  const { repository_id: repositoryId } = source;
+  return (
+    <>
+      Plasmid
+      {' '}
+      <strong>
+        <a href={`https://wekwikgene.wllsb.edu.cn/plasmids/${repositoryId}`} target="_blank" rel="noopener noreferrer">
+          {repositoryId}
+        </a>
+      </strong>
+      {' '}
+      from WekWikGene
+    </>
+  );
+}
+
 function BenchlingMessage({ source }) {
   const { repository_id: repositoryId } = source;
   const editUrl = repositoryId.replace(/\.gb$/, '/edit');
@@ -211,6 +229,8 @@ function FinishedSource({ sourceId }) {
     case 'EuroscarfSource': message = <EuroscarfMessage source={source} />;
       break;
     case 'SnapGenePlasmidSource': message = <SnapGenePlasmidMessage source={source} />;
+      break;
+    case 'WekWikGeneIdSource': message = <WekWikGeneMessage source={source} />;
       break;
     case 'GatewaySource': message = <GatewayMessage source={source} />;
       break;

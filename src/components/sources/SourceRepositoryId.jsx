@@ -25,6 +25,11 @@ function validateRepositoryId(repositoryId, repository) {
         return 'Euroscarf IDs must be P followed by numbers (e.g. P30174)';
       }
       break;
+    case 'wekwikgene':
+      if (!repositoryId.match(/^\d+$/)) {
+        return 'WekWikGene IDs must be numbers (e.g. 0000304)';
+      }
+      break;
     default:
       break;
   }
@@ -36,6 +41,7 @@ const exampleIds = {
   genbank: 'NM_001018957.2',
   benchling: '',
   euroscarf: 'P30174',
+  wekwikgene: '0000304',
 };
 
 const inputLabels = {
@@ -43,6 +49,7 @@ const inputLabels = {
   genbank: 'GenBank ID',
   benchling: 'Benchling URL',
   euroscarf: 'Euroscarf ID',
+  wekwikgene: 'WekWikGene ID',
 };
 
 const snapgeneCheckOption = (option, inputValue) => option.name.toLowerCase().includes(inputValue.toLowerCase());
@@ -230,6 +237,7 @@ function SourceRepositoryId({ source, requestStatus, sendPostRequest }) {
           <MenuItem value="snapgene">SnapGene</MenuItem>
           <MenuItem value="euroscarf">Euroscarf</MenuItem>
           <MenuItem value="igem">iGEM</MenuItem>
+          <MenuItem value="wekwikgene">WekWikGene</MenuItem>
         </Select>
       </FormControl>
       {selectedRepository !== '' && (
