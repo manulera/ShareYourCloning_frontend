@@ -164,8 +164,8 @@ export async function loadHistoryFile(file) {
     cloningStrategyFile = await jsonFilesInZip[0].getData(new BlobWriter());
     verificationFiles = await Promise.all(entries
       .filter((entry) => /verification-\d+-.*\.ab1/.test(entry.filename))
-      .map((entry) => {
-        const blob = entry.getData(new BlobWriter());
+      .map(async (entry) => {
+        const blob = await entry.getData(new BlobWriter());
         return new File([blob], entry.filename, { type: blob.type });
       }));
   } else if (isJsonFile) {
