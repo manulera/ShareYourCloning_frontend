@@ -5,8 +5,6 @@ import { getSubState } from '../../utils/thunks';
 import { getUsedPrimerIds } from '../../store/cloning_utils';
 import ELabFTWCategorySelect from './ELabFTWCategorySelect';
 
-const apiKey = import.meta.env.VITE_ELABFTW_API_WRITE_KEY;
-
 function PrimersNotInDabaseComponent({ id, submissionData, setSubmissionData }) {
   const primerCategoryId = submissionData?.primerCategoryId;
   const primers = useSelector((state) => {
@@ -47,7 +45,6 @@ function PrimersNotInDabaseComponent({ id, submissionData, setSubmissionData }) 
         setCategory={(c) => {
           setSubmissionData((prev) => ({ ...prev, primerCategoryId: c ? c.id : null }));
         }}
-        apiKey={apiKey}
         label="Save primers as"
         fullWidth
       />

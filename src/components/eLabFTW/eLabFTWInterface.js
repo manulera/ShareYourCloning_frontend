@@ -3,6 +3,7 @@ import GetSequenceFileAndDatabaseIdComponent from './GetSequenceFileAndDatabaseI
 import SubmitToDatabaseComponent from './SubmitToDatabaseComponent';
 import { getUsedPrimerIds } from '../../store/cloning_utils';
 import PrimersNotInDabaseComponent from './PrimersNotInDatabaseComponent';
+import GetPrimerComponent from './GetPrimerComponent';
 
 const apiKey = import.meta.env.VITE_ELABFTW_API_WRITE_KEY;
 
@@ -23,7 +24,7 @@ const createResource = async (categoryId) => {
     },
     { headers: { Authorization: apiKey } },
   );
-  return createdItemResponse.headers.location.split('/').pop();
+  return Number(createdItemResponse.headers.location.split('/').pop());
 };
 
 const patchResource = async (resourceId, title, metadata = undefined) => axios.patch(
@@ -49,7 +50,7 @@ async function uploadTextFileToResource(resourceId, fileName, textContent, comme
   formData.append('file', blob, fileName);
   formData.append('comment', comment);
   const response = await axios.post(`https://localhost:443/api/v2/items/${resourceId}/uploads`, formData, { headers: { Authorization: apiKey } });
-  return response.headers.location.split('/').pop();
+  return Number(response.headers.location.split('/').pop());
 }
 
 async function submitSequenceToDatabase({ submissionData: { title, sequenceCategoryId, primerCategoryId }, substate, id }) {
@@ -116,8 +117,14 @@ export default function eLabFTWInterface() {
   return {
     // Name of the database interface
     name: 'eLabFTW',
+    // Returns a link to the sequence in the database
+    getSequenceLink: (databaseId) => `https://localhost:443/database.php?mode=view&id=${databaseId.item_id}`,
+    // Returns a link to the primer in the database
+    getPrimerLink: (databaseId) => `https://localhost:443/database.php?mode=view&id=${databaseId}`,
     // Component for selecting and loading sequence files from the database
     GetSequenceFileAndDatabaseIdComponent,
+    // Component for selecting and loading primers from the database
+    GetPrimerComponent,
     // Component for submitting resources to the database
     SubmitToDatabaseComponent,
     // Component for handling primers not yet in database

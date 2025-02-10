@@ -10,7 +10,7 @@ function DatabaseSource({ source, requestStatus, sendPostRequest }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    // Read the file from eLabFTW
+    // Read the file from database
     const requestData = new FormData();
     requestData.append('file', file);
     const config = {
