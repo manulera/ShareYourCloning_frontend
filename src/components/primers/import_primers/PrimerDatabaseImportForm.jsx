@@ -2,9 +2,9 @@ import React, { useState, useCallback } from 'react';
 import { shallowEqual, useSelector } from 'react-redux';
 import Alert from '@mui/material/Alert';
 import { Button, TextField } from '@mui/material';
-import ElabFTWResourceSelect from '../../form/eLabFTW/ElabFTWResourceSelect';
-import ElabFTWCategorySelect from '../../form/eLabFTW/ElabFTWCategorySelect';
-import './styles.css';
+
+import ELabFTWCategorySelect from '../../eLabFTW/ELabFTWCategorySelect';
+import ELabFTWResourceSelect from '../../eLabFTW/ELabFTWResourceSelect';
 
 const apiKey = import.meta.env.VITE_ELABFTW_API_KEY;
 
@@ -68,14 +68,14 @@ function PrimerDatabaseImportForm({ submitPrimer, cancelForm }) {
     <form className="primer-row" onSubmit={onSubmit}>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1em', width: '80%', margin: 'auto' }}>
         <div style={{ display: 'flex', gap: '2em', alignItems: 'center', justifyContent: 'center' }}>
-          <ElabFTWCategorySelect
+          <ELabFTWCategorySelect
             setCategory={setSelectedCategory}
             apiKey={apiKey}
             fullWidth
           />
 
           {selectedCategory && (
-            <ElabFTWResourceSelect
+            <ELabFTWResourceSelect
               setResource={handleResourceSelect}
               categoryId={selectedCategory.id}
               apiKey={apiKey}

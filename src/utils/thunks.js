@@ -81,14 +81,6 @@ export const copyEntityThunk = (entityId) => async (dispatch, getState) => {
   dispatch(mergeStateThunk(newState, true, files));
 };
 
-const linkToParent = async (childId, parentId, apiKey) => {
-  await axios.post(
-    `https://localhost:443/api/v2/items/${childId}/items_links/${parentId}`,
-    { parent_id: parentId },
-    { headers: { Authorization: apiKey } },
-  );
-};
-
 export const uploadPrimerToELabFTWThunk = (id, title, categoryId, apiKey, linkedSequenceId = null) => async (dispatch, getState) => {
   const state = getState();
   const primer = state.cloning.primers.find((p) => p.id === id);
@@ -107,7 +99,7 @@ export const uploadPrimerToELabFTWThunk = (id, title, categoryId, apiKey, linked
   // Set the title
   await axios.patch(
     `https://localhost:443/api/v2/items/${itemId}`,
-    { title, metadata: JSON.stringify({ extra_fields: { sequence: { type: 'text', value: primer.sequence, group_id: null } } }) },
+    { title: primer.name, metadata: JSON.stringify({ extra_fields: { sequence: { type: 'text', value: primer.sequence, group_id: null } } }) },
     { headers: { Authorization: apiKey } },
   );
 
@@ -127,7 +119,7 @@ export const uploadSequenceToELabFTWThunk = (id, title, categoryId, apiKey, prim
   const state = getState();
   const { sources, primers, entities } = getSubState(state, id);
 
-  const eLabFTWSources = sources.filter((source) => source.type === 'ELabFTWFileSource');
+  const eLabFTWSources = sources.filter((source) => source.type === 'DatabaseSource');
   const links2add = eLabFTWSources.map((source) => source.database_id.item_id);
 
   const entity2export = entities.find((e) => e.id === id);
@@ -193,7 +185,7 @@ export const uploadSequenceToELabFTWThunk = (id, title, categoryId, apiKey, prim
   );
   const historyFileId = historyUploadResponse.headers.location.split('/').pop();
 
-  dispatch(cloningActions.addDatabaseId({ databaseId: { item_id: itemId, sequence_id: sequenceFileId, history_id: historyFileId }, id }));
+  dispatch(cloningActions.addDatabaseIdToEntity({ databaseId: { item_id: itemId, sequence_id: sequenceFileId, history_id: historyFileId }, id }));
   dispatch(cloningActions.addAlert({
     message: 'Item created successfully',
     severity: 'success',

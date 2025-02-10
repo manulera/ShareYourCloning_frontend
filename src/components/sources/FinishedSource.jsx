@@ -284,7 +284,7 @@ function FinishedSource({ sourceId }) {
       );
       break;
     case 'PolymeraseExtensionSource': message = 'Polymerase extension'; break;
-    case 'ELabFTWFileSource': message = <ElabFTWMessage source={source} />; break;
+    case 'DatabaseSource': message = <ElabFTWMessage source={source} />; break;
     case 'AnnotationSource': message = <PlannotateAnnotationMessage source={source} />; break;
     case 'IGEMSource': message = <IGEMMessage source={source} />; break;
     default: message = '';

@@ -11,7 +11,7 @@ import useStoreEditor from '../hooks/useStoreEditor';
 import DownloadSequenceFileDialog from './DownloadSequenceFileDialog';
 import EditSequenceNameDialog from './EditSequenceNameDialog';
 import VerificationFileDialog from './verification/VerificationFileDialog';
-import DialogSubmitToElab from './form/eLabFTW/DialogSubmitToElab';
+import SubmitToDatabaseDialog from './form/SubmitToDatabaseDialog';
 import { getSourceDatabaseId } from '../store/cloning_utils';
 
 function MainSequenceCheckBox({ id }) {
@@ -40,7 +40,7 @@ function MainSequenceCheckBox({ id }) {
       {downloadDialogOpen && <DownloadSequenceFileDialog {...{ id, dialogOpen: downloadDialogOpen, setDialogOpen: setDownloadDialogOpen }} />}
       {editNameDialogOpen && <EditSequenceNameDialog {...{ id, dialogOpen: editNameDialogOpen, setDialogOpen: setEditNameDialogOpen }} />}
       {verificationDialogOpen && <VerificationFileDialog {...{ id, dialogOpen: verificationDialogOpen, setDialogOpen: setVerificationDialogOpen }} />}
-      {eLabDialogOpen && <DialogSubmitToElab {...{ id, dialogOpen: eLabDialogOpen, setDialogOpen: setELabDialogOpen, resourceType: 'sequence' }} />}
+      {eLabDialogOpen && <SubmitToDatabaseDialog {...{ id, dialogOpen: eLabDialogOpen, setDialogOpen: setELabDialogOpen, resourceType: 'sequence' }} />}
       <Tooltip title={hasDatabaseId ? 'Saved to eLabFTW' : 'Submit to eLabFTW'} arrow placement="top">
         <SaveIcon
           onClick={() => !hasDatabaseId && setELabDialogOpen(true)}

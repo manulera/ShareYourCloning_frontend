@@ -4,7 +4,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 import ClearIcon from '@mui/icons-material/Clear';
-import DialogSubmitToElab from '../form/eLabFTW/DialogSubmitToElab';
+import SubmitToDatabaseDialog from '../form/SubmitToDatabaseDialog';
 
 function PrimerTableRow({ primer, deletePrimer, canBeDeleted, onEditClick }) {
   const [saveToDatabaseDialogOpen, setSaveToDatabaseDialogOpen] = useState(false);
@@ -48,7 +48,7 @@ function PrimerTableRow({ primer, deletePrimer, canBeDeleted, onEditClick }) {
                 <SaveIcon />
               </IconButton>
             </Tooltip>
-            <DialogSubmitToElab
+            <SubmitToDatabaseDialog
               id={primer.id}
               dialogOpen={saveToDatabaseDialogOpen}
               setDialogOpen={setSaveToDatabaseDialogOpen}
