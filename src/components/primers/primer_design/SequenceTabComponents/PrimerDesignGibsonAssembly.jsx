@@ -1,8 +1,6 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import React from 'react';
 import Box from '@mui/material/Box';
-import { Alert, Button, Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/material';
+import { Alert, Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/material';
 import { batch, useDispatch, useStore } from 'react-redux';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
@@ -10,12 +8,15 @@ import TabPanel from './TabPanel';
 import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipulation';
 import { usePrimerDesign } from './usePrimerDesign';
 import PrimerSettingsForm from './PrimerSettingsForm';
-import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import PrimerSpacerForm from './PrimerSpacerForm';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
+import StepNavigation from './StepNavigation';
+import PrimerDesignStepper from './PrimerDesignStepper';
+import { getSubmissionPreventedMessage } from './utils';
+import TabPanelSelectRoi from './TabPanelSelectRoi';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
@@ -24,7 +25,7 @@ function changeValueAtIndex(current, index, newValue) {
 export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
   const sequenceIds = React.useMemo(() => pcrSources.map((pcrSource) => pcrSource.input[0]), [pcrSources]);
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, onTabChange, selectedTab, setSequenceProduct } = usePrimerDesign('gibson_assembly', sequenceIds);
+  const { primers, error, designPrimers, setPrimers, rois, onTabChange, selectedTab, setSequenceProduct, handleNext, handleBack, handleSelectRegion } = usePrimerDesign('gibson_assembly', sequenceIds);
 
   const dispatch = useDispatch();
   const store = useStore();
@@ -98,19 +99,32 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
     }
   };
 
+  const steps = React.useMemo(() => [
+    ...templateSequencesIds.map((id, index) => ({ label: `Seq ${id}`, completed: rois[index] !== null })),
+    { label: 'Other settings', disabled: rois.some((region) => region === null), completed: primers.length > 0 },
+    { label: 'Results', disabled: primers.length === 0 },
+  ], [rois, primers]);
+
+  const submissionPreventedMessage = getSubmissionPreventedMessage(rois, primerDesignSettings, spacersAreValid);
   return (
     <Box>
-      <Tabs value={selectedTab} onChange={onTabChange} variant="scrollable" scrollButtons="auto">
-        {templateSequencesIds.map((id) => (
-          <Tab key={id} label={`Seq ${id}`} />
-        ))}
-        <Tab label="Other settings" />
-        {primers.length && (<Tab label="Results" />)}
-      </Tabs>
-      {templateSequencesIds.map((id, index) => (
-        <TabPanel key={id} value={selectedTab} index={index}>
-          <SequenceRoiSelect selectedRegion={rois[index]} onSelectRegion={() => onSelectRegion(index)} description={`Select the fragment of sequence ${id} to be amplified`} inputLabel={`Amplified region (sequence ${id})`} />
-        </TabPanel>
+      <PrimerDesignStepper
+        selectedTab={selectedTab}
+        steps={steps}
+        onTabChange={onTabChange}
+      />
+      {steps.slice(0, templateSequencesIds.length).map((step, index) => (
+        <TabPanelSelectRoi
+          key={step.label}
+          step={step}
+          index={index}
+          selectedTab={selectedTab}
+          handleSelectRegion={handleSelectRegion}
+          handleBack={handleBack}
+          handleNext={handleNext}
+          templateSequencesIds={templateSequencesIds}
+          rois={rois}
+        />
       ))}
       <TabPanel value={selectedTab} index={templateSequencesIds.length}>
         <Box sx={{ width: '80%', margin: 'auto' }}>
@@ -154,21 +168,22 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
               </Box>
             </>
           )}
-
-          { (rois.every((region) => region !== null) && primerDesignSettings.valid && spacersAreValid) && (
-            <FormControl>
-              <Button variant="contained" onClick={onPrimerDesign} sx={{ marginTop: 2, marginBottom: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
-            </FormControl>
-          )}
         </Box>
+        <StepNavigation
+          handleBack={handleBack}
+          handleNext={handleNext}
+          onStepCompletion={onPrimerDesign}
+          stepCompletionText="Design primers"
+          nextDisabled={primers.length === 0}
+          stepCompletionToolTip={submissionPreventedMessage}
+          allowStepCompletion={submissionPreventedMessage === ''}
+        />
       </TabPanel>
-      {primers.length > 0 && (
       <TabPanel value={selectedTab} index={templateSequencesIds.length + 1}>
-        <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
+        <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} handleBack={handleBack} />
       </TabPanel>
-      )}
-      {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
+      {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
     </Box>
   );
 }

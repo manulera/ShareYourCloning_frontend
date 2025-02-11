@@ -16,12 +16,7 @@ function PrimerResultForm({
   return (
     <div
       className="primer-design-form"
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'center',
-        marginBottom: nameError ? '12px' : '0',
-      }}
+
     >
       <FormControl sx={{ mx: 1, width: '30%' }}>
         <TextField

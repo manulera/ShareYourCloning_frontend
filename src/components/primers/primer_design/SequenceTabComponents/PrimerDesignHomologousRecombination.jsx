@@ -1,15 +1,12 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
+import React from 'react';
 import Box from '@mui/material/Box';
-import { Alert, Button, FormControl } from '@mui/material';
+import { Alert } from '@mui/material';
 import { batch, useDispatch, useSelector, useStore } from 'react-redux';
 import { isEqual } from 'lodash-es';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from './TabPanel';
 import { usePrimerDesign } from './usePrimerDesign';
-import SequenceRoiSelect from './SequenceRoiSelect';
 import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
@@ -17,13 +14,17 @@ import { simulateHomologousRecombination } from '../../../../utils/sequenceManip
 import PrimerSpacerForm from './PrimerSpacerForm';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
+import PrimerDesignStepper from './PrimerDesignStepper';
+import StepNavigation from './StepNavigation';
+import { getSubmissionPreventedMessage } from './utils';
+import TabPanelSelectRoi from './TabPanelSelectRoi';
 
 export default function PrimerDesignHomologousRecombination({ homologousRecombinationTargetId, pcrSource }) {
   const templateSequenceId = pcrSource.input[0];
   const templateSequenceNames = useSelector((state) => [state.cloning.teselaJsonCache[templateSequenceId].name], isEqual);
   const sequenceIds = React.useMemo(() => [templateSequenceId, homologousRecombinationTargetId], [templateSequenceId, homologousRecombinationTargetId]);
   const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
-  const { primers, error, designPrimers, setPrimers, rois, onSelectRegion, setSequenceProduct, onTabChange, selectedTab } = usePrimerDesign('homologous_recombination', sequenceIds);
+  const { primers, error, designPrimers, setPrimers, rois, setSequenceProduct, onTabChange, selectedTab, handleSelectRegion, handleNext, handleBack } = usePrimerDesign('homologous_recombination', sequenceIds);
 
   const dispatch = useDispatch();
   const store = useStore();
@@ -73,31 +74,43 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     }
   };
 
+  const steps = React.useMemo(() => [
+    { label: 'Amplified region',
+      completed: rois[0] !== null,
+      description: `Select the fragment of sequence ${templateSequenceId} to be amplified in the editor and click "Choose region"`,
+      inputLabel: `Amplified region (sequence ${templateSequenceId})` },
+    { label: 'Replaced region',
+      completed: rois[1] !== null,
+      description: 'Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment',
+      inputLabel: `Replaced region (sequence ${homologousRecombinationTargetId})`,
+      allowSinglePosition: true,
+    },
+    { label: 'Other settings', completed: primers.length > 0, disabled: rois.some((region) => region === null), description: 'Set the primer design settings', inputLabel: 'Primer design settings' },
+    { label: 'Results', disabled: primers.length === 0 },
+  ], [rois, primers, templateSequenceId, homologousRecombinationTargetId]);
+
+  const submissionPreventedMessage = getSubmissionPreventedMessage(rois, primerDesignSettings, spacersAreValid);
   return (
 
     <Box>
-      <Tabs value={selectedTab} onChange={onTabChange} centered>
-        <Tab label="Amplified region" />
-        <Tab label="Replaced region" />
-        <Tab label="Other settings" />
-        {primers.length === 2 && (<Tab label="Results" />)}
-      </Tabs>
-      <TabPanel value={selectedTab} index={0}>
-        <SequenceRoiSelect
-          selectedRegion={rois[0]}
-          onSelectRegion={() => onSelectRegion(0, false)}
-          description={`Select the fragment of sequence ${templateSequenceId} to be amplified`}
-          inputLabel={`Amplified region (sequence ${templateSequenceId})`}
+      <PrimerDesignStepper
+        selectedTab={selectedTab}
+        steps={steps}
+        onTabChange={onTabChange}
+      />
+      {steps.slice(0, 2).map((step, index) => (
+        <TabPanelSelectRoi
+          key={step.label}
+          step={step}
+          index={index}
+          selectedTab={selectedTab}
+          handleSelectRegion={handleSelectRegion}
+          handleBack={handleBack}
+          handleNext={handleNext}
+          templateSequencesIds={sequenceIds}
+          rois={rois}
         />
-      </TabPanel>
-      <TabPanel value={selectedTab} index={1}>
-        <SequenceRoiSelect
-          selectedRegion={rois[1]}
-          onSelectRegion={() => onSelectRegion(1, true)}
-          description="Select the single position (insertion) or region (replacement) where recombination will introduce the amplified fragment"
-          inputLabel={`Replaced region (sequence ${homologousRecombinationTargetId})`}
-        />
-      </TabPanel>
+      ))}
       <TabPanel value={selectedTab} index={2}>
         <PrimerSettingsForm {...primerDesignSettings} />
         <Box sx={{ pt: 2 }}>
@@ -116,19 +129,22 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
           sequenceNames={templateSequenceNames}
           sequenceIds={pcrSource.input}
         />
-        { rois.every((roi) => roi !== null) && insertionOrientation && primerDesignSettings.valid && (
-          <FormControl>
-            <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
-          </FormControl>
-        )}
+        <StepNavigation
+          handleBack={handleBack}
+          handleNext={handleNext}
+          onStepCompletion={onPrimerDesign}
+          stepCompletionText="Design primers"
+          nextDisabled={primers.length === 0}
+          stepCompletionToolTip={submissionPreventedMessage}
+          allowStepCompletion={submissionPreventedMessage === ''}
+        />
         {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
       </TabPanel>
-      {primers.length === 2 && (
-        <TabPanel value={selectedTab} index={3}>
-          <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
-        </TabPanel>
-      )}
+
+      <TabPanel value={selectedTab} index={3}>
+        <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} handleBack={handleBack} />
+      </TabPanel>
 
     </Box>
 
