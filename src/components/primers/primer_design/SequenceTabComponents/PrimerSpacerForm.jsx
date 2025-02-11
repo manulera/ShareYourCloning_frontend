@@ -2,8 +2,10 @@ import React from 'react';
 import { FormControl, TextField, Box } from '@mui/material';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import CollapsableLabel from './CollapsableLabel';
+import { usePrimerDesign } from './PrimerDesignContext';
 
-function PrimerSpacerForm({ spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds, open = false }) {
+function PrimerSpacerForm({ open = false }) {
+  const { spacers, setSpacers, fragmentCount, circularAssembly, sequenceNames, sequenceIds } = usePrimerDesign();
   const handleSpacerChange = (index, value) => {
     setSpacers((current) => current.map((spacer, i) => (i === index ? value : spacer)));
   };

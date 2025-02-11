@@ -1,7 +1,21 @@
 import { Step, StepButton, Stepper } from '@mui/material';
 import React from 'react';
+import { usePrimerDesign } from './PrimerDesignContext';
 
-function PrimerDesignStepper({ selectedTab, steps, onTabChange }) {
+function PrimerDesignStepper({ steps }) {
+  const { selectedTab, onTabChange, rois, primers } = usePrimerDesign();
+
+  const completedSteps = [
+    ...rois.map((roi) => roi !== null),
+    primers.length > 0,
+    false,
+  ];
+  const disabledSteps = [
+    ...rois.map(() => false),
+    rois.some((roi) => roi === null),
+    primers.length === 0,
+  ];
+  console.log(disabledSteps);
   return (
     <Stepper
       nonLinear
@@ -16,9 +30,10 @@ function PrimerDesignStepper({ selectedTab, steps, onTabChange }) {
 
       }}
     >
-      {steps.map(({ label, completed, disabled }, index) => (
-        <Step key={label} completed={completed === true}>
-          <StepButton disabled={disabled === true} onClick={() => onTabChange(null, index)}>
+      {steps.map(({ label, disabled }, index) => (
+
+        <Step key={label} completed={completedSteps[index]}>
+          <StepButton disabled={disabledSteps[index]} onClick={() => onTabChange(null, index)}>
             {label}
           </StepButton>
         </Step>

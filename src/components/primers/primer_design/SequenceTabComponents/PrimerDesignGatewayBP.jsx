@@ -5,7 +5,7 @@ import { Box, Alert } from '@mui/material';
 
 import TabPanel from '../../../navigation/TabPanel';
 import PrimerSettingsForm from './PrimerSettingsForm';
-import PrimerResultList from './PrimerResultList';
+// import PrimerResultList from './PrimerResultList';
 import { usePrimerDesign } from './usePrimerDesign';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 import PrimerSpacerForm from './PrimerSpacerForm';

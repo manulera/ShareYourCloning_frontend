@@ -8,7 +8,7 @@ import useStoreEditor from '../../../../hooks/useStoreEditor';
 import TabPanel from '../../../navigation/TabPanel';
 import { usePrimerDesign } from './usePrimerDesign';
 import PrimerSettingsForm from './PrimerSettingsForm';
-import PrimerResultList from './PrimerResultList';
+// import PrimerResultList from './PrimerResultList';
 import PrimerSpacerForm from './PrimerSpacerForm';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipulation';

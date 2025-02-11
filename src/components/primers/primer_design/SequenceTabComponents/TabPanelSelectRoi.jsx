@@ -6,14 +6,13 @@ import StepNavigation from './StepNavigation';
 import { selectedRegion2String } from '../../../../utils/selectedRegionUtils';
 import GatewayRoiSelect from './GatewayRoiSelect';
 import TabPanel from '../../../navigation/TabPanel';
+import { usePrimerDesign } from './PrimerDesignContext';
 
-function TabPanelSelectRoi({ step,
-  index, selectedTab, handleSelectRegion,
-  handleBack, handleNext, templateSequencesIds, rois,
-}) {
+function TabPanelSelectRoi({ step, index }) {
+  const { selectedTab, rois, handleSelectRegion, handleBack, handleNext, sequenceIds } = usePrimerDesign();
   const [error, setError] = React.useState('');
   const editorHasSelection = useSelector((state) => state.cloning.mainSequenceSelection.caretPosition !== undefined);
-  const id = templateSequencesIds[index];
+  const id = sequenceIds[index];
   const {
     description = `Select the fragment of sequence ${id} to be amplified in the editor and click "Choose region"`,
     inputLabel = `Amplified region (sequence ${id})`,
@@ -45,7 +44,7 @@ function TabPanelSelectRoi({ step,
         handleBack={handleBack}
         handleNext={handleNext}
         isFirstStep={index === 0}
-        nextDisabled={(index === templateSequencesIds.length - 1) && rois.some((region) => region === null)}
+        nextDisabled={(index === sequenceIds.length - 1) && rois.some((region) => region === null)}
         nextToolTip="You must select all regions before proceeding"
         allowStepCompletion={editorHasSelection}
         stepCompletionText="Choose region"
