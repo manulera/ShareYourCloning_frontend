@@ -4,14 +4,13 @@ import { Alert, Checkbox, FormControl, FormControlLabel, FormLabel } from '@mui/
 import { batch, useDispatch, useStore } from 'react-redux';
 import { cloningActions } from '../../../../store/cloning';
 import useStoreEditor from '../../../../hooks/useStoreEditor';
-import TabPanel from './TabPanel';
+import TabPanel from '../../../navigation/TabPanel';
 import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipulation';
 import { usePrimerDesign } from './usePrimerDesign';
 import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import OrientationPicker from './OrientationPicker';
 import PrimerSpacerForm from './PrimerSpacerForm';
-import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 import StepNavigation from './StepNavigation';
 import PrimerDesignStepper from './PrimerDesignStepper';
@@ -100,7 +99,9 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   };
 
   const steps = React.useMemo(() => [
-    ...templateSequencesIds.map((id, index) => ({ label: `Seq ${id}`, completed: rois[index] !== null })),
+    ...templateSequencesIds.map((id, index) => (
+      { label: `Seq ${id}`, completed: rois[index] !== null, selectOrientation: true }
+    )),
     { label: 'Other settings', disabled: rois.some((region) => region === null), completed: primers.length > 0 },
     { label: 'Results', disabled: primers.length === 0 },
   ], [rois, primers]);

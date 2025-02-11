@@ -3,7 +3,7 @@ import React from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
 import { Box, Alert } from '@mui/material';
 
-import TabPanel from './TabPanel';
+import TabPanel from '../../../navigation/TabPanel';
 import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import { usePrimerDesign } from './usePrimerDesign';
