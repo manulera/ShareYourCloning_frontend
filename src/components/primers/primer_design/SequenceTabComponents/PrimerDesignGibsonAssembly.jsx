@@ -38,9 +38,9 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   const [circularAssembly, setCircularAssembly] = React.useState(false);
   const [spacers, setSpacers] = React.useState(Array(pcrSources.length + 1).fill(''));
 
-  const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
+  const submissionPreventedMessage = getSubmissionPreventedMessage({ rois, primerDesignSettings, spacers });
   React.useEffect(() => {
-    if (rois.every((region) => region !== null) && spacersAreValid && fragmentOrientations.every((orientation) => orientation !== null)) {
+    if (submissionPreventedMessage === '') {
       const { teselaJsonCache } = store.getState().cloning;
       const templateSequences = templateSequencesIds.map((id) => teselaJsonCache[id]);
       const newSequenceProduct = joinEntitiesIntoSingleSequence(templateSequences, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
@@ -49,7 +49,7 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
     } else {
       setSequenceProduct(null);
     }
-  }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, spacersAreValid, store, setSequenceProduct]);
+  }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, store, setSequenceProduct]);
 
   const sequenceNames = React.useMemo(() => {
     const { teselaJsonCache } = store.getState().cloning;
@@ -105,7 +105,6 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
     { label: 'Results', disabled: primers.length === 0 },
   ], [rois, primers]);
 
-  const submissionPreventedMessage = getSubmissionPreventedMessage(rois, primerDesignSettings, spacersAreValid);
   return (
     <Box>
       <PrimerDesignStepper

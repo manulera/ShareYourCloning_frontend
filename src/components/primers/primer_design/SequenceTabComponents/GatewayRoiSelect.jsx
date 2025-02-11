@@ -74,10 +74,9 @@ function ComponentWrapper({ children, requestStatus, retry, donorSites }) {
 
 const { setMainSequenceSelection } = cloningActions;
 
-function GatewayRoiSelect({ id, setSpacers, greedy = false }) {
+function GatewayRoiSelect({ id, knownCombination, handleKnownCombinationChange, greedy = false }) {
   const [leftSite, setLeftSite] = React.useState(null);
   const [rightSite, setRightSite] = React.useState(null);
-  const [knownCombination, setKnownCombination] = React.useState(null);
   const [donorSites, setDonorSites] = React.useState([]);
   const { requestStatus, attemptAgain, sites } = useGatewaySites({ target: id, greedy });
   const { updateStoreEditor } = useStoreEditor();
@@ -107,21 +106,17 @@ function GatewayRoiSelect({ id, setSpacers, greedy = false }) {
       const orientation = [newLeftSite.location.includes('(+)'), newRightSite.location.includes('(+)')];
       const knownCombinationForward = knownCombinations.find(({ siteNames: knownSites, orientation: knownOrientation }) => isEqual(knownSites, siteNames) && isEqual(knownOrientation, orientation));
       if (knownCombinationForward) {
-        setSpacers(knownCombinationForward.spacers);
-        setKnownCombination(knownCombinationForward);
+        handleKnownCombinationChange(knownCombinationForward);
         return;
       }
-
       const siteNamesReverse = [newRightSite.siteName, newLeftSite.siteName];
       const orientationReverse = [!newRightSite.location.includes('(+)'), !newLeftSite.location.includes('(+)')];
       const knownCombinationReverse = knownCombinations.find(({ siteNames: knownSites, orientation: knownOrientation }) => isEqual(knownSites, siteNamesReverse) && isEqual(knownOrientation, orientationReverse));
       if (knownCombinationReverse) {
-        setSpacers(knownCombinationReverse.spacers);
         setKnownCombination(knownCombinationReverse);
         return;
       }
       setKnownCombination(null);
-      setSpacers(['', '']);
     }
   }, []);
 

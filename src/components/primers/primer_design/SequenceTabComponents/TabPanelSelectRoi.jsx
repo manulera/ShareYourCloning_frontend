@@ -1,15 +1,15 @@
 import React from 'react';
 import { Alert, FormControl, TextField } from '@mui/material';
 import { useSelector } from 'react-redux';
-import TabPanel from './TabPanel';
+
 import StepNavigation from './StepNavigation';
 import { selectedRegion2String } from '../../../../utils/selectedRegionUtils';
 import GatewayRoiSelect from './GatewayRoiSelect';
+import TabPanel from '../../../navigation/TabPanel';
 
 function TabPanelSelectRoi({ step,
   index, selectedTab, handleSelectRegion,
   handleBack, handleNext, templateSequencesIds, rois,
-  setSpacers,
 }) {
   const [error, setError] = React.useState('');
   const editorHasSelection = useSelector((state) => state.cloning.mainSequenceSelection.caretPosition !== undefined);
@@ -35,7 +35,11 @@ function TabPanelSelectRoi({ step,
       </FormControl>
       )}
       {mode === 'gateway' && (
-        <GatewayRoiSelect id={id} setSpacers={setSpacers} />
+        <GatewayRoiSelect
+          id={id}
+          knownCombination={step.knownCombination}
+          handleKnownCombinationChange={step.handleKnownCombinationChange}
+        />
       )}
       <StepNavigation
         handleBack={handleBack}
@@ -46,7 +50,7 @@ function TabPanelSelectRoi({ step,
         allowStepCompletion={editorHasSelection}
         stepCompletionText="Choose region"
         stepCompletionToolTip="Select a region in the editor"
-        onStepCompletion={() => handleSelectRegion(index, allowSinglePosition)}
+        onStepCompletion={() => setError(handleSelectRegion(index, allowSinglePosition))}
       />
 
     </TabPanel>

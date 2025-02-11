@@ -35,10 +35,10 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
 
   const [insertionOrientation, setInsertionOrientation] = React.useState('forward');
   const [spacers, setSpacers] = React.useState(['', '']);
-  const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
+  const submissionPreventedMessage = getSubmissionPreventedMessage({ rois, primerDesignSettings, spacers });
 
   React.useEffect(() => {
-    if (rois.every((roi) => roi !== null) && insertionOrientation && spacersAreValid) {
+    if (submissionPreventedMessage === '') {
       const { teselaJsonCache } = store.getState().cloning;
       const templateSequence = teselaJsonCache[templateSequenceId];
       const targetSequence = teselaJsonCache[homologousRecombinationTargetId];
@@ -48,7 +48,7 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     } else {
       setSequenceProduct(null);
     }
-  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId, spacers]);
+  }, [insertionOrientation, rois, templateSequenceId, homologousRecombinationTargetId, spacers, store, setSequenceProduct]);
 
   const addPrimers = () => {
     batch(() => {
@@ -89,7 +89,6 @@ export default function PrimerDesignHomologousRecombination({ homologousRecombin
     { label: 'Results', disabled: primers.length === 0 },
   ], [rois, primers, templateSequenceId, homologousRecombinationTargetId]);
 
-  const submissionPreventedMessage = getSubmissionPreventedMessage(rois, primerDesignSettings, spacersAreValid);
   return (
 
     <Box>

@@ -1,14 +1,13 @@
 import { isEqual } from 'lodash-es';
 import React from 'react';
 import { batch, useDispatch, useSelector } from 'react-redux';
-import { Box, Alert, Button, FormControl } from '@mui/material';
+import { Box, Alert } from '@mui/material';
 
 import TabPanel from './TabPanel';
 import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerResultList from './PrimerResultList';
 import { usePrimerDesign } from './usePrimerDesign';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
-import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import PrimerSpacerForm from './PrimerSpacerForm';
 
 import useStoreEditor from '../../../../hooks/useStoreEditor';
@@ -17,23 +16,19 @@ import { joinEntitiesIntoSingleSequence } from '../../../../utils/sequenceManipu
 import { cloningActions } from '../../../../store/cloning';
 import PrimerDesignStepper from './PrimerDesignStepper';
 import TabPanelSelectRoi from './TabPanelSelectRoi';
+import StepNavigation from './StepNavigation';
+import { getSubmissionPreventedMessage } from './utils';
 
 const { setMainSequenceId, setCurrentTab, addPrimersToPCRSource } = cloningActions;
 
-function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
-  const [donorSites, setDonorSites] = React.useState([]);
+function PrimerDesignGatewayBP({ donorVectorId, pcrSource }) {
   const [amplificationOrientation, setAmplificationOrientation] = React.useState('forward');
   const [knownCombination, setKnownCombination] = React.useState(null);
   const [spacers, setSpacers] = React.useState(['', '']);
-  const [leftSite, setLeftSite] = React.useState(null);
-  const [rightSite, setRightSite] = React.useState(null);
-
-  const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
 
   const templateSequenceId = pcrSource.input[0];
   const sequenceIds = React.useMemo(() => [templateSequenceId, donorVectorId], [templateSequenceId, donorVectorId]);
   const templateSequenceNames = useSelector((state) => [state.cloning.teselaJsonCache[templateSequenceId].name], isEqual);
-  const donorVectorSequence = useSelector((state) => state.cloning.teselaJsonCache[donorVectorId], isEqual);
   const templateSequence = useSelector((state) => state.cloning.teselaJsonCache[templateSequenceId], isEqual);
 
   const { primers, error, designPrimers, setPrimers, rois, setSequenceProduct, onTabChange, selectedTab, handleSelectRegion, handleBack, handleNext } = usePrimerDesign('simple_pair', sequenceIds);
@@ -42,8 +37,17 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
   const { updateStoreEditor } = useStoreEditor();
   const dispatch = useDispatch();
 
+  const handleKnownCombinationChange = (newKnownCombination) => {
+    setKnownCombination(newKnownCombination);
+    if (newKnownCombination) {
+      setSpacers(newKnownCombination.spacers);
+    }
+  };
+
+  const submissionPreventedMessage = getSubmissionPreventedMessage({ rois, primerDesignSettings, spacers, knownCombination });
+
   React.useEffect(() => {
-    if (rois[0] !== null && amplificationOrientation && spacersAreValid && leftSite && rightSite && knownCombination !== null) {
+    if (submissionPreventedMessage === '') {
       const newSequenceProduct = joinEntitiesIntoSingleSequence([templateSequence], [rois[0].selectionLayer], [amplificationOrientation], [spacers[0], spacers[1]], false, 'primer tail');
       newSequenceProduct.name = 'PCR product';
       const leftFeature = {
@@ -70,7 +74,7 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
       return;
     }
     setSequenceProduct(null);
-  }, [amplificationOrientation, rois, templateSequence, donorVectorSequence, spacers, leftSite, rightSite]);
+  }, [amplificationOrientation, rois, templateSequence, spacers, knownCombination]);
 
   const onPrimerDesign = async () => {
     const params = {
@@ -98,20 +102,22 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
     document.getElementById(`source-${pcrSource.id}`)?.scrollIntoView();
     updateStoreEditor('mainEditor', null);
   };
-  const steps = [
-    { label: 'Amplified region',
+  const steps = React.useMemo(() => [
+    {
+      label: 'Amplified region',
       completed: rois[0] !== null,
     },
-    { label: 'Replaced region',
+    {
+      label: 'Replaced region',
       completed: rois[1] !== null,
       mode: 'gateway',
+      knownCombination,
+      handleKnownCombinationChange,
     },
     { label: 'Other settings', disabled: rois.some((region) => region === null), completed: primers.length > 0 },
     { label: 'Results', disabled: primers.length === 0 },
-  ];
+  ], [rois, primers.length, knownCombination]);
 
-  // This should not happen in the normal flow, but it can happen if loading state from a file:
-  const allowSumbission = rois[0] !== null && amplificationOrientation && primerDesignSettings.valid && spacersAreValid && knownCombination !== null;
   return (
     <Box>
       <PrimerDesignStepper
@@ -130,7 +136,6 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
           handleNext={handleNext}
           templateSequencesIds={sequenceIds}
           rois={rois}
-          setSpacers={setSpacers}
         />
       ))}
       <TabPanel value={selectedTab} index={2}>
@@ -153,19 +158,22 @@ function PrimerDesignGatewayBP({ donorVectorId, pcrSource, greedy = false }) {
           open
         />
 
-        { allowSumbission && (
-          <FormControl>
-            <Button variant="contained" onClick={onPrimerDesign} sx={{ my: 2, backgroundColor: 'primary.main' }}>Design primers</Button>
-          </FormControl>
-        )}
+        <StepNavigation
+          handleBack={handleBack}
+          handleNext={handleNext}
+          onStepCompletion={onPrimerDesign}
+          stepCompletionText="Design primers"
+          nextDisabled={primers.length === 0}
+          stepCompletionToolTip={submissionPreventedMessage}
+          allowStepCompletion={submissionPreventedMessage === ''}
+        />
         {error && (<Alert severity="error" sx={{ width: 'fit-content', margin: 'auto', mb: 2 }}>{error}</Alert>)}
 
       </TabPanel>
-      {primers.length === 2 && (
-        <TabPanel value={selectedTab} index={3}>
-          <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} />
-        </TabPanel>
-      )}
+
+      <TabPanel value={selectedTab} index={3}>
+        <PrimerResultList primers={primers} addPrimers={addPrimers} setPrimers={setPrimers} handleBack={handleBack} />
+      </TabPanel>
 
     </Box>
   );
