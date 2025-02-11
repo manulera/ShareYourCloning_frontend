@@ -60,11 +60,6 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   //   }
   // }, [fragmentOrientations, rois, templateSequencesIds, spacers, circularAssembly, store, setSequenceProduct]);
 
-  // const sequenceNames = React.useMemo(() => {
-  //   const { teselaJsonCache } = store.getState().cloning;
-  //   return templateSequencesIds.map((id) => teselaJsonCache[id].name);
-  // }, [templateSequencesIds, store]);
-
   // const onCircularAssemblyChange = (event) => {
   //   setCircularAssembly(event.target.checked);
   //   if (event.target.checked) {
@@ -73,38 +68,6 @@ export default function PrimerDesignGibsonAssembly({ pcrSources }) {
   //   } else {
   //     // Add it again
   //     setSpacers((current) => ['', ...current]);
-  //   }
-  // };
-
-  // const addPrimers = () => {
-  //   batch(() => {
-  //     pcrSources.forEach((pcrSource, index) => {
-  //       dispatch(addPrimersToPCRSource({
-  //         fwdPrimer: primers[index * 2],
-  //         revPrimer: primers[index * 2 + 1],
-  //         sourceId: pcrSource.id,
-  //       }));
-  //     });
-  //     dispatch(setMainSequenceId(null));
-  //     dispatch(setCurrentTab(0));
-  //   });
-  //   setPrimers([]);
-  //   onTabChange(null, 0);
-  //   document.getElementById(`source-${pcrSources[0].id}`)?.scrollIntoView();
-  //   updateStoreEditor('mainEditor', null);
-  // };
-
-  // const onPrimerDesign = async () => {
-  //   const params = {
-  //     homology_length: primerDesignSettings.homologyLength,
-  //     minimal_hybridization_length: primerDesignSettings.hybridizationLength,
-  //     target_tm: primerDesignSettings.targetTm,
-  //     circular: circularAssembly,
-  //   };
-  //   const serverError = await designPrimers(rois, params, fragmentOrientations, spacers);
-
-  //   if (!serverError) {
-  //     onTabChange(null, templateSequencesIds.length + 1);
   //   }
   // };
 
