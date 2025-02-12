@@ -3,11 +3,13 @@ import React from 'react';
 import { usePrimerDesign } from './PrimerDesignContext';
 
 function PrimerDesignStepper({ steps }) {
-  const { selectedTab, onTabChange, rois, primers } = usePrimerDesign();
+  const { selectedTab, onTabChange, rois, primers, submissionPreventedMessage } = usePrimerDesign();
 
   const completedSteps = [
     ...rois.map((roi) => roi !== null),
-    primers.length > 0,
+    // We check submissionPreventedMessage, because you could design primers and then come back
+    // and have bad settings
+    primers.length > 0 && submissionPreventedMessage === '',
     false,
   ];
   const disabledSteps = [
@@ -30,9 +32,9 @@ function PrimerDesignStepper({ steps }) {
 
       }}
     >
-      {steps.map(({ label, disabled }, index) => (
+      {steps.map(({ label }, index) => (
 
-        <Step key={label} completed={completedSteps[index]}>
+        <Step key={label} completed={!disabledSteps[index] && completedSteps[index]}>
           <StepButton disabled={disabledSteps[index]} onClick={() => onTabChange(null, index)}>
             {label}
           </StepButton>

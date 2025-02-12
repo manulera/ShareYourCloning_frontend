@@ -6,6 +6,7 @@ import PrimerSettingsForm from './PrimerSettingsForm';
 import PrimerSpacerForm from './PrimerSpacerForm';
 import OrientationPicker from './OrientationPicker';
 import { usePrimerDesign } from './PrimerDesignContext';
+import RestrictionSpacerForm from './RestrictionSpacerForm';
 
 function TabPannelSettings() {
   const { templateSequenceIds, designType, selectedTab, sequenceIds, circularAssembly, onCircularAssemblyChange, designPrimers, primers, primerDesignSettings, submissionPreventedMessage } = usePrimerDesign();
@@ -23,6 +24,7 @@ function TabPannelSettings() {
             />
           ))}
         </Box>
+        <RestrictionSpacerForm />
         <PrimerSpacerForm />
         {designType === 'gibson_assembly' && (
           <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>

@@ -11,6 +11,7 @@ import { cloningActions } from '../../../../store/cloning';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
 import { joinEntitiesIntoSingleSequence, simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
+import useEnzymePrimerDesignSettings from './useEnzymePrimerDesignSettings';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
@@ -33,20 +34,26 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
   const [circularAssembly, setCircularAssembly] = useState(false);
   const [spacers, setSpacers] = useState(Array(templateSequenceIds.length + 1).fill(''));
 
+  // Restriction ligation
+  const { enzymePrimerDesignSettings, enzymePrimerDesignHandlingFunctions } = useEnzymePrimerDesignSettings();
+
+  console.log(enzymePrimerDesignSettings.enzymeSpacers);
   // Gateway BP
   const [knownCombination, setKnownCombination] = useState(null);
 
   const handleKnownCombinationChange = (newKnownCombination, selection) => {
     if (newKnownCombination) {
-      setKnownCombination({ ...knownCombination, selection });
+      setKnownCombination({ ...newKnownCombination, selection });
       setSpacers(newKnownCombination.spacers);
     } else {
       setSpacers(['', '']);
       setKnownCombination(null);
+      setRois((c) => changeValueAtIndex(c, 1, null));
     }
   };
 
   const primerDesignSettings = usePrimerDesignSettings(initialPrimerDesignSettings);
+
   const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
   const sequenceNames = useSelector((state) => sequenceIds.map((id) => state.cloning.teselaJsonCache[id].name), isEqual);
   const templateSequenceNames = useSelector((state) => templateSequenceIds.map((id) => state.cloning.teselaJsonCache[id].name), isEqual);
@@ -65,9 +72,16 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
       return 'Primer design settings not valid';
     } if (spacers.some((spacer) => stringIsNotDNA(spacer))) {
       return 'Spacer sequences not valid';
-    }
-    if (designType === 'gateway_bp' && !knownCombination) {
+    } if (designType === 'gateway_bp' && !knownCombination) {
       return 'No valid combination of attP sites selected';
+    } if (designType === 'restriction_ligation') {
+      const { left_enzyme: leftEnzyme, right_enzyme: rightEnzyme, filler_bases: fillerBases } = enzymePrimerDesignSettings;
+      if (!leftEnzyme && !rightEnzyme) {
+        return 'You must select and enzyme';
+      }
+      if (stringIsNotDNA(fillerBases)) {
+        return 'Filler bases not valid';
+      }
     }
     return '';
   };
@@ -79,7 +93,12 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     if (submissionPreventedMessage === '') {
       const { teselaJsonCache } = store.getState().cloning;
       const sequences = sequenceIds.map((id) => teselaJsonCache[id]);
-      if (designType === 'gibson_assembly') {
+      if (designType === 'simple_pair' || designType === 'restriction_ligation') {
+        const { enzymeSpacers } = enzymePrimerDesignSettings;
+        const extendedSpacers = [enzymeSpacers[0] + spacers[0], spacers[1] + enzymeSpacers[1]];
+        newSequenceProduct = joinEntitiesIntoSingleSequence(sequences, rois.map((s) => s.selectionLayer), fragmentOrientations, extendedSpacers, circularAssembly);
+        newSequenceProduct.name = 'PCR product';
+      } else if (designType === 'gibson_assembly') {
         newSequenceProduct = joinEntitiesIntoSingleSequence(sequences, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
         newSequenceProduct.name = 'Gibson Assembly product';
       } else if (designType === 'homologous_recombination') {
@@ -112,7 +131,7 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
       }
     }
     setSequenceProduct(newSequenceProduct);
-  }, [rois, spacersAreValid, fragmentOrientations, circularAssembly, designType, spacers]);
+  }, [rois, spacersAreValid, fragmentOrientations, circularAssembly, designType, spacers, ...enzymePrimerDesignSettings.enzymeSpacers]);
 
   const onCircularAssemblyChange = (event) => {
     setCircularAssembly(event.target.checked);
@@ -248,13 +267,15 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
         spacers,
       };
       endpoint = 'homologous_recombination';
-    } else if (designType === 'simple_pair' || designType === 'gateway_bp') {
+    } else if (designType === 'simple_pair' || designType === 'gateway_bp' || designType === 'restriction_ligation') {
       const pcrTemplateId = sequenceIds[0];
+      const { enzymeSpacers, ...enzymeParams } = enzymePrimerDesignSettings;
       params = {
-        homology_length: primerDesignSettings.homologyLength,
         minimal_hybridization_length: primerDesignSettings.hybridizationLength,
         target_tm: primerDesignSettings.targetTm,
+        ...enzymeParams,
       };
+
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
@@ -332,6 +353,8 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     designType,
     knownCombination,
     handleKnownCombinationChange,
+    enzymePrimerDesignSettings,
+    enzymePrimerDesignHandlingFunctions,
   }), [
     primers,
     error,
@@ -360,6 +383,8 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     designType,
     knownCombination,
     handleKnownCombinationChange,
+    enzymePrimerDesignSettings,
+    enzymePrimerDesignHandlingFunctions,
   ]);
 
   return (
