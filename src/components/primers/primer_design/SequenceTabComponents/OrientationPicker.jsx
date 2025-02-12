@@ -3,9 +3,12 @@ import React from 'react';
 import { usePrimerDesign } from './PrimerDesignContext';
 
 function OrientationPicker({ id, index }) {
-  const { fragmentOrientations, handleFragmentOrientationChange, sequenceNames } = usePrimerDesign();
-  const sequenceName = sequenceNames[index];
-  const label = sequenceName && sequenceName !== 'name' ? `Seq. ${id} (${sequenceName})` : `Seq. ${id}`;
+  const { designType, fragmentOrientations, handleFragmentOrientationChange, templateSequenceNames } = usePrimerDesign();
+  const sequenceName = templateSequenceNames[index];
+  let label = sequenceName && sequenceName !== 'name' ? `Seq. ${id} (${sequenceName})` : `Seq. ${id}`;
+  if (designType === 'homologous_recombination') {
+    label = 'Orientation of insert';
+  }
   return (
     <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', margin: '0', padding: '0' }}>
       <tbody>

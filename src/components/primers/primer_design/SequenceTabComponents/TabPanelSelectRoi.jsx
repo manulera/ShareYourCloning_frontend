@@ -9,7 +9,7 @@ import TabPanel from '../../../navigation/TabPanel';
 import { usePrimerDesign } from './PrimerDesignContext';
 
 function TabPanelSelectRoi({ step, index }) {
-  const { selectedTab, rois, handleSelectRegion, handleBack, handleNext, sequenceIds } = usePrimerDesign();
+  const { selectedTab, rois, handleSelectRegion, sequenceIds, knownCombination, designType } = usePrimerDesign();
   const [error, setError] = React.useState('');
   const editorHasSelection = useSelector((state) => state.cloning.mainSequenceSelection.caretPosition !== undefined);
   const id = sequenceIds[index];
@@ -17,8 +17,12 @@ function TabPanelSelectRoi({ step, index }) {
     description = `Select the fragment of sequence ${id} to be amplified in the editor and click "Choose region"`,
     inputLabel = `Amplified region (sequence ${id})`,
     allowSinglePosition = false,
-    mode = 'editor',
+    stepCompletionToolTip = 'Select a region in the editor',
   } = step;
+
+  const mode = designType === 'gateway_bp' && index === 1 ? 'gateway_bp' : 'editor';
+  const allowStepCompletion = (mode === 'editor' && editorHasSelection) || (mode === 'gateway_bp' && knownCombination);
+  const onStepCompletion = () => { setError(handleSelectRegion(index, allowSinglePosition)); };
 
   return (
     <TabPanel value={selectedTab} index={index}>
@@ -33,23 +37,17 @@ function TabPanelSelectRoi({ step, index }) {
         />
       </FormControl>
       )}
-      {mode === 'gateway' && (
-        <GatewayRoiSelect
-          id={id}
-          knownCombination={step.knownCombination}
-          handleKnownCombinationChange={step.handleKnownCombinationChange}
-        />
+      {mode === 'gateway_bp' && (
+        <GatewayRoiSelect id={id} />
       )}
       <StepNavigation
-        handleBack={handleBack}
-        handleNext={handleNext}
         isFirstStep={index === 0}
         nextDisabled={(index === sequenceIds.length - 1) && rois.some((region) => region === null)}
         nextToolTip="You must select all regions before proceeding"
-        allowStepCompletion={editorHasSelection}
+        allowStepCompletion={allowStepCompletion}
         stepCompletionText="Choose region"
-        stepCompletionToolTip="Select a region in the editor"
-        onStepCompletion={() => setError(handleSelectRegion(index, allowSinglePosition))}
+        stepCompletionToolTip={stepCompletionToolTip}
+        onStepCompletion={onStepCompletion}
       />
 
     </TabPanel>

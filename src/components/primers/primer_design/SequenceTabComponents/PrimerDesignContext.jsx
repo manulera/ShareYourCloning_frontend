@@ -10,6 +10,7 @@ import useStoreEditor from '../../../../hooks/useStoreEditor';
 import { cloningActions } from '../../../../store/cloning';
 import usePrimerDesignSettings from './usePrimerDesignSettings';
 import { stringIsNotDNA } from '../../../../store/cloning_utils';
+import { joinEntitiesIntoSingleSequence, simulateHomologousRecombination } from '../../../../utils/sequenceManipulation';
 
 function changeValueAtIndex(current, index, newValue) {
   return current.map((_, i) => (i === index ? newValue : current[i]));
@@ -18,25 +19,44 @@ function changeValueAtIndex(current, index, newValue) {
 const PrimerDesignContext = React.createContext();
 
 export function PrimerDesignProvider({ children, designType, sequenceIds, initialPrimerDesignSettings }) {
+  let templateSequenceIds = sequenceIds;
+  if (designType === 'homologous_recombination' || designType === 'gateway_bp') {
+    templateSequenceIds = sequenceIds.slice(0, 1);
+  }
+
   const [primers, setPrimers] = useState([]);
   const [rois, setRois] = useState(Array(sequenceIds.length).fill(null));
   const [error, setError] = useState('');
   const [selectedTab, setSelectedTab] = useState(0);
   const [sequenceProduct, setSequenceProduct] = useState(null);
-  const [fragmentOrientations, setFragmentOrientations] = useState(Array(sequenceIds.length).fill('forward'));
+  const [fragmentOrientations, setFragmentOrientations] = useState(Array(templateSequenceIds.length).fill('forward'));
   const [circularAssembly, setCircularAssembly] = useState(false);
-  const [spacers, setSpacers] = useState(Array(sequenceIds.length + 1).fill(''));
-  const primerDesignSettings = usePrimerDesignSettings(initialPrimerDesignSettings);
+  const [spacers, setSpacers] = useState(Array(templateSequenceIds.length + 1).fill(''));
 
+  // Gateway BP
+  const [knownCombination, setKnownCombination] = useState(null);
+
+  const handleKnownCombinationChange = (newKnownCombination, selection) => {
+    if (newKnownCombination) {
+      setKnownCombination({ ...knownCombination, selection });
+      setSpacers(newKnownCombination.spacers);
+    } else {
+      setSpacers(['', '']);
+      setKnownCombination(null);
+    }
+  };
+
+  const primerDesignSettings = usePrimerDesignSettings(initialPrimerDesignSettings);
+  const spacersAreValid = React.useMemo(() => spacers.every((spacer) => !stringIsNotDNA(spacer)), [spacers]);
   const sequenceNames = useSelector((state) => sequenceIds.map((id) => state.cloning.teselaJsonCache[id].name), isEqual);
+  const templateSequenceNames = useSelector((state) => templateSequenceIds.map((id) => state.cloning.teselaJsonCache[id].name), isEqual);
+  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
 
   const store = useStore();
   const backendRoute = useBackendRoute();
   const dispatch = useDispatch();
   const { updateStoreEditor } = useStoreEditor();
   const { setMainSequenceId, addPrimersToPCRSource, setCurrentTab } = cloningActions;
-
-  const mainSequenceId = useSelector((state) => state.cloning.mainSequenceId);
 
   const getSubmissionPreventedMessage = () => {
     if (rois.some((region) => region === null)) {
@@ -46,13 +66,72 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     } if (spacers.some((spacer) => stringIsNotDNA(spacer))) {
       return 'Spacer sequences not valid';
     }
+    if (designType === 'gateway_bp' && !knownCombination) {
+      return 'No valid combination of attP sites selected';
+    }
     return '';
   };
 
   const submissionPreventedMessage = getSubmissionPreventedMessage();
 
+  React.useEffect(() => {
+    let newSequenceProduct = null;
+    if (submissionPreventedMessage === '') {
+      const { teselaJsonCache } = store.getState().cloning;
+      const sequences = sequenceIds.map((id) => teselaJsonCache[id]);
+      if (designType === 'gibson_assembly') {
+        newSequenceProduct = joinEntitiesIntoSingleSequence(sequences, rois.map((s) => s.selectionLayer), fragmentOrientations, spacers, circularAssembly);
+        newSequenceProduct.name = 'Gibson Assembly product';
+      } else if (designType === 'homologous_recombination') {
+        newSequenceProduct = simulateHomologousRecombination(sequences[0], sequences[1], rois.map((s) => s.selectionLayer), fragmentOrientations[0] === 'reverse', spacers);
+        newSequenceProduct.name = 'Homologous recombination product';
+      } else if (designType === 'gateway_bp') {
+        newSequenceProduct = joinEntitiesIntoSingleSequence([sequences[0]], [rois[0].selectionLayer], fragmentOrientations, spacers, false, 'primer tail');
+        newSequenceProduct.name = 'PCR product';
+        const leftFeature = {
+          start: knownCombination.translationFrame[0],
+          end: spacers[0].length - 1,
+          type: 'CDS',
+          name: 'translation frame',
+          strand: 1,
+          forward: true,
+        };
+        const nbAas = Math.floor((spacers[1].length - knownCombination.translationFrame[1]) / 3);
+        const rightStart = newSequenceProduct.sequence.length - knownCombination.translationFrame[1] - nbAas * 3;
+        const rightFeature = {
+          start: rightStart,
+          end: newSequenceProduct.sequence.length - knownCombination.translationFrame[1] - 1,
+          type: 'CDS',
+          name: 'translation frame',
+          strand: 1,
+          forward: true,
+        };
+        newSequenceProduct.features.push(leftFeature);
+        newSequenceProduct.features.push(rightFeature);
+        setSequenceProduct(newSequenceProduct);
+      }
+    }
+    setSequenceProduct(newSequenceProduct);
+  }, [rois, spacersAreValid, fragmentOrientations, circularAssembly, designType, spacers]);
+
+  const onCircularAssemblyChange = (event) => {
+    setCircularAssembly(event.target.checked);
+    if (event.target.checked) {
+      // Remove the first spacer
+      setSpacers((current) => current.slice(1));
+    } else {
+      // Add it again
+      setSpacers((current) => ['', ...current]);
+    }
+  };
+
   const onSelectRegion = (index, allowSinglePosition = false) => {
-    const selectedRegion = store.getState().cloning.mainSequenceSelection;
+    let selectedRegion;
+    if (designType === 'gateway_bp' && index === 1) {
+      selectedRegion = knownCombination.selection;
+    } else {
+      selectedRegion = store.getState().cloning.mainSequenceSelection;
+    }
     const { caretPosition } = selectedRegion;
     if (caretPosition === undefined) {
       setRois((c) => changeValueAtIndex(c, index, null));
@@ -132,6 +211,7 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     const { cloning: { entities } } = store.getState();
     let requestData;
     let params;
+    let endpoint;
     if (designType === 'gibson_assembly') {
       params = {
         homology_length: primerDesignSettings.homologyLength,
@@ -147,8 +227,14 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
         })),
         spacers,
       };
+      endpoint = 'gibson_assembly';
     } else if (designType === 'homologous_recombination') {
       const [pcrTemplateId, homologousRecombinationTargetId] = sequenceIds;
+      params = {
+        homology_length: primerDesignSettings.homologyLength,
+        minimal_hybridization_length: primerDesignSettings.hybridizationLength,
+        target_tm: primerDesignSettings.targetTm,
+      };
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
@@ -161,8 +247,14 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
         },
         spacers,
       };
-    } else if (designType === 'simple_pair') {
+      endpoint = 'homologous_recombination';
+    } else if (designType === 'simple_pair' || designType === 'gateway_bp') {
       const pcrTemplateId = sequenceIds[0];
+      params = {
+        homology_length: primerDesignSettings.homologyLength,
+        minimal_hybridization_length: primerDesignSettings.hybridizationLength,
+        target_tm: primerDesignSettings.targetTm,
+      };
       requestData = {
         pcr_template: {
           sequence: entities.find((e) => e.id === pcrTemplateId),
@@ -171,9 +263,10 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
         },
         spacers,
       };
+      endpoint = 'simple_pair';
     }
 
-    const url = backendRoute(`/primer_design/${designType}`);
+    const url = backendRoute(`/primer_design/${endpoint}`);
 
     try {
       const resp = await axios.post(url, requestData, { params });
@@ -191,9 +284,7 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
 
   const addPrimers = () => {
     const pcrSources = store.getState().cloning.sources.filter((source) => source.type === 'PCRSource');
-    const usedPCRSources = sequenceIds
-      .map((id) => pcrSources.find((source) => source.input.includes(id)))
-      .filter((source) => source !== undefined);
+    const usedPCRSources = templateSequenceIds.map((id) => pcrSources.find((source) => source.input.includes(id)));
     batch(() => {
       usedPCRSources.forEach((pcrSource, index) => {
         dispatch(addPrimersToPCRSource({
@@ -235,6 +326,12 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     primerDesignSettings,
     submissionPreventedMessage,
     addPrimers,
+    onCircularAssemblyChange,
+    templateSequenceIds,
+    templateSequenceNames,
+    designType,
+    knownCombination,
+    handleKnownCombinationChange,
   }), [
     primers,
     error,
@@ -259,6 +356,10 @@ export function PrimerDesignProvider({ children, designType, sequenceIds, initia
     primerDesignSettings,
     submissionPreventedMessage,
     addPrimers,
+    templateSequenceIds,
+    designType,
+    knownCombination,
+    handleKnownCombinationChange,
   ]);
 
   return (

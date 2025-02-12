@@ -1,5 +1,6 @@
 import { Box, Button, Tooltip } from '@mui/material';
 import React from 'react';
+import { usePrimerDesign } from './PrimerDesignContext';
 
 function ToolTipWrapper({ title, children, enabled = false }) {
   if (enabled) {
@@ -14,7 +15,8 @@ function ToolTipWrapper({ title, children, enabled = false }) {
   return children;
 }
 
-function StepNavigation({ handleBack, handleNext, onStepCompletion, allowStepCompletion, stepCompletionText, isFirstStep = false, nextDisabled = false, nextToolTip = '', stepCompletionToolTip = '' }) {
+function StepNavigation({ onStepCompletion, allowStepCompletion, stepCompletionText, isFirstStep = false, nextDisabled = false, nextToolTip = '', stepCompletionToolTip = '' }) {
+  const { handleBack, handleNext } = usePrimerDesign();
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
       <Button

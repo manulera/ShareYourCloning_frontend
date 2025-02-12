@@ -15,7 +15,7 @@ function PrimerDesignStepper({ steps }) {
     rois.some((roi) => roi === null),
     primers.length === 0,
   ];
-  console.log(disabledSteps);
+
   return (
     <Stepper
       nonLinear

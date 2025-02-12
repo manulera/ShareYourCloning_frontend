@@ -7,39 +7,39 @@ import PrimerSpacerForm from './PrimerSpacerForm';
 import OrientationPicker from './OrientationPicker';
 import { usePrimerDesign } from './PrimerDesignContext';
 
-function TabPannelSettings({ steps }) {
-  const { selectedTab, sequenceIds, circularAssembly, onCircularAssemblyChange, designPrimers, primers, primerDesignSettings, submissionPreventedMessage } = usePrimerDesign();
+function TabPannelSettings() {
+  const { templateSequenceIds, designType, selectedTab, sequenceIds, circularAssembly, onCircularAssemblyChange, designPrimers, primers, primerDesignSettings, submissionPreventedMessage } = usePrimerDesign();
   return (
     <TabPanel value={selectedTab} index={sequenceIds.length}>
       <Box sx={{ width: '80%', margin: 'auto' }}>
         <PrimerSettingsForm {...primerDesignSettings} />
         <Box sx={{ mt: 2 }}>
-          <FormLabel>Fragment orientation</FormLabel>
-          {steps.map(({ id, selectOrientation }, index) => (
-            selectOrientation && (
-              <OrientationPicker
-                key={id}
-                id={id}
-                index={index}
-              />
-            )
+          {designType === 'gibson_assembly' && <FormLabel>Fragment orientation</FormLabel>}
+          {templateSequenceIds.map((id, index) => (
+            <OrientationPicker
+              key={id}
+              id={id}
+              index={index}
+            />
           ))}
         </Box>
         <PrimerSpacerForm />
-        <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-          <FormControl>
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={circularAssembly}
-                  onChange={onCircularAssemblyChange}
-                  name="circular-assembly"
-                />
+        {designType === 'gibson_assembly' && (
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <FormControl>
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={circularAssembly}
+                    onChange={onCircularAssemblyChange}
+                    name="circular-assembly"
+                  />
                     )}
-              label="Circular assembly"
-            />
-          </FormControl>
-        </Box>
+                label="Circular assembly"
+              />
+            </FormControl>
+          </Box>
+        )}
 
       </Box>
       <StepNavigation
